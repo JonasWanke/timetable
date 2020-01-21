@@ -1,3 +1,3 @@
 # timetable
 
-?? Customizable, animated calendar widget including day, week and month views
+📅 Customizable, animated calendar widget including day, week and month views

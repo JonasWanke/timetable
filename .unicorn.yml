@@ -1,0 +1,57 @@
+unicornVersion: "0.1.0"
+name: "timetable"
+description: "?? Customizable, animated calendar widget including day, week and month\
+  \ views"
+homepage: "https://github.com/JonasWanke/timetable"
+license: "apache-2.0"
+version: "0.0.1"
+categorization:
+  component:
+    values: []
+    labels:
+      color: "c2e0c6"
+      prefix: "C: "
+      descriptionPrefix: "Component: "
+    name: "component"
+  priority:
+    values:
+    - name: "1"
+      description: "1 (Lowest)"
+    - name: "2"
+      description: "2 (Low)"
+    - name: "3"
+      description: "3 (Medium)"
+    - name: "4"
+      description: "4 (High)"
+    - name: "5"
+      description: "5 (Highest)"
+    labels:
+      color: "e5b5ff"
+      prefix: "P: "
+      descriptionPrefix: "Priority: "
+    name: "priority"
+  type:
+    values:
+    - name: "feat"
+      description: ":tada: New Features"
+      versionBump: null
+    - name: "change"
+      description: "⚡ Changes"
+      versionBump: null
+    - name: "fix"
+      description: ":bug: Bug Fixes"
+      versionBump: null
+    - name: "docs"
+      description: ":scroll: Documentation updates"
+      versionBump: null
+    - name: "refactor"
+      description: ":building_construction: Refactoring"
+      versionBump: null
+    - name: "build"
+      description: ":package: Build & CI"
+      versionBump: null
+    labels:
+      color: "c5def5"
+      prefix: "T: "
+      descriptionPrefix: "Type: "
+    name: "type"

@@ -21,7 +21,7 @@ jobs:
       - name: Install Flutter
         uses: subosito/flutter-action@v1
         with:
-          version: "1.14.4-pre.17"
+          flutter-version: "1.14.4-pre.17"
           channel: "master"
 
       - name: Install dependencies
@@ -42,10 +42,11 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: "12.x"
-      - name: Install Flutter (stable)
+      - name: Install Flutter
         uses: subosito/flutter-action@v1
         with:
-          channel: "stable"
+          flutter-version: "1.14.4-pre.17"
+          channel: "master"
 
       - name: Checkout source
         uses: actions/download-artifact@v1
@@ -85,10 +86,11 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: "12.x"
-      - name: Install Flutter (stable)
+      - name: Install Flutter
         uses: subosito/flutter-action@v1
         with:
-          channel: "stable"
+          flutter-version: "1.14.4-pre.17"
+          channel: "master"
 
       - name: Checkout source
         uses: actions/download-artifact@v1

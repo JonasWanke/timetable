@@ -6,7 +6,15 @@ license: "apache-2.0"
 version: "0.0.1"
 categorization:
   component:
-    values: []
+    values:
+    - name: "timetable"
+      description: "The actual timetable package"
+      paths:
+      - "lib/**"
+    - name: "example"
+      description: "Example app"
+      paths:
+      - "example/**"
     labels:
       color: "c2e0c6"
       prefix: "C: "

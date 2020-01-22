@@ -16,4 +16,4 @@ jobs:
       - uses: actions/checkout@v2
       - uses: JonasWanke/unicorn@v0.1
         with:
-          repo-token: "${{ secrets.GITHUB_TOKEN }}"
+          repo-token: "${{ secrets.UNICORN_TOKEN }}"

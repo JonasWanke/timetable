@@ -24,7 +24,10 @@ jobs:
           channel: "stable"
 
       - name: Install dependencies
-        run: flutter pub get
+        run: |
+          cd ./example
+          sed -i -E 's/timetable: .+/timetable:\n    path: ..\\/' pubspec.yaml
+          flutter pub get
 
       - name: Persist current state
         uses: actions/upload-artifact@v1
@@ -97,6 +100,4 @@ jobs:
 
       - run: |
           cd ./example
-          sed -i -E 's/timetable: .+/timetable:\n    path: ..\\/' pubspec.yaml
-          flutter pub get
           flutter build apk

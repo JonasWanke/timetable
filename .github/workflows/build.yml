@@ -21,8 +21,7 @@ jobs:
       - name: Install Flutter
         uses: subosito/flutter-action@v1
         with:
-          flutter-version: "1.14.4-pre.17"
-          channel: "master"
+          channel: "stable"
 
       - name: Install dependencies
         run: flutter pub get
@@ -45,8 +44,7 @@ jobs:
       - name: Install Flutter
         uses: subosito/flutter-action@v1
         with:
-          flutter-version: "1.14.4-pre.17"
-          channel: "master"
+          channel: "stable"
 
       - name: Checkout source
         uses: actions/download-artifact@v1
@@ -89,8 +87,7 @@ jobs:
       - name: Install Flutter
         uses: subosito/flutter-action@v1
         with:
-          flutter-version: "1.14.4-pre.17"
-          channel: "master"
+          channel: "stable"
 
       - name: Checkout source
         uses: actions/download-artifact@v1

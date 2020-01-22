@@ -42,8 +42,9 @@ packages:
   timetable:
     dependency: "direct main"
     description:
-      name: timetable
-      url: "https://pub.dartlang.org"
+      path: ".."
+      relative: true
+    source: path
     version: "0.0.1"
   typed_data:
     dependency: transitive

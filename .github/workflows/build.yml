@@ -27,7 +27,6 @@ jobs:
         run: |
           sed -i -E 's/timetable: .+/timetable:\n    path: ..\//' ./example/pubspec.yaml
           flutter pub get
-        continue-on-error: true
 
       - name: Persist current state
         uses: actions/upload-artifact@v1

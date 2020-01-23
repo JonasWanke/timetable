@@ -10,6 +10,7 @@ dependencies:
     sdk: flutter
 
   timetable: ^0.0.1
+  time_machine: ^0.9.12
 
 flutter:
   uses-material-design: true

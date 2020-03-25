@@ -2,6 +2,7 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:black_hole_flutter/black_hole_flutter.dart';
+import 'package:dartx/dartx.dart';
 import 'package:flutter/widgets.dart';
 import 'package:time_machine/time_machine.dart' hide Offset;
 import 'package:timetable/src/day_background_painter.dart';
@@ -14,7 +15,7 @@ class DayEventsWidget<E extends Event> extends StatelessWidget {
   DayEventsWidget({
     Key key,
     @required this.date,
-    @required this.events,
+    @required List<E> events,
     @required this.eventBuilder,
   })  : assert(date != null),
         assert(events != null),
@@ -25,17 +26,9 @@ class DayEventsWidget<E extends Event> extends StatelessWidget {
             'All events must intersect the given date'),
         assert(events.map((e) => e.id).toSet().length == events.length,
             'Events may not contain duplicate IDs'),
+        events = events.sortedBy((e) => e.start).thenBy((e) => e.end),
         assert(eventBuilder != null),
-        super(key: key) {
-    events.sort((a, b) {
-      final startResult = a.start.compareTo(b.start);
-      if (startResult != 0) {
-        return startResult;
-      }
-
-      return a.end.compareTo(b.end);
-    });
-  }
+        super(key: key);
 
   static final Period minEventLength = Period(minutes: 30);
   static const double eventSpacing = 4;
@@ -114,10 +107,10 @@ class _DayEventsLayoutDelegate<E extends Event>
 
   _EventPositions _calculatePositions() {
     // How this layout algorithm works:
-    // We first divide all events into group, whereas a group contains all
-    // events that (partially) overlap one another.
-    // Inside a group, events whose start times are very close, we split them
-    // into multiple columns.
+    // We first divide all events into groups, whereas a group contains all
+    // events that intersect one another.
+    // Inside a group, events with very close start times are split into
+    // multiple columns.
     final positions = _EventPositions();
 
     List<E> currentGroup = [];

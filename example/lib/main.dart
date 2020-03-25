@@ -27,6 +27,7 @@ class _TimetableExampleState extends State<TimetableExample> {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Timetable example',
+      darkTheme: ThemeData.dark(),
       home: Scaffold(
         appBar: AppBar(title: Text('Timetable example')),
         body: Timetable<BasicEvent>(

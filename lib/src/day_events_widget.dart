@@ -1,8 +1,10 @@
 import 'dart:math';
 import 'dart:ui';
 
+import 'package:black_hole_flutter/black_hole_flutter.dart';
 import 'package:flutter/widgets.dart';
 import 'package:time_machine/time_machine.dart' hide Offset;
+import 'package:timetable/src/day_background_painter.dart';
 
 import 'event.dart';
 import 'timetable.dart';
@@ -45,16 +47,19 @@ class DayEventsWidget<E extends Event> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomMultiChildLayout(
-      delegate: _DayEventsLayoutDelegate(this),
-      children: events
-          .map(
-            (e) => LayoutId(
-              id: e.id,
-              child: eventBuilder(e),
-            ),
-          )
-          .toList(),
+    return CustomPaint(
+      painter: DayBackgroundPainter(dividerColor: context.theme.dividerColor),
+      child: CustomMultiChildLayout(
+        delegate: _DayEventsLayoutDelegate(this),
+        children: events
+            .map(
+              (e) => LayoutId(
+                id: e.id,
+                child: eventBuilder(e),
+              ),
+            )
+            .toList(),
+      ),
     );
   }
 }

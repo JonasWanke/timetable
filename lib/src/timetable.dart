@@ -1,8 +1,9 @@
 import 'package:flutter/widgets.dart';
 import 'package:time_machine/time_machine.dart';
-import 'package:timetable/src/day_events_widget.dart';
-import 'package:timetable/src/event.dart';
-import 'package:timetable/timetable.dart';
+
+import 'day_events_widget.dart';
+import 'day_page_view.dart';
+import 'event.dart';
 
 class TimetableController {
   TimetableController({LocalDate initialDate})
@@ -33,15 +34,16 @@ class Timetable<E extends Event> extends StatefulWidget {
   _TimetableState<E> createState() => _TimetableState<E>();
 }
 
-class _TimetableState<E extends Event> extends State<Timetable> {
+class _TimetableState<E extends Event> extends State<Timetable<E>> {
   @override
   Widget build(BuildContext context) {
-    final widget = this.widget as Timetable<E>;
-
-    return DayEventsWidget<E>(
-      date: LocalDate.today(),
-      events: widget.eventProvider(LocalDate.today()),
-      eventBuilder: widget.eventBuilder,
+    return DayPageView(
+      startDate: widget.controller.initialDate,
+      dayBuilder: (_, day) => DayEventsWidget<E>(
+        date: day,
+        events: widget.eventProvider(day),
+        eventBuilder: widget.eventBuilder,
+      ),
     );
   }
 }

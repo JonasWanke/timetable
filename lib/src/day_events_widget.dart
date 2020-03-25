@@ -5,8 +5,8 @@ import 'package:black_hole_flutter/black_hole_flutter.dart';
 import 'package:dartx/dartx.dart';
 import 'package:flutter/widgets.dart';
 import 'package:time_machine/time_machine.dart' hide Offset;
-import 'package:timetable/src/day_background_painter.dart';
 
+import 'day_background_painter.dart';
 import 'event.dart';
 import 'timetable.dart';
 import 'utils.dart';

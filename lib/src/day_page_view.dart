@@ -1,38 +1,44 @@
 import 'package:flutter/material.dart';
 import 'package:time_machine/time_machine.dart';
 
+import 'controller.dart';
+
 typedef DayWidgetBuilder = Widget Function(BuildContext context, LocalDate day);
 
 class DayPageView extends StatelessWidget {
   const DayPageView({
     Key key,
+    @required this.controller,
     @required this.dayBuilder,
-    @required this.startDate,
-    this.visibleDayCount = 7,
-  })  : assert(dayBuilder != null),
-        assert(startDate != null),
-        assert(visibleDayCount != null),
+  })  : assert(controller != null),
+        assert(dayBuilder != null),
         super(key: key);
 
+  final TimetableController controller;
   final DayWidgetBuilder dayBuilder;
-  final LocalDate startDate;
-  final int visibleDayCount;
-
-  static final _epochIndex = -LocalDate.minIsoValue.epochDay;
 
   @override
   Widget build(BuildContext context) {
-    return PageView.builder(
-      controller: PageController(
-        // TODO(JonasWanke): initialPage is centered, whereas we probably want startDate to be the left-most day.
-        initialPage: dateToIndex(startDate),
-        viewportFraction: 1 / visibleDayCount,
-      ),
-      itemBuilder: (context, index) => dayBuilder(context, indexToDate(index)),
+    return Scrollable(
+      axisDirection: AxisDirection.right,
+      physics: TimetableScrollPhysics(),
+      controller: controller,
+      viewportBuilder: (context, position) {
+        return Viewport(
+          // TODO(JonasWanke): anchor
+          axisDirection: AxisDirection.right,
+          offset: position,
+          slivers: <Widget>[
+            SliverFillViewport(
+              viewportFraction: 1 / controller.visibleDays,
+              delegate: SliverChildBuilderDelegate(
+                (context, index) =>
+                    dayBuilder(context, LocalDate.fromEpochDay(index)),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
-
-  static int dateToIndex(LocalDate date) => date.epochDay + _epochIndex;
-  static LocalDate indexToDate(int index) =>
-      LocalDate.fromEpochDay(index - _epochIndex);
 }

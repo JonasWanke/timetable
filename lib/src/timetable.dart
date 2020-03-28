@@ -1,17 +1,11 @@
 import 'package:flutter/widgets.dart';
 import 'package:time_machine/time_machine.dart';
 
+import 'controller.dart';
 import 'date_hours_widget.dart';
 import 'day_events_widget.dart';
 import 'day_page_view.dart';
 import 'event.dart';
-
-class TimetableController {
-  TimetableController({LocalDate initialDate})
-      : initialDate = initialDate ?? LocalDate.today();
-
-  final LocalDate initialDate;
-}
 
 typedef EventProvider<E extends Event> = List<E> Function(LocalDate date);
 typedef EventBuilder<E extends Event> = Widget Function(E event);
@@ -43,7 +37,7 @@ class _TimetableState<E extends Event> extends State<Timetable<E>> {
         DateHoursWidget(),
         Expanded(
           child: DayPageView(
-            startDate: widget.controller.initialDate,
+            controller: widget.controller,
             dayBuilder: (_, day) => DayEventsWidget<E>(
               date: day,
               events: widget.eventProvider(day),

@@ -44,14 +44,13 @@ class DayEventsWidget<E extends Event> extends StatelessWidget {
       painter: DayBackgroundPainter(dividerColor: context.theme.dividerColor),
       child: CustomMultiChildLayout(
         delegate: _DayEventsLayoutDelegate(this),
-        children: events
-            .map(
-              (e) => LayoutId(
-                id: e.id,
-                child: eventBuilder(e),
-              ),
-            )
-            .toList(),
+        children: [
+          for (final event in events)
+            LayoutId(
+              id: event.id,
+              child: eventBuilder(event),
+            ),
+        ],
       ),
     );
   }

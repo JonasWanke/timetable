@@ -19,5 +19,5 @@ class DayBackgroundPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(DayBackgroundPainter oldDelegate) =>
-      dividerPaint != oldDelegate.dividerPaint;
+      dividerPaint.color != oldDelegate.dividerPaint.color;
 }

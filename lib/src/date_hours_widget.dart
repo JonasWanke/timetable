@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:time_machine/time_machine.dart' hide Offset;
 import 'package:time_machine/time_machine_text_patterns.dart';
 
+import 'timetable.dart';
+
 class DateHoursWidget extends StatelessWidget {
   static final _pattern = LocalTimePattern.createWithCurrentCulture('HH:mm');
 
@@ -28,7 +30,7 @@ class DateHoursWidget extends StatelessWidget {
 class _DateHoursLayoutDelegate extends MultiChildLayoutDelegate {
   @override
   Size getSize(BoxConstraints constraints) =>
-      constraints.constrainDimensions(40, double.infinity);
+      constraints.constrainDimensions(hourColumnWidth, double.infinity);
 
   @override
   void performLayout(Size size) {

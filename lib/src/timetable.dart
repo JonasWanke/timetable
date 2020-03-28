@@ -6,9 +6,12 @@ import 'date_hours_widget.dart';
 import 'day_events_widget.dart';
 import 'day_page_view.dart';
 import 'event.dart';
+import 'header_widget.dart';
 
 typedef EventProvider<E extends Event> = List<E> Function(LocalDate date);
 typedef EventBuilder<E extends Event> = Widget Function(E event);
+
+const hourColumnWidth = 40.0;
 
 class Timetable<E extends Event> extends StatefulWidget {
   Timetable({
@@ -32,17 +35,24 @@ class Timetable<E extends Event> extends StatefulWidget {
 class _TimetableState<E extends Event> extends State<Timetable<E>> {
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return Column(
       children: <Widget>[
-        DateHoursWidget(),
+        HeaderWidget(controller: widget.controller),
         Expanded(
-          child: DayPageView(
-            controller: widget.controller,
-            dayBuilder: (_, day) => DayEventsWidget<E>(
-              date: day,
-              events: widget.eventProvider(day),
-              eventBuilder: widget.eventBuilder,
-            ),
+          child: Row(
+            children: <Widget>[
+              DateHoursWidget(),
+              Expanded(
+                child: DayPageView(
+                  controller: widget.controller,
+                  dayBuilder: (_, day) => DayEventsWidget<E>(
+                    date: day,
+                    events: widget.eventProvider(day),
+                    eventBuilder: widget.eventBuilder,
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ],

@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
-import 'package:linked_scroll_controller/linked_scroll_controller.dart';
 import 'package:time_machine/time_machine.dart';
+
+import 'scrolling.dart';
 
 class TimetableController {
   TimetableController({
@@ -8,13 +9,16 @@ class TimetableController {
     this.visibleDays = 7,
   })  : initialDate = initialDate ?? LocalDate.today(),
         assert(visibleDays != null),
-        assert(visibleDays > 0);
+        assert(visibleDays > 0),
+        scrollControllers = LinkedScrollControllerGroup(
+          initialPage: (initialDate ?? LocalDate.today()).epochDay.toDouble(),
+          viewportFraction: 1 / visibleDays,
+        );
 
   final LocalDate initialDate;
   final int visibleDays;
 
-  final LinkedScrollControllerGroup scrollControllers =
-      LinkedScrollControllerGroup();
+  final LinkedScrollControllerGroup scrollControllers;
 }
 
 // Inspired by [PageScrollPhysics]

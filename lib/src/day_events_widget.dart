@@ -112,7 +112,7 @@ class _DayEventsLayoutDelegate<E extends Event>
     // multiple columns.
     final positions = _EventPositions();
 
-    List<E> currentGroup = [];
+    var currentGroup = <E>[];
     var currentEnd = LocalDateTimeExtension.minIsoValue;
     for (final event in widget.events) {
       if (event.start >= currentEnd) {
@@ -140,7 +140,7 @@ class _DayEventsLayoutDelegate<E extends Event>
       return;
     }
 
-    final List<List<Event>> columns = [];
+    final columns = <List<Event>>[];
     for (final event in currentGroup) {
       var minColumn = -1;
       var minIndex = 1 << 31;

@@ -208,8 +208,8 @@ class _LinkedScrollPosition extends ScrollPositionWithSingleContext {
 
   // Calls hold without propagating to peers.
   void _holdInternal() {
-    // TODO: passing null to hold seems fishy, but it doesn't
-    // appear to hurt anything. Revisit this if bad things happen.
+    // Passing null to hold seems fishy, but it doesn't appear to hurt anything.
+    // Revisit this if bad things happen.
     super.hold(null);
   }
 

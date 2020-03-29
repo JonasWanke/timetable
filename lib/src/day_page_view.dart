@@ -5,7 +5,7 @@ import 'controller.dart';
 
 typedef DayWidgetBuilder = Widget Function(BuildContext context, LocalDate day);
 
-class DayPageView extends StatelessWidget {
+class DayPageView extends StatefulWidget {
   const DayPageView({
     Key key,
     @required this.controller,
@@ -18,11 +18,30 @@ class DayPageView extends StatelessWidget {
   final DayWidgetBuilder dayBuilder;
 
   @override
+  _DayPageViewState createState() => _DayPageViewState();
+}
+
+class _DayPageViewState extends State<DayPageView> {
+  ScrollController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = widget.controller.scrollControllers.addAndGet();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scrollable(
       axisDirection: AxisDirection.right,
-      physics: TimetableScrollPhysics(),
-      controller: controller,
+      physics: TimetableScrollPhysics(widget.controller),
+      controller: _controller,
       viewportBuilder: (context, position) {
         return Viewport(
           // TODO(JonasWanke): anchor
@@ -30,10 +49,10 @@ class DayPageView extends StatelessWidget {
           offset: position,
           slivers: <Widget>[
             SliverFillViewport(
-              viewportFraction: 1 / controller.visibleDays,
+              viewportFraction: 1 / widget.controller.visibleDays,
               delegate: SliverChildBuilderDelegate(
                 (context, index) =>
-                    dayBuilder(context, LocalDate.fromEpochDay(index)),
+                    widget.dayBuilder(context, LocalDate.fromEpochDay(index)),
               ),
             ),
           ],

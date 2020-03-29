@@ -1,9 +1,8 @@
-import 'package:black_hole_flutter/black_hole_flutter.dart';
 import 'package:flutter/widgets.dart';
+import 'package:linked_scroll_controller/linked_scroll_controller.dart';
 import 'package:time_machine/time_machine.dart';
-import 'package:time_machine/time_machine_text_patterns.dart';
 
-class TimetableController extends ScrollController {
+class TimetableController {
   TimetableController({
     LocalDate initialDate,
     this.visibleDays = 7,
@@ -14,135 +13,35 @@ class TimetableController extends ScrollController {
   final LocalDate initialDate;
   final int visibleDays;
 
-  @override
-  ScrollPosition createScrollPosition(ScrollPhysics physics,
-      ScrollContext context, ScrollPosition oldPosition) {
-    return _TimetablePosition(
-      initialDate: initialDate,
-      visibleDays: visibleDays,
-      physics: physics,
-      context: context,
-      oldPosition: oldPosition,
-    );
-  }
-
-  @override
-  void attach(ScrollPosition position) {
-    super.attach(position);
-    (position as _TimetablePosition).visibleDays = visibleDays;
-  }
-}
-
-// Inspired by Flutter's [_PagePosition].
-class _TimetablePosition extends ScrollPositionWithSingleContext {
-  _TimetablePosition({
-    @required this.initialDate,
-    @required int visibleDays,
-    ScrollPhysics physics,
-    ScrollContext context,
-    bool keepPage = true,
-    ScrollPosition oldPosition,
-  })  : assert(initialDate != null),
-        _dateToUseOnStartup = _DatePosition(initialDate),
-        assert(visibleDays != null),
-        assert(visibleDays > 0),
-        _visibleDays = visibleDays,
-        assert(keepPage != null),
-        super(
-          physics: physics,
-          context: context,
-          initialPixels: null,
-          keepScrollOffset: keepPage,
-          oldPosition: oldPosition,
-        );
-
-  final LocalDate initialDate;
-  _DatePosition _dateToUseOnStartup;
-
-  int _visibleDays;
-  int get visibleDays => _visibleDays;
-  set visibleDays(int value) {
-    if (visibleDays == value) {
-      return;
-    }
-    final oldPosition = datePosition;
-    _visibleDays = value;
-    if (oldPosition != null) {
-      forcePixels(getPixelsFromDate(oldPosition));
-    }
-  }
-
-  _DatePosition get datePosition => getDateFromPixels(pixels);
-
-  @override
-  void saveScrollOffset() {
-    context.storageContext.pageStorage
-        ?.writeState(context.storageContext, getDateFromPixels(pixels));
-  }
-
-  @override
-  void restoreScrollOffset() {
-    if (pixels != null) {
-      return;
-    }
-
-    final _DatePosition value =
-        context.storageContext.pageStorage?.readState(context.storageContext);
-    if (value != null) {
-      _dateToUseOnStartup = value;
-    }
-  }
-
-  @override
-  bool applyViewportDimension(double viewportDimension) {
-    final oldViewportDimension = viewportDimension;
-    final result = super.applyViewportDimension(viewportDimension);
-    final date = (pixels == null || oldViewportDimension == 0)
-        ? _dateToUseOnStartup
-        : getDateFromPixels(pixels, oldViewportDimension);
-    final newPixels = getPixelsFromDate(date);
-
-    if (newPixels != pixels) {
-      correctPixels(newPixels);
-      return false;
-    }
-    return result;
-  }
-
-  _DatePosition getDateFromPixels(double pixels, [double viewportDimension]) {
-    final position =
-        pixels * visibleDays / (viewportDimension ?? this.viewportDimension);
-    final rounded = position.round();
-    final epochDay = rounded <= position ? rounded : rounded - 1;
-
-    return _DatePosition.forEpochDay(epochDay, position - epochDay);
-  }
-
-  double getPixelsFromPage(double page) =>
-      page * viewportDimension / visibleDays;
-  double getPixelsFromDate(_DatePosition datePosition) =>
-      getPixelsFromPage(datePosition.page);
+  final LinkedScrollControllerGroup scrollControllers =
+      LinkedScrollControllerGroup();
 }
 
 // Inspired by [PageScrollPhysics]
 class TimetableScrollPhysics extends ScrollPhysics {
-  const TimetableScrollPhysics({ScrollPhysics parent}) : super(parent: parent);
+  const TimetableScrollPhysics(this.controller, {ScrollPhysics parent})
+      : assert(controller != null),
+        super(parent: parent);
+
+  final TimetableController controller;
 
   @override
   TimetableScrollPhysics applyTo(ScrollPhysics ancestor) {
-    return TimetableScrollPhysics(parent: buildParent(ancestor));
+    return TimetableScrollPhysics(controller, parent: buildParent(ancestor));
   }
 
   double _getTargetPixels(
       ScrollPosition position, Tolerance tolerance, double velocity) {
-    final timetablePosition = position as _TimetablePosition;
-    double page = timetablePosition.datePosition.page;
+    var page =
+        position.pixels * controller.visibleDays / position.viewportDimension;
     if (velocity < -tolerance.velocity) {
       page -= 0.5;
     } else if (velocity > tolerance.velocity) {
       page += 0.5;
     }
-    return timetablePosition.getPixelsFromPage(page.roundToDouble());
+    return page.roundToDouble() *
+        position.viewportDimension /
+        controller.visibleDays;
   }
 
   @override
@@ -154,8 +53,8 @@ class TimetableScrollPhysics extends ScrollPhysics {
         (velocity >= 0.0 && position.pixels >= position.maxScrollExtent)) {
       return super.createBallisticSimulation(position, velocity);
     }
-    final Tolerance tolerance = this.tolerance;
-    final double target = _getTargetPixels(position, tolerance, velocity);
+    final tolerance = this.tolerance;
+    final target = _getTargetPixels(position, tolerance, velocity);
     if (target != position.pixels) {
       return ScrollSpringSimulation(
         spring,
@@ -170,23 +69,4 @@ class TimetableScrollPhysics extends ScrollPhysics {
 
   @override
   bool get allowImplicitScrolling => false;
-}
-
-class _DatePosition {
-  const _DatePosition(this.date, [this.offset = 0])
-      : assert(date != null),
-        assert(offset != null),
-        assert(0 <= offset && offset < 1);
-  _DatePosition.forEpochDay(int epochDay, [double offset = 0])
-      : this(LocalDate.fromEpochDay(epochDay), offset);
-
-  static final _datePattern = LocalDatePattern.iso;
-
-  final LocalDate date;
-  final double offset;
-
-  double get page => date.epochDay + offset;
-
-  @override
-  String toString() => '${_datePattern.format(date)} $offset';
 }

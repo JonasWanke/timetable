@@ -1,18 +1,16 @@
 import 'dart:math';
 import 'dart:ui';
 
-import 'package:black_hole_flutter/black_hole_flutter.dart';
 import 'package:dartx/dartx.dart';
 import 'package:flutter/widgets.dart';
 import 'package:time_machine/time_machine.dart' hide Offset;
 
-import 'day_background_painter.dart';
-import 'event.dart';
-import 'timetable.dart';
-import 'utils.dart';
+import '../event.dart';
+import '../timetable.dart';
+import '../utils.dart';
 
-class DayEventsWidget<E extends Event> extends StatelessWidget {
-  DayEventsWidget({
+class DateEvents<E extends Event> extends StatelessWidget {
+  DateEvents({
     Key key,
     @required this.date,
     @required List<E> events,
@@ -40,18 +38,15 @@ class DayEventsWidget<E extends Event> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomPaint(
-      painter: DayBackgroundPainter(dividerColor: context.theme.dividerColor),
-      child: CustomMultiChildLayout(
-        delegate: _DayEventsLayoutDelegate(this),
-        children: [
-          for (final event in events)
-            LayoutId(
-              id: event.id,
-              child: eventBuilder(event),
-            ),
-        ],
-      ),
+    return CustomMultiChildLayout(
+      delegate: _DayEventsLayoutDelegate(this),
+      children: [
+        for (final event in events)
+          LayoutId(
+            id: event.id,
+            child: eventBuilder(event),
+          ),
+      ],
     );
   }
 }
@@ -60,7 +55,7 @@ class _DayEventsLayoutDelegate<E extends Event>
     extends MultiChildLayoutDelegate {
   _DayEventsLayoutDelegate(this.widget) : assert(widget != null);
 
-  final DayEventsWidget<E> widget;
+  final DateEvents<E> widget;
 
   @override
   void performLayout(Size size) {
@@ -86,7 +81,7 @@ class _DayEventsLayoutDelegate<E extends Event>
 
       final top = min(
         timeToY(event.start),
-        size.height - periodToY(DayEventsWidget.minEventLength),
+        size.height - periodToY(DateEvents.minEventLength),
       );
       final height =
           periodToY(event.actualDuration).clamp(0, size.height - top);
@@ -94,9 +89,9 @@ class _DayEventsLayoutDelegate<E extends Event>
       final columnWidth =
           size.width / positions.groupColumnCounts[position.group];
       final columnLeft =
-          columnWidth * position.column + DayEventsWidget.eventSpacing;
-      final left = columnLeft + position.index * DayEventsWidget.eventSpacing;
-      final width = columnWidth - DayEventsWidget.eventSpacing;
+          columnWidth * position.column + DateEvents.eventSpacing;
+      final left = columnLeft + position.index * DateEvents.eventSpacing;
+      final width = columnWidth - DateEvents.eventSpacing;
 
       final childSize = Size(width, height);
       layoutChild(event.id, BoxConstraints.tight(childSize));
@@ -151,7 +146,7 @@ class _DayEventsLayoutDelegate<E extends Event>
         final other = column.last;
 
         // No space in current column
-        if (event.start <= other.start + DayEventsWidget.minStackOverlap) {
+        if (event.start <= other.start + DateEvents.minStackOverlap) {
           continue;
         }
 
@@ -212,7 +207,7 @@ class _SingleEventPosition {
 
 extension _TimeCalculation on Event {
   LocalDateTime get actualEnd =>
-      LocalDateTime.max(end, start + DayEventsWidget.minEventLength);
+      LocalDateTime.max(end, start + DateEvents.minEventLength);
 
   Period get actualDuration => start.periodUntil(actualEnd);
 }

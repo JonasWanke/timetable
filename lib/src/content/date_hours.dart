@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:time_machine/time_machine.dart' hide Offset;
 import 'package:time_machine/time_machine_text_patterns.dart';
 
-import 'timetable.dart';
+import '../timetable.dart';
 
-class DateHoursWidget extends StatelessWidget {
+class DateHours extends StatelessWidget {
   static final _pattern = LocalTimePattern.createWithCurrentCulture('HH:mm');
 
   @override

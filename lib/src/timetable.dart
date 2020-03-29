@@ -1,19 +1,18 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:time_machine/time_machine.dart';
+import 'package:timetable/src/content/timetable_content.dart';
 
 import 'controller.dart';
-import 'date_hours_widget.dart';
-import 'day_events_widget.dart';
-import 'day_page_view.dart';
 import 'event.dart';
-import 'header_widget.dart';
+import 'header/timetable_header.dart';
 
 typedef EventProvider<E extends Event> = List<E> Function(LocalDate date);
 typedef EventBuilder<E extends Event> = Widget Function(E event);
 
 const hourColumnWidth = 40.0;
 
-class Timetable<E extends Event> extends StatefulWidget {
+class Timetable<E extends Event> extends StatelessWidget {
   Timetable({
     Key key,
     TimetableController controller,
@@ -29,30 +28,15 @@ class Timetable<E extends Event> extends StatefulWidget {
   final EventBuilder<E> eventBuilder;
 
   @override
-  _TimetableState<E> createState() => _TimetableState<E>();
-}
-
-class _TimetableState<E extends Event> extends State<Timetable<E>> {
-  @override
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        HeaderWidget(controller: widget.controller),
+        TimetableHeader(controller: controller),
         Expanded(
-          child: Row(
-            children: <Widget>[
-              DateHoursWidget(),
-              Expanded(
-                child: DayPageView(
-                  controller: widget.controller,
-                  dayBuilder: (_, day) => DayEventsWidget<E>(
-                    date: day,
-                    events: widget.eventProvider(day),
-                    eventBuilder: widget.eventBuilder,
-                  ),
-                ),
-              ),
-            ],
+          child: TimetableContent(
+            controller: controller,
+            eventProvider: eventProvider,
+            eventBuilder: eventBuilder,
           ),
         ),
       ],

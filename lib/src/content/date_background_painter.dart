@@ -1,8 +1,8 @@
 import 'package:flutter/widgets.dart';
 import 'package:time_machine/time_machine.dart' hide Offset;
 
-class DayBackgroundPainter extends CustomPainter {
-  DayBackgroundPainter({@required Color dividerColor})
+class DateBackgroundPainter extends CustomPainter {
+  DateBackgroundPainter({@required Color dividerColor})
       : assert(dividerColor != null),
         dividerPaint = Paint()..color = dividerColor;
 
@@ -18,6 +18,6 @@ class DayBackgroundPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(DayBackgroundPainter oldDelegate) =>
+  bool shouldRepaint(DateBackgroundPainter oldDelegate) =>
       dividerPaint.color != oldDelegate.dividerPaint.color;
 }

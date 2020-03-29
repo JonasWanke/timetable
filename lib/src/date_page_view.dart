@@ -3,25 +3,26 @@ import 'package:time_machine/time_machine.dart';
 
 import 'controller.dart';
 
-typedef DayWidgetBuilder = Widget Function(BuildContext context, LocalDate day);
+typedef DateWidgetBuilder = Widget Function(
+    BuildContext context, LocalDate date);
 
-class DayPageView extends StatefulWidget {
-  const DayPageView({
+class DatePageView extends StatefulWidget {
+  const DatePageView({
     Key key,
     @required this.controller,
-    @required this.dayBuilder,
+    @required this.builder,
   })  : assert(controller != null),
-        assert(dayBuilder != null),
+        assert(builder != null),
         super(key: key);
 
   final TimetableController controller;
-  final DayWidgetBuilder dayBuilder;
+  final DateWidgetBuilder builder;
 
   @override
-  _DayPageViewState createState() => _DayPageViewState();
+  _DatePageViewState createState() => _DatePageViewState();
 }
 
-class _DayPageViewState extends State<DayPageView> {
+class _DatePageViewState extends State<DatePageView> {
   ScrollController _controller;
 
   @override
@@ -52,7 +53,7 @@ class _DayPageViewState extends State<DayPageView> {
               viewportFraction: 1 / widget.controller.visibleDays,
               delegate: SliverChildBuilderDelegate(
                 (context, index) =>
-                    widget.dayBuilder(context, LocalDate.fromEpochDay(index)),
+                    widget.builder(context, LocalDate.fromEpochDay(index)),
               ),
             ),
           ],

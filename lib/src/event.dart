@@ -14,3 +14,9 @@ abstract class Event {
   final LocalDateTime start;
   final LocalDateTime end;
 }
+
+extension TimetableEvent on Event {
+  bool intersectsDate(LocalDate date) =>
+      start <= date.at(LocalTime.maxValue) &&
+      end >= date.at(LocalTime.minValue);
+}

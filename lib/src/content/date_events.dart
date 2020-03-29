@@ -17,10 +17,7 @@ class DateEvents<E extends Event> extends StatelessWidget {
     @required this.eventBuilder,
   })  : assert(date != null),
         assert(events != null),
-        assert(
-            events.every((e) =>
-                e.start <= date.at(LocalTime.maxValue) &&
-                e.end >= date.at(LocalTime.minValue)),
+        assert(events.every((e) => e.intersectsDate(date)),
             'All events must intersect the given date'),
         assert(events.map((e) => e.id).toSet().length == events.length,
             'Events may not contain duplicate IDs'),
@@ -91,7 +88,7 @@ class _DayEventsLayoutDelegate<E extends Event>
       final columnLeft =
           columnWidth * position.column + DateEvents.eventSpacing;
       final left = columnLeft + position.index * DateEvents.eventSpacing;
-      final width = columnWidth - DateEvents.eventSpacing;
+      final width = columnWidth - position.index * DateEvents.eventSpacing;
 
       final childSize = Size(width, height);
       layoutChild(event.id, BoxConstraints.tight(childSize));
@@ -146,7 +143,7 @@ class _DayEventsLayoutDelegate<E extends Event>
         final other = column.last;
 
         // No space in current column
-        if (event.start <= other.start + DateEvents.minStackOverlap) {
+        if (event.start < other.start + DateEvents.minStackOverlap) {
           continue;
         }
 

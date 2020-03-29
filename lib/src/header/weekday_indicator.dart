@@ -3,13 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:time_machine/time_machine.dart';
 import 'package:time_machine/time_machine_text_patterns.dart';
 
+import '../utils.dart';
+
 class WeekdayIndicator extends StatelessWidget {
   const WeekdayIndicator(this.date, {Key key}) : super(key: key);
 
   static final _pattern = LocalDatePattern.createWithCurrentCulture('ddd');
 
   final LocalDate date;
-  bool get isToday => date == LocalDate.today();
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +19,8 @@ class WeekdayIndicator extends StatelessWidget {
     return Text(
       _pattern.format(date),
       style: TextStyle(
-        color: isToday ? theme.primaryColor : theme.highEmphasisOnBackground,
+        color:
+            date.isToday ? theme.primaryColor : theme.highEmphasisOnBackground,
       ),
     );
   }

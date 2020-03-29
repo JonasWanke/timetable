@@ -108,12 +108,12 @@ class _DayEventsLayoutDelegate<E extends Event>
     final positions = _EventPositions();
 
     var currentGroup = <E>[];
-    var currentEnd = LocalDateTimeExtension.minIsoValue;
+    var currentEnd = TimetableLocalDateTime.minIsoValue;
     for (final event in widget.events) {
       if (event.start >= currentEnd) {
         _endGroup(positions, currentGroup);
         currentGroup = [];
-        currentEnd = LocalDateTimeExtension.minIsoValue;
+        currentEnd = TimetableLocalDateTime.minIsoValue;
       }
 
       currentGroup.add(event);
@@ -139,7 +139,7 @@ class _DayEventsLayoutDelegate<E extends Event>
     for (final event in currentGroup) {
       var minColumn = -1;
       var minIndex = 1 << 31;
-      var minEnd = LocalDateTimeExtension.minIsoValue;
+      var minEnd = TimetableLocalDateTime.minIsoValue;
       var columnFound = false;
       for (var columnIndex = 0; columnIndex < columns.length; columnIndex++) {
         final column = columns[columnIndex];
@@ -153,10 +153,10 @@ class _DayEventsLayoutDelegate<E extends Event>
         final index = column
                 .where((e) => e.actualEnd >= event.start)
                 .map((e) => positions.eventPositions[e].index)
-                .max ??
+                .max() ??
             -1;
         final previousEnd = column.fold(
-          LocalDateTimeExtension.maxIsoValue,
+          TimetableLocalDateTime.maxIsoValue,
           (max, e) => LocalDateTime.max(max, e.end),
         );
         // Further at the top and hence wider

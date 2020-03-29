@@ -84,7 +84,8 @@ class _DayEventsLayoutDelegate<E extends Event>
           periodToY(event.actualDuration).clamp(0, size.height - top);
 
       final columnWidth =
-          size.width / positions.groupColumnCounts[position.group];
+          size.width / positions.groupColumnCounts[position.group] -
+              DateEvents.eventSpacing;
       final columnLeft =
           columnWidth * position.column + DateEvents.eventSpacing;
       final left = columnLeft + position.index * DateEvents.eventSpacing;

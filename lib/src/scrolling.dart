@@ -6,6 +6,7 @@
 // license that can be found in the LICENSE file or at
 // https://developers.google.com/open-source/licenses/bsd
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
@@ -38,12 +39,16 @@ class LinkedScrollControllerGroup {
 
   /// The current page of the group.
   double get page => _pageNotifier.value;
+  ValueListenable<double> get pageListenable => _pageNotifier;
 
   /// Creates a new controller that is linked to any existing ones.
   ScrollController addAndGet() {
     final controller = _LinkedScrollController(this);
     _allControllers.add(controller);
-    controller.addListener(() => _pageNotifier.value = controller.offset);
+    controller.addListener(() {
+      _pageNotifier.value = controller.offset /
+          (controller.position.viewportDimension * viewportFraction);
+    });
     return controller;
   }
 

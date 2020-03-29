@@ -1,5 +1,6 @@
-import 'package:flutter/material.dart';
+import 'package:black_hole_flutter/black_hole_flutter.dart';
 import 'package:flutter/widgets.dart';
+import 'package:timetable/src/content/multi_date_background_painter.dart';
 
 import '../controller.dart';
 import '../date_page_view.dart';
@@ -24,12 +25,18 @@ class MultiDateContent<E extends Event> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DatePageView(
-      controller: controller,
-      builder: (_, date) => DateEvents<E>(
-        date: date,
-        events: eventProvider(date),
-        eventBuilder: eventBuilder,
+    return CustomPaint(
+      painter: MultiDateBackgroundPainter(
+        controller: controller,
+        dividerColor: context.theme.dividerColor,
+      ),
+      child: DatePageView(
+        controller: controller,
+        builder: (_, date) => DateEvents<E>(
+          date: date,
+          events: eventProvider(date),
+          eventBuilder: eventBuilder,
+        ),
       ),
     );
   }

@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:time_machine/time_machine.dart' hide Offset;
 
 import '../controller.dart';
+import '../utils.dart';
 
 class MultiDateBackgroundPainter extends CustomPainter {
   MultiDateBackgroundPainter({
@@ -22,6 +23,8 @@ class MultiDateBackgroundPainter extends CustomPainter {
   }
 
   void _drawDateDividers(Canvas canvas, Size size) {
+    canvas.drawLine(Offset(0, 0), Offset(0, size.height), dividerPaint);
+
     final initialOffset = 1 - controller.scrollControllers.page % 1;
     final dateCount = controller.visibleDays;
     final widthPerDate = size.width / dateCount;
@@ -33,9 +36,9 @@ class MultiDateBackgroundPainter extends CustomPainter {
 
   void _drawHourDividers(Canvas canvas, Size size) {
     final heightPerHour = size.height / TimeConstants.hoursPerDay;
-    for (var i = 1; i < TimeConstants.hoursPerDay; i++) {
-      final y = i * heightPerHour;
-      canvas.drawLine(Offset(0, y), Offset(size.width, y), dividerPaint);
+    for (final h in innerDateHours) {
+      final y = h * heightPerHour;
+      canvas.drawLine(Offset(-8, y), Offset(size.width, y), dividerPaint);
     }
   }
 

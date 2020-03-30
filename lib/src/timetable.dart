@@ -10,7 +10,7 @@ import 'header/timetable_header.dart';
 typedef EventProvider<E extends Event> = List<E> Function(LocalDate date);
 typedef EventBuilder<E extends Event> = Widget Function(E event);
 
-const hourColumnWidth = 40.0;
+const double hourColumnWidth = 48;
 
 class Timetable<E extends Event> extends StatelessWidget {
   Timetable({

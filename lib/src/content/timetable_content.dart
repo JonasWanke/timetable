@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import '../controller.dart';
 import '../event.dart';
 import '../timetable.dart';
+import '../utils/vertical_zoom.dart';
 import 'date_hours.dart';
 import 'multi_date_content.dart';
 
@@ -24,17 +25,19 @@ class TimetableContent<E extends Event> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: <Widget>[
-        DateHours(),
-        Expanded(
-          child: MultiDateContent(
-            controller: controller,
-            eventProvider: eventProvider,
-            eventBuilder: eventBuilder,
+    return VerticalZoom(
+      child: Row(
+        children: <Widget>[
+          DateHours(),
+          Expanded(
+            child: MultiDateContent<E>(
+              controller: controller,
+              eventProvider: eventProvider,
+              eventBuilder: eventBuilder,
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

@@ -29,7 +29,16 @@ class _TimetableExampleState extends State<TimetableExample> {
       title: 'Timetable example',
       darkTheme: ThemeData.dark(),
       home: Scaffold(
-        appBar: AppBar(title: Text('Timetable example')),
+        appBar: AppBar(
+          title: Text('Timetable example'),
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(Icons.today),
+              onPressed: () => _controller.animateToToday(),
+              tooltip: 'Jump to today',
+            ),
+          ],
+        ),
         body: Timetable<BasicEvent>(
           controller: _controller,
           eventProvider: (date) {

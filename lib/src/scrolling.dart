@@ -46,8 +46,7 @@ class LinkedScrollControllerGroup {
     final controller = _LinkedScrollController(this);
     _allControllers.add(controller);
     controller.addListener(() {
-      _pageNotifier.value = controller.offset /
-          (controller.position.viewportDimension * viewportFraction);
+      _pageNotifier.value = controller.page;
     });
     return controller;
   }
@@ -73,8 +72,11 @@ class LinkedScrollControllerGroup {
   }) async {
     final animations = <Future<void>>[];
     for (final controller in _attachedControllers) {
-      animations
-          .add(controller.animateTo(page, duration: duration, curve: curve));
+      animations.add(controller.animateToPage(
+        page,
+        duration: duration,
+        curve: curve,
+      ));
     }
     return Future.wait<void>(animations).then<void>((_) => null);
   }
@@ -82,13 +84,8 @@ class LinkedScrollControllerGroup {
   /// Jumps the scroll position of all linked controllers to [value].
   void jumpTo(double value) {
     for (final controller in _attachedControllers) {
-      controller.jumpTo(value);
+      controller.jumpToPage(value);
     }
-  }
-
-  /// Resets the scroll position of all linked controllers to 0.
-  void resetScroll() {
-    jumpTo(0);
   }
 }
 
@@ -99,6 +96,9 @@ class _LinkedScrollController extends ScrollController {
       : super(initialScrollOffset: _controllers.page);
 
   final LinkedScrollControllerGroup _controllers;
+
+  double get page =>
+      offset / (position.viewportDimension * _controllers.viewportFraction);
 
   @override
   void dispose() {
@@ -154,6 +154,17 @@ class _LinkedScrollController extends ScrollController {
     }
     return activities;
   }
+
+  Future<void> animateToPage(
+    double page, {
+    @required Curve curve,
+    @required Duration duration,
+  }) async =>
+      animateTo(_pageToOffset(page), curve: curve, duration: duration);
+  Future<void> jumpToPage(double page) async => jumpTo(_pageToOffset(page));
+
+  double _pageToOffset(double page) =>
+      page * position.viewportDimension * _controllers.viewportFraction;
 }
 
 // Implementation details: Whenever position.setPixels or position.forcePixels

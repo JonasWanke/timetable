@@ -19,6 +19,23 @@ class TimetableController {
   final int visibleDays;
 
   final LinkedScrollControllerGroup scrollControllers;
+
+  Future<void> animateToToday({
+    Curve curve = Curves.easeInOut,
+    Duration duration = const Duration(milliseconds: 200),
+  }) =>
+      animateTo(LocalDate.today(), curve: curve, duration: duration);
+  Future<void> animateTo(
+    LocalDate date, {
+    Curve curve = Curves.easeInOut,
+    Duration duration = const Duration(milliseconds: 200),
+  }) async {
+    await scrollControllers.animateTo(
+      date.epochDay.toDouble(),
+      curve: curve,
+      duration: duration,
+    );
+  }
 }
 
 // Inspired by [PageScrollPhysics]

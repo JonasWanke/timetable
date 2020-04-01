@@ -2,37 +2,39 @@
 import 'package:flutter/widgets.dart';
 import 'package:time_machine/time_machine.dart';
 
+import 'controller.dart';
 import 'visible_range.dart';
 
 class TimetableScrollPhysics extends ScrollPhysics {
-  const TimetableScrollPhysics(this.visibleRange, {ScrollPhysics parent})
-      : assert(visibleRange != null),
+  const TimetableScrollPhysics(this.controller, {ScrollPhysics parent})
+      : assert(controller != null),
         super(parent: parent);
 
-  final VisibleRange visibleRange;
+  final TimetableController controller;
 
   static double getTargetPageForDate(
     LocalDate date,
-    VisibleRange visibleRange,
+    TimetableController controller,
   ) {
     assert(date != null);
-    assert(visibleRange != null);
-    return getTargetPage(date.epochDay.toDouble(), visibleRange);
+    assert(controller != null);
+    return getTargetPage(date.epochDay.toDouble(), controller);
   }
 
   static double getTargetPage(
     double page,
-    VisibleRange visibleRange, {
+    TimetableController controller, {
     double velocityAddition = 0,
   }) {
     assert(page != null);
-    assert(visibleRange != null);
+    assert(controller != null);
     assert(velocityAddition != null);
 
+    final visibleRange = controller.visibleRange;
     if (visibleRange is DaysVisibleRange) {
       return (page + velocityAddition).roundToDouble();
     } else if (visibleRange is WeekVisibleRange) {
-      final epochWeekDayOffset = visibleRange.firstDayOfWeek.value -
+      final epochWeekDayOffset = controller.firstDayOfWeek.value -
           LocalDate.fromEpochDay(0).dayOfWeek.value;
       final currentWeek =
           (page - epochWeekDayOffset) / TimeConstants.daysPerWeek;
@@ -47,23 +49,23 @@ class TimetableScrollPhysics extends ScrollPhysics {
 
   @override
   TimetableScrollPhysics applyTo(ScrollPhysics ancestor) {
-    return TimetableScrollPhysics(visibleRange, parent: buildParent(ancestor));
+    return TimetableScrollPhysics(controller, parent: buildParent(ancestor));
   }
 
   double _getTargetPixels(
       ScrollPosition position, Tolerance tolerance, double velocity) {
-    final visibleRange = this.visibleRange;
-    final velocityAddition =
-        velocity.abs() > tolerance.velocity ? 0.5 * velocity.sign : 0.0;
-    final currentPage =
-        position.pixels * visibleRange.visibleDays / position.viewportDimension;
+    final pixelsToPage =
+        controller.visibleRange.visibleDays / position.viewportDimension;
+
+    final currentPage = position.pixels * pixelsToPage;
 
     final targetPage = getTargetPage(
       currentPage,
-      visibleRange,
-      velocityAddition: velocityAddition,
+      controller,
+      velocityAddition:
+          velocity.abs() > tolerance.velocity ? 0.5 * velocity.sign : 0.0,
     );
-    return targetPage * position.viewportDimension / visibleRange.visibleDays;
+    return targetPage / pixelsToPage;
   }
 
   @override

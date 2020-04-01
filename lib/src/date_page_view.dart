@@ -3,6 +3,7 @@ import 'package:time_machine/time_machine.dart';
 
 import 'controller.dart';
 import 'event.dart';
+import 'scroll_physics.dart';
 
 typedef DateWidgetBuilder = Widget Function(
     BuildContext context, LocalDate date);
@@ -44,7 +45,7 @@ class _DatePageViewState extends State<DatePageView> {
 
     return Scrollable(
       axisDirection: AxisDirection.right,
-      physics: TimetableScrollPhysics(widget.controller.visibleRange),
+      physics: TimetableScrollPhysics(widget.controller),
       controller: _controller,
       viewportBuilder: (context, position) {
         return Viewport(

@@ -50,13 +50,17 @@ class _MultiDateContentState<E extends Event>
       ),
       child: DatePageView(
         controller: widget.controller,
-        builder: (_, date) => DateEvents<E>(
-          date: date,
-          events: widget.controller.eventProvider
-              .getPartDayEventsIntersecting(date)
-              .toList(),
-          eventBuilder: widget.eventBuilder,
-        ),
+        builder: (_, date) {
+          return ValueListenableBuilder<Iterable<E>>(
+            valueListenable: widget.controller.eventProvider
+                .getPartDayEventsIntersecting(date),
+            builder: (context, events, _) => DateEvents<E>(
+              date: date,
+              events: events,
+              eventBuilder: widget.eventBuilder,
+            ),
+          );
+        },
       ),
     );
   }

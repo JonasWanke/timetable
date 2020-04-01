@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:meta/meta.dart';
 import 'package:time_machine/time_machine.dart';
 
@@ -15,6 +17,17 @@ abstract class Event {
   final LocalDateTime end;
   bool get isAllDay => start.periodUntil(end).normalize().days >= 1;
   bool get isPartDay => !isAllDay;
+
+  @override
+  bool operator ==(dynamic other) {
+    return runtimeType == other.runtimeType &&
+        id == other.id &&
+        start == other.start &&
+        end == other.end;
+  }
+
+  @override
+  int get hashCode => hashList([runtimeType, id, start, end]);
 }
 
 extension TimetableEvent on Event {

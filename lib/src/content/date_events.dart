@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'dart:ui';
 
+import 'package:collection/collection.dart';
 import 'package:dartx/dartx.dart';
 import 'package:flutter/widgets.dart';
 import 'package:time_machine/time_machine.dart' hide Offset;
@@ -13,15 +14,19 @@ class DateEvents<E extends Event> extends StatelessWidget {
   DateEvents({
     Key key,
     @required this.date,
-    @required List<E> events,
+    @required Iterable<E> events,
     @required this.eventBuilder,
   })  : assert(date != null),
         assert(events != null),
-        assert(events.every((e) => e.intersectsDate(date)),
-            'All events must intersect the given date'),
-        assert(events.map((e) => e.id).toSet().length == events.length,
-            'Events may not contain duplicate IDs'),
-        events = events.sortedBy((e) => e.start).thenBy((e) => e.end),
+        assert(
+          events.every((e) => e.intersectsDate(date)),
+          'All events must intersect the given date',
+        ),
+        assert(
+          events.map((e) => e.id).toSet().length == events.length,
+          'Events may not contain duplicate IDs',
+        ),
+        events = events.sortedBy((e) => e.start).thenByDescending((e) => e.end),
         assert(eventBuilder != null),
         super(key: key);
 
@@ -36,10 +41,11 @@ class DateEvents<E extends Event> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomMultiChildLayout(
-      delegate: _DayEventsLayoutDelegate(this),
+      delegate: _DayEventsLayoutDelegate(date, events),
       children: [
         for (final event in events)
           LayoutId(
+            key: ValueKey(event.id),
             id: event.id,
             child: eventBuilder(event),
           ),
@@ -50,18 +56,21 @@ class DateEvents<E extends Event> extends StatelessWidget {
 
 class _DayEventsLayoutDelegate<E extends Event>
     extends MultiChildLayoutDelegate {
-  _DayEventsLayoutDelegate(this.widget) : assert(widget != null);
+  _DayEventsLayoutDelegate(this.date, this.events)
+      : assert(date != null),
+        assert(events != null);
 
-  final DateEvents<E> widget;
+  final LocalDate date;
+  final List<E> events;
 
   @override
   void performLayout(Size size) {
     final positions = _calculatePositions();
 
     double timeToY(LocalDateTime dateTime) {
-      if (dateTime.calendarDate < widget.date) {
+      if (dateTime.calendarDate < date) {
         return 0;
-      } else if (dateTime.calendarDate > widget.date) {
+      } else if (dateTime.calendarDate > date) {
         return size.height;
       } else {
         final progress = dateTime.clockTime.timeSinceMidnight.inMilliseconds /
@@ -71,9 +80,9 @@ class _DayEventsLayoutDelegate<E extends Event>
     }
 
     double periodToY(Period period) =>
-        timeToY(widget.date.at(LocalTime.midnight) + period);
+        timeToY(date.at(LocalTime.midnight) + period);
 
-    for (final event in widget.events) {
+    for (final event in events) {
       final position = positions.eventPositions[event];
 
       final top = min(
@@ -107,7 +116,7 @@ class _DayEventsLayoutDelegate<E extends Event>
 
     var currentGroup = <E>[];
     var currentEnd = TimetableLocalDateTime.minIsoValue;
-    for (final event in widget.events) {
+    for (final event in events) {
       if (event.start >= currentEnd) {
         _endGroup(positions, currentGroup);
         currentGroup = [];
@@ -122,7 +131,7 @@ class _DayEventsLayoutDelegate<E extends Event>
     return positions;
   }
 
-  void _endGroup(_EventPositions positions, List<Event> currentGroup) {
+  void _endGroup(_EventPositions positions, List<E> currentGroup) {
     if (currentGroup.isEmpty) {
       return;
     }
@@ -133,7 +142,7 @@ class _DayEventsLayoutDelegate<E extends Event>
       return;
     }
 
-    final columns = <List<Event>>[];
+    final columns = <List<E>>[];
     for (final event in currentGroup) {
       var minColumn = -1;
       var minIndex = 1 << 31;
@@ -182,8 +191,9 @@ class _DayEventsLayoutDelegate<E extends Event>
   }
 
   @override
-  bool shouldRelayout(MultiChildLayoutDelegate oldDelegate) {
-    return true;
+  bool shouldRelayout(_DayEventsLayoutDelegate<E> oldDelegate) {
+    return date != oldDelegate.date ||
+        !DeepCollectionEquality().equals(events, oldDelegate.events);
   }
 }
 

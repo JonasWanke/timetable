@@ -53,4 +53,8 @@ class TimetableController<E extends Event> {
       duration: duration,
     );
   }
+
+  void dispose() {
+    eventProvider.dispose();
+  }
 }

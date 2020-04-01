@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:time_machine/time_machine.dart';
 
 import 'controller.dart';
+import 'event.dart';
 
 typedef DateWidgetBuilder = Widget Function(
     BuildContext context, LocalDate date);
 
-class DatePageView extends StatefulWidget {
+class DatePageView<E extends Event> extends StatefulWidget {
   const DatePageView({
     Key key,
     @required this.controller,
@@ -15,7 +16,7 @@ class DatePageView extends StatefulWidget {
         assert(builder != null),
         super(key: key);
 
-  final TimetableController controller;
+  final TimetableController<E> controller;
   final DateWidgetBuilder builder;
 
   @override
@@ -43,7 +44,7 @@ class _DatePageViewState extends State<DatePageView> {
 
     return Scrollable(
       axisDirection: AxisDirection.right,
-      physics: TimetableScrollPhysics(widget.controller),
+      physics: TimetableScrollPhysics(widget.controller.visibleRange),
       controller: _controller,
       viewportBuilder: (context, position) {
         return Viewport(

@@ -2,9 +2,10 @@ import 'package:flutter/widgets.dart';
 import 'package:time_machine/time_machine.dart' hide Offset;
 
 import '../controller.dart';
+import '../event.dart';
 import '../utils.dart';
 
-class MultiDateBackgroundPainter extends CustomPainter {
+class MultiDateBackgroundPainter<E extends Event> extends CustomPainter {
   MultiDateBackgroundPainter({
     @required this.controller,
     @required Color dividerColor,
@@ -13,7 +14,7 @@ class MultiDateBackgroundPainter extends CustomPainter {
         dividerPaint = Paint()..color = dividerColor,
         super(repaint: controller.scrollControllers.pageListenable);
 
-  final TimetableController controller;
+  final TimetableController<E> controller;
   final Paint dividerPaint;
 
   @override

@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 
 import '../controller.dart';
+import '../event.dart';
 import '../timetable.dart';
 import 'multi_date_header.dart';
 import 'week_indicator.dart';
 
-class TimetableHeader extends StatelessWidget {
+class TimetableHeader<E extends Event> extends StatelessWidget {
   const TimetableHeader({
     Key key,
     @required this.controller,
   })  : assert(controller != null),
         super(key: key);
 
-  final TimetableController controller;
+  final TimetableController<E> controller;
 
   @override
   Widget build(BuildContext context) {

@@ -2,18 +2,24 @@ import 'package:flutter/widgets.dart';
 import 'package:time_machine/time_machine.dart';
 import 'package:timetable/src/visible_range.dart';
 
+import 'event.dart';
+import 'event_provider.dart';
 import 'scrolling.dart';
 
-class TimetableController {
+class TimetableController<E extends Event> {
   TimetableController({
+    @required this.eventProvider,
     LocalDate initialDate,
     this.visibleRange = const VisibleRange.week(),
-  })  : initialDate = initialDate ?? LocalDate.today(),
+  })  : assert(eventProvider != null),
+        initialDate = initialDate ?? LocalDate.today(),
         assert(visibleRange != null),
         scrollControllers = LinkedScrollControllerGroup(
           initialPage: (initialDate ?? LocalDate.today()).epochDay.toDouble(),
           viewportFraction: 1 / visibleRange.visibleDays,
         );
+
+  final EventProvider<E> eventProvider;
 
   final LocalDate initialDate;
   final VisibleRange visibleRange;
@@ -40,23 +46,23 @@ class TimetableController {
 
 // Inspired by [PageScrollPhysics]
 class TimetableScrollPhysics extends ScrollPhysics {
-  const TimetableScrollPhysics(this.controller, {ScrollPhysics parent})
-      : assert(controller != null),
+  const TimetableScrollPhysics(this.visibleRange, {ScrollPhysics parent})
+      : assert(visibleRange != null),
         super(parent: parent);
 
-  final TimetableController controller;
+  final VisibleRange visibleRange;
 
   @override
   TimetableScrollPhysics applyTo(ScrollPhysics ancestor) {
-    return TimetableScrollPhysics(controller, parent: buildParent(ancestor));
+    return TimetableScrollPhysics(visibleRange, parent: buildParent(ancestor));
   }
 
   double _getTargetPixels(
       ScrollPosition position, Tolerance tolerance, double velocity) {
+    final visibleRange = this.visibleRange;
     final velocityAddition =
         velocity.abs() > tolerance.velocity ? 0.5 * velocity.sign : 0;
 
-    final visibleRange = controller.visibleRange;
     var page =
         position.pixels * visibleRange.visibleDays / position.viewportDimension;
     if (visibleRange is DaysVisibleRange) {

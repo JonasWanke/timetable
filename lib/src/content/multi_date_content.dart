@@ -12,15 +12,12 @@ class MultiDateContent<E extends Event> extends StatelessWidget {
   const MultiDateContent({
     Key key,
     @required this.controller,
-    @required this.eventProvider,
     @required this.eventBuilder,
   })  : assert(controller != null),
-        assert(eventProvider != null),
         assert(eventBuilder != null),
         super(key: key);
 
-  final TimetableController controller;
-  final EventProvider<E> eventProvider;
+  final TimetableController<E> controller;
   final EventBuilder<E> eventBuilder;
 
   @override
@@ -34,7 +31,9 @@ class MultiDateContent<E extends Event> extends StatelessWidget {
         controller: controller,
         builder: (_, date) => DateEvents<E>(
           date: date,
-          events: eventProvider(date),
+          events: controller.eventProvider
+              .getPartDayEventsIntersecting(date)
+              .toList(),
           eventBuilder: eventBuilder,
         ),
       ),

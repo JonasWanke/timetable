@@ -12,15 +12,12 @@ class TimetableContent<E extends Event> extends StatelessWidget {
   const TimetableContent({
     Key key,
     @required this.controller,
-    @required this.eventProvider,
     @required this.eventBuilder,
   })  : assert(controller != null),
-        assert(eventProvider != null),
         assert(eventBuilder != null),
         super(key: key);
 
-  final TimetableController controller;
-  final EventProvider<E> eventProvider;
+  final TimetableController<E> controller;
   final EventBuilder<E> eventBuilder;
 
   @override
@@ -44,7 +41,6 @@ class TimetableContent<E extends Event> extends StatelessWidget {
           Expanded(
             child: MultiDateContent<E>(
               controller: controller,
-              eventProvider: eventProvider,
               eventBuilder: eventBuilder,
             ),
           ),

@@ -13,6 +13,8 @@ abstract class Event {
   final Object id;
   final LocalDateTime start;
   final LocalDateTime end;
+  bool get isAllDay => start.periodUntil(end).normalize().days >= 1;
+  bool get isPartDay => !isAllDay;
 }
 
 extension TimetableEvent on Event {

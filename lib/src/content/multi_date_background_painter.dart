@@ -26,7 +26,7 @@ class MultiDateBackgroundPainter extends CustomPainter {
     canvas.drawLine(Offset(0, 0), Offset(0, size.height), dividerPaint);
 
     final initialOffset = 1 - controller.scrollControllers.page % 1;
-    final dateCount = controller.visibleDays;
+    final dateCount = controller.visibleRange.visibleDays;
     final widthPerDate = size.width / dateCount;
     for (var i = 0; i + initialOffset < dateCount; i++) {
       final x = (initialOffset + i) * widthPerDate;

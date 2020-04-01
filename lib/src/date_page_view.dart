@@ -39,6 +39,8 @@ class _DatePageViewState extends State<DatePageView> {
 
   @override
   Widget build(BuildContext context) {
+    final visibleDays = widget.controller.visibleRange.visibleDays;
+
     return Scrollable(
       axisDirection: AxisDirection.right,
       physics: TimetableScrollPhysics(widget.controller),
@@ -48,12 +50,15 @@ class _DatePageViewState extends State<DatePageView> {
           // TODO(JonasWanke): anchor
           axisDirection: AxisDirection.right,
           offset: position,
+          anchor: visibleDays.isEven ? 1 / (2 * visibleDays) : 0,
           slivers: <Widget>[
             SliverFillViewport(
-              viewportFraction: 1 / widget.controller.visibleDays,
+              viewportFraction: 1 / visibleDays,
               delegate: SliverChildBuilderDelegate(
-                (context, index) =>
-                    widget.builder(context, LocalDate.fromEpochDay(index)),
+                (context, index) => widget.builder(
+                  context,
+                  LocalDate.fromEpochDay(index + visibleDays ~/ 2),
+                ),
               ),
             ),
           ],

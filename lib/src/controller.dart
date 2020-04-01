@@ -1,22 +1,22 @@
 import 'package:flutter/widgets.dart';
 import 'package:time_machine/time_machine.dart';
+import 'package:timetable/src/visible_range.dart';
 
 import 'scrolling.dart';
 
 class TimetableController {
   TimetableController({
     LocalDate initialDate,
-    this.visibleDays = 7,
+    this.visibleRange = const VisibleRange.week(),
   })  : initialDate = initialDate ?? LocalDate.today(),
-        assert(visibleDays != null),
-        assert(visibleDays > 0),
+        assert(visibleRange != null),
         scrollControllers = LinkedScrollControllerGroup(
           initialPage: (initialDate ?? LocalDate.today()).epochDay.toDouble(),
-          viewportFraction: 1 / visibleDays,
+          viewportFraction: 1 / visibleRange.visibleDays,
         );
 
   final LocalDate initialDate;
-  final int visibleDays;
+  final VisibleRange visibleRange;
 
   final LinkedScrollControllerGroup scrollControllers;
 
@@ -53,16 +53,26 @@ class TimetableScrollPhysics extends ScrollPhysics {
 
   double _getTargetPixels(
       ScrollPosition position, Tolerance tolerance, double velocity) {
+    final velocityAddition =
+        velocity.abs() > tolerance.velocity ? 0.5 * velocity.sign : 0;
+
+    final visibleRange = controller.visibleRange;
     var page =
-        position.pixels * controller.visibleDays / position.viewportDimension;
-    if (velocity < -tolerance.velocity) {
-      page -= 0.5;
-    } else if (velocity > tolerance.velocity) {
-      page += 0.5;
+        position.pixels * visibleRange.visibleDays / position.viewportDimension;
+    if (visibleRange is DaysVisibleRange) {
+      page = (page + velocityAddition).roundToDouble();
+    } else if (visibleRange is WeekVisibleRange) {
+      final epochWeekDayOffset = visibleRange.firstDayOfWeek.value -
+          LocalDate.fromEpochDay(0).dayOfWeek.value;
+      page = (page - epochWeekDayOffset) / TimeConstants.daysPerWeek;
+      page += velocityAddition;
+      page =
+          page.roundToDouble() * TimeConstants.daysPerWeek + epochWeekDayOffset;
+    } else {
+      assert(false,
+          'Unsupported VisibleRange subclass: ${visibleRange.runtimeType}');
     }
-    return page.roundToDouble() *
-        position.viewportDimension /
-        controller.visibleDays;
+    return page * position.viewportDimension / visibleRange.visibleDays;
   }
 
   @override

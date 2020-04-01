@@ -2,7 +2,7 @@ import 'package:black_hole_flutter/black_hole_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:time_machine/time_machine.dart';
 
-import '../utils.dart';
+import '../utils/utils.dart';
 
 class DateIndicator extends StatelessWidget {
   const DateIndicator(this.date, {Key key}) : super(key: key);

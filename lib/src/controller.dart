@@ -4,7 +4,7 @@ import 'package:timetable/src/visible_range.dart';
 
 import 'event.dart';
 import 'event_provider.dart';
-import 'scrolling.dart';
+import 'utils/scrolling.dart';
 
 class TimetableController<E extends Event> {
   TimetableController({

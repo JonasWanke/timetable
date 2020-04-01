@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:time_machine/time_machine.dart';
 import 'package:time_machine/time_machine_text_patterns.dart';
 
-import '../utils.dart';
+import '../utils/utils.dart';
 
 class WeekdayIndicator extends StatelessWidget {
   const WeekdayIndicator(this.date, {Key key}) : super(key: key);

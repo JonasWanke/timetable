@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:time_machine/time_machine.dart' hide Offset;
 import 'package:time_machine/time_machine_text_patterns.dart';
 
-import '../utils.dart';
+import '../utils/utils.dart';
 
 class DateHoursPainter extends CustomPainter {
   DateHoursPainter({

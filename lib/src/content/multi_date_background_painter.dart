@@ -3,7 +3,7 @@ import 'package:time_machine/time_machine.dart' hide Offset;
 
 import '../controller.dart';
 import '../event.dart';
-import '../utils.dart';
+import '../utils/utils.dart';
 
 class MultiDateBackgroundPainter<E extends Event> extends CustomPainter {
   MultiDateBackgroundPainter({

@@ -12,11 +12,17 @@ class CurrentTimeIndicatorPainter<E extends Event> extends CustomPainter {
     @required this.controller,
     @required Color color,
     this.circleRadius = 4,
+    Listenable repaint,
   })  : assert(controller != null),
         assert(color != null),
         _paint = Paint()..color = color,
         assert(circleRadius != null),
-        super(repaint: controller.scrollControllers.pageListenable);
+        super(
+          repaint: Listenable.merge([
+            controller.scrollControllers.pageListenable,
+            repaint,
+          ]),
+        );
 
   final TimetableController<E> controller;
   final Paint _paint;
@@ -45,7 +51,8 @@ class CurrentTimeIndicatorPainter<E extends Event> extends CustomPainter {
     final radius = lerpDouble(circleRadius, 0, (actualLeft - left) / dateWidth);
     canvas
       ..drawCircle(Offset(actualLeft, y), radius, _paint)
-      ..drawLine(Offset(actualLeft, y), Offset(actualRight, y), _paint);
+      ..drawLine(
+          Offset(actualLeft + radius, y), Offset(actualRight, y), _paint);
   }
 
   @override

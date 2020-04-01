@@ -5,11 +5,12 @@ import '../controller.dart';
 import '../date_page_view.dart';
 import '../event.dart';
 import '../timetable.dart';
+import '../utils/stream_change_notifier.dart';
 import 'current_time_indicator_painter.dart';
 import 'date_events.dart';
 import 'multi_date_background_painter.dart';
 
-class MultiDateContent<E extends Event> extends StatelessWidget {
+class MultiDateContent<E extends Event> extends StatefulWidget {
   const MultiDateContent({
     Key key,
     @required this.controller,
@@ -22,24 +23,39 @@ class MultiDateContent<E extends Event> extends StatelessWidget {
   final EventBuilder<E> eventBuilder;
 
   @override
+  _MultiDateContentState<E> createState() => _MultiDateContentState<E>();
+}
+
+class _MultiDateContentState<E extends Event>
+    extends State<MultiDateContent<E>> {
+  final _timeListenable =
+      StreamChangeNotifier(Stream.periodic(Duration(seconds: 10)));
+
+  @override
+  void dispose() {
+    _timeListenable.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return CustomPaint(
       painter: MultiDateBackgroundPainter(
-        controller: controller,
+        controller: widget.controller,
         dividerColor: context.theme.dividerColor,
       ),
       foregroundPainter: CurrentTimeIndicatorPainter(
-        controller: controller,
+        controller: widget.controller,
         color: context.theme.highEmphasisOnBackground,
       ),
       child: DatePageView(
-        controller: controller,
+        controller: widget.controller,
         builder: (_, date) => DateEvents<E>(
           date: date,
-          events: controller.eventProvider
+          events: widget.controller.eventProvider
               .getPartDayEventsIntersecting(date)
               .toList(),
-          eventBuilder: eventBuilder,
+          eventBuilder: widget.eventBuilder,
         ),
       ),
     );

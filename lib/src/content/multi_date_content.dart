@@ -1,12 +1,13 @@
 import 'package:black_hole_flutter/black_hole_flutter.dart';
 import 'package:flutter/widgets.dart';
-import 'package:timetable/src/content/multi_date_background_painter.dart';
 
 import '../controller.dart';
 import '../date_page_view.dart';
 import '../event.dart';
 import '../timetable.dart';
+import 'current_time_indicator_painter.dart';
 import 'date_events.dart';
+import 'multi_date_background_painter.dart';
 
 class MultiDateContent<E extends Event> extends StatelessWidget {
   const MultiDateContent({
@@ -26,6 +27,10 @@ class MultiDateContent<E extends Event> extends StatelessWidget {
       painter: MultiDateBackgroundPainter(
         controller: controller,
         dividerColor: context.theme.dividerColor,
+      ),
+      foregroundPainter: CurrentTimeIndicatorPainter(
+        controller: controller,
+        color: context.theme.highEmphasisOnBackground,
       ),
       child: DatePageView(
         controller: controller,

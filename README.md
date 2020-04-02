@@ -7,10 +7,10 @@
 
 
 - [Getting started](#getting-started)
-  - [1. Initialize [<kbd>time_machine</kbd>]](#1-initialize-kbdtimemachinekbd)
-  - [2. Define your [`Event`]s](#2-define-your-events)
-  - [3. Create an [`EventProvider`]](#3-create-an-eventprovider)
-  - [4. Create a [`TimetableController`]](#4-create-a-timetablecontroller)
+  - [1. Initialize <kbd>time_machine</kbd>](#1-initialize-kbdtimemachinekbd)
+  - [2. Define your `Event`s](#2-define-your-events)
+  - [3. Create an `EventProvider`](#3-create-an-eventprovider)
+  - [4. Create a `TimetableController`](#4-create-a-timetablecontroller)
 - [Features & Coming soon](#features--coming-soon)
 
 ## Getting started
@@ -69,6 +69,7 @@ final myEventProvider = EventProvider.list([
   ),
 ]);
 ```
+> See the [example][example/main.dart] for more [`EventProvider`] samples!
 
 
 ### 4. Create a [`TimetableController`]
@@ -80,7 +81,7 @@ _controller = TimetableController(
   // Optional parameters with their default values:
   initialDate: LocalDate.today(),
   visibleRange: VisibleRange.week(),
-  firstDayOfWeek = DayOfWeek.monday,
+  firstDayOfWeek: DayOfWeek.monday,
 );
 ```
 
@@ -100,6 +101,7 @@ _controller = TimetableController(
 
 
 
+[example/main.dart]: https://github.com/JonasWanke/timetable/blob/master/example/lib/main.dart
 [<kbd>time_machine</kbd>]: https://pub.dev/packages/time_machine
 <!-- Flutter -->
 [`TabController`]: https://api.flutter.dev/flutter/material/TabController-class.html

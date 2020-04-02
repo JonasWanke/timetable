@@ -60,6 +60,8 @@ class _DayEventsLayoutDelegate<E extends Event>
       : assert(date != null),
         assert(events != null);
 
+  static const minWidth = 4.0;
+
   final LocalDate date;
   final List<E> events;
 
@@ -100,7 +102,7 @@ class _DayEventsLayoutDelegate<E extends Event>
       final left = columnLeft + position.index * DateEvents.eventSpacing;
       final width = columnWidth - position.index * DateEvents.eventSpacing;
 
-      final childSize = Size(width, height);
+      final childSize = Size(width.coerceAtLeast(minWidth), height);
       layoutChild(event.id, BoxConstraints.tight(childSize));
       positionChild(event.id, Offset(left, top));
     }

@@ -24,7 +24,7 @@ class TimetableHeader<E extends Event> extends StatelessWidget {
 
     return SizedBox(
       // TODO(JonasWanke): dynamic height based on content
-      height: 100,
+      height: 64,
       child: Row(
         children: <Widget>[
           SizedBox(

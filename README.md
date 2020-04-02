@@ -56,7 +56,7 @@ In addition, you also need a [`Widget`] to display your events. When using [`Bas
 
 As the name suggests, you use [`EventProvider`] to provide [`Event`]s to <kbd>timetable</kbd>. There are currently two [`EventProvider`]s to choose from:
 - [`EventProvider.list(List<E> events)`][`EventProvider.list`]: Use this provider if you have a fixed list of events.
-- [`EventProvider.stream({StreamedEventGetter<E> eventGetter})`]: Use this provider if your events can change or you have many events and only want to load the relevant subset.
+- [`EventProvider.stream({StreamedEventGetter<E> eventGetter})`][`EventProvider.stream`]: Use this provider if your events can change or you have many events and only want to load the relevant subset.
 
 ```dart
 final myEventProvider = EventProvider.list([

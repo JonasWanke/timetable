@@ -11,6 +11,8 @@ abstract class EventProvider<E extends Event> {
   const EventProvider();
 
   factory EventProvider.list(List<E> events) = ListEventProvider<E>;
+  factory EventProvider.stream({@required StreamedEventGetter<E> eventGetter}) =
+      StreamEventProvider<E>;
 
   void onVisibleDatesChanged(DateInterval visibleRange) {}
 
@@ -60,13 +62,21 @@ class StreamEventProvider<E extends Event> extends EventProvider<E>
   StreamEventProvider({@required this.eventGetter})
       : assert(eventGetter != null) {
     _events = visibleDates.switchMap(eventGetter).publishValue();
+    _eventsSubscription = _events.connect();
   }
 
   final StreamedEventGetter<E> eventGetter;
-  ValueStream<Iterable<E>> _events;
+  ValueConnectableStream<Iterable<E>> _events;
+  StreamSubscription _eventsSubscription;
 
   @override
   Stream<Iterable<E>> getPartDayEventsIntersecting(LocalDate date) {
     return _events.map((events) => events.partDayEvents.intersectingDate(date));
+  }
+
+  @override
+  void dispose() {
+    _eventsSubscription.cancel();
+    super.dispose();
   }
 }

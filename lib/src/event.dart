@@ -3,8 +3,14 @@ import 'dart:ui';
 import 'package:meta/meta.dart';
 import 'package:time_machine/time_machine.dart';
 
+import 'basic.dart';
+
+/// The base class of all events.
+///
+/// See also:
+/// - [BasicEvent], which provides a basic implementation to get you started.
 abstract class Event {
-  Event({
+  const Event({
     @required this.id,
     @required this.start,
     @required this.end,
@@ -12,9 +18,15 @@ abstract class Event {
         assert(start != null),
         assert(end != null);
 
+  /// A unique ID, used e.g. for animating events.
   final Object id;
+
+  /// Start of the event.
   final LocalDateTime start;
+
+  // End of the event; exclusive.
   final LocalDateTime end;
+
   bool get isAllDay => start.periodUntil(end).normalize().days >= 1;
   bool get isPartDay => !isAllDay;
 

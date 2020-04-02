@@ -11,11 +11,26 @@ abstract class VisibleRange {
   })  : assert(visibleDays != null),
         assert(visibleDays > 0);
 
+  /// Display a fixed number of days.
+  ///
+  /// While scrolling, this can snap to all dates.
+  ///
+  /// When animating to a date (see [TimetableController.animateTo]), that day
+  /// will be aligned to the left.
   const factory VisibleRange.days(int count) = DaysVisibleRange;
+
+  /// Display seven consecutive days, aligned based on
+  /// [TimetableController.firstDayOfWeek].
+  ///
+  /// While scrolling, this only snaps to week boundaries.
+  ///
+  /// When animating to a date (see [TimetableController.animateTo]), the week
+  /// containing that date will fill the viewport.
   const factory VisibleRange.week() = WeekVisibleRange;
 
   final int visibleDays;
 
+  /// Gets the page to align to the viewport's left side based on [focusDate].
   double getTargetPageForDate(
     LocalDate focusDate,
     DayOfWeek firstDayOfWeek, {
@@ -30,6 +45,7 @@ abstract class VisibleRange {
     );
   }
 
+  /// Gets the page to align to the viewport's left side based on [focusPage].
   double getTargetPage(
     double focusPage,
     DayOfWeek firstDayOfWeek, {

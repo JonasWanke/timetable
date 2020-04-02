@@ -3,14 +3,24 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:time_machine/time_machine.dart';
-import 'package:timetable/timetable.dart';
 
+import 'controller.dart';
 import 'event.dart';
 
+/// Provides [Event]s to a [TimetableController].
+///
+/// We provide the following implementations:
+/// - [EventProvider.list], if you have a fixed list of [Event]s.
+/// - [EventProvider.stream], if your events may change or you have many events
+///   and only want to load a relevant subset.
 abstract class EventProvider<E extends Event> {
   const EventProvider();
 
+  /// Creates an [EventProvider] based on a fixed list of [Event]s.
   factory EventProvider.list(List<E> events) = ListEventProvider<E>;
+
+  /// Creates an [EventProvider] accepting a [Stream] of [Event]s based on the
+  /// currently visible range.
   factory EventProvider.stream({@required StreamedEventGetter<E> eventGetter}) =
       StreamEventProvider<E>;
 
@@ -18,10 +28,19 @@ abstract class EventProvider<E extends Event> {
 
   Stream<Iterable<E>> getPartDayEventsIntersecting(LocalDate date);
 
+  /// Discards any resources used by the object.
+  ///
+  /// After this is called, the object is not in a usable state and should be
+  /// discarded.
+  ///
+  /// This method is usually called by [TimetableController].
   void dispose() {}
 }
 
-/// An [EventProvider] accepting a single fixed list of events.
+/// An [EventProvider] accepting a single fixed list of [Event]s.
+///
+/// See also:
+/// - [EventProvider.stream], if your events change or you have lots of them.
 class ListEventProvider<E extends Event> extends EventProvider<E> {
   ListEventProvider(List<E> events)
       : assert(events != null),
@@ -57,6 +76,11 @@ mixin VisibleDatesStreamEventProviderMixin<E extends Event>
 typedef StreamedEventGetter<E extends Event> = Stream<Iterable<E>> Function(
     DateInterval dates);
 
+/// An [EventProvider] accepting a [Stream] of [Event]s based on the currently
+/// visible range.
+///
+/// See also:
+/// - [EventProvider.list], if you only have a few static [Event]s.
 class StreamEventProvider<E extends Event> extends EventProvider<E>
     with VisibleDatesStreamEventProviderMixin<E> {
   StreamEventProvider({@required this.eventGetter})

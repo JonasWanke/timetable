@@ -4,8 +4,12 @@ import 'package:time_machine/time_machine.dart';
 
 import 'event.dart';
 
+/// A basic implementation of [Event] to get you started.
+///
+/// See also:
+/// - [BasicEventWidget], which can display instances of [BasicEvent].
 class BasicEvent extends Event {
-  BasicEvent({
+  const BasicEvent({
     @required Object id,
     @required this.title,
     @required this.color,
@@ -14,7 +18,12 @@ class BasicEvent extends Event {
   })  : assert(title != null),
         super(id: id, start: start, end: end);
 
+  /// A title for the user, used e.g. by [BasicEventWidget].
   final String title;
+
+  /// [Color] used for displaying this event.
+  ///
+  /// This is used e.g. by [BasicEventWidget] as the background color.
   final Color color;
 
   @override
@@ -25,11 +34,13 @@ class BasicEvent extends Event {
   int get hashCode => hashList([super.hashCode, title, color]);
 }
 
+/// A simple [Widget] for displaying a [BasicEvent].
 class BasicEventWidget extends StatelessWidget {
   const BasicEventWidget(this.event, {Key key})
       : assert(event != null),
         super(key: key);
 
+  /// The [BasicEvent] to be displayed.
   final BasicEvent event;
 
   @override

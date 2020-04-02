@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:time_machine/time_machine.dart';
 import 'package:timetable/timetable.dart';
 
+import 'positioning_demo.dart';
 import 'utils.dart';
 
 void main() async {
@@ -19,12 +20,20 @@ class TimetableExample extends StatefulWidget {
 }
 
 class _TimetableExampleState extends State<TimetableExample> {
-  TimetableController _controller;
+  TimetableController<BasicEvent> _controller;
 
   @override
   void initState() {
     super.initState();
-    _controller = TimetableController();
+    _controller = TimetableController(
+      eventProvider: positioningDemoEventProvider,
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
@@ -45,66 +54,6 @@ class _TimetableExampleState extends State<TimetableExample> {
         ),
         body: Timetable<BasicEvent>(
           controller: _controller,
-          eventProvider: (date) {
-            return [
-              BasicEvent(
-                id: -1,
-                title: 'SC',
-                start: date.at(LocalTime(8, 15, 0)),
-                end: date.at(LocalTime(8, 45, 0)),
-                color: Colors.blue,
-              ),
-              BasicEvent(
-                id: -0.5,
-                title: 'st/MD: flutter europe',
-                start: date.at(LocalTime(8, 30, 0)),
-                end: date.at(LocalTime(8, 30, 0)),
-                color: Colors.orange,
-              ),
-              BasicEvent(
-                id: 0,
-                title: 'TI: hw',
-                start: date.at(LocalTime(8, 45, 0)),
-                end: date.at(LocalTime(10, 45, 0)),
-                color: Colors.green,
-              ),
-              BasicEvent(
-                id: 1,
-                title: 'SWA',
-                start: date.at(LocalTime(9, 15, 0)),
-                end: date.at(LocalTime(10, 45, 0)),
-                color: Colors.green,
-              ),
-              BasicEvent(
-                id: 2,
-                title: 'BS I',
-                start: date.at(LocalTime(11, 0, 0)),
-                end: date.at(LocalTime(12, 30, 0)),
-                color: Colors.green,
-              ),
-              BasicEvent(
-                id: 3,
-                title: 'SC',
-                start: date.at(LocalTime(11, 0, 0)),
-                end: date.at(LocalTime(12, 30, 0)),
-                color: Colors.blue,
-              ),
-              BasicEvent(
-                id: 4,
-                title: 'St/CK: Cake pops doodle',
-                start: date.at(LocalTime(11, 0, 0)),
-                end: date.at(LocalTime(11, 0, 0)),
-                color: Colors.orange,
-              ),
-              BasicEvent(
-                id: 5,
-                title: 'Lunch',
-                start: date.at(LocalTime(12, 30, 0)),
-                end: date.at(LocalTime(13, 30, 0)),
-                color: Colors.grey,
-              ),
-            ];
-          },
           eventBuilder: (event) => BasicEventWidget(event),
         ),
       ),

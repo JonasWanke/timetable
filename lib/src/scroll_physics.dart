@@ -1,9 +1,7 @@
 // Inspired by [PageScrollPhysics]
 import 'package:flutter/widgets.dart';
-import 'package:time_machine/time_machine.dart';
 
 import 'controller.dart';
-import 'visible_range.dart';
 
 class TimetableScrollPhysics extends ScrollPhysics {
   const TimetableScrollPhysics(this.controller, {ScrollPhysics parent})
@@ -11,41 +9,6 @@ class TimetableScrollPhysics extends ScrollPhysics {
         super(parent: parent);
 
   final TimetableController controller;
-
-  static double getTargetPageForDate(
-    LocalDate date,
-    TimetableController controller,
-  ) {
-    assert(date != null);
-    assert(controller != null);
-    return getTargetPage(date.epochDay.toDouble(), controller);
-  }
-
-  static double getTargetPage(
-    double page,
-    TimetableController controller, {
-    double velocityAddition = 0,
-  }) {
-    assert(page != null);
-    assert(controller != null);
-    assert(velocityAddition != null);
-
-    final visibleRange = controller.visibleRange;
-    if (visibleRange is DaysVisibleRange) {
-      return (page + velocityAddition).roundToDouble();
-    } else if (visibleRange is WeekVisibleRange) {
-      final epochWeekDayOffset = controller.firstDayOfWeek.value -
-          LocalDate.fromEpochDay(0).dayOfWeek.value;
-      final currentWeek =
-          (page - epochWeekDayOffset) / TimeConstants.daysPerWeek;
-      final targetWeek = (currentWeek + velocityAddition).roundToDouble();
-      return targetWeek * TimeConstants.daysPerWeek + epochWeekDayOffset;
-    } else {
-      assert(false,
-          'Unsupported VisibleRange subclass: ${visibleRange.runtimeType}');
-      return 0;
-    }
-  }
 
   @override
   TimetableScrollPhysics applyTo(ScrollPhysics ancestor) {
@@ -59,11 +22,11 @@ class TimetableScrollPhysics extends ScrollPhysics {
 
     final currentPage = position.pixels * pixelsToPage;
 
-    final targetPage = getTargetPage(
+    final targetPage = controller.visibleRange.getTargetPage(
       currentPage,
-      controller,
-      velocityAddition:
-          velocity.abs() > tolerance.velocity ? 0.5 * velocity.sign : 0.0,
+      controller.firstDayOfWeek,
+      velocity: velocity,
+      tolerance: tolerance,
     );
     return targetPage / pixelsToPage;
   }

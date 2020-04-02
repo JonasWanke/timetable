@@ -4,7 +4,6 @@ import 'package:time_machine/time_machine.dart';
 
 import 'event.dart';
 import 'event_provider.dart';
-import 'scroll_physics.dart';
 import 'utils/scrolling.dart';
 import 'utils/utils.dart';
 import 'visible_range.dart';
@@ -20,8 +19,8 @@ class TimetableController<E extends Event> {
         assert(firstDayOfWeek != null),
         assert(visibleRange != null) {
     _scrollControllers = LinkedScrollControllerGroup(
-      initialPage: TimetableScrollPhysics.getTargetPageForDate(
-          initialDate ?? LocalDate.today(), this),
+      initialPage:
+          visibleRange.getTargetPageForDate(this.initialDate, firstDayOfWeek),
       viewportFraction: 1 / visibleRange.visibleDays,
     );
 
@@ -68,7 +67,7 @@ class TimetableController<E extends Event> {
     Duration duration = const Duration(milliseconds: 200),
   }) async {
     await scrollControllers.animateTo(
-      TimetableScrollPhysics.getTargetPageForDate(date, this),
+      visibleRange.getTargetPageForDate(date, firstDayOfWeek),
       curve: curve,
       duration: duration,
     );

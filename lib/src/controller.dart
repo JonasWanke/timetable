@@ -27,19 +27,16 @@ class TimetableController<E extends Event> {
 
     _dateListenable = scrollControllers.pageListenable
         .map((page) => LocalDate.fromEpochDay(page.floor()));
-    _currentlyVisibleDatesListenable = _dateListenable.map((date) {
-      var visibleDays = visibleRange.visibleDays;
-      final page = scrollControllers.page;
-      if ((page.roundToDouble() - page).abs() < precisionErrorTolerance) {
-        // When we're aligned to the viewport (page is a whole number), the
-        // amount of days to add is one fewer that visibleDays, as DateInterval
-        // includes the end date.
-        visibleDays--;
-      }
-      return DateInterval(date, date.addDays(visibleDays));
+    _currentlyVisibleDatesListenable = scrollControllers.pageListenable
+        .map((page) {
+      return DateInterval(
+        LocalDate.fromEpochDay(page.floor()),
+        LocalDate.fromEpochDay(page.ceil() + visibleRange.visibleDays - 1),
+      );
     })
-      ..addListener(
-          () => eventProvider.onVisibleDatesChanged(currentlyVisibleDates));
+          ..addListener(
+              () => eventProvider.onVisibleDatesChanged(currentlyVisibleDates));
+    eventProvider.onVisibleDatesChanged(currentlyVisibleDates);
   }
 
   final EventProvider<E> eventProvider;

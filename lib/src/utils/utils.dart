@@ -18,7 +18,7 @@ extension TimetableLocalDateTime on LocalDateTime {
 typedef Mapper<T, R> = R Function(T data);
 
 extension MapListenable<T> on ValueListenable<T> {
-  ValueListenable<R> map<R>(Mapper<T, R> mapper) =>
+  ValueNotifier<R> map<R>(Mapper<T, R> mapper) =>
       _MapValueListenable(this, mapper);
 }
 

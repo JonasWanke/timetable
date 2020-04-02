@@ -35,3 +35,10 @@ extension TimetableEvent on Event {
       start <= date.at(LocalTime.maxValue) &&
       end >= date.at(LocalTime.minValue);
 }
+
+extension TimetableEventIterable<E extends Event> on Iterable<E> {
+  Iterable<E> get partDayEvents => where((e) => e.isPartDay);
+
+  Iterable<E> intersectingDate(LocalDate date) =>
+      where((e) => e.intersectsDate(date));
+}

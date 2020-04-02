@@ -11,8 +11,9 @@ dependencies:
     sdk: flutter
 
   black_hole_flutter: ^0.2.0
-  collection: ^1.14.12
+  collection: ^1.14.11
   dartx: ^0.2.0
   meta: ^1.1.8
   pedantic: ^1.9.0
+  rxdart: ^0.23.1
   time_machine: ^0.9.12

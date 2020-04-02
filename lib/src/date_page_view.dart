@@ -49,7 +49,6 @@ class _DatePageViewState extends State<DatePageView> {
       controller: _controller,
       viewportBuilder: (context, position) {
         return Viewport(
-          // TODO(JonasWanke): anchor
           axisDirection: AxisDirection.right,
           offset: position,
           anchor: visibleDays.isEven ? 1 / (2 * visibleDays) : 0,

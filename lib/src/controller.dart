@@ -18,11 +18,13 @@ class TimetableController<E extends Event> {
   })  : assert(eventProvider != null),
         initialDate = initialDate ?? LocalDate.today(),
         assert(firstDayOfWeek != null),
-        assert(visibleRange != null),
-        scrollControllers = LinkedScrollControllerGroup(
-          initialPage: (initialDate ?? LocalDate.today()).epochDay.toDouble(),
-          viewportFraction: 1 / visibleRange.visibleDays,
-        ) {
+        assert(visibleRange != null) {
+    _scrollControllers = LinkedScrollControllerGroup(
+      initialPage: TimetableScrollPhysics.getTargetPageForDate(
+          initialDate ?? LocalDate.today(), this),
+      viewportFraction: 1 / visibleRange.visibleDays,
+    );
+
     _dateListenable = scrollControllers.pageListenable
         .map((page) => LocalDate.fromEpochDay(page.floor()));
     _currentlyVisibleDatesListenable = _dateListenable.map((date) {
@@ -46,7 +48,8 @@ class TimetableController<E extends Event> {
   final VisibleRange visibleRange;
   final DayOfWeek firstDayOfWeek;
 
-  final LinkedScrollControllerGroup scrollControllers;
+  LinkedScrollControllerGroup _scrollControllers;
+  LinkedScrollControllerGroup get scrollControllers => _scrollControllers;
 
   ValueNotifier<LocalDate> _dateListenable;
   ValueListenable<LocalDate> get dateListenable => _dateListenable;

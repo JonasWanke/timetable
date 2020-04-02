@@ -7,7 +7,7 @@ import '../event.dart';
 import '../timetable.dart';
 import '../utils/stream_change_notifier.dart';
 import 'current_time_indicator_painter.dart';
-import 'date_events.dart';
+import 'listening_date_events.dart';
 import 'multi_date_background_painter.dart';
 
 class MultiDateContent<E extends Event> extends StatefulWidget {
@@ -51,17 +51,10 @@ class _MultiDateContentState<E extends Event>
       child: DatePageView(
         controller: widget.controller,
         builder: (_, date) {
-          return StreamBuilder<Iterable<E>>(
-            stream: widget.controller.eventProvider
-                .getPartDayEventsIntersecting(date),
-            builder: (context, snapshot) {
-              final events = snapshot.data ?? [];
-              return DateEvents<E>(
-                date: date,
-                events: events,
-                eventBuilder: widget.eventBuilder,
-              );
-            },
+          return StreamedDateEvents<E>(
+            date: date,
+            controller: widget.controller,
+            eventBuilder: widget.eventBuilder,
           );
         },
       ),

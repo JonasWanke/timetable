@@ -11,6 +11,7 @@
   - [2. Define your `Event`s](#2-define-your-events)
   - [3. Create an `EventProvider`](#3-create-an-eventprovider)
   - [4. Create a `TimetableController`](#4-create-a-timetablecontroller)
+  - [5. Create your `Timetable`](#5-create-your-timetable)
 - [Features & Coming soon](#features--coming-soon)
 
 ## Getting started
@@ -76,7 +77,7 @@ final myEventProvider = EventProvider.list([
 
 Similar to a [`ScrollController`] or a [`TabController`], a [`TimetableController`] is reponsible for interacting with a [`Timetable`] and managing its state. You can instantiate it with your [`EventProvider`]:
 ```dart
-_controller = TimetableController(
+final myController = TimetableController(
   eventProvider: myEventProvider,
   // Optional parameters with their default values:
   initialDate: LocalDate.today(),
@@ -86,6 +87,19 @@ _controller = TimetableController(
 ```
 
 > Don't forget to [`dispose`][`TimetableController.dispose`] your controller, e.g. in [`State.dispose`]!
+
+
+### 5. Create your [`Timetable`]
+
+Using your [`TimetableController`] and [`EventBuilder`], you can now create a [`Timetable`] widget:
+```dart
+Timetable<BasicEvent>(
+  controller: myController,
+  eventBuilder: (event) => BasicEventWidget(event),
+)
+```
+
+And you're done 🎉
 
 
 ## Features & Coming soon

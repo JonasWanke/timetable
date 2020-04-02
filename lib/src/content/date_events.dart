@@ -90,7 +90,7 @@ class _DayEventsLayoutDelegate<E extends Event>
         size.height - periodToY(DateEvents.minEventLength),
       );
       final height =
-          periodToY(event.actualDuration).clamp(0, size.height - top);
+          periodToY(event.durationOn(date)).clamp(0, size.height - top);
 
       final columnWidth =
           size.width / positions.groupColumnCounts[position.group] -
@@ -217,5 +217,9 @@ extension _TimeCalculation on Event {
   LocalDateTime get actualEnd =>
       LocalDateTime.max(end, start + DateEvents.minEventLength);
 
-  Period get actualDuration => start.periodUntil(actualEnd);
+  Period durationOn(LocalDate date) {
+    final todayStart = LocalDateTime.max(start, date.atMidnight());
+    final todayEnd = LocalDateTime.min(actualEnd, date.addDays(1).atMidnight());
+    return todayStart.periodUntil(todayEnd);
+  }
 }

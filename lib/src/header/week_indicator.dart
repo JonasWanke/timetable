@@ -9,7 +9,9 @@ class WeekIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = context.theme;
-    final color = theme.cardColor;
+    final color = theme.contrastColor
+        .withOpacity(0.12)
+        .alphaBlendOn(theme.scaffoldBackgroundColor);
 
     return DecoratedBox(
       decoration: BoxDecoration(
@@ -20,7 +22,7 @@ class WeekIndicator extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
         child: Text(
           week.toString(),
-          style: TextStyle(color: color.highEmphasisOnColor),
+          style: TextStyle(color: color.mediumEmphasisOnColor),
         ),
       ),
     );

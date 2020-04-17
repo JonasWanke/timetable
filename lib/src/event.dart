@@ -52,11 +52,10 @@ extension TimetableEvent on Event {
         end > interval.start.at(LocalTime.minValue);
   }
 
-  DateInterval get intersectingDates {
-    // End is exclusive.
-    final actualEnd = end - Period(nanoseconds: 1);
-    return DateInterval(start.calendarDate, actualEnd.calendarDate);
-  }
+  LocalDate get endDateInclusive => (end - Period(nanoseconds: 1)).calendarDate;
+
+  DateInterval get intersectingDates =>
+      DateInterval(start.calendarDate, endDateInclusive);
 }
 
 extension TimetableEventIterable<E extends Event> on Iterable<E> {

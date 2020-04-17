@@ -250,16 +250,20 @@ class _EventsLayout<E extends Event> extends RenderBox
     final dateWidth = size.width / visibleRange.visibleDays;
     for (final child in children) {
       final event = (child.parentData as _EventParentData<E>).event;
+
+      final startDate = event.start.calendarDate;
+      final left = ((startDate.epochDay - page) * dateWidth).coerceAtLeast(0);
+      final endDate = event.endDateInclusive;
+      final right =
+          ((endDate.epochDay + 1 - page) * dateWidth).coerceAtMost(size.width);
+
       child.layout(BoxConstraints.tightFor(
-        width: event.intersectingDates.length * dateWidth,
+        width: right - left,
         height: eventHeight,
       ));
 
-      final startDate = event.start.calendarDate.epochDay;
-      (child.parentData as _EventParentData<E>).offset = Offset(
-        (startDate - page) * dateWidth,
-        yPositions[event] * eventHeight,
-      );
+      (child.parentData as _EventParentData<E>).offset =
+          Offset(left, yPositions[event] * eventHeight);
     }
   }
 

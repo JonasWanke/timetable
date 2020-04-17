@@ -50,6 +50,7 @@ final _events = <BasicEvent>[
   _DemoEvent(7, 1, LocalTime(2, 30, 0), LocalTime(3, 30, 0)),
   _DemoEvent(7, 2, LocalTime(3, 0, 0), LocalTime(4, 0, 0)),
   _DemoEvent(8, 0, LocalTime(20, 0, 0), LocalTime(4, 0, 0), endDateOffset: 1),
+  _DemoEvent.allDay(0, 0, 1),
 ];
 
 class _DemoEvent extends BasicEvent {
@@ -65,5 +66,14 @@ class _DemoEvent extends BasicEvent {
           color: Colors.grey,
           start: LocalDate.today().addDays(demoId).at(start),
           end: LocalDate.today().addDays(demoId + endDateOffset).at(end),
+        );
+
+  _DemoEvent.allDay(int id, int startOffset, int length)
+      : super(
+          id: 'a-$id',
+          title: 'a-$id',
+          color: Colors.grey,
+          start: LocalDate.today().addDays(startOffset).atMidnight(),
+          end: LocalDate.today().addDays(startOffset + length).atMidnight(),
         );
 }

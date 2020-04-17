@@ -26,7 +26,10 @@ class Timetable<E extends Event> extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        TimetableHeader(controller: controller),
+        TimetableHeader(
+          controller: controller,
+          eventBuilder: eventBuilder,
+        ),
         Expanded(
           child: TimetableContent<E>(
             controller: controller,

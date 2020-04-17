@@ -26,7 +26,7 @@ class DateEvents<E extends Event> extends StatelessWidget {
           events.map((e) => e.id).toSet().length == events.length,
           'Events may not contain duplicate IDs',
         ),
-        events = events.sortedBy((e) => e.start).thenByDescending((e) => e.end),
+        events = events.sortedByStartLength(),
         assert(eventBuilder != null),
         super(key: key);
 

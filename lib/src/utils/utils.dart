@@ -15,6 +15,10 @@ extension TimetableLocalDateTime on LocalDateTime {
       LocalDate.maxIsoValue.at(LocalTime.maxValue);
 }
 
+extension TimetableDateInterval on DateInterval {
+  Iterable<LocalDate> get dates => Iterable.generate(length, start.addDays);
+}
+
 typedef Mapper<T, R> = R Function(T data);
 
 extension MapListenable<T> on ValueListenable<T> {

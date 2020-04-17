@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:dartx/dartx.dart';
 import 'package:meta/meta.dart';
 import 'package:time_machine/time_machine.dart';
 
@@ -44,13 +45,29 @@ abstract class Event {
 
 extension TimetableEvent on Event {
   bool intersectsDate(LocalDate date) =>
-      start <= date.at(LocalTime.maxValue) &&
-      end >= date.at(LocalTime.minValue);
+      start <= date.at(LocalTime.maxValue) && end > date.at(LocalTime.minValue);
+
+  bool intersectsInterval(DateInterval interval) {
+    return start <= interval.end.at(LocalTime.maxValue) &&
+        end > interval.start.at(LocalTime.minValue);
+  }
+
+  DateInterval get intersectingDates {
+    // End is exclusive.
+    final actualEnd = end - Period(nanoseconds: 1);
+    return DateInterval(start.calendarDate, actualEnd.calendarDate);
+  }
 }
 
 extension TimetableEventIterable<E extends Event> on Iterable<E> {
+  Iterable<E> get allDayEvents => where((e) => e.isAllDay);
   Iterable<E> get partDayEvents => where((e) => e.isPartDay);
 
+  Iterable<E> intersectingInterval(DateInterval interval) =>
+      where((e) => e.intersectsInterval(interval));
   Iterable<E> intersectingDate(LocalDate date) =>
       where((e) => e.intersectsDate(date));
+
+  List<E> sortedByStartLength() =>
+      sortedBy((e) => e.start).thenByDescending((e) => e.end);
 }

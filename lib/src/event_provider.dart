@@ -26,6 +26,7 @@ abstract class EventProvider<E extends Event> {
 
   void onVisibleDatesChanged(DateInterval visibleRange) {}
 
+  Stream<Iterable<E>> getAllDayEventsIntersecting(DateInterval interval);
   Stream<Iterable<E>> getPartDayEventsIntersecting(LocalDate date);
 
   /// Discards any resources used by the object.
@@ -47,6 +48,12 @@ class ListEventProvider<E extends Event> extends EventProvider<E> {
         _events = events;
 
   final List<E> _events;
+
+  @override
+  Stream<Iterable<E>> getAllDayEventsIntersecting(DateInterval interval) {
+    final events = _events.allDayEvents.intersectingInterval(interval);
+    return Stream.value(events);
+  }
 
   @override
   Stream<Iterable<E>> getPartDayEventsIntersecting(LocalDate date) {
@@ -92,6 +99,12 @@ class StreamEventProvider<E extends Event> extends EventProvider<E>
   final StreamedEventGetter<E> eventGetter;
   ValueConnectableStream<Iterable<E>> _events;
   StreamSubscription _eventsSubscription;
+
+  @override
+  Stream<Iterable<E>> getAllDayEventsIntersecting(DateInterval interval) {
+    return _events
+        .map((events) => events.allDayEvents.intersectingInterval(interval));
+  }
 
   @override
   Stream<Iterable<E>> getPartDayEventsIntersecting(LocalDate date) {

@@ -7,8 +7,8 @@ import '../event.dart';
 import '../timetable.dart';
 import '../utils/stream_change_notifier.dart';
 import 'current_time_indicator_painter.dart';
-import 'listening_date_events.dart';
 import 'multi_date_background_painter.dart';
+import 'streamed_date_events.dart';
 
 class MultiDateContent<E extends Event> extends StatefulWidget {
   const MultiDateContent({

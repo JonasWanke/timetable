@@ -80,6 +80,10 @@ Similar to a [`ScrollController`] or a [`TabController`], a [`TimetableControlle
 final myController = TimetableController(
   eventProvider: myEventProvider,
   // Optional parameters with their default values:
+  initialTimeRange: InitialTimeRange.range(
+    startTime: LocalTime(8, 0, 0),
+    endTime: LocalTime(20, 0, 0),
+  ),
   initialDate: LocalDate.today(),
   visibleRange: VisibleRange.week(),
   firstDayOfWeek: DayOfWeek.monday,

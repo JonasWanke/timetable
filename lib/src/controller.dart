@@ -5,6 +5,7 @@ import 'package:time_machine/time_machine.dart';
 import 'event.dart';
 import 'event_provider.dart';
 import 'header/timetable_header.dart';
+import 'initial_time_range.dart';
 import 'timetable.dart';
 import 'utils/scrolling.dart';
 import 'utils/utils.dart';
@@ -15,10 +16,12 @@ class TimetableController<E extends Event> {
   TimetableController({
     @required this.eventProvider,
     LocalDate initialDate,
+    this.initialTimeRange = const InitialTimeRange.zoom(1),
     this.visibleRange = const VisibleRange.week(),
     this.firstDayOfWeek = DayOfWeek.monday,
   })  : assert(eventProvider != null),
         initialDate = initialDate ?? LocalDate.today(),
+        assert(initialTimeRange != null),
         assert(firstDayOfWeek != null),
         assert(visibleRange != null) {
     _scrollControllers = LinkedScrollControllerGroup(
@@ -44,7 +47,12 @@ class TimetableController<E extends Event> {
   /// The [EventProvider] used for populating [Timetable] with events.
   final EventProvider<E> eventProvider;
 
-  /// The initial focused date.
+  /// The initially visible time range.
+  ///
+  /// This defaults to the full day.
+  final InitialTimeRange initialTimeRange;
+
+  /// The initially focused date.
   ///
   /// This defaults to [LocalDate.today];
   final LocalDate initialDate;

@@ -62,6 +62,10 @@ class _TimetableExampleState extends State<TimetableExample> {
       // ),
 
       // Other (optional) parameters:
+      initialTimeRange: InitialTimeRange.range(
+        startTime: LocalTime(8, 0, 0),
+        endTime: LocalTime(20, 0, 0),
+      ),
       initialDate: LocalDate.today(),
       visibleRange: VisibleRange.days(3),
       firstDayOfWeek: DayOfWeek.monday,

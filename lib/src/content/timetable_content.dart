@@ -23,6 +23,7 @@ class TimetableContent<E extends Event> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return VerticalZoom(
+      initialZoom: controller.initialTimeRange.asInitialZoom(),
       child: Row(
         children: <Widget>[
           Container(

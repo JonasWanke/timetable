@@ -97,6 +97,7 @@ jobs:
           name: source
           path: .
 
-      - run: |
+      - name: Build APK
+        run: |
           cd ./example
           flutter build apk

@@ -107,7 +107,7 @@ class WeekVisibleRange extends VisibleRange {
         (focusPage - epochWeekDayOffset) / TimeConstants.daysPerWeek;
 
     final velocityAddition = getDefaultVelocityAddition(velocity, tolerance);
-    final targetWeek = (focusWeek + velocityAddition).roundToDouble();
+    final targetWeek = (focusWeek + velocityAddition).floorToDouble();
     return targetWeek * TimeConstants.daysPerWeek + epochWeekDayOffset;
   }
 }

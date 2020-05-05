@@ -17,3 +17,12 @@ dependencies:
   pedantic: ^1.9.0
   rxdart: ^0.23.1
   time_machine: ^0.9.12
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  test: ^1.14.3
+
+dependency_overrides:
+  pedantic: ^1.9.0
+  test_api: ^0.2.15

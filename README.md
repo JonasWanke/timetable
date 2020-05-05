@@ -7,7 +7,7 @@
 
 
 - [Getting started](#getting-started)
-  - [1. Initialize <kbd>time_machine</kbd>](#1-initialize-kbdtimemachinekbd)
+  - [1. Initialize <kbd>time_machine</kbd>](#1-initialize-time_machine)
   - [2. Define your `Event`s](#2-define-your-events)
   - [3. Create an `EventProvider`](#3-create-an-eventprovider)
   - [4. Create a `TimetableController`](#4-create-a-timetablecontroller)
@@ -75,7 +75,7 @@ final myEventProvider = EventProvider.list([
 
 ### 4. Create a [`TimetableController`]
 
-Similar to a [`ScrollController`] or a [`TabController`], a [`TimetableController`] is reponsible for interacting with a [`Timetable`] and managing its state. You can instantiate it with your [`EventProvider`]:
+Similar to a [`ScrollController`] or a [`TabController`], a [`TimetableController`] is responsible for interacting with a [`Timetable`] and managing its state. You can instantiate it with your [`EventProvider`]:
 ```dart
 final myController = TimetableController(
   eventProvider: myEventProvider,
@@ -130,6 +130,7 @@ And you're done 🎉
 [`BasicEvent`]: https://pub.dev/documentation/timetable/latest/timetable/BasicEvent-class.html
 [`BasicEventWidget`]: https://pub.dev/documentation/timetable/latest/timetable/BasicEventWidget-class.html
 [`Event`]: https://pub.dev/documentation/timetable/latest/timetable/Event-class.html
+[`EventBuilder`]: https://pub.dev/documentation/timetable/latest/timetable/EventBuilder-class.html
 [`EventProvider`]: https://pub.dev/documentation/timetable/latest/timetable/EventProvider-class.html
 [`EventProvider.list`]: https://pub.dev/documentation/timetable/latest/timetable/EventProvider/EventProvider.list.html
 [`EventProvider.stream`]: https://pub.dev/documentation/timetable/latest/timetable/EventProvider/EventProvider.stream.html

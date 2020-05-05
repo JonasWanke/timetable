@@ -12,14 +12,15 @@ dependencies:
 
   black_hole_flutter: ^0.2.10
   collection: ^1.14.11
+  dartx: ^0.3.0
   meta: ^1.1.8
-  pedantic: ^1.9.0
   rxdart: ^0.23.1
   time_machine: ^0.9.12
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  pedantic: ^1.9.0
   test: ^1.14.3
 
 dependency_overrides:

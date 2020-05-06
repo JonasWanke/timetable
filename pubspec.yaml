@@ -1,6 +1,6 @@
 name: timetable
 description: "📅 Customizable, animated calendar widget including day & week views"
-version: 0.1.2
+version: 0.1.3
 homepage: https://github.com/JonasWanke/timetable
 
 environment:

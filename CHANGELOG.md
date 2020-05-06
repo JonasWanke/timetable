@@ -15,10 +15,16 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 ### 📦 Build & CI
 -->
 
-## [Unreleased](https://github.com/JonasWanke/timetable/compare/v0.1.2...master)
+## [Unreleased](https://github.com/JonasWanke/timetable/compare/v0.1.3...master)
 
 
-## [0.1.2](https://github.com/JonasWanke/timetable/compare/v0.1.1...v0.1.2) · 2020-05-04
+## [0.1.3](https://github.com/JonasWanke/timetable/compare/v0.1.2...v0.1.3) · 2020-05-06
+
+### 🐛 Bug Fixes
+- fix time zooming & add testing ([#3](https://github.com/JonasWanke/timetable/pull/3))
+
+
+## [0.1.2](https://github.com/JonasWanke/timetable/compare/v0.1.1...v0.1.2) · 2020-05-05
 
 ### 🎉 New Features
 - add `TimetableController.initialTimeRange`, closes: [#1](https://github.com/JonasWanke/timetable/issues/1)

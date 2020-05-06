@@ -24,15 +24,36 @@ jobs:
           channel: "stable"
 
       - name: Install dependencies
-        run: |
-          sed -i -E 's/timetable: .+/timetable:\n    path: ..\//' ./example/pubspec.yaml
-          flutter pub get
+        run: flutter pub get
 
       - name: Persist current state
         uses: actions/upload-artifact@v1
         with:
           name: source
           path: .
+
+  test:
+    name: Run tests
+    needs: install
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install Java
+        uses: actions/setup-java@v1
+        with:
+          java-version: "12.x"
+      - name: Install Flutter
+        uses: subosito/flutter-action@v1
+        with:
+          channel: "stable"
+
+      - name: Checkout source
+        uses: actions/download-artifact@v1
+        with:
+          name: source
+          path: .
+
+      - name: Run tests
+        run: flutter test
 
   lint:
     name: Lint

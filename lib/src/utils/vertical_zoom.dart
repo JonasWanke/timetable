@@ -97,7 +97,7 @@ class _VerticalZoomState extends State<VerticalZoom> {
       builder: (context, constraints) {
         final height = constraints.maxHeight;
 
-        _zoom = widget.initialZoom.getZoom(height);
+        _zoom ??= widget.initialZoom.getZoom(height);
         _scrollController ??= ScrollController(
           initialScrollOffset: widget.initialZoom.getOffset(height, _zoom),
         );

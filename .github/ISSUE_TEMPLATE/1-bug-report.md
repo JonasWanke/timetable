@@ -7,22 +7,10 @@ assignees: ''
 
 ---
 
-<!--
-Thanks for taking the time to file an issue!
-Please select the component label(s) (C: abc) this bug is related to from the right (if applicable).
--->
+<!-- Thanks for taking the time to file an issue! -->
 
 **Describe the bug**
 <!-- A clear and concise description of what the bug is -->
-
-
-
-**To Reproduce**
-<!-- Steps to reproduce the behavior -->
-1. Go to '...'
-2. Click on '....'
-3. Scroll down to '....'
-4. See error
 
 
 <!-- If applicable, add screenshots to help explain your problem
@@ -34,7 +22,7 @@ Please select the component label(s) (C: abc) this bug is related to from the ri
 -->
 
 **Environment:**
-<!-- Please complete the following information -->
+<!-- Please complete the following information: -->
 - Device:  <!-- e.g. Samsung Galaxy S8+ -->
-- OS:  <!-- e.g. Windows 10 Home 1809 -->
-- Program/library version:  <!-- e.g. 1.0.0 -->
+- OS version:  <!-- e.g. Android 9.0.0 -->
+- Package version:  <!-- e.g. 1.0.2 -->

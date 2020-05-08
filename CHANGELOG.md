@@ -7,6 +7,7 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 
 <!-- Template:
 ## [NEW](https://github.com/JonasWanke/timetable/compare/vOLD...vNEW) · 2020-xx-xx
+### ⚠ BREAKING CHANGES
 ### 🎉 New Features
 ### ⚡ Changes
 ### 🐛 Bug Fixes
@@ -15,7 +16,17 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 ### 📦 Build & CI
 -->
 
-## [Unreleased](https://github.com/JonasWanke/timetable/compare/v0.1.3...master)
+## [Unreleased](https://github.com/JonasWanke/timetable/compare/v0.2.0...master)
+
+
+## [0.2.0](https://github.com/JonasWanke/timetable/compare/v0.1.3...v0.2.0) · 2020-05-08
+
+### ⚠ BREAKING CHANGES
+- fix week scroll alignment ([#6](https://github.com/JonasWanke/timetable/pull/6))
+  - To provide a simpler API the exposed methods of `VisibleRange` were changed slightly. This doesn't affect you if you just instantiate one of the given implementations, but only if you extend it yourself or call one of its methods directly.
+
+### 🐛 Bug Fixes
+- support Flutter v1.17.0 ([#4](https://github.com/JonasWanke/timetable/pull/4))
 
 
 ## [0.1.3](https://github.com/JonasWanke/timetable/compare/v0.1.2...v0.1.3) · 2020-05-06

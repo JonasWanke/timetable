@@ -1,16 +1,58 @@
+import 'package:dartx/dartx.dart';
 import 'package:test/test.dart';
 import 'package:time_machine/time_machine.dart';
 import 'package:timetable/src/visible_range.dart';
 
 void main() {
-  group('WeekVisibleRange', () {
-    WeekVisibleRange visibleRange;
-    setUp(() => visibleRange = WeekVisibleRange());
+  VisibleRange visibleRange;
 
-    group('getTargetPage w/o velocity', () {
+  group('VisibleRange.days', () {
+    setUp(() => visibleRange = VisibleRange.days(3));
+
+    test('getTargetPageForFocus', () {
+      // Monday of week 2020-01
+      final startDate = LocalDate(2019, 12, 30);
+
+      expect(
+        0.rangeTo(2).map((offset) {
+          return visibleRange.getTargetPageForFocusDate(
+            startDate + Period(days: offset),
+            DayOfWeek.monday,
+          );
+        }),
+        equals(0.rangeTo(2).map((offset) => startDate.epochDay + offset)),
+      );
+    });
+
+    test('getTargetPageForCurrent', () {
+      // Monday of week 2020-01
+      final startPage = LocalDate(2019, 12, 30).epochDay.toDouble();
+
+      final values = {
+        startPage: startPage,
+        startPage - 0.4: startPage,
+        startPage + 0.4: startPage,
+        startPage + 1: startPage + 1,
+      };
+      expect(
+        values.keys.map((current) {
+          return visibleRange.getTargetPageForCurrent(
+            current,
+            DayOfWeek.monday,
+          );
+        }),
+        equals(values.values),
+      );
+    });
+  });
+
+  group('VisibleRange.week', () {
+    setUp(() => visibleRange = VisibleRange.week());
+
+    group('getTargetPageForFocus', () {
       LocalDate getTargetDate(LocalDate focusDate) {
         final targetPage =
-            visibleRange.getTargetPageForDate(focusDate, DayOfWeek.monday);
+            visibleRange.getTargetPageForFocusDate(focusDate, DayOfWeek.monday);
         return LocalDate.fromEpochDay(targetPage.toInt());
       }
 
@@ -41,6 +83,21 @@ void main() {
           everyElement(equals(LocalDate(2020, 4, 27))),
         );
       });
+    });
+
+    test('getTargetPageForCurrent', () {
+      // Monday of week 2020-01
+      final startPage = LocalDate(2019, 12, 30).epochDay.toDouble();
+
+      expect(
+        (-3).rangeTo(3).map((offset) {
+          return visibleRange.getTargetPageForCurrent(
+            startPage + offset,
+            DayOfWeek.monday,
+          );
+        }),
+        everyElement(equals(startPage)),
+      );
     });
   });
 }

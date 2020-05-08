@@ -51,7 +51,7 @@ class _DatePageViewState extends State<DatePageView> {
         return Viewport(
           axisDirection: AxisDirection.right,
           offset: position,
-          anchor: visibleDays.isEven ? 1 / (2 * visibleDays) : 0,
+          anchor: 0,
           slivers: <Widget>[
             SliverFillViewport(
               viewportFraction: 1 / visibleDays,

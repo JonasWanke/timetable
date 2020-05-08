@@ -16,13 +16,15 @@ class TimetableScrollPhysics extends ScrollPhysics {
   }
 
   double _getTargetPixels(
-      ScrollPosition position, Tolerance tolerance, double velocity) {
+    ScrollPosition position,
+    Tolerance tolerance,
+    double velocity,
+  ) {
     final pixelsToPage =
         controller.visibleRange.visibleDays / position.viewportDimension;
-
     final currentPage = position.pixels * pixelsToPage;
 
-    final targetPage = controller.visibleRange.getTargetPage(
+    final targetPage = controller.visibleRange.getTargetPageForCurrent(
       currentPage,
       controller.firstDayOfWeek,
       velocity: velocity,

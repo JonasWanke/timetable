@@ -57,7 +57,7 @@ class BasicEventWidget extends StatelessWidget {
       child: Padding(
         padding: EdgeInsets.fromLTRB(4, 2, 4, 0),
         child: DefaultTextStyle(
-          style: context.textTheme.body1.copyWith(
+          style: context.textTheme.bodyText2.copyWith(
             fontSize: 12,
             color: event.color.highEmphasisOnColor,
           ),

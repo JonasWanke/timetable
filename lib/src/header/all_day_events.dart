@@ -60,7 +60,7 @@ class AllDayEvents<E extends Event> extends StatelessWidget {
 }
 
 class _EventParentDataWidget<E extends Event>
-    extends ParentDataWidget<_EventsWidget<E>> {
+    extends ParentDataWidget<_EventParentData<E>> {
   const _EventParentDataWidget({
     Key key,
     @required this.event,
@@ -68,6 +68,9 @@ class _EventParentDataWidget<E extends Event>
   }) : super(key: key, child: child);
 
   final E event;
+
+  @override
+  Type get debugTypicalAncestorWidgetClass => _EventsWidget;
 
   @override
   void applyParentData(RenderObject renderObject) {

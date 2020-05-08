@@ -25,8 +25,8 @@ class TimetableController<E extends Event> {
         assert(firstDayOfWeek != null),
         assert(visibleRange != null) {
     _scrollControllers = LinkedScrollControllerGroup(
-      initialPage:
-          visibleRange.getTargetPageForDate(this.initialDate, firstDayOfWeek),
+      initialPage: visibleRange.getTargetPageForFocusDate(
+          this.initialDate, firstDayOfWeek),
       viewportFraction: 1 / visibleRange.visibleDays,
     );
 
@@ -100,7 +100,7 @@ class TimetableController<E extends Event> {
     Duration duration = const Duration(milliseconds: 200),
   }) async {
     await scrollControllers.animateTo(
-      visibleRange.getTargetPageForDate(date, firstDayOfWeek),
+      visibleRange.getTargetPageForFocusDate(date, firstDayOfWeek),
       curve: curve,
       duration: duration,
     );

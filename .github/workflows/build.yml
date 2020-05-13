@@ -4,11 +4,16 @@ on:
   push:
   pull_request:
   schedule:
-    - cron: "0 8 * * *"
+    - cron: "0 4,11 * * *"
+
+env:
+  JAVA_VERSION: 12.x
+  FLUTTER_CHANNEL: stable
+  FLUTTER_VERSION: 1.17.x
 
 jobs:
   install:
-    name: Install Flutter and dependencies
+    name: Install Flutter & dependencies
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -17,11 +22,11 @@ jobs:
       - name: Install Java
         uses: actions/setup-java@v1
         with:
-          java-version: "12.x"
+          java-version: ${{ env.JAVA_VERSION }}
       - name: Install Flutter
         uses: subosito/flutter-action@v1
         with:
-          channel: "stable"
+          channel: ${{ env.FLUTTER_CHANNEL }}
 
       - name: Install dependencies
         run: flutter pub get
@@ -40,17 +45,19 @@ jobs:
       - name: Install Java
         uses: actions/setup-java@v1
         with:
-          java-version: "12.x"
+          java-version: ${{ env.JAVA_VERSION }}
       - name: Install Flutter
         uses: subosito/flutter-action@v1
         with:
-          channel: "stable"
+          channel: ${{ env.FLUTTER_CHANNEL }}
 
       - name: Checkout source
-        uses: actions/download-artifact@v1
+        uses: actions/download-artifact@v2
         with:
           name: source
-          path: .
+
+      - name: Install dependencies
+        run: flutter pub get
 
       - name: Run tests
         run: flutter test
@@ -63,17 +70,19 @@ jobs:
       - name: Install Java
         uses: actions/setup-java@v1
         with:
-          java-version: "12.x"
+          java-version: ${{ env.JAVA_VERSION }}
       - name: Install Flutter
         uses: subosito/flutter-action@v1
         with:
-          channel: "stable"
+          channel: ${{ env.FLUTTER_CHANNEL }}
 
       - name: Checkout source
-        uses: actions/download-artifact@v1
+        uses: actions/download-artifact@v2
         with:
           name: source
-          path: .
+
+      - name: Install dependencies
+        run: flutter pub get
 
       - name: Run linter
         run: flutter analyze > flutter_analyze_report.txt
@@ -113,12 +122,20 @@ jobs:
           channel: "stable"
 
       - name: Checkout source
-        uses: actions/download-artifact@v1
+        uses: actions/download-artifact@v2
         with:
           name: source
-          path: .
+
+      - name: Install dependencies
+        run: flutter pub get
+        working-directory: example
 
       - name: Build APK
-        run: |
-          cd ./example
-          flutter build apk
+        run: flutter build apk
+        working-directory: example
+
+      - name: Upload APK as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: example-apk
+          path: example/build/app/outputs/apk/release/app-release.apk

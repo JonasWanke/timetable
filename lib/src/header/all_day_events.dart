@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'dart:ui';
 
 import 'package:black_hole_flutter/black_hole_flutter.dart';
@@ -33,7 +34,10 @@ class AllDayEvents<E extends Event> extends StatelessWidget {
           stream: controller.eventProvider
               .getAllDayEventsIntersecting(visibleDates),
           builder: (_, snapshot) {
-            final events = snapshot.data ?? [];
+            var events = snapshot.data ?? [];
+            // The StreamBuilder gets recycled and initially still has a list of
+            // old events.
+            events = events.where((e) => e.intersectsInterval(visibleDates));
 
             return ValueListenableBuilder(
               valueListenable: controller.scrollControllers.pageListenable,
@@ -181,8 +185,7 @@ class _EventsLayout<E extends Event> extends RenderBox
 
   static const double eventHeight = 24;
 
-  Iterable<E> get events =>
-      children.map((child) => (child.parentData as _EventParentData<E>).event);
+  Iterable<E> get events => children.map((child) => child.data.event);
 
   @override
   void setupParentData(RenderObject child) {
@@ -225,6 +228,9 @@ class _EventsLayout<E extends Event> extends RenderBox
   @override
   double computeMaxIntrinsicHeight(double width) => _computeIntrinsicHeight();
 
+  final _yPositions = <E, int>{};
+  var _maxHeight = 0;
+
   @override
   void performLayout() {
     assert(!sizedByParent);
@@ -234,25 +240,44 @@ class _EventsLayout<E extends Event> extends RenderBox
       return;
     }
 
-    final sortedEvents = events.sortedByStartLength();
-    final dateHeights = <int, int>{};
-    final yPositions = <E, int>{};
+    _removeOldEvents();
+    _calculateEventPositions();
+    size = Size(constraints.maxWidth, _maxHeight * eventHeight);
+    _positionEvents();
+  }
+
+  void _removeOldEvents() {
+    _yPositions.removeWhere((e, _) {
+      final distance = math.max(
+        e.start.calendarDate.periodSince(currentlyVisibleDates.end).days,
+        e.endDateInclusive.periodUntil(currentlyVisibleDates.start).days,
+      );
+      return distance >= visibleRange.visibleDays;
+    });
+  }
+
+  void _calculateEventPositions() {
+    final sortedEvents =
+        events.whereNot(_yPositions.containsKey).sortedByStartLength();
     for (final event in sortedEvents) {
-      final intersectingDates = event.intersectingDates.dates;
-      final y = intersectingDates
-          .map((date) => dateHeights[date.epochDay] ?? 0)
-          .max();
-      yPositions[event] = y;
-      for (final date in intersectingDates) {
-        dateHeights[date.epochDay] = y + 1;
+      for (var y = 0; y <= _maxHeight; y++) {
+        if (_yPositions.entries.any((e) =>
+            e.value == y &&
+            e.key.intersectsInterval(event.intersectingDates))) {
+          continue;
+        }
+
+        _yPositions[event] = y;
+        _maxHeight = math.max(_maxHeight, y + 1);
+        break;
       }
     }
+  }
 
-    size = Size(constraints.maxWidth, dateHeights.values.max() * eventHeight);
-
+  void _positionEvents() {
     final dateWidth = size.width / visibleRange.visibleDays;
     for (final child in children) {
-      final event = (child.parentData as _EventParentData<E>).event;
+      final event = child.data.event;
 
       final startDate = event.start.calendarDate;
       final left = ((startDate.epochDay - page) * dateWidth).coerceAtLeast(0);
@@ -265,8 +290,7 @@ class _EventsLayout<E extends Event> extends RenderBox
         height: eventHeight,
       ));
 
-      (child.parentData as _EventParentData<E>).offset =
-          Offset(left, yPositions[event] * eventHeight);
+      child.data.offset = Offset(left, _yPositions[event] * eventHeight);
     }
   }
 
@@ -279,4 +303,8 @@ class _EventsLayout<E extends Event> extends RenderBox
   void paint(PaintingContext context, Offset offset) {
     defaultPaint(context, offset);
   }
+}
+
+extension _ParentData<E extends Event> on RenderBox {
+  _EventParentData<E> get data => parentData as _EventParentData<E>;
 }

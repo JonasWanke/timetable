@@ -51,6 +51,13 @@ final _events = <BasicEvent>[
   _DemoEvent(7, 2, LocalTime(3, 0, 0), LocalTime(4, 0, 0)),
   _DemoEvent(8, 0, LocalTime(20, 0, 0), LocalTime(4, 0, 0), endDateOffset: 1),
   _DemoEvent.allDay(0, 0, 1),
+  _DemoEvent.allDay(1, 1, 1),
+  _DemoEvent.allDay(2, 0, 2),
+  _DemoEvent.allDay(3, 2, 2),
+  _DemoEvent.allDay(4, 2, 2),
+  _DemoEvent.allDay(5, 1, 2),
+  _DemoEvent.allDay(6, 3, 2),
+  _DemoEvent.allDay(7, 4, 4),
 ];
 
 class _DemoEvent extends BasicEvent {

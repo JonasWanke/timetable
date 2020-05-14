@@ -42,6 +42,9 @@ abstract class Event {
 
   @override
   int get hashCode => hashList([runtimeType, id, start, end]);
+
+  @override
+  String toString() => id.toString();
 }
 
 extension TimetableEvent on Event {

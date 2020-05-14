@@ -216,17 +216,31 @@ class _EventsLayout<E extends Event> extends RenderBox
     return 0;
   }
 
-  double _computeIntrinsicHeight() {
-    final maxParallelEvents = currentlyVisibleDates.dates.map((date) {
-      return events.count((event) => event.intersectsDate(date));
-    }).max();
-    return maxParallelEvents * eventHeight;
+  double _parallelEventCount() {
+    int parallelEventsFrom(int page) {
+      final startDate = LocalDate.fromEpochDay(page);
+      final interval = DateInterval(
+        startDate,
+        startDate + Period(days: visibleRange.visibleDays - 1),
+      );
+
+      return interval.dates.map((date) {
+        return events.count((e) => e.intersectsDate(date));
+      }).max();
+    }
+
+    final oldParallelEvents = parallelEventsFrom(page.floor());
+    final newParallelEvents = parallelEventsFrom(page.ceil());
+    final t = page - page.floorToDouble();
+    return lerpDouble(oldParallelEvents, newParallelEvents, t);
   }
 
   @override
-  double computeMinIntrinsicHeight(double width) => _computeIntrinsicHeight();
+  double computeMinIntrinsicHeight(double width) =>
+      _parallelEventCount() * eventHeight;
   @override
-  double computeMaxIntrinsicHeight(double width) => _computeIntrinsicHeight();
+  double computeMaxIntrinsicHeight(double width) =>
+      _parallelEventCount() * eventHeight;
 
   final _yPositions = <E, int>{};
   var _maxHeight = 0;
@@ -242,7 +256,7 @@ class _EventsLayout<E extends Event> extends RenderBox
 
     _removeOldEvents();
     _calculateEventPositions();
-    size = Size(constraints.maxWidth, _maxHeight * eventHeight);
+    _setSize();
     _positionEvents();
   }
 
@@ -274,6 +288,13 @@ class _EventsLayout<E extends Event> extends RenderBox
     }
   }
 
+  bool _hasOverflow = false;
+  void _setSize() {
+    final parallelEvents = _parallelEventCount();
+    size = Size(constraints.maxWidth, parallelEvents * eventHeight);
+    _hasOverflow = parallelEvents.floorToDouble() != parallelEvents;
+  }
+
   void _positionEvents() {
     final dateWidth = size.width / visibleRange.visibleDays;
     for (final child in children) {
@@ -301,7 +322,13 @@ class _EventsLayout<E extends Event> extends RenderBox
 
   @override
   void paint(PaintingContext context, Offset offset) {
-    defaultPaint(context, offset);
+    if (!_hasOverflow) {
+      defaultPaint(context, offset);
+      return;
+    }
+
+    context.pushClipRect(
+        needsCompositing, offset, Offset.zero & size, defaultPaint);
   }
 }
 

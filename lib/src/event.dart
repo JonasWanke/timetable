@@ -49,7 +49,7 @@ abstract class Event {
 
 extension TimetableEvent on Event {
   bool intersectsDate(LocalDate date) =>
-      start <= date.at(LocalTime.maxValue) && end > date.at(LocalTime.minValue);
+      intersectsInterval(DateInterval(date, date));
 
   bool intersectsInterval(DateInterval interval) {
     return start.calendarDate <= interval.end &&

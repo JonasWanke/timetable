@@ -98,7 +98,7 @@ class StreamEventProvider<E extends Event> extends EventProvider<E>
 
   final StreamedEventGetter<E> eventGetter;
   ValueConnectableStream<Iterable<E>> _events;
-  StreamSubscription _eventsSubscription;
+  StreamSubscription<Iterable<E>> _eventsSubscription;
 
   @override
   Stream<Iterable<E>> getAllDayEventsIntersecting(DateInterval interval) {

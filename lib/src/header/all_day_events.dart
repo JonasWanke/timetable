@@ -11,7 +11,6 @@ import 'package:timetable/src/visible_range.dart';
 import '../controller.dart';
 import '../event.dart';
 import '../timetable.dart';
-import '../utils/utils.dart';
 
 class AllDayEvents<E extends Event> extends StatelessWidget {
   const AllDayEvents({

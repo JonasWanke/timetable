@@ -21,7 +21,7 @@ class DateIndicator extends StatelessWidget {
       child: Padding(
         padding: EdgeInsets.all(8),
         child: Text(
-          '${date.dayOfMonth}',
+          date.dayOfMonth.toString(),
           style: TextStyle(
             color: date.isToday
                 ? theme.primaryColor.highEmphasisOnColor

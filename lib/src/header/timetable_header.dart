@@ -49,7 +49,7 @@ class TimetableHeader<E extends Event> extends StatelessWidget {
               AllDayEvents(
                 controller: controller,
                 eventBuilder: eventBuilder,
-              )
+              ),
             ],
           ),
         ),

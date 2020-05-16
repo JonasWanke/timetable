@@ -58,6 +58,9 @@ final _events = <BasicEvent>[
   _DemoEvent.allDay(5, 1, 2),
   _DemoEvent.allDay(6, 3, 2),
   _DemoEvent.allDay(7, 4, 4),
+  _DemoEvent.allDay(8, -1, 2),
+  _DemoEvent.allDay(9, -2, 2),
+  _DemoEvent.allDay(10, -3, 2),
 ];
 
 class _DemoEvent extends BasicEvent {

@@ -224,11 +224,14 @@ class _EventsLayout<E extends Event> extends RenderBox
         startDate + Period(days: visibleRange.visibleDays - 1),
       );
 
-      return interval.dates.map((date) {
-        return events.count((e) => e.intersectsDate(date));
-      }).max();
+      final maxEventPosition = _yPositions.entries
+          .where((e) => e.key.intersectsInterval(interval))
+          .map((e) => e.value)
+          .max();
+      return maxEventPosition != null ? maxEventPosition + 1 : 0;
     }
 
+    _updateEventPositions();
     final oldParallelEvents = parallelEventsFrom(page.floor());
     final newParallelEvents = parallelEventsFrom(page.ceil());
     final t = page - page.floorToDouble();
@@ -243,7 +246,6 @@ class _EventsLayout<E extends Event> extends RenderBox
       _parallelEventCount() * eventHeight;
 
   final _yPositions = <E, int>{};
-  var _maxHeight = 0;
 
   @override
   void performLayout() {
@@ -254,13 +256,13 @@ class _EventsLayout<E extends Event> extends RenderBox
       return;
     }
 
-    _removeOldEvents();
-    _calculateEventPositions();
+    _updateEventPositions();
     _setSize();
     _positionEvents();
   }
 
-  void _removeOldEvents() {
+  void _updateEventPositions() {
+    // Remove old events.
     _yPositions.removeWhere((e, _) {
       final distance = math.max(
         e.start.calendarDate.periodSince(currentlyVisibleDates.end).days,
@@ -268,22 +270,29 @@ class _EventsLayout<E extends Event> extends RenderBox
       );
       return distance >= visibleRange.visibleDays;
     });
-  }
 
-  void _calculateEventPositions() {
+    // Insert new events.
     final sortedEvents =
         events.whereNot(_yPositions.containsKey).sortedByStartLength();
+
+    Iterable<E> eventsWithPosition(int y) {
+      return _yPositions.entries.where((e) => e.value == y).map((e) => e.key);
+    }
+
+    outer:
     for (final event in sortedEvents) {
-      for (var y = 0; y <= _maxHeight; y++) {
-        if (_yPositions.entries.any((e) =>
-            e.value == y &&
-            e.key.intersectsInterval(event.intersectingDates))) {
-          continue;
+      var y = 0;
+      final interval = event.intersectingDates;
+
+      // ignore: literal_only_boolean_expressions
+      while (true) {
+        final intersectingEvents = eventsWithPosition(y);
+        if (intersectingEvents.none((e) => e.intersectsInterval(interval))) {
+          _yPositions[event] = y;
+          continue outer;
         }
 
-        _yPositions[event] = y;
-        _maxHeight = math.max(_maxHeight, y + 1);
-        break;
+        y++;
       }
     }
   }

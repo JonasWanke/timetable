@@ -1,5 +1,6 @@
 library timetable;
 
+export 'src/all_day.dart' show AllDayEventLayoutInfo;
 export 'src/basic.dart';
 export 'src/controller.dart';
 export 'src/event.dart';

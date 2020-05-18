@@ -8,6 +8,7 @@ import 'package:flutter/widgets.dart';
 import 'package:time_machine/time_machine.dart' hide Offset;
 import 'package:timetable/src/visible_range.dart';
 
+import '../all_day.dart';
 import '../controller.dart';
 import '../event.dart';
 import '../timetable.dart';
@@ -16,48 +17,73 @@ class AllDayEvents<E extends Event> extends StatelessWidget {
   const AllDayEvents({
     Key key,
     @required this.controller,
-    @required this.eventBuilder,
+    @required this.allDayEventBuilder,
   })  : assert(controller != null),
-        assert(eventBuilder != null),
+        assert(allDayEventBuilder != null),
         super(key: key);
 
   final TimetableController<E> controller;
-  final EventBuilder<E> eventBuilder;
+  final AllDayEventBuilder<E> allDayEventBuilder;
 
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder<DateInterval>(
-      valueListenable: controller.currentlyVisibleDatesListenable,
-      builder: (_, visibleDates, __) {
-        return StreamBuilder<Iterable<E>>(
-          stream: controller.eventProvider
-              .getAllDayEventsIntersecting(visibleDates),
-          builder: (_, snapshot) {
-            var events = snapshot.data ?? [];
-            // The StreamBuilder gets recycled and initially still has a list of
-            // old events.
-            events = events.where((e) => e.intersectsInterval(visibleDates));
+    return ClipRect(
+      child: ValueListenableBuilder<DateInterval>(
+        valueListenable: controller.currentlyVisibleDatesListenable,
+        builder: (_, visibleDates, __) {
+          return StreamBuilder<Iterable<E>>(
+            stream: controller.eventProvider
+                .getAllDayEventsIntersecting(visibleDates),
+            builder: (_, snapshot) {
+              var events = snapshot.data ?? [];
+              // The StreamBuilder gets recycled and initially still has a list of
+              // old events.
+              events = events.where((e) => e.intersectsInterval(visibleDates));
 
-            return ValueListenableBuilder(
-              valueListenable: controller.scrollControllers.pageListenable,
-              builder: (_, page, __) {
-                return _EventsWidget<E>(
-                  visibleRange: controller.visibleRange,
-                  currentlyVisibleDates: controller.currentlyVisibleDates,
-                  page: page,
-                  children: [
-                    for (final event in events)
-                      _EventParentDataWidget<E>(
-                        event: event,
-                        child: eventBuilder(event),
-                      ),
-                  ],
-                );
-              },
-            );
-          },
-        );
-      },
+              return ValueListenableBuilder(
+                valueListenable: controller.scrollControllers.pageListenable,
+                builder: (context, page, __) =>
+                    _buildEventLayout(context, events, page),
+              );
+            },
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildEventLayout(
+    BuildContext context,
+    Iterable<E> events,
+    double page,
+  ) {
+    return _EventsWidget<E>(
+      visibleRange: controller.visibleRange,
+      currentlyVisibleDates: controller.currentlyVisibleDates,
+      page: page,
+      children: [
+        for (final event in events)
+          _EventParentDataWidget<E>(
+            key: ValueKey(event.id),
+            event: event,
+            child: _buildEvent(context, event, page),
+          ),
+      ],
+    );
+  }
+
+  Widget _buildEvent(BuildContext context, E event, double page) {
+    final visibleDays = controller.visibleRange.visibleDays;
+    final eventStartPage = event.start.calendarDate.epochDay;
+    final eventEndPage = (event.endDateInclusive + Period(days: 1)).epochDay;
+    final hiddenStartDays = (page - eventStartPage).coerceAtLeast(0);
+    return allDayEventBuilder(
+      context,
+      event,
+      AllDayEventLayoutInfo(
+        hiddenStartDays: hiddenStartDays,
+        hiddenEndDays: (eventEndPage - page - visibleDays).coerceAtLeast(0),
+      ),
     );
   }
 }

@@ -1,6 +1,9 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:time_machine/time_machine.dart';
 import 'package:timetable/timetable.dart';
+import 'package:black_hole_flutter/black_hole_flutter.dart';
 
 final EventProvider<BasicEvent> positioningDemoEventProvider =
     EventProvider.list(_events);
@@ -73,7 +76,7 @@ class _DemoEvent extends BasicEvent {
   }) : super(
           id: '$demoId-$eventId',
           title: '$demoId-$eventId',
-          color: Colors.grey,
+          color: _getColor('$demoId-$eventId'),
           start: LocalDate.today().addDays(demoId).at(start),
           end: LocalDate.today().addDays(demoId + endDateOffset).at(end),
         );
@@ -82,8 +85,18 @@ class _DemoEvent extends BasicEvent {
       : super(
           id: 'a-$id',
           title: 'a-$id',
-          color: Colors.grey,
+          color: _getColor('a-$id'),
           start: LocalDate.today().addDays(startOffset).atMidnight(),
           end: LocalDate.today().addDays(startOffset + length).atMidnight(),
         );
+
+  static Color _getColor(String id) {
+    return Random(id.hashCode)
+        .nextColorHsv(
+          saturation: 0.7,
+          value: 0.8,
+          alpha: 1,
+        )
+        .toColor();
+  }
 }

@@ -10,7 +10,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-  black_hole_flutter: ^0.2.10
+  black_hole_flutter: ^0.2.11
   collection: ^1.14.11
   dartx: ^0.3.0
   meta: ^1.1.8

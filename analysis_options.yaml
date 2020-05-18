@@ -4,6 +4,10 @@ analyzer:
   exclude:
     - build/**
     - lib/**.g.dart
+    - local/**
+  language:
+    strict-inference: true
+    strict-raw-types: true
 
 linter:
   rules:

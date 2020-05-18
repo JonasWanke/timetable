@@ -1,7 +1,9 @@
 import 'package:black_hole_flutter/black_hole_flutter.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:time_machine/time_machine.dart';
+import 'package:time_machine/time_machine.dart' hide Offset;
 
+import 'all_day.dart';
 import 'event.dart';
 
 /// A basic implementation of [Event] to get you started.
@@ -62,6 +64,51 @@ class BasicEventWidget extends StatelessWidget {
             color: event.color.highEmphasisOnColor,
           ),
           child: Text(event.title),
+        ),
+      ),
+    );
+  }
+}
+
+/// A simple [Widget] for displaying a [BasicEvent] as an all-day event.
+class BasicAllDayEventWidget extends StatelessWidget {
+  const BasicAllDayEventWidget(
+    this.event, {
+    Key key,
+    @required this.info,
+    this.borderRadius = 4,
+  })  : assert(event != null),
+        assert(info != null),
+        assert(borderRadius != null),
+        super(key: key);
+
+  /// The [BasicEvent] to be displayed.
+  final BasicEvent event;
+  final AllDayEventLayoutInfo info;
+  final double borderRadius;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.all(2),
+      child: CustomPaint(
+        painter: AllDayEventBackgroundPainter(
+          info: info,
+          color: event.color,
+          borderRadius: borderRadius,
+        ),
+        child: Padding(
+          padding: EdgeInsets.fromLTRB(4, 2, 0, 2),
+          child: Align(
+            alignment: AlignmentDirectional.centerStart,
+            child: DefaultTextStyle(
+              style: context.textTheme.bodyText2.copyWith(
+                fontSize: 14,
+                color: event.color.highEmphasisOnColor,
+              ),
+              child: Text(event.title, maxLines: 1),
+            ),
+          ),
         ),
       ),
     );

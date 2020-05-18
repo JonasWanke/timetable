@@ -7,34 +7,34 @@ void main() {
     group('zoom', () {
       test('default', () {
         final initial = InitialZoom.zoom(1);
-        expect(initial.getZoom(200), equals(1));
-        expect(initial.getOffset(200, 1), equals(0));
+        expect(initial.getContentHeight(200), equals(200));
+        expect(initial.getOffset(200, 200), equals(0));
       });
       test('double', () {
         final initial = InitialZoom.zoom(2);
-        expect(initial.getZoom(200), equals(2));
-        expect(initial.getOffset(200, 2), equals(100));
+        expect(initial.getContentHeight(200), equals(400));
+        expect(initial.getOffset(200, 400), equals(100));
       });
     });
 
     group('range', () {
       test('default', () {
         final initial = InitialZoom.range();
-        expect(initial.getZoom(200), equals(1));
-        expect(initial.getOffset(200, 1), equals(0));
+        expect(initial.getContentHeight(200), equals(200));
+        expect(initial.getOffset(200, 200), equals(0));
       });
       test('top half', () {
         final initial = InitialZoom.range(endFraction: 0.5);
-        expect(initial.getZoom(200), equals(2));
-        expect(initial.getOffset(200, 1), equals(0));
+        expect(initial.getContentHeight(200), equals(400));
+        expect(initial.getOffset(200, 200), equals(0));
       });
       test('center half', () {
         final initial = InitialZoom.range(
           startFraction: 0.25,
           endFraction: 0.75,
         );
-        expect(initial.getZoom(200), equals(2));
-        expect(initial.getOffset(200, 2), equals(100));
+        expect(initial.getContentHeight(200), equals(400));
+        expect(initial.getOffset(200, 400), equals(100));
       });
     });
   });

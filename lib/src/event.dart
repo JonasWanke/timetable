@@ -17,7 +17,8 @@ abstract class Event {
     @required this.end,
   })  : assert(id != null),
         assert(start != null),
-        assert(end != null);
+        assert(end != null),
+        assert(start <= end);
 
   /// A unique ID, used e.g. for animating events.
   final Object id;
@@ -41,18 +42,27 @@ abstract class Event {
 
   @override
   int get hashCode => hashList([runtimeType, id, start, end]);
+
+  @override
+  String toString() => id.toString();
 }
 
 extension TimetableEvent on Event {
   bool intersectsDate(LocalDate date) =>
-      start <= date.at(LocalTime.maxValue) && end > date.at(LocalTime.minValue);
+      intersectsInterval(DateInterval(date, date));
 
   bool intersectsInterval(DateInterval interval) {
-    return start <= interval.end.at(LocalTime.maxValue) &&
-        end > interval.start.at(LocalTime.minValue);
+    return start.calendarDate <= interval.end &&
+        endDateInclusive >= interval.start;
   }
 
-  LocalDate get endDateInclusive => (end - Period(nanoseconds: 1)).calendarDate;
+  LocalDate get endDateInclusive {
+    if (start.calendarDate == end.calendarDate) {
+      return end.calendarDate;
+    }
+
+    return (end - Period(nanoseconds: 1)).calendarDate;
+  }
 
   DateInterval get intersectingDates =>
       DateInterval(start.calendarDate, endDateInclusive);

@@ -13,8 +13,8 @@ abstract class InitialZoom {
     double endFraction,
   }) = _RangeInitialZoom;
 
-  double getZoom(double height);
-  double getOffset(double height, double zoom);
+  double getContentHeight(double parentHeight);
+  double getOffset(double parentHeight, double contentHeight);
 }
 
 class _FactorInitialZoom extends InitialZoom {
@@ -25,11 +25,11 @@ class _FactorInitialZoom extends InitialZoom {
   final double zoom;
 
   @override
-  double getZoom(double height) => zoom;
+  double getContentHeight(double parentHeight) => parentHeight * zoom;
   @override
-  double getOffset(double height, double zoom) {
+  double getOffset(double parentHeight, double contentHeight) {
     // Center the viewport vertically.
-    return height * (zoom - 1) / 2;
+    return (contentHeight - parentHeight) / 2;
   }
 }
 
@@ -49,10 +49,12 @@ class _RangeInitialZoom extends InitialZoom {
   final double endFraction;
 
   @override
-  double getZoom(double height) => 1 / (endFraction - startFraction);
+  double getContentHeight(double parentHeight) =>
+      parentHeight / (endFraction - startFraction);
 
   @override
-  double getOffset(double height, double zoom) => height * zoom * startFraction;
+  double getOffset(double parentHeight, double contentHeight) =>
+      contentHeight * startFraction;
 }
 
 class VerticalZoom extends StatefulWidget {
@@ -76,8 +78,10 @@ class VerticalZoom extends StatefulWidget {
 
 class _VerticalZoomState extends State<VerticalZoom> {
   ScrollController _scrollController;
-  double _zoom;
-  double _zoomUpdateReference;
+  // We store height i/o zoom factor so our child stays constant when we change
+  // height.
+  double _contentHeight;
+  double _contentHeightUpdateReference;
   double _lastFocus;
 
   @override
@@ -97,9 +101,10 @@ class _VerticalZoomState extends State<VerticalZoom> {
       builder: (context, constraints) {
         final height = constraints.maxHeight;
 
-        _zoom ??= widget.initialZoom.getZoom(height);
+        _contentHeight ??= widget.initialZoom.getContentHeight(height);
         _scrollController ??= ScrollController(
-          initialScrollOffset: widget.initialZoom.getOffset(height, _zoom),
+          initialScrollOffset:
+              widget.initialZoom.getOffset(height, _contentHeight),
         );
 
         return GestureDetector(
@@ -111,7 +116,7 @@ class _VerticalZoomState extends State<VerticalZoom> {
             physics: NeverScrollableScrollPhysics(),
             controller: _scrollController,
             child: SizedBox(
-              height: _zoom * height,
+              height: _contentHeight,
               child: widget.child,
             ),
           ),
@@ -121,22 +126,26 @@ class _VerticalZoomState extends State<VerticalZoom> {
   }
 
   void _onZoomStart(double height, ScaleStartDetails details) {
-    _zoomUpdateReference = _zoom;
+    _contentHeightUpdateReference = _contentHeight;
     _lastFocus = _getFocus(height, details.localFocalPoint);
   }
 
   void _onZoomUpdate(double height, ScaleUpdateDetails details) {
     setState(() {
-      _zoom = (details.verticalScale * _zoomUpdateReference).coerceIn(1, 4);
+      final minHeight = height;
+      final maxHeight = height * 4;
+      _contentHeight = (details.verticalScale * _contentHeightUpdateReference)
+          .coerceIn(minHeight, maxHeight);
 
       final scrollOffset =
-          _lastFocus * height * _zoom - details.localFocalPoint.dy;
-      _scrollController.jumpTo(scrollOffset.coerceIn(0, (_zoom - 1) * height));
+          _lastFocus * _contentHeight - details.localFocalPoint.dy;
+      _scrollController
+          .jumpTo(scrollOffset.coerceIn(0, _contentHeight - height));
 
       _lastFocus = _getFocus(height, details.localFocalPoint);
     });
   }
 
   double _getFocus(double height, Offset focalPoint) =>
-      (_scrollController.offset + focalPoint.dy) / (height * _zoom);
+      (_scrollController.offset + focalPoint.dy) / _contentHeight;
 }

@@ -13,7 +13,7 @@ abstract class InitialZoom {
     double endFraction,
   }) = _RangeInitialZoom;
 
-  double getZoom(double parentHeight);
+  double getContentHeight(double parentHeight);
   double getOffset(double parentHeight, double contentHeight);
 }
 
@@ -25,7 +25,7 @@ class _FactorInitialZoom extends InitialZoom {
   final double zoom;
 
   @override
-  double getZoom(double parentHeight) => zoom;
+  double getContentHeight(double parentHeight) => parentHeight * zoom;
   @override
   double getOffset(double parentHeight, double contentHeight) {
     // Center the viewport vertically.
@@ -49,7 +49,8 @@ class _RangeInitialZoom extends InitialZoom {
   final double endFraction;
 
   @override
-  double getZoom(double parentHeight) => 1 / (endFraction - startFraction);
+  double getContentHeight(double parentHeight) =>
+      parentHeight / (endFraction - startFraction);
 
   @override
   double getOffset(double parentHeight, double contentHeight) =>
@@ -100,7 +101,7 @@ class _VerticalZoomState extends State<VerticalZoom> {
       builder: (context, constraints) {
         final height = constraints.maxHeight;
 
-        _contentHeight ??= widget.initialZoom.getZoom(height);
+        _contentHeight ??= widget.initialZoom.getContentHeight(height);
         _scrollController ??= ScrollController(
           initialScrollOffset:
               widget.initialZoom.getOffset(height, _contentHeight),

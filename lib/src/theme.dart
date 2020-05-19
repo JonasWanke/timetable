@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:time_machine/time_machine.dart';
 
 import 'timetable.dart';
 
@@ -13,7 +14,21 @@ class TimetableThemeData {
     this.dateIndicatorDecoration,
     this.dateIndicatorTextStyle,
     this.allDayEventHeight,
-  });
+    this.hourTextStyle,
+    this.timeIndicatorColor,
+    this.dividerColor,
+    this.minimumHourHeight,
+    this.maximumHourHeight,
+    this.partDayEventMinimumDuration,
+    this.partDayEventMinimumHeight,
+    this.partDayEventSpacing,
+    this.partDayStackedEventSpacing,
+  })  : assert(allDayEventHeight == null || allDayEventHeight > 0),
+        assert(minimumHourHeight == null || minimumHourHeight > 0),
+        assert(maximumHourHeight == null || maximumHourHeight > 0),
+        assert(minimumHourHeight == null ||
+            maximumHourHeight == null ||
+            minimumHourHeight <= maximumHourHeight);
 
   /// Used by default for indicating the current date.
   ///
@@ -25,7 +40,7 @@ class TimetableThemeData {
   /// [Decoration] to show around the week indicator.
   final Decoration weekIndicatorDecoration;
 
-  /// [TextStyle] to display the current week number.
+  /// [TextStyle] used to display the current week number.
   final TextStyle weekIndicatorTextStyle;
 
   /// [Decoration] to show around the day-of-week-indicator.
@@ -34,7 +49,7 @@ class TimetableThemeData {
   /// - [dateIndicatorTextStyle] for a list of possible states.
   final MaterialStateProperty<Decoration> weekDayIndicatorDecoration;
 
-  /// [TextStyle] to display the day of week.
+  /// [TextStyle] used to display the day of week.
   ///
   /// See also:
   /// - [dateIndicatorTextStyle] for a list of possible states.
@@ -46,7 +61,7 @@ class TimetableThemeData {
   /// - [dateIndicatorTextStyle] for a list of possible states.
   final MaterialStateProperty<Decoration> dateIndicatorDecoration;
 
-  /// [TextStyle] to display the date (of month).
+  /// [TextStyle] used to display the date (of month).
   ///
   /// States:
   /// - past days: [MaterialState.disabled]
@@ -59,6 +74,45 @@ class TimetableThemeData {
   /// Defaults to 24.
   final double allDayEventHeight;
 
+  // Content:
+
+  /// [TextStyle] used to display the hours of the day.
+  final TextStyle hourTextStyle;
+
+  /// [Color] for painting the current time indicator.
+  final Color timeIndicatorColor;
+
+  /// [Color] for painting hour and day dividers in the part-day event area.
+  final Color dividerColor;
+
+  /// Minimum height of a single hour when zooming in.
+  ///
+  /// Defaults to 16.
+  final double minimumHourHeight;
+
+  /// Maximum height of a single hour when zooming in.
+  ///
+  /// [double.infinity] is supported!
+  ///
+  /// Defaults to 64.
+  final double maximumHourHeight;
+
+  /// Minimum [Period] to size a part-day event.
+  ///
+  /// Can be used together with [partDayEventMinimumHeight].
+  final Period partDayEventMinimumDuration;
+
+  /// Minimum height to size a part-day event.
+  ///
+  /// Can be used together with [partDayEventMinimumDuration].
+  final double partDayEventMinimumHeight;
+
+  /// Horizontal space between two parallel events shown next to each other.
+  final double partDayEventSpacing;
+
+  /// Horizontal space between two parallel events stacked on top of each other.
+  final double partDayStackedEventSpacing;
+
   @override
   int get hashCode {
     return hashValues(
@@ -70,6 +124,15 @@ class TimetableThemeData {
       dateIndicatorDecoration,
       dateIndicatorTextStyle,
       allDayEventHeight,
+      hourTextStyle,
+      timeIndicatorColor,
+      dividerColor,
+      minimumHourHeight,
+      maximumHourHeight,
+      partDayEventMinimumDuration,
+      partDayEventMinimumHeight,
+      partDayEventSpacing,
+      partDayStackedEventSpacing,
     );
   }
 
@@ -89,7 +152,16 @@ class TimetableThemeData {
         other.weekDayIndicatorTextStyle == weekDayIndicatorTextStyle &&
         other.dateIndicatorDecoration == dateIndicatorDecoration &&
         other.dateIndicatorTextStyle == dateIndicatorTextStyle &&
-        other.allDayEventHeight == allDayEventHeight;
+        other.allDayEventHeight == allDayEventHeight &&
+        other.hourTextStyle == hourTextStyle &&
+        other.timeIndicatorColor == timeIndicatorColor &&
+        other.dividerColor == dividerColor &&
+        other.minimumHourHeight == minimumHourHeight &&
+        other.maximumHourHeight == maximumHourHeight &&
+        other.partDayEventMinimumDuration == partDayEventMinimumDuration &&
+        other.partDayEventMinimumHeight == partDayEventMinimumHeight &&
+        other.partDayEventSpacing == partDayEventSpacing &&
+        other.partDayStackedEventSpacing == partDayStackedEventSpacing;
   }
 }
 

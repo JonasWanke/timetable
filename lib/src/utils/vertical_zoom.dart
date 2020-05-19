@@ -62,8 +62,15 @@ class VerticalZoom extends StatefulWidget {
     Key key,
     this.initialZoom = const InitialZoom.zoom(1),
     @required this.child,
+    this.minChildHeight = 1,
+    this.maxChildHeight = double.infinity,
   })  : assert(initialZoom != null),
         assert(child != null),
+        assert(minChildHeight != null),
+        assert(minChildHeight > 0),
+        assert(maxChildHeight != null),
+        assert(maxChildHeight > 0),
+        assert(minChildHeight <= maxChildHeight),
         super(key: key);
 
   static const zoomMax = 4;
@@ -71,6 +78,8 @@ class VerticalZoom extends StatefulWidget {
   final InitialZoom initialZoom;
 
   final Widget child;
+  final double minChildHeight;
+  final double maxChildHeight;
 
   @override
   _VerticalZoomState createState() => _VerticalZoomState();
@@ -132,15 +141,13 @@ class _VerticalZoomState extends State<VerticalZoom> {
 
   void _onZoomUpdate(double height, ScaleUpdateDetails details) {
     setState(() {
-      final minHeight = height;
-      final maxHeight = height * 4;
       _contentHeight = (details.verticalScale * _contentHeightUpdateReference)
-          .coerceIn(minHeight, maxHeight);
+          .coerceIn(widget.minChildHeight, widget.maxChildHeight);
 
       final scrollOffset =
           _lastFocus * _contentHeight - details.localFocalPoint.dy;
-      _scrollController
-          .jumpTo(scrollOffset.coerceIn(0, _contentHeight - height));
+      _scrollController.jumpTo(
+          scrollOffset.coerceIn(0, (_contentHeight - height).coerceAtLeast(0)));
 
       _lastFocus = _getFocus(height, details.localFocalPoint);
     });

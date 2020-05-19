@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import '../controller.dart';
 import '../date_page_view.dart';
 import '../event.dart';
+import '../theme.dart';
 import '../timetable.dart';
 import '../utils/stream_change_notifier.dart';
 import 'current_time_indicator_painter.dart';
@@ -39,14 +40,18 @@ class _MultiDateContentState<E extends Event>
 
   @override
   Widget build(BuildContext context) {
+    final theme = context.theme;
+    final timetableTheme = context.timetableTheme;
+
     return CustomPaint(
       painter: MultiDateBackgroundPainter(
         controller: widget.controller,
-        dividerColor: context.theme.dividerColor,
+        dividerColor: timetableTheme?.dividerColor ?? theme.dividerColor,
       ),
       foregroundPainter: CurrentTimeIndicatorPainter(
         controller: widget.controller,
-        color: context.theme.highEmphasisOnBackground,
+        color: timetableTheme?.timeIndicatorColor ??
+            theme.highEmphasisOnBackground,
       ),
       child: DatePageView(
         controller: widget.controller,

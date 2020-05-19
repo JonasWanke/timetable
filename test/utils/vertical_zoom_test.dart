@@ -55,12 +55,18 @@ void main() {
     }
 
     testWidgets('initial', (tester) async {
-      await tester.pumpWidget(VerticalZoom(child: Container()));
+      await tester.pumpWidget(VerticalZoom(
+        maxChildHeight: double.infinity,
+        child: Container(),
+      ));
       expect(getChildHeight(tester), equals(getParentHeight(tester)));
       expect(getChildOffset(tester), equals(0));
     });
     testWidgets('drag w/o zoom', (tester) async {
-      await tester.pumpWidget(VerticalZoom(child: Container()));
+      await tester.pumpWidget(VerticalZoom(
+        maxChildHeight: double.infinity,
+        child: Container(),
+      ));
 
       await tester.drag(parentFinder, Offset(0, 100));
       expect(getChildOffset(tester), equals(0));
@@ -72,6 +78,7 @@ void main() {
     testWidgets('drag w/ zoom', (tester) async {
       await tester.pumpWidget(VerticalZoom(
         initialZoom: InitialZoom.zoom(2),
+        maxChildHeight: double.infinity,
         child: Container(),
       ));
 

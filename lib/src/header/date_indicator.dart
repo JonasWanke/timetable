@@ -2,6 +2,7 @@ import 'package:black_hole_flutter/black_hole_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:time_machine/time_machine.dart';
 
+import '../theme.dart';
 import '../utils/utils.dart';
 
 class DateIndicator extends StatelessWidget {
@@ -12,23 +13,39 @@ class DateIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = context.theme;
+    final timetableTheme = context.timetableTheme;
+
+    final states = statesFor(date);
+    final primaryColor = timetableTheme?.primaryColor ?? theme.primaryColor;
+    final decoration =
+        timetableTheme?.dateIndicatorDecoration?.resolve(states) ??
+            BoxDecoration(
+              shape: BoxShape.circle,
+              color: date.isToday ? primaryColor : Colors.transparent,
+            );
+    final textStyle = timetableTheme?.dateIndicatorTextStyle?.resolve(states) ??
+        TextStyle(
+          color: date.isToday
+              ? primaryColor.highEmphasisOnColor
+              : theme.highEmphasisOnBackground,
+        );
 
     return DecoratedBox(
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: date.isToday ? theme.primaryColor : Colors.transparent,
-      ),
+      decoration: decoration,
       child: Padding(
         padding: EdgeInsets.all(8),
         child: Text(
           date.dayOfMonth.toString(),
-          style: TextStyle(
-            color: date.isToday
-                ? theme.primaryColor.highEmphasisOnColor
-                : theme.highEmphasisOnBackground,
-          ),
+          style: textStyle,
         ),
       ),
     );
+  }
+
+  static Set<MaterialState> statesFor(LocalDate date) {
+    return {
+      if (date < LocalDate.today()) MaterialState.disabled,
+      if (date.isToday) MaterialState.selected,
+    };
   }
 }

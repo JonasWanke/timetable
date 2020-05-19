@@ -6,12 +6,13 @@ import 'package:dartx/dartx.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:time_machine/time_machine.dart' hide Offset;
-import 'package:timetable/src/visible_range.dart';
 
 import '../all_day.dart';
 import '../controller.dart';
 import '../event.dart';
+import '../theme.dart';
 import '../timetable.dart';
+import '../visible_range.dart';
 
 class AllDayEvents<E extends Event> extends StatelessWidget {
   const AllDayEvents({
@@ -130,6 +131,8 @@ class _EventsWidget<E extends Event> extends MultiChildRenderObjectWidget {
         assert(children != null),
         super(children: children);
 
+  static const _defaultEventHeight = 24.0;
+
   final VisibleRange visibleRange;
   final DateInterval currentlyVisibleDates;
   final double page;
@@ -140,6 +143,8 @@ class _EventsWidget<E extends Event> extends MultiChildRenderObjectWidget {
       visibleRange: visibleRange,
       currentlyVisibleDates: currentlyVisibleDates,
       page: page,
+      eventHeight:
+          context.timetableTheme?.allDayEventHeight ?? _defaultEventHeight,
     );
   }
 
@@ -148,7 +153,9 @@ class _EventsWidget<E extends Event> extends MultiChildRenderObjectWidget {
     renderObject
       ..visibleRange = visibleRange
       ..currentlyVisibleDates = currentlyVisibleDates
-      ..page = page;
+      ..page = page
+      ..eventHeight =
+          context.timetableTheme?.allDayEventHeight ?? _defaultEventHeight;
   }
 }
 
@@ -165,12 +172,15 @@ class _EventsLayout<E extends Event> extends RenderBox
     @required VisibleRange visibleRange,
     @required DateInterval currentlyVisibleDates,
     @required double page,
+    @required double eventHeight,
   })  : assert(visibleRange != null),
         _visibleRange = visibleRange,
         assert(currentlyVisibleDates != null),
         _currentlyVisibleDates = currentlyVisibleDates,
         assert(page != null),
-        _page = page;
+        _page = page,
+        assert(eventHeight != null),
+        _eventHeight = eventHeight;
 
   VisibleRange _visibleRange;
   VisibleRange get visibleRange => _visibleRange;
@@ -208,7 +218,17 @@ class _EventsLayout<E extends Event> extends RenderBox
     markNeedsLayout();
   }
 
-  static const double eventHeight = 24;
+  double _eventHeight;
+  double get eventHeight => _eventHeight;
+  set eventHeight(double value) {
+    assert(value != null);
+    if (_eventHeight == value) {
+      return;
+    }
+
+    _eventHeight = value;
+    markNeedsLayout();
+  }
 
   Iterable<E> get events => children.map((child) => child.data.event);
 

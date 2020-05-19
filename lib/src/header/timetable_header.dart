@@ -43,7 +43,7 @@ class TimetableHeader<E extends Event> extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               SizedBox(
-                height: 64,
+                height: 72,
                 child: MultiDateHeader(controller: controller),
               ),
               AllDayEvents<E>(

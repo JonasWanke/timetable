@@ -1,9 +1,9 @@
 📅 Customizable, animated calendar widget including day & week views.
 
 
-|                                           Event positioning demo                                           |                                                            Zoomed in                                                            |                                                                    Dark mode & custom range                                                                    |
-| :--------------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------: |
-| ![Screenshot of timetable](https://github.com/JonasWanke/timetable/raw/master/doc/screenshot.jpg?raw=true) | ![Screenshot of timetable while zoomed in](https://github.com/JonasWanke/timetable/raw/master/doc/screenshot-zoom.jpg?raw=true) | ![Screenshot of timetable in dark mode with only three visible days](https://github.com/JonasWanke/timetable/raw/master/doc/screenshot-3day-dark.jpg?raw=true) |
+|                                        Event positioning demo                                        |                                                                    Dark mode & custom range                                                                    |
+| :--------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------: |
+| ![Screenshot of timetable](https://github.com/JonasWanke/timetable/raw/master/doc/demo.gif?raw=true) | ![Screenshot of timetable in dark mode with only three visible days](https://github.com/JonasWanke/timetable/raw/master/doc/screenshot-3day-dark.jpg?raw=true) |
 
 
 - [Getting started](#getting-started)

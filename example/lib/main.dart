@@ -100,9 +100,8 @@ class _TimetableExampleState extends State<TimetableExample> {
         body: Timetable<BasicEvent>(
           controller: _controller,
           eventBuilder: (event) => BasicEventWidget(event),
-          allDayEventBuilder: (context, event, info) {
-            return BasicAllDayEventWidget(event, info: info);
-          },
+          allDayEventBuilder: (context, event, info) =>
+              BasicAllDayEventWidget(event, info: info),
         ),
       ),
     );

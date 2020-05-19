@@ -16,7 +16,18 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 ### 📦 Build & CI
 -->
 
-## [Unreleased](https://github.com/JonasWanke/timetable/compare/v0.2.0...master)
+## [Unreleased](https://github.com/JonasWanke/timetable/compare/v0.2.1...master)
+
+
+## [0.2.1](https://github.com/JonasWanke/timetable/compare/v0.2.0...v0.2.1) · 2020-05-19
+
+### 🎉 New Features
+- All-day events (shown at the top) ([#8](https://github.com/JonasWanke/timetable/pull/8)), closes: ([#5](https://github.com/JonasWanke/timetable/issues/5))
+- Theming ([#9](https://github.com/JonasWanke/timetable/pull/9)) — see the README for more information!
+
+### 📦 Build & CI
+- specify minimum Flutter version (v1.17.0) in `pubspec.yaml`
+- **example:** upload generated APK as artifact
 
 
 ## [0.2.0](https://github.com/JonasWanke/timetable/compare/v0.1.3...v0.2.0) · 2020-05-08

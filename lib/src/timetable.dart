@@ -6,6 +6,7 @@ import 'content/timetable_content.dart';
 import 'controller.dart';
 import 'event.dart';
 import 'header/timetable_header.dart';
+import 'theme.dart';
 
 typedef EventBuilder<E extends Event> = Widget Function(E event);
 typedef AllDayEventBuilder<E extends Event> = Widget Function(
@@ -22,6 +23,7 @@ class Timetable<E extends Event> extends StatelessWidget {
     @required this.controller,
     @required this.eventBuilder,
     this.allDayEventBuilder,
+    this.theme,
   })  : assert(controller != null),
         assert(eventBuilder != null),
         super(key: key);
@@ -34,9 +36,11 @@ class Timetable<E extends Event> extends StatelessWidget {
   /// If not set, [eventBuilder] will be used instead.
   final AllDayEventBuilder<E> allDayEventBuilder;
 
+  final TimetableThemeData theme;
+
   @override
   Widget build(BuildContext context) {
-    return Column(
+    Widget child = Column(
       children: <Widget>[
         TimetableHeader<E>(
           controller: controller,
@@ -51,5 +55,11 @@ class Timetable<E extends Event> extends StatelessWidget {
         ),
       ],
     );
+
+    if (theme != null) {
+      child = TimetableTheme(data: theme, child: child);
+    }
+
+    return child;
   }
 }

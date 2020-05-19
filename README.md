@@ -1,9 +1,9 @@
 📅 Customizable, animated calendar widget including day & week views.
 
 
-|                                           Event positioning demo                                           |                                                            Zoomed in                                                            |                                                                    Dark mode & custom range                                                                    |
-| :--------------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------: |
-| ![Screenshot of timetable](https://github.com/JonasWanke/timetable/raw/master/doc/screenshot.jpg?raw=true) | ![Screenshot of timetable while zoomed in](https://github.com/JonasWanke/timetable/raw/master/doc/screenshot-zoom.jpg?raw=true) | ![Screenshot of timetable in dark mode with only three visible days](https://github.com/JonasWanke/timetable/raw/master/doc/screenshot-3day-dark.jpg?raw=true) |
+|                                        Event positioning demo                                        |                                                                    Dark mode & custom range                                                                    |
+| :--------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------: |
+| ![Screenshot of timetable](https://github.com/JonasWanke/timetable/raw/master/doc/demo.gif?raw=true) | ![Screenshot of timetable in dark mode with only three visible days](https://github.com/JonasWanke/timetable/raw/master/doc/screenshot-3day-dark.jpg?raw=true) |
 
 
 - [Getting started](#getting-started)
@@ -12,6 +12,7 @@
   - [3. Create an `EventProvider`](#3-create-an-eventprovider)
   - [4. Create a `TimetableController`](#4-create-a-timetablecontroller)
   - [5. Create your `Timetable`](#5-create-your-timetable)
+- [Theming](#theming)
 - [Features & Coming soon](#features--coming-soon)
 
 ## Getting started
@@ -70,12 +71,14 @@ final myEventProvider = EventProvider.list([
   ),
 ]);
 ```
+
 > See the [example][example/main.dart] for more [`EventProvider`] samples!
 
 
 ### 4. Create a [`TimetableController`]
 
 Similar to a [`ScrollController`] or a [`TabController`], a [`TimetableController`] is responsible for interacting with a [`Timetable`] and managing its state. You can instantiate it with your [`EventProvider`]:
+
 ```dart
 final myController = TimetableController(
   eventProvider: myEventProvider,
@@ -95,15 +98,36 @@ final myController = TimetableController(
 
 ### 5. Create your [`Timetable`]
 
-Using your [`TimetableController`] and [`EventBuilder`], you can now create a [`Timetable`] widget:
+Using your [`TimetableController`], you can now create a [`Timetable`] widget:
+
 ```dart
 Timetable<BasicEvent>(
   controller: myController,
   eventBuilder: (event) => BasicEventWidget(event),
+  allDayEventBuilder: (context, event, info) =>
+      BasicAllDayEventWidget(event, info: info),
 )
 ```
 
 And you're done 🎉
+
+
+## Theming
+
+For a full list of visual properties that can be tweaked, see [`TimetableThemeData`].
+
+To apply a theme, specify it in the [`Timetable`] constructor:
+
+```dart
+Timetable<BasicEvent>(
+  controller: /* ... */,
+  theme: TimetableThemeData(
+    primaryColor: Colors.teal,
+    partDayEventMinimumDuration: Period(minutes: 30),
+    // ...and many more!
+  ),
+),
+```
 
 
 ## Features & Coming soon
@@ -111,8 +135,9 @@ And you're done 🎉
 - [x] Smartly arrange overlapping events
 - [x] Zooming
 - [x] Selectable [`VisibleRange`]s
+- [x] Display all-day events at the top
+- [x] Theming
 - [ ] Animate between different [`VisibleRange`]s
-- [ ] Display all-day events at the top
 - [ ] Month-view, Agenda-view
 - [ ] Listener when tapping the background (e.g. for creating an event)
 - [ ] Support for event resizing
@@ -137,4 +162,5 @@ And you're done 🎉
 [`Timetable`]: https://pub.dev/documentation/timetable/latest/timetable/Timetable-class.html
 [`TimetableController`]: https://pub.dev/documentation/timetable/latest/timetable/TimetableController-class.html
 [`TimetableController.dispose`]: https://pub.dev/documentation/timetable/latest/timetable/TimetableController/dispose.html
+[`TimetableThemeData`]: https://pub.dev/documentation/timetable/latest/timetable/TimetableThemeData-class.html
 [`VisibleRange`]: https://pub.dev/documentation/timetable/latest/timetable/VisibleRange-class.html

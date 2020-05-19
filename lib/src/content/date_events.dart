@@ -123,12 +123,12 @@ class _DayEventsLayoutDelegate<E extends Event>
       final height = periodToY(_durationOn(event, date, size.height))
           .clamp(0, size.height - top);
 
-      final columnWidth =
-          size.width / positions.groupColumnCounts[position.group] -
-              eventSpacing;
-      final columnLeft = columnWidth * position.column + eventSpacing;
+      final columnWidth = (size.width - eventSpacing) /
+          positions.groupColumnCounts[position.group];
+      final columnLeft = columnWidth * position.column;
       final left = columnLeft + position.index * stackedEventSpacing;
-      final width = columnWidth - position.index * stackedEventSpacing;
+      final width =
+          columnWidth - position.index * stackedEventSpacing - eventSpacing;
 
       final childSize = Size(width.coerceAtLeast(minWidth), height);
       layoutChild(event.id, BoxConstraints.tight(childSize));
@@ -241,6 +241,10 @@ class _DayEventsLayoutDelegate<E extends Event>
   @override
   bool shouldRelayout(_DayEventsLayoutDelegate<E> oldDelegate) {
     return date != oldDelegate.date ||
+        minEventDuration != oldDelegate.minEventDuration ||
+        minEventHeight != oldDelegate.minEventHeight ||
+        eventSpacing != oldDelegate.eventSpacing ||
+        stackedEventSpacing != oldDelegate.stackedEventSpacing ||
         !DeepCollectionEquality().equals(events, oldDelegate.events);
   }
 }

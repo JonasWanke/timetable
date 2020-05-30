@@ -16,7 +16,16 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 ### 📦 Build & CI
 -->
 
-## [Unreleased](https://github.com/JonasWanke/timetable/compare/v0.2.1...master)
+## [Unreleased](https://github.com/JonasWanke/timetable/compare/v0.2.2...master)
+
+
+## [0.2.2](https://github.com/JonasWanke/timetable/compare/v0.2.1...v0.2.2) · 2020-05-30
+
+### 🎉 New Features
+- optional `onTap`-parameter for `BasicEventWidget` & `BasicAllDayEventWidget` ([#12](https://github.com/JonasWanke/timetable/pull/12)), closes: ([#11](https://github.com/JonasWanke/timetable/issues/11))
+
+### 📦 Build & CI
+- specify minimum Dart version (v2.7.0) in `pubspec.yaml`
 
 
 ## [0.2.1](https://github.com/JonasWanke/timetable/compare/v0.2.0...v0.2.1) · 2020-05-19

@@ -3,7 +3,7 @@ description: A simple example app for the timetable package
 version: 0.2.1
 
 environment:
-  sdk: ">=2.1.0 <3.0.0"
+  sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
   flutter:

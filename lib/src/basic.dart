@@ -38,12 +38,19 @@ class BasicEvent extends Event {
 
 /// A simple [Widget] for displaying a [BasicEvent].
 class BasicEventWidget extends StatelessWidget {
-  const BasicEventWidget(this.event, {Key key})
-      : assert(event != null),
+  const BasicEventWidget(
+    this.event, {
+    Key key,
+    this.onTap,
+  })  : assert(event != null),
         super(key: key);
 
   /// The [BasicEvent] to be displayed.
   final BasicEvent event;
+
+  /// An optional [VoidCallback] that will be invoked when the user taps this
+  /// widget.
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -56,14 +63,17 @@ class BasicEventWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(4),
       ),
       color: event.color,
-      child: Padding(
-        padding: EdgeInsets.fromLTRB(4, 2, 4, 0),
-        child: DefaultTextStyle(
-          style: context.textTheme.bodyText2.copyWith(
-            fontSize: 12,
-            color: event.color.highEmphasisOnColor,
+      child: InkWell(
+        onTap: onTap,
+        child: Padding(
+          padding: EdgeInsets.fromLTRB(4, 2, 4, 0),
+          child: DefaultTextStyle(
+            style: context.textTheme.bodyText2.copyWith(
+              fontSize: 12,
+              color: event.color.highEmphasisOnColor,
+            ),
+            child: Text(event.title),
           ),
-          child: Text(event.title),
         ),
       ),
     );
@@ -77,6 +87,7 @@ class BasicAllDayEventWidget extends StatelessWidget {
     Key key,
     @required this.info,
     this.borderRadius = 4,
+    this.onTap,
   })  : assert(event != null),
         assert(info != null),
         assert(borderRadius != null),
@@ -86,6 +97,10 @@ class BasicAllDayEventWidget extends StatelessWidget {
   final BasicEvent event;
   final AllDayEventLayoutInfo info;
   final double borderRadius;
+
+  /// An optional [VoidCallback] that will be invoked when the user taps this
+  /// widget.
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -97,18 +112,34 @@ class BasicAllDayEventWidget extends StatelessWidget {
           color: event.color,
           borderRadius: borderRadius,
         ),
-        child: Padding(
-          padding: EdgeInsets.fromLTRB(4, 2, 0, 2),
-          child: Align(
-            alignment: AlignmentDirectional.centerStart,
-            child: DefaultTextStyle(
-              style: context.textTheme.bodyText2.copyWith(
-                fontSize: 14,
-                color: event.color.highEmphasisOnColor,
-              ),
-              child: Text(event.title, maxLines: 1),
-            ),
+        child: Material(
+          shape: AllDayEventBorder(
+            info: info,
+            side: BorderSide.none,
+            borderRadius: borderRadius,
           ),
+          clipBehavior: Clip.antiAlias,
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: onTap,
+            child: _buildContent(context),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildContent(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.fromLTRB(4, 2, 0, 2),
+      child: Align(
+        alignment: AlignmentDirectional.centerStart,
+        child: DefaultTextStyle(
+          style: context.textTheme.bodyText2.copyWith(
+            fontSize: 14,
+            color: event.color.highEmphasisOnColor,
+          ),
+          child: Text(event.title, maxLines: 1),
         ),
       ),
     );

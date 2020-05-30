@@ -12,7 +12,7 @@ void main() async {
 
   WidgetsFlutterBinding.ensureInitialized();
   await TimeMachine.initialize({'rootBundle': rootBundle});
-  runApp(TimetableExample());
+  runApp(ExampleApp(child: TimetableExample()));
 }
 
 class TimetableExample extends StatefulWidget {
@@ -21,11 +21,13 @@ class TimetableExample extends StatefulWidget {
 }
 
 class _TimetableExampleState extends State<TimetableExample> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   TimetableController<BasicEvent> _controller;
 
   @override
   void initState() {
     super.initState();
+
     _controller = TimetableController(
       // A basic EventProvider containing a single event.
       eventProvider: EventProvider.list([
@@ -80,30 +82,38 @@ class _TimetableExampleState extends State<TimetableExample> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Timetable example',
-      darkTheme: ThemeData(
-        brightness: Brightness.dark,
-        primaryColor: Colors.blue,
+    return Scaffold(
+      key: _scaffoldKey,
+      appBar: AppBar(
+        title: Text('Timetable example'),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.today),
+            onPressed: () => _controller.animateToToday(),
+            tooltip: 'Jump to today',
+          ),
+        ],
       ),
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('Timetable example'),
-          actions: <Widget>[
-            IconButton(
-              icon: Icon(Icons.today),
-              onPressed: () => _controller.animateToToday(),
-              tooltip: 'Jump to today',
-            ),
-          ],
-        ),
-        body: Timetable<BasicEvent>(
-          controller: _controller,
-          eventBuilder: (event) => BasicEventWidget(event),
-          allDayEventBuilder: (context, event, info) =>
-              BasicAllDayEventWidget(event, info: info),
+      body: Timetable<BasicEvent>(
+        controller: _controller,
+        eventBuilder: (event) {
+          return BasicEventWidget(
+            event,
+            onTap: () => _showSnackBar('Part-day event $event tapped'),
+          );
+        },
+        allDayEventBuilder: (context, event, info) => BasicAllDayEventWidget(
+          event,
+          info: info,
+          onTap: () => _showSnackBar('All-day event $event tapped'),
         ),
       ),
     );
+  }
+
+  void _showSnackBar(String content) {
+    _scaffoldKey.currentState.showSnackBar(SnackBar(
+      content: Text(content),
+    ));
   }
 }

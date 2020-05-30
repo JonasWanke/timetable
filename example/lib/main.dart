@@ -29,19 +29,19 @@ class _TimetableExampleState extends State<TimetableExample> {
     super.initState();
 
     _controller = TimetableController(
-      // A basic EventProvider containing a single event.
-      eventProvider: EventProvider.list([
-        BasicEvent(
-          id: 0,
-          title: 'My Event',
-          color: Colors.blue,
-          start: LocalDate.today().at(LocalTime(13, 0, 0)),
-          end: LocalDate.today().at(LocalTime(15, 0, 0)),
-        ),
-      ]),
+      // A basic EventProvider containing a single event:
+      // eventProvider: EventProvider.list([
+      //   BasicEvent(
+      //     id: 0,
+      //     title: 'My Event',
+      //     color: Colors.blue,
+      //     start: LocalDate.today().at(LocalTime(13, 0, 0)),
+      //     end: LocalDate.today().at(LocalTime(15, 0, 0)),
+      //   ),
+      // ]),
 
       // For a demo of overlapping events, use this one instead:
-      // eventProvider: positioningDemoEventProvider,
+      eventProvider: positioningDemoEventProvider,
 
       // Or even this short example using a Stream:
       // eventProvider: EventProvider.stream(

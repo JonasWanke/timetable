@@ -17,7 +17,10 @@ dependencies:
   meta: ^1.1.8
   pedantic: ^1.8.0+1
   rxdart: ^0.24.0
-  time_machine: ^0.9.12
+  time_machine:
+    git:
+      url: https://github.com/JonasWanke/time_machine.git
+      ref: fix/localdate-today-calendar
 
 dev_dependencies:
   flutter_test:

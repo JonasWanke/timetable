@@ -105,9 +105,11 @@ packages:
   time_machine:
     dependency: "direct main"
     description:
-      name: time_machine
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "."
+      ref: "fix/localdate-today-calendar"
+      resolved-ref: c65f0a3b8e98d9966684d091f34d44aaad024c20
+      url: "https://github.com/JonasWanke/time_machine.git"
+    source: git
     version: "0.9.12"
   timetable:
     dependency: "direct main"

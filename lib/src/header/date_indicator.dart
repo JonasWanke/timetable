@@ -6,7 +6,9 @@ import '../theme.dart';
 import '../utils/utils.dart';
 
 class DateIndicator extends StatelessWidget {
-  const DateIndicator(this.date, {Key key}) : super(key: key);
+  const DateIndicator(this.date, {Key key})
+      : assert(date != null),
+        super(key: key);
 
   final LocalDate date;
 
@@ -44,7 +46,7 @@ class DateIndicator extends StatelessWidget {
 
   static Set<MaterialState> statesFor(LocalDate date) {
     return {
-      if (date < LocalDate.today()) MaterialState.disabled,
+      if (date < LocalDate.today(date.calendar)) MaterialState.disabled,
       if (date.isToday) MaterialState.selected,
     };
   }

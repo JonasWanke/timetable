@@ -11,7 +11,10 @@ dependencies:
 
   timetable:
     path: ../
-  time_machine: ^0.9.12
+  time_machine:
+    git:
+      url: https://github.com/JonasWanke/time_machine.git
+      ref: fix/localdate-today-calendar
 
 flutter:
   uses-material-design: true

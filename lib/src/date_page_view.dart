@@ -6,7 +6,9 @@ import 'event.dart';
 import 'scroll_physics.dart';
 
 typedef DateWidgetBuilder = Widget Function(
-    BuildContext context, LocalDate date);
+  BuildContext context,
+  LocalDate date,
+);
 
 class DatePageView<E extends Event> extends StatefulWidget {
   const DatePageView({
@@ -58,7 +60,10 @@ class _DatePageViewState extends State<DatePageView> {
               delegate: SliverChildBuilderDelegate(
                 (context, index) => widget.builder(
                   context,
-                  LocalDate.fromEpochDay(index + visibleDays ~/ 2),
+                  LocalDate.fromEpochDay(
+                    index + visibleDays ~/ 2,
+                    widget.controller.calendar,
+                  ),
                 ),
               ),
             ),

@@ -8,7 +8,9 @@ import '../utils/utils.dart';
 import 'date_indicator.dart';
 
 class WeekdayIndicator extends StatelessWidget {
-  const WeekdayIndicator(this.date, {Key key}) : super(key: key);
+  const WeekdayIndicator(this.date, {Key key})
+      : assert(date != null),
+        super(key: key);
 
   static final _pattern = LocalDatePattern.createWithCurrentCulture('ddd');
 

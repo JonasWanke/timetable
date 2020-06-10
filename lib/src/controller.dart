@@ -14,13 +14,18 @@ import 'visible_range.dart';
 /// Controls a [Timetable] and manages its state.
 class TimetableController<E extends Event> {
   TimetableController({
+    CalendarSystem calendar,
     @required this.eventProvider,
     LocalDate initialDate,
     this.initialTimeRange = const InitialTimeRange.zoom(1),
     this.visibleRange = const VisibleRange.week(),
     this.firstDayOfWeek = DayOfWeek.monday,
-  })  : assert(eventProvider != null),
-        initialDate = initialDate ?? LocalDate.today(),
+  })  : calendar = calendar ?? _defaultCalendar,
+        assert(eventProvider != null),
+        initialDate =
+            initialDate ?? LocalDate.today(calendar ?? _defaultCalendar),
+        assert(initialDate == null || initialDate.calendar == calendar ??
+            _defaultCalendar),
         assert(initialTimeRange != null),
         assert(firstDayOfWeek != null),
         assert(visibleRange != null) {
@@ -31,18 +36,31 @@ class TimetableController<E extends Event> {
     );
 
     _dateListenable = scrollControllers.pageListenable
-        .map((page) => LocalDate.fromEpochDay(page.floor()));
+        .map((page) => LocalDate.fromEpochDay(page.floor(), calendar));
     _currentlyVisibleDatesListenable = scrollControllers.pageListenable
         .map((page) {
       return DateInterval(
-        LocalDate.fromEpochDay(page.floor()),
-        LocalDate.fromEpochDay(page.ceil() + visibleRange.visibleDays - 1),
+        LocalDate.fromEpochDay(page.floor(), calendar),
+        LocalDate.fromEpochDay(
+          page.ceil() + visibleRange.visibleDays - 1,
+          calendar,
+        ),
       );
     })
           ..addListener(
               () => eventProvider.onVisibleDatesChanged(currentlyVisibleDates));
     eventProvider.onVisibleDatesChanged(currentlyVisibleDates);
   }
+
+  static final _defaultCalendar = CalendarSystem.iso;
+
+  /// The [CalendarSystem] used for all dates and times.
+  ///
+  /// All [LocalDate]s and [LocalDateTime]s you pass to timetable must use this
+  /// calendar.
+  ///
+  /// Defaults to [CalendarSystem.iso].
+  final CalendarSystem calendar;
 
   /// The [EventProvider] used for populating [Timetable] with events.
   final EventProvider<E> eventProvider;
@@ -89,7 +107,7 @@ class TimetableController<E extends Event> {
     Curve curve = Curves.easeInOut,
     Duration duration = const Duration(milliseconds: 200),
   }) =>
-      animateTo(LocalDate.today(), curve: curve, duration: duration);
+      animateTo(LocalDate.today(calendar), curve: curve, duration: duration);
 
   /// Animates the given [date] into view.
   ///
@@ -99,6 +117,8 @@ class TimetableController<E extends Event> {
     Curve curve = Curves.easeInOut,
     Duration duration = const Duration(milliseconds: 200),
   }) async {
+    assert(date.calendar == calendar);
+
     await scrollControllers.animateTo(
       visibleRange.getTargetPageForFocusDate(date, firstDayOfWeek),
       curve: curve,

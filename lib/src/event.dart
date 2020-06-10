@@ -29,6 +29,12 @@ abstract class Event {
   // End of the event; exclusive.
   final LocalDateTime end;
 
+  CalendarSystem get calendar {
+    // TODO(JonasWanke): Check this in the constructor
+    assert(start.calendar == end.calendar);
+    return start.calendar;
+  }
+
   bool get isAllDay => start.periodUntil(end).normalize().days >= 1;
   bool get isPartDay => !isAllDay;
 
@@ -52,6 +58,8 @@ extension TimetableEvent on Event {
       intersectsInterval(DateInterval(date, date));
 
   bool intersectsInterval(DateInterval interval) {
+    assert(calendar == interval.calendar);
+
     return start.calendarDate <= interval.end &&
         endDateInclusive >= interval.start;
   }

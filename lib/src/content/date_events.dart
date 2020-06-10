@@ -145,16 +145,17 @@ class _DayEventsLayoutDelegate<E extends Event>
     final positions = _EventPositions();
 
     var currentGroup = <E>[];
-    var currentEnd = TimetableLocalDateTime.minIsoValue;
+    LocalDateTime currentEnd;
     for (final event in events) {
-      if (event.start >= currentEnd) {
+      if (currentEnd != null || event.start >= currentEnd) {
         _endGroup(positions, currentGroup, height);
         currentGroup = [];
-        currentEnd = TimetableLocalDateTime.minIsoValue;
+        currentEnd = null;
       }
 
       currentGroup.add(event);
-      currentEnd = currentEnd.coerceAtLeast(_actualEnd(event, height));
+      final eventEnd = _actualEnd(event, height);
+      currentEnd = currentEnd?.coerceAtLeast(eventEnd) ?? eventEnd;
     }
     _endGroup(positions, currentGroup, height);
 
@@ -177,7 +178,7 @@ class _DayEventsLayoutDelegate<E extends Event>
     for (final event in currentGroup) {
       var minColumn = -1;
       var minIndex = 1 << 31;
-      var minEnd = TimetableLocalDateTime.minIsoValue;
+      LocalDateTime minEnd;
       var columnFound = false;
       for (var columnIndex = 0; columnIndex < columns.length; columnIndex++) {
         final column = columns[columnIndex];
@@ -193,12 +194,10 @@ class _DayEventsLayoutDelegate<E extends Event>
                 .map((e) => positions.eventPositions[e].index)
                 .max() ??
             -1;
-        final previousEnd = column.fold(
-          TimetableLocalDateTime.maxIsoValue,
-          (max, e) => LocalDateTime.max(max, e.end),
-        );
+        final previousEnd = column.map((e) => e.end).max();
         // Further at the top and hence wider
-        if (index < minIndex || (index == minIndex && previousEnd < minEnd)) {
+        if (index < minIndex ||
+            (index == minIndex && minEnd != null && previousEnd < minEnd)) {
           minColumn = columnIndex;
           minIndex = index;
           minEnd = previousEnd;

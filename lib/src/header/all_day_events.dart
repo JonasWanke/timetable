@@ -263,7 +263,8 @@ class _EventsLayout<E extends Event> extends RenderBox
 
   double _parallelEventCount() {
     int parallelEventsFrom(int page) {
-      final startDate = LocalDate.fromEpochDay(page);
+      final startDate =
+          LocalDate.fromEpochDay(page, currentlyVisibleDates.calendar);
       final interval = DateInterval(
         startDate,
         startDate + Period(days: visibleRange.visibleDays - 1),

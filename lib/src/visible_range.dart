@@ -32,8 +32,11 @@ abstract class VisibleRange {
 
   /// Convenience method of [getTargetPageForFocus] taking a [LocalDate].
   double getTargetPageForFocusDate(
-      LocalDate focusDate, DayOfWeek firstDayOfWeek) {
+    LocalDate focusDate,
+    DayOfWeek firstDayOfWeek,
+  ) {
     assert(focusDate != null);
+
     return getTargetPageForFocus(focusDate.epochDay.toDouble(), firstDayOfWeek);
   }
 

@@ -5,7 +5,9 @@ import 'date_indicator.dart';
 import 'weekday_indicator.dart';
 
 class DateHeader extends StatelessWidget {
-  const DateHeader(this.date, {Key key}) : super(key: key);
+  const DateHeader(this.date, {Key key})
+      : assert(date != null),
+        super(key: key);
 
   final LocalDate date;
 

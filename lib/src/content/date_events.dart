@@ -8,7 +8,6 @@ import 'package:time_machine/time_machine.dart' hide Offset;
 import '../event.dart';
 import '../theme.dart';
 import '../timetable.dart';
-import '../utils/utils.dart';
 
 class DateEvents<E extends Event> extends StatelessWidget {
   DateEvents({

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:meta/meta.dart';
 import 'package:time_machine/time_machine.dart';
 import 'package:time_machine/time_machine_text_patterns.dart';
 
@@ -10,6 +11,7 @@ class TimetableThemeData {
     this.primaryColor,
     this.weekIndicatorDecoration,
     this.weekIndicatorTextStyle,
+    this.totalDateIndicatorHeight,
     this.weekDayIndicatorPattern,
     this.weekDayIndicatorDecoration,
     this.weekDayIndicatorTextStyle,
@@ -45,6 +47,14 @@ class TimetableThemeData {
 
   /// [TextStyle] used to display the current week number.
   final TextStyle weekIndicatorTextStyle;
+
+  /// Total (combined) height of both the day-of-week- and
+  /// date-of-month-indicators.
+  ///
+  /// > **Note:** This will soon be determined automatically based on the actual
+  /// > height.
+  @experimental
+  final double totalDateIndicatorHeight;
 
   /// [LocalDatePattern] for formatting the day-of-week.
   ///
@@ -134,6 +144,7 @@ class TimetableThemeData {
       primaryColor,
       weekIndicatorDecoration,
       weekIndicatorTextStyle,
+      totalDateIndicatorHeight,
       weekDayIndicatorPattern,
       weekDayIndicatorDecoration,
       weekDayIndicatorTextStyle,
@@ -165,6 +176,7 @@ class TimetableThemeData {
         other.primaryColor == primaryColor &&
         other.weekIndicatorDecoration == weekIndicatorDecoration &&
         other.weekIndicatorTextStyle == weekIndicatorTextStyle &&
+        other.totalDateIndicatorHeight == totalDateIndicatorHeight &&
         other.weekDayIndicatorPattern == weekDayIndicatorPattern &&
         other.weekDayIndicatorDecoration == weekDayIndicatorDecoration &&
         other.weekDayIndicatorTextStyle == weekDayIndicatorTextStyle &&

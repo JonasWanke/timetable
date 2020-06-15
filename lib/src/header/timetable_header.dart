@@ -3,6 +3,7 @@ import 'package:time_machine/time_machine.dart';
 
 import '../controller.dart';
 import '../event.dart';
+import '../theme.dart';
 import '../timetable.dart';
 import 'all_day_events.dart';
 import 'multi_date_header.dart';
@@ -43,7 +44,7 @@ class TimetableHeader<E extends Event> extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               SizedBox(
-                height: 72,
+                height: context.timetableTheme?.totalDateIndicatorHeight ?? 72,
                 child: MultiDateHeader(controller: controller),
               ),
               AllDayEvents<E>(

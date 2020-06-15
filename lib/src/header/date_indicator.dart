@@ -1,6 +1,7 @@
 import 'package:black_hole_flutter/black_hole_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:time_machine/time_machine.dart';
+import 'package:time_machine/time_machine_text_patterns.dart';
 
 import '../theme.dart';
 import '../utils/utils.dart';
@@ -15,6 +16,8 @@ class DateIndicator extends StatelessWidget {
     final theme = context.theme;
     final timetableTheme = context.timetableTheme;
 
+    final pattern = timetableTheme?.dateIndicatorPattern ??
+        LocalDatePattern.createWithCurrentCulture('%d');
     final states = statesFor(date);
     final primaryColor = timetableTheme?.primaryColor ?? theme.primaryColor;
     final decoration =
@@ -34,10 +37,7 @@ class DateIndicator extends StatelessWidget {
       decoration: decoration,
       child: Padding(
         padding: EdgeInsets.all(8),
-        child: Text(
-          date.dayOfMonth.toString(),
-          style: textStyle,
-        ),
+        child: Text(pattern.format(date), style: textStyle),
       ),
     );
   }

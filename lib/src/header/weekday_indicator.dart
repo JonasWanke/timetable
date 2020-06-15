@@ -10,8 +10,6 @@ import 'date_indicator.dart';
 class WeekdayIndicator extends StatelessWidget {
   const WeekdayIndicator(this.date, {Key key}) : super(key: key);
 
-  static final _pattern = LocalDatePattern.createWithCurrentCulture('ddd');
-
   final LocalDate date;
 
   @override
@@ -19,6 +17,8 @@ class WeekdayIndicator extends StatelessWidget {
     final theme = context.theme;
     final timetableTheme = context.timetableTheme;
 
+    final pattern = timetableTheme?.weekDayIndicatorPattern ??
+        LocalDatePattern.createWithCurrentCulture('ddd');
     final states = DateIndicator.statesFor(date);
     final decoration =
         timetableTheme?.weekDayIndicatorDecoration?.resolve(states) ??
@@ -35,10 +35,7 @@ class WeekdayIndicator extends StatelessWidget {
       decoration: decoration,
       child: Padding(
         padding: EdgeInsets.all(8),
-        child: Text(
-          _pattern.format(date),
-          style: textStyle,
-        ),
+        child: Text(pattern.format(date), style: textStyle),
       ),
     );
   }

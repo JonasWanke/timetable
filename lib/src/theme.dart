@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:time_machine/time_machine.dart';
+import 'package:time_machine/time_machine_text_patterns.dart';
 
 import 'timetable.dart';
 
@@ -9,8 +10,10 @@ class TimetableThemeData {
     this.primaryColor,
     this.weekIndicatorDecoration,
     this.weekIndicatorTextStyle,
+    this.weekDayIndicatorPattern,
     this.weekDayIndicatorDecoration,
     this.weekDayIndicatorTextStyle,
+    this.dateIndicatorPattern,
     this.dateIndicatorDecoration,
     this.dateIndicatorTextStyle,
     this.allDayEventHeight,
@@ -43,6 +46,12 @@ class TimetableThemeData {
   /// [TextStyle] used to display the current week number.
   final TextStyle weekIndicatorTextStyle;
 
+  /// [LocalDatePattern] for formatting the day-of-week.
+  ///
+  /// See also:
+  /// - [dateIndicatorTextStyle] for a list of possible states.
+  final LocalDatePattern weekDayIndicatorPattern;
+
   /// [Decoration] to show around the day-of-week-indicator.
   ///
   /// See also:
@@ -54,6 +63,12 @@ class TimetableThemeData {
   /// See also:
   /// - [dateIndicatorTextStyle] for a list of possible states.
   final MaterialStateProperty<TextStyle> weekDayIndicatorTextStyle;
+
+  /// [LocalDatePattern] for formatting the date (of month).
+  ///
+  /// See also:
+  /// - [dateIndicatorTextStyle] for a list of possible states.
+  final LocalDatePattern dateIndicatorPattern;
 
   /// [Decoration] to show around the date (of month) indicator.
   ///
@@ -119,8 +134,10 @@ class TimetableThemeData {
       primaryColor,
       weekIndicatorDecoration,
       weekIndicatorTextStyle,
+      weekDayIndicatorPattern,
       weekDayIndicatorDecoration,
       weekDayIndicatorTextStyle,
+      dateIndicatorPattern,
       dateIndicatorDecoration,
       dateIndicatorTextStyle,
       allDayEventHeight,
@@ -148,8 +165,10 @@ class TimetableThemeData {
         other.primaryColor == primaryColor &&
         other.weekIndicatorDecoration == weekIndicatorDecoration &&
         other.weekIndicatorTextStyle == weekIndicatorTextStyle &&
+        other.weekDayIndicatorPattern == weekDayIndicatorPattern &&
         other.weekDayIndicatorDecoration == weekDayIndicatorDecoration &&
         other.weekDayIndicatorTextStyle == weekDayIndicatorTextStyle &&
+        other.dateIndicatorPattern == dateIndicatorPattern &&
         other.dateIndicatorDecoration == dateIndicatorDecoration &&
         other.dateIndicatorTextStyle == dateIndicatorTextStyle &&
         other.allDayEventHeight == allDayEventHeight &&

@@ -60,7 +60,7 @@ class TimetableThemeData {
   ///
   /// See also:
   /// - [dateIndicatorTextStyle] for a list of possible states.
-  final LocalDatePattern weekDayIndicatorPattern;
+  final MaterialStateProperty<LocalDatePattern> weekDayIndicatorPattern;
 
   /// [Decoration] to show around the day-of-week-indicator.
   ///
@@ -78,7 +78,7 @@ class TimetableThemeData {
   ///
   /// See also:
   /// - [dateIndicatorTextStyle] for a list of possible states.
-  final LocalDatePattern dateIndicatorPattern;
+  final MaterialStateProperty<LocalDatePattern> dateIndicatorPattern;
 
   /// [Decoration] to show around the date (of month) indicator.
   ///

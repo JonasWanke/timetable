@@ -16,9 +16,9 @@ class DateIndicator extends StatelessWidget {
     final theme = context.theme;
     final timetableTheme = context.timetableTheme;
 
-    final pattern = timetableTheme?.dateIndicatorPattern ??
-        LocalDatePattern.createWithCurrentCulture('%d');
     final states = statesFor(date);
+    final pattern = timetableTheme?.dateIndicatorPattern?.resolve(states) ??
+        LocalDatePattern.createWithCurrentCulture('%d');
     final primaryColor = timetableTheme?.primaryColor ?? theme.primaryColor;
     final decoration =
         timetableTheme?.dateIndicatorDecoration?.resolve(states) ??

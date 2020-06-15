@@ -16,7 +16,13 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 ### 📦 Build & CI
 -->
 
-## [Unreleased](https://github.com/JonasWanke/timetable/compare/v0.2.2...master)
+## [Unreleased](https://github.com/JonasWanke/timetable/compare/v0.2.3...master)
+
+
+## [0.2.3](https://github.com/JonasWanke/timetable/compare/v0.2.2...v0.2.3) · 2020-06-15
+
+### 🎉 New Features
+- Customizable date/weekday format with `TimetableThemeData.weekDayIndicatorPattern`, `.dateIndicatorPattern` & temporary `.totalDateIndicatorHeight` ([#16](https://github.com/JonasWanke/timetable/pull/16)), closes: ([#15](https://github.com/JonasWanke/timetable/issues/15))
 
 
 ## [0.2.2](https://github.com/JonasWanke/timetable/compare/v0.2.1...v0.2.2) · 2020-05-30

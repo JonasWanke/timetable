@@ -1,5 +1,6 @@
 import 'package:black_hole_flutter/black_hole_flutter.dart';
 import 'package:flutter/widgets.dart';
+import 'package:time_machine/time_machine.dart';
 
 import '../controller.dart';
 import '../date_page_view.dart';
@@ -57,17 +58,22 @@ class _MultiDateContentState<E extends Event>
       child: DatePageView(
         controller: widget.controller,
         builder: (_, date) {
-          return GestureDetector(
+          return LayoutBuilder(
+          builder: (context, constraints) {
+             return GestureDetector(
               behavior: HitTestBehavior.translucent,
-              onTap: () {
-                print(date);
-               // widget.onCreateEvent(null, false);
+              onTapUp: (details) {
+                final cell = details.localPosition.dy / ((constraints.heightConstraints() / 24).maxHeight);
+                final time = DateTime(date.year, date.monthOfYear, date.dayOfYear, cell.toInt());
+                final startTime = LocalDateTime.dateTime(time);
+                print(startTime);
+            //    widget.onCreateEvent(startTime, false);
               },
               child: StreamedDateEvents<E>(
                 date: date,
                 controller: widget.controller,
                 eventBuilder: widget.eventBuilder,
-              ));
+              ));});
         },
       ),
     );

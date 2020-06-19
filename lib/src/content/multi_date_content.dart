@@ -16,12 +16,14 @@ class MultiDateContent<E extends Event> extends StatefulWidget {
     Key key,
     @required this.controller,
     @required this.eventBuilder,
+    @required this.onCreateEvent,
   })  : assert(controller != null),
         assert(eventBuilder != null),
         super(key: key);
 
   final TimetableController<E> controller;
   final EventBuilder<E> eventBuilder;
+  final OnCreateEventCallback onCreateEvent;
 
   @override
   _MultiDateContentState<E> createState() => _MultiDateContentState<E>();
@@ -42,7 +44,6 @@ class _MultiDateContentState<E extends Event>
   Widget build(BuildContext context) {
     final theme = context.theme;
     final timetableTheme = context.timetableTheme;
-
     return CustomPaint(
       painter: MultiDateBackgroundPainter(
         controller: widget.controller,
@@ -56,11 +57,17 @@ class _MultiDateContentState<E extends Event>
       child: DatePageView(
         controller: widget.controller,
         builder: (_, date) {
-          return StreamedDateEvents<E>(
-            date: date,
-            controller: widget.controller,
-            eventBuilder: widget.eventBuilder,
-          );
+          return GestureDetector(
+              behavior: HitTestBehavior.translucent,
+              onTap: () {
+                print(date);
+               // widget.onCreateEvent(null, false);
+              },
+              child: StreamedDateEvents<E>(
+                date: date,
+                controller: widget.controller,
+                eventBuilder: widget.eventBuilder,
+              ));
         },
       ),
     );

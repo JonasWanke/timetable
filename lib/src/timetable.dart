@@ -55,6 +55,7 @@ class Timetable<E extends Event> extends StatelessWidget {
           child: TimetableContent<E>(
             controller: controller,
             eventBuilder: eventBuilder,
+            onCreateEvent: onCreateEvent
           ),
         ),
       ],

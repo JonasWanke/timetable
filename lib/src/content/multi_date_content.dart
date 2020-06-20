@@ -17,7 +17,7 @@ class MultiDateContent<E extends Event> extends StatefulWidget {
     Key key,
     @required this.controller,
     @required this.eventBuilder,
-    @required this.onCreateEvent,
+    this.onCreateEvent,
   })  : assert(controller != null),
         assert(eventBuilder != null),
         super(key: key);
@@ -66,8 +66,10 @@ class _MultiDateContentState<E extends Event>
                 final cell = details.localPosition.dy / ((constraints.maxHeight / 24).round());
                 final time = DateTime(date.year, date.monthOfYear, date.dayOfYear, cell.toInt() + 1);
                 final startTime = LocalDateTime.dateTime(time);
-                print(startTime);
-            //    widget.onCreateEvent(startTime, false);
+
+                if(widget.onCreateEvent != null) {
+                  widget.onCreateEvent(startTime, false);
+                }
               },
               child: StreamedDateEvents<E>(
                 date: date,

@@ -48,6 +48,7 @@ class Timetable<E extends Event> extends StatelessWidget {
       children: <Widget>[
         TimetableHeader<E>(
           controller: controller,
+          onCreateEvent: onCreateEvent,
           allDayEventBuilder:
               allDayEventBuilder ?? (_, event, __) => eventBuilder(event),
         ),

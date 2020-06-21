@@ -14,14 +14,14 @@ class TimetableHeader<E extends Event> extends StatelessWidget {
     Key key,
     @required this.controller,
     @required this.allDayEventBuilder,
-    this.onCreateEvent,
+    this.onCreateAllDayEvent,
   })  : assert(controller != null),
         assert(allDayEventBuilder != null),
         super(key: key);
 
   final TimetableController<E> controller;
   final AllDayEventBuilder<E> allDayEventBuilder;
-  final OnCreateEventCallback onCreateEvent;
+  final OnCreateEventCallback onCreateAllDayEvent;
 
   @override
   Widget build(BuildContext context) {
@@ -51,6 +51,7 @@ class TimetableHeader<E extends Event> extends StatelessWidget {
               ),
               AllDayEvents<E>(
                 controller: controller,
+                onCreateAllDayEvent: onCreateAllDayEvent,
                 allDayEventBuilder: allDayEventBuilder,
               ),
             ],

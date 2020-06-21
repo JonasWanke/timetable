@@ -63,9 +63,9 @@ class _MultiDateContentState<E extends Event>
              return GestureDetector(
               behavior: HitTestBehavior.translucent,
               onTapUp: (details) {
-                final cell = details.localPosition.dy / ((constraints.maxHeight / 24).round());
-                final time = DateTime(date.year, date.monthOfYear, date.dayOfYear, cell.toInt() + 1);
-                final startTime = LocalDateTime.dateTime(time);
+                final tappedCell = details.localPosition.dy / ((constraints.maxHeight / 24).round());
+                final dateAndTime = DateTime(date.year, date.monthOfYear, date.dayOfYear, tappedCell.toInt() + 1);
+                final startTime = LocalDateTime.dateTime(dateAndTime);
 
                 if(widget.onCreateEvent != null) {
                   widget.onCreateEvent(startTime, false);

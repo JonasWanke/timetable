@@ -19,14 +19,14 @@ class AllDayEvents<E extends Event> extends StatelessWidget {
     Key key,
     @required this.controller,
     @required this.allDayEventBuilder,
-    this.onCreateAllDayEvent,
+    this.onAllDayEventBackgroundTap,
   })  : assert(controller != null),
         assert(allDayEventBuilder != null),
         super(key: key);
 
   final TimetableController<E> controller;
   final AllDayEventBuilder<E> allDayEventBuilder;
-  final OnCreateEventCallback onCreateAllDayEvent;
+  final OnCreateEventCallback onAllDayEventBackgroundTap;
 
   @override
   Widget build(BuildContext context) {
@@ -51,16 +51,16 @@ class AllDayEvents<E extends Event> extends StatelessWidget {
                         controller.scrollControllers.pageListenable,
                     builder: (context, page, __) => GestureDetector(
                       behavior: HitTestBehavior.translucent,
-                      onTapUp: onCreateAllDayEvent != null ? (details) {
+                      onTapUp: onAllDayEventBackgroundTap != null ? (details) {
                         final tappedCell = details.localPosition.dx /
                             (constraints.maxWidth /
                                 controller.visibleRange.visibleDays);
                         final date = LocalDate.fromEpochDay(
-                            page.floor() + tappedCell.toInt());
+                            (page + tappedCell).floor());
 
                         final startTime = LocalTime.sinceMidnight(Time(hours: 0)).atDate(date);
 
-                        _callOnCreateAllDayEvent(startTime, true);
+                        _callOnAllDayEventBackgroundTap(startTime, true);
                       } : null,
                       child: _buildEventLayout(context, events, page),
                     ),
@@ -74,9 +74,9 @@ class AllDayEvents<E extends Event> extends StatelessWidget {
     );
   }
 
-  void _callOnCreateAllDayEvent(LocalDateTime startTime, bool isAllDay){
-    if (onCreateAllDayEvent != null) {
-      onCreateAllDayEvent(startTime, isAllDay);
+  void _callOnAllDayEventBackgroundTap(LocalDateTime startTime, bool isAllDay){
+    if (onAllDayEventBackgroundTap != null) {
+      onAllDayEventBackgroundTap(startTime, isAllDay);
     }
   }
 

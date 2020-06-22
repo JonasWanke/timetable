@@ -17,14 +17,14 @@ class MultiDateContent<E extends Event> extends StatefulWidget {
     Key key,
     @required this.controller,
     @required this.eventBuilder,
-    this.onCreateEvent,
+    this.onEventBackgroundTap,
   })  : assert(controller != null),
         assert(eventBuilder != null),
         super(key: key);
 
   final TimetableController<E> controller;
   final EventBuilder<E> eventBuilder;
-  final OnCreateEventCallback onCreateEvent;
+  final OnCreateEventCallback onEventBackgroundTap;
 
   @override
   _MultiDateContentState<E> createState() => _MultiDateContentState<E>();
@@ -58,32 +58,44 @@ class _MultiDateContentState<E extends Event>
       child: DatePageView(
         controller: widget.controller,
         builder: (_, date) {
-          return LayoutBuilder(builder: (context, constraints) {
-            return GestureDetector(
-              behavior: HitTestBehavior.translucent,
-              onTapUp: widget.onCreateEvent != null ? (details) {
-                final tappedCell = details.localPosition.dy /
-                    ((constraints.maxHeight / 24).round());
-
-                final startTime = LocalTime.sinceMidnight(Time(hours: tappedCell.toInt())).atDate(date);
-                _callOnCreateEvent(startTime, false);
-
-              } : null,
-              child: StreamedDateEvents<E>(
-                date: date,
-                controller: widget.controller,
-                eventBuilder: widget.eventBuilder,
-              ),
-            );
-          });
+          return LayoutBuilder(
+            builder: (context, constraints) {
+              return GestureDetector(
+                behavior: HitTestBehavior.translucent,
+                onTapUp: widget.onEventBackgroundTap != null
+                    ? (details) {
+                        final tappedCell = details.localPosition.dy /
+                            ((constraints.maxHeight / 24).round());
+                        final minutesAsQuarter = (tappedCell * 4).ceil() / 4;
+                        final digitValue = minutesAsQuarter
+                            .toString()
+                            .split('.')[1]
+                            .padRight(2, '0');
+                        final minutesOfTap =
+                            60 * (double.parse(digitValue) / 100);
+                        final startTime = LocalTime.sinceMidnight(Time(
+                                hours: tappedCell.toInt(),
+                                minutes: minutesOfTap))
+                            .atDate(date);
+                        _callOnEventBackgroundTap(startTime, false);
+                      }
+                    : null,
+                child: StreamedDateEvents<E>(
+                  date: date,
+                  controller: widget.controller,
+                  eventBuilder: widget.eventBuilder,
+                ),
+              );
+            },
+          );
         },
       ),
     );
   }
 
-  void _callOnCreateEvent(LocalDateTime startTime, bool isAllDay){
-    if (widget.onCreateEvent != null) {
-      widget.onCreateEvent(startTime, isAllDay);
+  void _callOnEventBackgroundTap(LocalDateTime startTime, bool isAllDay) {
+    if (widget.onEventBackgroundTap != null) {
+      widget.onEventBackgroundTap(startTime, isAllDay);
     }
   }
 }

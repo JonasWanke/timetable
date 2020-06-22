@@ -26,8 +26,8 @@ class Timetable<E extends Event> extends StatelessWidget {
     @required this.controller,
     @required this.eventBuilder,
     this.allDayEventBuilder,
-    this.onCreateEvent,
-    this.onCreateAllDayEvent,
+    this.onEventBackgroundTap,
+    this.onAllDayEventBackgroundTap,
     this.theme,
   })  : assert(controller != null),
         assert(eventBuilder != null),
@@ -41,8 +41,8 @@ class Timetable<E extends Event> extends StatelessWidget {
   /// If not set, [eventBuilder] will be used instead.
   final AllDayEventBuilder<E> allDayEventBuilder;
   final TimetableThemeData theme;
-  final OnCreateEventCallback onCreateEvent;
-  final OnCreateEventCallback onCreateAllDayEvent;
+  final OnCreateEventCallback onEventBackgroundTap;
+  final OnCreateEventCallback onAllDayEventBackgroundTap;
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +50,7 @@ class Timetable<E extends Event> extends StatelessWidget {
       children: <Widget>[
         TimetableHeader<E>(
           controller: controller,
-          onCreateAllDayEvent: onCreateAllDayEvent,
+          onAllDayEventBackgroundTap: onAllDayEventBackgroundTap,
           allDayEventBuilder:
               allDayEventBuilder ?? (_, event, __) => eventBuilder(event),
         ),
@@ -58,7 +58,7 @@ class Timetable<E extends Event> extends StatelessWidget {
           child: TimetableContent<E>(
             controller: controller,
             eventBuilder: eventBuilder,
-            onCreateEvent: onCreateEvent
+            onEventBackgroundTap: onEventBackgroundTap
           ),
         ),
       ],

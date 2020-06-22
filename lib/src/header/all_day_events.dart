@@ -57,9 +57,9 @@ class AllDayEvents<E extends Event> extends StatelessWidget {
                                 controller.visibleRange.visibleDays);
                         final date = LocalDate.fromEpochDay(
                             page.floor() + tappedCell.toInt());
-                        final dateAndTime = DateTime(
-                            date.year, date.monthOfYear, date.dayOfYear + 2);
-                        final startTime = LocalDateTime.dateTime(dateAndTime);
+
+                        final startTime = LocalTime.sinceMidnight(Time(hours: 0)).atDate(date);
+
                         _callOnCreateAllDayEvent(startTime, true);
                       } : null,
                       child: _buildEventLayout(context, events, page),

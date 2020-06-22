@@ -65,10 +65,7 @@ class _MultiDateContentState<E extends Event>
                 final tappedCell = details.localPosition.dy /
                     ((constraints.maxHeight / 24).round());
 
-                final dateAndTime = DateTime(date.year, date.monthOfYear,
-                    date.dayOfYear, tappedCell.toInt() + 1);
-                final startTime = LocalDateTime.dateTime(dateAndTime);
-
+                final startTime = LocalTime.sinceMidnight(Time(hours: tappedCell.toInt())).atDate(date);
                 _callOnCreateEvent(startTime, false);
 
               } : null,

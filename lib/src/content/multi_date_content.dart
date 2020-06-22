@@ -61,17 +61,17 @@ class _MultiDateContentState<E extends Event>
           return LayoutBuilder(builder: (context, constraints) {
             return GestureDetector(
               behavior: HitTestBehavior.translucent,
-              onTapUp: (details) {
+              onTapUp: widget.onCreateEvent != null ? (details) {
                 final tappedCell = details.localPosition.dy /
                     ((constraints.maxHeight / 24).round());
+
                 final dateAndTime = DateTime(date.year, date.monthOfYear,
                     date.dayOfYear, tappedCell.toInt() + 1);
                 final startTime = LocalDateTime.dateTime(dateAndTime);
 
-                if (widget.onCreateEvent != null) {
-                  widget.onCreateEvent(startTime, false);
-                }
-              },
+                _callOnCreateEvent(startTime, false);
+
+              } : null,
               child: StreamedDateEvents<E>(
                 date: date,
                 controller: widget.controller,
@@ -82,5 +82,11 @@ class _MultiDateContentState<E extends Event>
         },
       ),
     );
+  }
+
+  void _callOnCreateEvent(LocalDateTime startTime, bool isAllDay){
+    if (widget.onCreateEvent != null) {
+      widget.onCreateEvent(startTime, isAllDay);
+    }
   }
 }

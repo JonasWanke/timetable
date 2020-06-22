@@ -15,7 +15,7 @@ class TimetableContent<E extends Event> extends StatelessWidget {
     Key key,
     @required this.controller,
     @required this.eventBuilder,
-    @required this.onCreateEvent,
+    this.onCreateEvent,
   })  : assert(controller != null),
         assert(eventBuilder != null),
         super(key: key);

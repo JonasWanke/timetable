@@ -30,39 +30,54 @@ class AllDayEvents<E extends Event> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ClipRect(child: LayoutBuilder(builder: (context, constraints) {
-      return ValueListenableBuilder<DateInterval>(
-        valueListenable: controller.currentlyVisibleDatesListenable,
-        builder: (_, visibleDates, __) {
-          return StreamBuilder<Iterable<E>>(
-            stream: controller.eventProvider
-                .getAllDayEventsIntersecting(visibleDates),
-            builder: (_, snapshot) {
-              var events = snapshot.data ?? [];
-              // The StreamBuilder gets recycled and initially still has a list of
-              // old events.
-              events = events.where((e) => e.intersectsInterval(visibleDates));
+    return ClipRect(
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          return ValueListenableBuilder<DateInterval>(
+            valueListenable: controller.currentlyVisibleDatesListenable,
+            builder: (_, visibleDates, __) {
+              return StreamBuilder<Iterable<E>>(
+                stream: controller.eventProvider
+                    .getAllDayEventsIntersecting(visibleDates),
+                builder: (_, snapshot) {
+                  var events = snapshot.data ?? [];
+                  // The StreamBuilder gets recycled and initially still has a list of
+                  // old events.
+                  events =
+                      events.where((e) => e.intersectsInterval(visibleDates));
 
-              return ValueListenableBuilder(
-                  valueListenable: controller.scrollControllers.pageListenable,
-                  builder: (context, page, __) => GestureDetector(
-                        behavior: HitTestBehavior.translucent,
-                        onTapUp: (details) {
-                          final tappedCell = details.localPosition.dx / (constraints.widthConstraints().maxWidth / controller.visibleRange.visibleDays);
-                          final date = LocalDate.fromEpochDay(page.floor() + tappedCell.toInt());
-                          final dateAndTime = DateTime(date.year, date.monthOfYear, date.dayOfYear + 2);
-                          final startTime = LocalDateTime.dateTime(dateAndTime);
-                          if (onCreateAllDayEvent != null) {
-                            onCreateAllDayEvent(startTime, true);
-                          }
-                        },
-                        child: _buildEventLayout(context, events, page),
-                      ));
+                  return ValueListenableBuilder(
+                    valueListenable:
+                        controller.scrollControllers.pageListenable,
+                    builder: (context, page, __) => GestureDetector(
+                      behavior: HitTestBehavior.translucent,
+                      onTapUp: onCreateAllDayEvent != null ? (details) {
+                        final tappedCell = details.localPosition.dx /
+                            (constraints.maxWidth /
+                                controller.visibleRange.visibleDays);
+                        final date = LocalDate.fromEpochDay(
+                            page.floor() + tappedCell.toInt());
+                        final dateAndTime = DateTime(
+                            date.year, date.monthOfYear, date.dayOfYear + 2);
+                        final startTime = LocalDateTime.dateTime(dateAndTime);
+                        _callOnCreateAllDayEvent(startTime, true);
+                      } : null,
+                      child: _buildEventLayout(context, events, page),
+                    ),
+                  );
+                },
+              );
             },
           );
         },
-      );
-    }));
+      ),
+    );
+  }
+
+  void _callOnCreateAllDayEvent(LocalDateTime startTime, bool isAllDay){
+    if (onCreateAllDayEvent != null) {
+      onCreateAllDayEvent(startTime, isAllDay);
+    }
   }
 
   Widget _buildEventLayout(

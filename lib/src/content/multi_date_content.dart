@@ -58,16 +58,17 @@ class _MultiDateContentState<E extends Event>
       child: DatePageView(
         controller: widget.controller,
         builder: (_, date) {
-          return LayoutBuilder(
-          builder: (context, constraints) {
-             return GestureDetector(
+          return LayoutBuilder(builder: (context, constraints) {
+            return GestureDetector(
               behavior: HitTestBehavior.translucent,
               onTapUp: (details) {
-                final tappedCell = details.localPosition.dy / ((constraints.maxHeight / 24).round());
-                final dateAndTime = DateTime(date.year, date.monthOfYear, date.dayOfYear, tappedCell.toInt() + 1);
+                final tappedCell = details.localPosition.dy /
+                    ((constraints.maxHeight / 24).round());
+                final dateAndTime = DateTime(date.year, date.monthOfYear,
+                    date.dayOfYear, tappedCell.toInt() + 1);
                 final startTime = LocalDateTime.dateTime(dateAndTime);
 
-                if(widget.onCreateEvent != null) {
+                if (widget.onCreateEvent != null) {
                   widget.onCreateEvent(startTime, false);
                 }
               },
@@ -75,7 +76,9 @@ class _MultiDateContentState<E extends Event>
                 date: date,
                 controller: widget.controller,
                 eventBuilder: widget.eventBuilder,
-              ));});
+              ),
+            );
+          });
         },
       ),
     );

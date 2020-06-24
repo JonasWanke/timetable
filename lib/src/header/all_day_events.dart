@@ -19,14 +19,14 @@ class AllDayEvents<E extends Event> extends StatelessWidget {
     Key key,
     @required this.controller,
     @required this.allDayEventBuilder,
-    this.onAllDayEventBackgroundTap,
+    this.onEventBackgroundTap,
   })  : assert(controller != null),
         assert(allDayEventBuilder != null),
         super(key: key);
 
   final TimetableController<E> controller;
   final AllDayEventBuilder<E> allDayEventBuilder;
-  final OnCreateEventCallback onAllDayEventBackgroundTap;
+  final OnEventBackgroundTapCallback onEventBackgroundTap;
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +51,7 @@ class AllDayEvents<E extends Event> extends StatelessWidget {
                         controller.scrollControllers.pageListenable,
                     builder: (context, page, __) => GestureDetector(
                       behavior: HitTestBehavior.translucent,
-                      onTapUp: onAllDayEventBackgroundTap != null
+                      onTapUp: onEventBackgroundTap != null
                           ? (details) {
                               _callOnAllDayEventBackgroundTap(
                                   details, page, constraints);
@@ -74,7 +74,7 @@ class AllDayEvents<E extends Event> extends StatelessWidget {
         (constraints.maxWidth / controller.visibleRange.visibleDays);
     final date = LocalDate.fromEpochDay((page + tappedCell).floor());
     final startTime = date.atMidnight();
-    onAllDayEventBackgroundTap(startTime, true);
+    onEventBackgroundTap(startTime, true);
   }
 
   Widget _buildEventLayout(

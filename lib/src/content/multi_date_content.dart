@@ -24,7 +24,7 @@ class MultiDateContent<E extends Event> extends StatefulWidget {
 
   final TimetableController<E> controller;
   final EventBuilder<E> eventBuilder;
-  final OnCreateEventCallback onEventBackgroundTap;
+  final OnEventBackgroundTapCallback onEventBackgroundTap;
 
   @override
   _MultiDateContentState<E> createState() => _MultiDateContentState<E>();

@@ -22,7 +22,7 @@ class TimetableContent<E extends Event> extends StatelessWidget {
 
   final TimetableController<E> controller;
   final EventBuilder<E> eventBuilder;
-  final OnCreateEventCallback onEventBackgroundTap;
+  final OnEventBackgroundTapCallback onEventBackgroundTap;
 
   @override
   Widget build(BuildContext context) {

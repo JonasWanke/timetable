@@ -64,20 +64,7 @@ class _MultiDateContentState<E extends Event>
                 behavior: HitTestBehavior.translucent,
                 onTapUp: widget.onEventBackgroundTap != null
                     ? (details) {
-                        final tappedCell = details.localPosition.dy /
-                            ((constraints.maxHeight / 24).round());
-                        final minutesAsQuarter = (tappedCell * 4).ceil() / 4;
-                        final digitValue = minutesAsQuarter
-                            .toString()
-                            .split('.')[1]
-                            .padRight(2, '0');
-                        final minutesOfTap =
-                            60 * (double.parse(digitValue) / 100);
-                        final startTime = LocalTime.sinceMidnight(Time(
-                                hours: tappedCell.toInt(),
-                                minutes: minutesOfTap))
-                            .atDate(date);
-                        _callOnEventBackgroundTap(startTime, false);
+                        _callOnEventBackgroundTap(details, date, constraints);
                       }
                     : null,
                 child: StreamedDateEvents<E>(
@@ -93,9 +80,14 @@ class _MultiDateContentState<E extends Event>
     );
   }
 
-  void _callOnEventBackgroundTap(LocalDateTime startTime, bool isAllDay) {
-    if (widget.onEventBackgroundTap != null) {
-      widget.onEventBackgroundTap(startTime, isAllDay);
-    }
+  void _callOnEventBackgroundTap(TapUpDetails details, LocalDate date, BoxConstraints constraints) {
+    final millis = details.localPosition.dy /
+        constraints.maxHeight *
+        TimeConstants.millisecondsPerDay;
+    final startTime = LocalTime.sinceMidnight(
+        Time(milliseconds: millis.floor()))
+        .atDate(date);
+      widget.onEventBackgroundTap(startTime, false);
+
   }
 }

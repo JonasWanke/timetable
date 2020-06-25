@@ -22,13 +22,13 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 ## [0.2.3](https://github.com/JonasWanke/timetable/compare/v0.2.2...v0.2.3) · 2020-06-15
 
 ### 🎉 New Features
-- Customizable date/weekday format with `TimetableThemeData.weekDayIndicatorPattern`, `.dateIndicatorPattern` & temporary `.totalDateIndicatorHeight` ([#16](https://github.com/JonasWanke/timetable/pull/16)), closes: ([#15](https://github.com/JonasWanke/timetable/issues/15))
+- Customizable date/weekday format with `TimetableThemeData.weekDayIndicatorPattern`, `.dateIndicatorPattern` & temporary `.totalDateIndicatorHeight` ([#16](https://github.com/JonasWanke/timetable/pull/16)), closes: [#15](https://github.com/JonasWanke/timetable/issues/15)
 
 
 ## [0.2.2](https://github.com/JonasWanke/timetable/compare/v0.2.1...v0.2.2) · 2020-05-30
 
 ### 🎉 New Features
-- optional `onTap`-parameter for `BasicEventWidget` & `BasicAllDayEventWidget` ([#12](https://github.com/JonasWanke/timetable/pull/12)), closes: ([#11](https://github.com/JonasWanke/timetable/issues/11))
+- optional `onTap`-parameter for `BasicEventWidget` & `BasicAllDayEventWidget` ([#12](https://github.com/JonasWanke/timetable/pull/12)), closes: [#11](https://github.com/JonasWanke/timetable/issues/11)
 
 ### 📦 Build & CI
 - specify minimum Dart version (v2.7.0) in `pubspec.yaml`
@@ -37,7 +37,7 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 ## [0.2.1](https://github.com/JonasWanke/timetable/compare/v0.2.0...v0.2.1) · 2020-05-19
 
 ### 🎉 New Features
-- All-day events (shown at the top) ([#8](https://github.com/JonasWanke/timetable/pull/8)), closes: ([#5](https://github.com/JonasWanke/timetable/issues/5))
+- All-day events (shown at the top) ([#8](https://github.com/JonasWanke/timetable/pull/8)), closes: [#5](https://github.com/JonasWanke/timetable/issues/5)
 - Theming ([#9](https://github.com/JonasWanke/timetable/pull/9)) — see the README for more information!
 
 ### 📦 Build & CI

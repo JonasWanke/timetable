@@ -19,38 +19,62 @@ class AllDayEvents<E extends Event> extends StatelessWidget {
     Key key,
     @required this.controller,
     @required this.allDayEventBuilder,
+    this.onEventBackgroundTap,
   })  : assert(controller != null),
         assert(allDayEventBuilder != null),
         super(key: key);
 
   final TimetableController<E> controller;
   final AllDayEventBuilder<E> allDayEventBuilder;
+  final OnEventBackgroundTapCallback onEventBackgroundTap;
 
   @override
   Widget build(BuildContext context) {
     return ClipRect(
-      child: ValueListenableBuilder<DateInterval>(
-        valueListenable: controller.currentlyVisibleDatesListenable,
-        builder: (_, visibleDates, __) {
-          return StreamBuilder<Iterable<E>>(
-            stream: controller.eventProvider
-                .getAllDayEventsIntersecting(visibleDates),
-            builder: (_, snapshot) {
-              var events = snapshot.data ?? [];
-              // The StreamBuilder gets recycled and initially still has a list of
-              // old events.
-              events = events.where((e) => e.intersectsInterval(visibleDates));
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          return ValueListenableBuilder<DateInterval>(
+            valueListenable: controller.currentlyVisibleDatesListenable,
+            builder: (_, visibleDates, __) {
+              return StreamBuilder<Iterable<E>>(
+                stream: controller.eventProvider
+                    .getAllDayEventsIntersecting(visibleDates),
+                builder: (_, snapshot) {
+                  var events = snapshot.data ?? [];
+                  // The StreamBuilder gets recycled and initially still has a list of
+                  // old events.
+                  events =
+                      events.where((e) => e.intersectsInterval(visibleDates));
 
-              return ValueListenableBuilder(
-                valueListenable: controller.scrollControllers.pageListenable,
-                builder: (context, page, __) =>
-                    _buildEventLayout(context, events, page),
+                  return ValueListenableBuilder(
+                    valueListenable:
+                        controller.scrollControllers.pageListenable,
+                    builder: (context, page, __) => GestureDetector(
+                      behavior: HitTestBehavior.translucent,
+                      onTapUp: onEventBackgroundTap != null
+                          ? (details) {
+                              _callOnAllDayEventBackgroundTap(
+                                  details, page, constraints);
+                            }
+                          : null,
+                      child: _buildEventLayout(context, events, page),
+                    ),
+                  );
+                },
               );
             },
           );
         },
       ),
     );
+  }
+
+  void _callOnAllDayEventBackgroundTap(TapUpDetails details, double page, BoxConstraints constraints) {
+    final tappedCell = details.localPosition.dx /
+        (constraints.maxWidth / controller.visibleRange.visibleDays);
+    final date = LocalDate.fromEpochDay((page + tappedCell).floor());
+    final startTime = date.atMidnight();
+    onEventBackgroundTap(startTime, true);
   }
 
   Widget _buildEventLayout(
@@ -183,7 +207,9 @@ class _EventsLayout<E extends Event> extends RenderBox
         _eventHeight = eventHeight;
 
   VisibleRange _visibleRange;
+
   VisibleRange get visibleRange => _visibleRange;
+
   set visibleRange(VisibleRange value) {
     assert(value != null);
     if (_visibleRange == value) {
@@ -195,7 +221,9 @@ class _EventsLayout<E extends Event> extends RenderBox
   }
 
   DateInterval _currentlyVisibleDates;
+
   DateInterval get currentlyVisibleDates => _currentlyVisibleDates;
+
   set currentlyVisibleDates(DateInterval value) {
     assert(value != null);
     if (_currentlyVisibleDates == value) {
@@ -207,7 +235,9 @@ class _EventsLayout<E extends Event> extends RenderBox
   }
 
   double _page;
+
   double get page => _page;
+
   set page(double value) {
     assert(value != null);
     if (_page == value) {
@@ -219,7 +249,9 @@ class _EventsLayout<E extends Event> extends RenderBox
   }
 
   double _eventHeight;
+
   double get eventHeight => _eventHeight;
+
   set eventHeight(double value) {
     assert(value != null);
     if (_eventHeight == value) {
@@ -286,6 +318,7 @@ class _EventsLayout<E extends Event> extends RenderBox
   @override
   double computeMinIntrinsicHeight(double width) =>
       _parallelEventCount() * eventHeight;
+
   @override
   double computeMaxIntrinsicHeight(double width) =>
       _parallelEventCount() * eventHeight;
@@ -343,6 +376,7 @@ class _EventsLayout<E extends Event> extends RenderBox
   }
 
   bool _hasOverflow = false;
+
   void _setSize() {
     final parallelEvents = _parallelEventCount();
     size = Size(constraints.maxWidth, parallelEvents * eventHeight);

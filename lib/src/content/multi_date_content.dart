@@ -1,5 +1,6 @@
 import 'package:black_hole_flutter/black_hole_flutter.dart';
 import 'package:flutter/widgets.dart';
+import 'package:time_machine/time_machine.dart';
 
 import '../controller.dart';
 import '../date_page_view.dart';
@@ -16,12 +17,14 @@ class MultiDateContent<E extends Event> extends StatefulWidget {
     Key key,
     @required this.controller,
     @required this.eventBuilder,
+    this.onEventBackgroundTap,
   })  : assert(controller != null),
         assert(eventBuilder != null),
         super(key: key);
 
   final TimetableController<E> controller;
   final EventBuilder<E> eventBuilder;
+  final OnEventBackgroundTapCallback onEventBackgroundTap;
 
   @override
   _MultiDateContentState<E> createState() => _MultiDateContentState<E>();
@@ -42,7 +45,6 @@ class _MultiDateContentState<E extends Event>
   Widget build(BuildContext context) {
     final theme = context.theme;
     final timetableTheme = context.timetableTheme;
-
     return CustomPaint(
       painter: MultiDateBackgroundPainter(
         controller: widget.controller,
@@ -56,13 +58,36 @@ class _MultiDateContentState<E extends Event>
       child: DatePageView(
         controller: widget.controller,
         builder: (_, date) {
-          return StreamedDateEvents<E>(
-            date: date,
-            controller: widget.controller,
-            eventBuilder: widget.eventBuilder,
+          return LayoutBuilder(
+            builder: (context, constraints) {
+              return GestureDetector(
+                behavior: HitTestBehavior.translucent,
+                onTapUp: widget.onEventBackgroundTap != null
+                    ? (details) {
+                        _callOnEventBackgroundTap(details, date, constraints);
+                      }
+                    : null,
+                child: StreamedDateEvents<E>(
+                  date: date,
+                  controller: widget.controller,
+                  eventBuilder: widget.eventBuilder,
+                ),
+              );
+            },
           );
         },
       ),
     );
+  }
+
+  void _callOnEventBackgroundTap(TapUpDetails details, LocalDate date, BoxConstraints constraints) {
+    final millis = details.localPosition.dy /
+        constraints.maxHeight *
+        TimeConstants.millisecondsPerDay;
+    final startTime = LocalTime.sinceMidnight(
+        Time(milliseconds: millis.floor()))
+        .atDate(date);
+      widget.onEventBackgroundTap(startTime, false);
+
   }
 }

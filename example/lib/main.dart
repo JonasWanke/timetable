@@ -96,6 +96,9 @@ class _TimetableExampleState extends State<TimetableExample> {
       ),
       body: Timetable<BasicEvent>(
         controller: _controller,
+        onEventBackgroundTap: (start, isAllDay) {
+          _showSnackBar('Background tapped $start is all day event $isAllDay');
+        },
         eventBuilder: (event) {
           return BasicEventWidget(
             event,

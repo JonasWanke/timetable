@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:time_machine/time_machine.dart';
 
 import 'all_day.dart';
 import 'content/timetable_content.dart';
@@ -9,6 +10,7 @@ import 'header/timetable_header.dart';
 import 'theme.dart';
 
 typedef EventBuilder<E extends Event> = Widget Function(E event);
+typedef OnEventBackgroundTapCallback = void Function(LocalDateTime start, bool isAllDay);
 typedef AllDayEventBuilder<E extends Event> = Widget Function(
   BuildContext context,
   E event,
@@ -18,11 +20,13 @@ typedef AllDayEventBuilder<E extends Event> = Widget Function(
 const double hourColumnWidth = 48;
 
 class Timetable<E extends Event> extends StatelessWidget {
+
   const Timetable({
     Key key,
     @required this.controller,
     @required this.eventBuilder,
     this.allDayEventBuilder,
+    this.onEventBackgroundTap,
     this.theme,
   })  : assert(controller != null),
         assert(eventBuilder != null),
@@ -35,8 +39,8 @@ class Timetable<E extends Event> extends StatelessWidget {
   ///
   /// If not set, [eventBuilder] will be used instead.
   final AllDayEventBuilder<E> allDayEventBuilder;
-
   final TimetableThemeData theme;
+  final OnEventBackgroundTapCallback onEventBackgroundTap;
 
   @override
   Widget build(BuildContext context) {
@@ -44,6 +48,7 @@ class Timetable<E extends Event> extends StatelessWidget {
       children: <Widget>[
         TimetableHeader<E>(
           controller: controller,
+          onEventBackgroundTap: onEventBackgroundTap,
           allDayEventBuilder:
               allDayEventBuilder ?? (_, event, __) => eventBuilder(event),
         ),
@@ -51,6 +56,7 @@ class Timetable<E extends Event> extends StatelessWidget {
           child: TimetableContent<E>(
             controller: controller,
             eventBuilder: eventBuilder,
+            onEventBackgroundTap: onEventBackgroundTap
           ),
         ),
       ],

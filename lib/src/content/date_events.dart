@@ -116,7 +116,6 @@ class _DayEventsLayoutDelegate<E extends Event>
 
     for (final event in events) {
       final position = positions.eventPositions[event];
-
       final top = timeToY(event.start)
           .coerceAtMost(size.height - periodToY(minEventDuration))
           .coerceAtMost(size.height - minEventHeight);

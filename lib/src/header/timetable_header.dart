@@ -14,12 +14,14 @@ class TimetableHeader<E extends Event> extends StatelessWidget {
     Key key,
     @required this.controller,
     @required this.allDayEventBuilder,
+    this.onEventBackgroundTap,
   })  : assert(controller != null),
         assert(allDayEventBuilder != null),
         super(key: key);
 
   final TimetableController<E> controller;
   final AllDayEventBuilder<E> allDayEventBuilder;
+  final OnEventBackgroundTapCallback onEventBackgroundTap;
 
   @override
   Widget build(BuildContext context) {
@@ -49,6 +51,7 @@ class TimetableHeader<E extends Event> extends StatelessWidget {
               ),
               AllDayEvents<E>(
                 controller: controller,
+                onEventBackgroundTap: onEventBackgroundTap,
                 allDayEventBuilder: allDayEventBuilder,
               ),
             ],

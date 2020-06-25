@@ -10,19 +10,50 @@ import 'event.dart';
 /// Provides [Event]s to a [TimetableController].
 ///
 /// We provide the following implementations:
-/// - [EventProvider.list], if you have a fixed list of [Event]s.
+/// - [EventProvider.list], if you have a non-changing list of [Event]s.
+/// - [EventProvider.simpleStream], if you have a changing list of [Event]s.
 /// - [EventProvider.stream], if your events may change or you have many events
 ///   and only want to load a relevant subset.
 abstract class EventProvider<E extends Event> {
   const EventProvider();
 
   /// Creates an [EventProvider] based on a fixed list of [Event]s.
+  ///
+  /// See also:
+  /// - [EventProvider]'s class comment for an overview of provided
+  ///   implementations.
   factory EventProvider.list(List<E> events) = ListEventProvider<E>;
+
+  /// Creates an [EventProvider] accepting a [Stream] of [Event]s.
+  ///
+  /// See also:
+  /// - [EventProvider]'s class comment for an overview of provided
+  ///   implementations.
+  factory EventProvider.simpleStream(Stream<List<E>> eventStream) {
+    assert(eventStream != null);
+
+    final baseStream = eventStream.publishValue();
+    final subscription = baseStream.connect();
+    return EventProvider<E>.stream(
+      eventGetter: (dates) {
+        return baseStream.map((e) {
+          return e.intersectingInterval(dates);
+        });
+      },
+      onDispose: subscription.cancel,
+    );
+  }
 
   /// Creates an [EventProvider] accepting a [Stream] of [Event]s based on the
   /// currently visible range.
-  factory EventProvider.stream({@required StreamedEventGetter<E> eventGetter}) =
-      StreamEventProvider<E>;
+  ///
+  /// See also:
+  /// - [EventProvider]'s class comment for an overview of provided
+  ///   implementations.
+  factory EventProvider.stream({
+    @required StreamedEventGetter<E> eventGetter,
+    VoidCallback onDispose,
+  }) = StreamEventProvider<E>;
 
   void onVisibleDatesChanged(DateInterval visibleRange) {}
 
@@ -38,9 +69,11 @@ abstract class EventProvider<E extends Event> {
   void dispose() {}
 }
 
-/// An [EventProvider] accepting a single fixed list of [Event]s.
+/// An [EventProvider] accepting a single, non-changing list of [Event]s.
 ///
 /// See also:
+/// - [EventProvider.simpleStream], if you have a few events, but they may
+///   change.
 /// - [EventProvider.stream], if your events change or you have lots of them.
 class ListEventProvider<E extends Event> extends EventProvider<E> {
   ListEventProvider(List<E> events)
@@ -88,15 +121,19 @@ typedef StreamedEventGetter<E extends Event> = Stream<Iterable<E>> Function(
 ///
 /// See also:
 /// - [EventProvider.list], if you only have a few static [Event]s.
+/// - [EventProvider.simpleStream], if you only have a few events that may
+///   change.
 class StreamEventProvider<E extends Event> extends EventProvider<E>
     with VisibleDatesStreamEventProviderMixin<E> {
-  StreamEventProvider({@required this.eventGetter})
+  StreamEventProvider({@required this.eventGetter, this.onDispose})
       : assert(eventGetter != null) {
     _events = visibleDates.switchMap(eventGetter).publishValue();
     _eventsSubscription = _events.connect();
   }
 
   final StreamedEventGetter<E> eventGetter;
+  final VoidCallback onDispose;
+
   ValueConnectableStream<Iterable<E>> _events;
   StreamSubscription<Iterable<E>> _eventsSubscription;
 
@@ -114,6 +151,7 @@ class StreamEventProvider<E extends Event> extends EventProvider<E>
   @override
   void dispose() {
     _eventsSubscription.cancel();
+    onDispose?.call();
     super.dispose();
   }
 }

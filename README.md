@@ -57,8 +57,10 @@ In addition, you also need a [`Widget`] to display your events. When using [`Bas
 ### 3. Create an [`EventProvider`]
 
 As the name suggests, you use [`EventProvider`] to provide [`Event`]s to <kbd>timetable</kbd>. There are currently two [`EventProvider`]s to choose from:
-- [`EventProvider.list(List<E> events)`][`EventProvider.list`]: Use this provider if you have a fixed list of events.
-- [`EventProvider.stream({StreamedEventGetter<E> eventGetter})`][`EventProvider.stream`]: Use this provider if your events can change or you have many events and only want to load the relevant subset.
+
+- [`EventProvider.list(List<E> events)`][`EventProvider.list`]: If you have a non-changing list of events.
+- [`EventProvider.simpleStream(Stream<List<E>> eventStream)`][`EventProvider.simpleStream`]: If you have a limited, changing list of events.
+- [`EventProvider.stream({StreamedEventGetter<E> eventGetter})`][`EventProvider.stream`]: If your events can change or you have many events and only want to load the relevant subset.
 
 ```dart
 final myEventProvider = EventProvider.list([
@@ -70,6 +72,17 @@ final myEventProvider = EventProvider.list([
     end: LocalDate.today().at(LocalTime(15, 0, 0)),
   ),
 ]);
+```
+
+For trying out the behavior of changing events, you can create a `StreamController<List<E>>` and `add()` different lists of events, e.g. in `Future.delayed()`:
+
+```dart
+final eventController = StreamController<List<BasicEvent>>()..add([]);
+final provider = EventProvider.simpleStream(eventController.stream);
+Future.delayed(Duration(seconds: 5), () => eventController.add(/* some events */));
+
+// Don't forget to close the stream controller when you're done, e.g. in `dispose`:
+eventController.close();
 ```
 
 > See the [example][example/main.dart] for more [`EventProvider`] samples!
@@ -158,6 +171,7 @@ Timetable<BasicEvent>(
 [`EventBuilder`]: https://pub.dev/documentation/timetable/latest/timetable/EventBuilder-class.html
 [`EventProvider`]: https://pub.dev/documentation/timetable/latest/timetable/EventProvider-class.html
 [`EventProvider.list`]: https://pub.dev/documentation/timetable/latest/timetable/EventProvider/EventProvider.list.html
+[`EventProvider.simpleStream`]: https://pub.dev/documentation/timetable/latest/timetable/EventProvider/EventProvider.simpleStream.html
 [`EventProvider.stream`]: https://pub.dev/documentation/timetable/latest/timetable/EventProvider/EventProvider.stream.html
 [`Timetable`]: https://pub.dev/documentation/timetable/latest/timetable/Timetable-class.html
 [`TimetableController`]: https://pub.dev/documentation/timetable/latest/timetable/TimetableController-class.html

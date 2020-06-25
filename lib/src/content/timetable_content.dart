@@ -55,7 +55,7 @@ class TimetableContent<E extends Event> extends StatelessWidget {
             child: MultiDateContent<E>(
               controller: controller,
               eventBuilder: eventBuilder,
-              onEventBackgroundTap: onEventBackgroundTap
+              onEventBackgroundTap: onEventBackgroundTap,
             ),
           ),
         ],

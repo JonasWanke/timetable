@@ -80,14 +80,15 @@ class _MultiDateContentState<E extends Event>
     );
   }
 
-  void _callOnEventBackgroundTap(TapUpDetails details, LocalDate date, BoxConstraints constraints) {
+  void _callOnEventBackgroundTap(
+    TapUpDetails details,
+    LocalDate date,
+    BoxConstraints constraints,
+  ) {
     final millis = details.localPosition.dy /
         constraints.maxHeight *
         TimeConstants.millisecondsPerDay;
-    final startTime = LocalTime.sinceMidnight(
-        Time(milliseconds: millis.floor()))
-        .atDate(date);
-      widget.onEventBackgroundTap(startTime, false);
-
+    final time = LocalTime.sinceMidnight(Time(milliseconds: millis.floor()));
+    widget.onEventBackgroundTap(date.at(time), false);
   }
 }

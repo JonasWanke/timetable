@@ -69,12 +69,15 @@ class AllDayEvents<E extends Event> extends StatelessWidget {
     );
   }
 
-  void _callOnAllDayEventBackgroundTap(TapUpDetails details, double page, BoxConstraints constraints) {
+  void _callOnAllDayEventBackgroundTap(
+    TapUpDetails details,
+    double page,
+    BoxConstraints constraints,
+  ) {
     final tappedCell = details.localPosition.dx /
         (constraints.maxWidth / controller.visibleRange.visibleDays);
     final date = LocalDate.fromEpochDay((page + tappedCell).floor());
-    final startTime = date.atMidnight();
-    onEventBackgroundTap(startTime, true);
+    onEventBackgroundTap(date.atMidnight(), true);
   }
 
   Widget _buildEventLayout(

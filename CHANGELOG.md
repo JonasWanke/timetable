@@ -16,7 +16,17 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 ### 📦 Build & CI
 -->
 
-## [Unreleased](https://github.com/JonasWanke/timetable/compare/v0.2.3...master)
+## [Unreleased](https://github.com/JonasWanke/timetable/compare/v0.2.4...master)
+
+
+## [0.2.4](https://github.com/JonasWanke/timetable/compare/v0.2.3...v0.2.4) · 2020-06-25
+
+### 🎉 New Features
+- `Timetable.onEventBackgroundTap`: called when tapping the background, e.g. for creating an event ([#20](https://github.com/JonasWanke/timetable/pull/20)), closes: [#18](https://github.com/JonasWanke/timetable/issues/18). Thanks to [@raLaaaa](https://github.com/raLaaaa)!
+- add `EventProvider.simpleStream` as a simpler interface than `EventProvider.stream` ([e63bfb4](https://github.com/JonasWanke/timetable/commit/e63bfb4f974ce5319fd6f6bb12ebb561d8c5143c))
+
+### 📜 Documentation updates
+- improve streaming `EventProvider` documentation ([e63bfb4](https://github.com/JonasWanke/timetable/commit/e63bfb4f974ce5319fd6f6bb12ebb561d8c5143c)), fixes: [#19](https://github.com/JonasWanke/timetable/issues/19)
 
 
 ## [0.2.3](https://github.com/JonasWanke/timetable/compare/v0.2.2...v0.2.3) · 2020-06-15

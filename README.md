@@ -152,7 +152,7 @@ Timetable<BasicEvent>(
 - [x] Theming
 - [ ] Animate between different [`VisibleRange`]s
 - [ ] Month-view, Agenda-view
-- [ ] Listener when tapping the background (e.g. for creating an event)
+- [x] Listener when tapping the background (e.g. for creating an event)
 - [ ] Support for event resizing
 
 

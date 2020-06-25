@@ -10,17 +10,24 @@ import 'header/timetable_header.dart';
 import 'theme.dart';
 
 typedef EventBuilder<E extends Event> = Widget Function(E event);
-typedef OnEventBackgroundTapCallback = void Function(LocalDateTime start, bool isAllDay);
 typedef AllDayEventBuilder<E extends Event> = Widget Function(
   BuildContext context,
   E event,
   AllDayEventLayoutInfo info,
 );
 
+/// Signature for [Timetable.onEventBackgroundTap].
+///
+/// `start` contains the time that the user tapped on. `isAllDay` indicates that
+/// the tap occurred in the all-day/nnheader area.
+typedef OnEventBackgroundTapCallback = void Function(
+  LocalDateTime start,
+  bool isAllDay,
+);
+
 const double hourColumnWidth = 48;
 
 class Timetable<E extends Event> extends StatelessWidget {
-
   const Timetable({
     Key key,
     @required this.controller,
@@ -40,6 +47,9 @@ class Timetable<E extends Event> extends StatelessWidget {
   /// If not set, [eventBuilder] will be used instead.
   final AllDayEventBuilder<E> allDayEventBuilder;
   final TimetableThemeData theme;
+
+  /// Called when the user taps the background in areas where events are laid
+  /// out.
   final OnEventBackgroundTapCallback onEventBackgroundTap;
 
   @override
@@ -56,7 +66,7 @@ class Timetable<E extends Event> extends StatelessWidget {
           child: TimetableContent<E>(
             controller: controller,
             eventBuilder: eventBuilder,
-            onEventBackgroundTap: onEventBackgroundTap
+            onEventBackgroundTap: onEventBackgroundTap,
           ),
         ),
       ],

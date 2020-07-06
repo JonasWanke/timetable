@@ -164,8 +164,8 @@ To automatically react to locale changes of the app, see [Dana-Ferguson/time_mac
 - [x] Selectable [`VisibleRange`]s
 - [x] Display all-day events at the top
 - [x] Theming
-- [ ] Animate between different [`VisibleRange`]s
-- [ ] Month-view, Agenda-view
+- [ ] Animate between different [`VisibleRange`]s: see [#17]
+- [ ] Month-view, Agenda-view: see [#17]
 - [x] Listener when tapping the background (e.g. for creating an event)
 - [ ] Support for event resizing
 
@@ -191,6 +191,7 @@ To automatically react to locale changes of the app, see [Dana-Ferguson/time_mac
 [`TimetableController.dispose`]: https://pub.dev/documentation/timetable/latest/timetable/TimetableController/dispose.html
 [`TimetableThemeData`]: https://pub.dev/documentation/timetable/latest/timetable/TimetableThemeData-class.html
 [`VisibleRange`]: https://pub.dev/documentation/timetable/latest/timetable/VisibleRange-class.html
+[#17]: https://github.com/JonasWanke/timetable/issues/17
 <!-- time_machine -->
 [<kbd>time_machine</kbd>]: https://pub.dev/packages/time_machine
 [`Culture`]: https://pub.dev/documentation/time_machine/latest/time_machine/Culture-class.html

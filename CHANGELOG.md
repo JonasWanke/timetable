@@ -16,7 +16,16 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 ### 📦 Build & CI
 -->
 
-## [Unreleased](https://github.com/JonasWanke/timetable/compare/v0.2.4...master)
+## [Unreleased](https://github.com/JonasWanke/timetable/compare/v0.2.5...master)
+
+
+## [0.2.5](https://github.com/JonasWanke/timetable/compare/v0.2.4...v0.2.5) · 2020-07-06
+
+### 📜 Documentation updates
+- add Localization section to the README
+
+### 📦 Build & CI
+- update <kbd>dartx</kbd> to v0.4.0
 
 
 ## [0.2.4](https://github.com/JonasWanke/timetable/compare/v0.2.3...v0.2.4) · 2020-06-25

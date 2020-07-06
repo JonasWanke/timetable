@@ -143,6 +143,20 @@ Timetable<BasicEvent>(
 ```
 
 
+## Localization
+
+[<kbd>time_machine</kbd>] is used internally for date & time formatting. By default, it uses `en_US` as its locale (managed by the [`Culture`] class) and doesn't know about Flutter's locale. To change the locale, set [`Culture.current`] after the call to [`TimeMachine.initialize`]:
+
+```dart
+// Supported cultures: https://github.com/Dana-Ferguson/time_machine/tree/master/lib/data/cultures
+Culture.current = await Cultures.getCulture('de');
+```
+
+To automatically react to locale changes of the app, see [Dana-Ferguson/time_machine#28].
+
+> **Note:** A better solution for Localization is already planned.
+
+
 ## Features & Coming soon
 
 - [x] Smartly arrange overlapping events
@@ -158,7 +172,6 @@ Timetable<BasicEvent>(
 
 
 [example/main.dart]: https://github.com/JonasWanke/timetable/blob/master/example/lib/main.dart
-[<kbd>time_machine</kbd>]: https://pub.dev/packages/time_machine
 <!-- Flutter -->
 [`TabController`]: https://api.flutter.dev/flutter/material/TabController-class.html
 [`ScrollController`]: https://api.flutter.dev/flutter/widgets/ScrollController-class.html
@@ -178,3 +191,9 @@ Timetable<BasicEvent>(
 [`TimetableController.dispose`]: https://pub.dev/documentation/timetable/latest/timetable/TimetableController/dispose.html
 [`TimetableThemeData`]: https://pub.dev/documentation/timetable/latest/timetable/TimetableThemeData-class.html
 [`VisibleRange`]: https://pub.dev/documentation/timetable/latest/timetable/VisibleRange-class.html
+<!-- time_machine -->
+[<kbd>time_machine</kbd>]: https://pub.dev/packages/time_machine
+[`Culture`]: https://pub.dev/documentation/time_machine/latest/time_machine/Culture-class.html
+[`Culture.current`]: https://pub.dev/documentation/time_machine/latest/time_machine/Culture/current.html
+[`TimeMachine.initialize`]: https://pub.dev/documentation/time_machine/latest/time_machine/TimeMachine/initialize.html
+[Dana-Ferguson/time_machine#28]: https://github.com/Dana-Ferguson/time_machine/issues/28

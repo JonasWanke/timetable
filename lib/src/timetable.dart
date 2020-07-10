@@ -15,6 +15,10 @@ typedef AllDayEventBuilder<E extends Event> = Widget Function(
   E event,
   AllDayEventLayoutInfo info,
 );
+typedef HeaderBuilder = Widget Function(
+  BuildContext context,
+  LocalDate date
+);
 
 /// Signature for [Timetable.onEventBackgroundTap].
 ///
@@ -35,6 +39,8 @@ class Timetable<E extends Event> extends StatelessWidget {
     this.allDayEventBuilder,
     this.onEventBackgroundTap,
     this.theme,
+    this.dayHeaderBuilder,
+    this.weekIndicatorBuilder,
   })  : assert(controller != null),
         assert(eventBuilder != null),
         super(key: key);
@@ -52,6 +58,18 @@ class Timetable<E extends Event> extends StatelessWidget {
   /// out.
   final OnEventBackgroundTapCallback onEventBackgroundTap;
 
+  /// Builder for Week Indicator area.
+  ///
+  /// If it's not provided, or builder returns `null`,
+  /// default [WeekIndicator] widget will be used
+  final HeaderBuilder weekIndicatorBuilder;
+
+  /// Builder for Day header.
+  ///
+  /// If it's not provided, or builder returns `null`,
+  /// default [DateHeader] widget will be used
+  final HeaderBuilder dayHeaderBuilder;
+
   @override
   Widget build(BuildContext context) {
     Widget child = Column(
@@ -59,6 +77,8 @@ class Timetable<E extends Event> extends StatelessWidget {
         TimetableHeader<E>(
           controller: controller,
           onEventBackgroundTap: onEventBackgroundTap,
+          weekIndicatorBuilder: weekIndicatorBuilder,
+          dayHeaderBuilder: dayHeaderBuilder,
           allDayEventBuilder:
               allDayEventBuilder ?? (_, event, __) => eventBuilder(event),
         ),

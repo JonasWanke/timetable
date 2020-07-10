@@ -15,6 +15,9 @@ typedef AllDayEventBuilder<E extends Event> = Widget Function(
   E event,
   AllDayEventLayoutInfo info,
 );
+
+/// Signature for [Timetable.weekIndicatorBuilder] and
+/// [Timetable.weekIndicatorBuilder] params
 typedef HeaderBuilder = Widget Function(
   BuildContext context,
   LocalDate date
@@ -61,13 +64,13 @@ class Timetable<E extends Event> extends StatelessWidget {
   /// Builder for Week Indicator area.
   ///
   /// If it's not provided, or builder returns `null`,
-  /// default [WeekIndicator] widget will be used
+  /// default `WeekIndicator` widget will be used
   final HeaderBuilder weekIndicatorBuilder;
 
   /// Builder for Day header.
   ///
   /// If it's not provided, or builder returns `null`,
-  /// default [DateHeader] widget will be used
+  /// default `DateHeader` widget will be used
   final HeaderBuilder dayHeaderBuilder;
 
   @override

@@ -67,10 +67,10 @@ class Timetable<E extends Event> extends StatelessWidget {
   /// will be shown.
   final HeaderBuilder weekIndicatorBuilder;
 
-  /// Builder for Day header.
+  /// Custom builder for header of a single date.
   ///
-  /// If it's not provided, or builder returns `null`,
-  /// default `DateHeader` widget will be used
+  /// If it's not provided, or the builder returns `null`, the day of week and
+  /// day of month will be shown.
   final HeaderBuilder dayHeaderBuilder;
 
   @override

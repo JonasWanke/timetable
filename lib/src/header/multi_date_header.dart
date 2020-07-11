@@ -15,7 +15,7 @@ class MultiDateHeader<E extends Event> extends StatelessWidget {
         super(key: key);
 
   final TimetableController<E> controller;
-  final HeaderBuilder builder;
+  final HeaderWidgetBuilder builder;
 
   @override
   Widget build(BuildContext context) {

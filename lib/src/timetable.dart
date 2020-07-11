@@ -18,7 +18,7 @@ typedef AllDayEventBuilder<E extends Event> = Widget Function(
 
 /// Signature for [Timetable.weekIndicatorBuilder] and
 /// [Timetable.weekIndicatorBuilder].
-typedef HeaderBuilder = Widget Function(
+typedef HeaderWidgetBuilder = Widget Function(
   BuildContext context,
   LocalDate date
 );
@@ -65,13 +65,13 @@ class Timetable<E extends Event> extends StatelessWidget {
   ///
   /// If it's not provided, or the builder returns `null`, a week indicator
   /// will be shown.
-  final HeaderBuilder weekIndicatorBuilder;
+  final HeaderWidgetBuilder weekIndicatorBuilder;
 
   /// Custom builder for header of a single date.
   ///
   /// If it's not provided, or the builder returns `null`, the day of week and
   /// day of month will be shown.
-  final HeaderBuilder dayHeaderBuilder;
+  final HeaderWidgetBuilder dayHeaderBuilder;
 
   @override
   Widget build(BuildContext context) {

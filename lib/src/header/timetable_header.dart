@@ -24,8 +24,8 @@ class TimetableHeader<E extends Event> extends StatelessWidget {
   final TimetableController<E> controller;
   final AllDayEventBuilder<E> allDayEventBuilder;
   final OnEventBackgroundTapCallback onEventBackgroundTap;
-  final HeaderBuilder weekIndicatorBuilder;
-  final HeaderBuilder dayHeaderBuilder;
+  final HeaderWidgetBuilder weekIndicatorBuilder;
+  final HeaderWidgetBuilder dayHeaderBuilder;
 
   @override
   Widget build(BuildContext context) {

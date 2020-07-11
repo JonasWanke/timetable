@@ -61,10 +61,10 @@ class Timetable<E extends Event> extends StatelessWidget {
   /// out.
   final OnEventBackgroundTapCallback onEventBackgroundTap;
 
-  /// Builder for Week Indicator area.
+  /// Custom builder for the left area of the header.
   ///
-  /// If it's not provided, or builder returns `null`,
-  /// default `WeekIndicator` widget will be used
+  /// If it's not provided, or the builder returns `null`, a week indicator
+  /// will be shown.
   final HeaderBuilder weekIndicatorBuilder;
 
   /// Builder for Day header.

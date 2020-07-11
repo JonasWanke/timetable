@@ -243,19 +243,22 @@ class _DayEventsLayoutDelegate<E extends Event>
         continue;
       }
 
-      final cols =
-          (position.column + 1).rangeTo(columns.length - 1).where((column) {
-        return currentGroup
-            .where((e) => positions.eventPositions[e].column == column)
+      var columnSpan = 1;
+      for (var i = position.column + 1; i < columns.length; i++) {
+        final hasOverlapInColumn = currentGroup
+            .where((e) => positions.eventPositions[e].column == i)
             .where((e) =>
                 event.start < _actualEnd(e, height) &&
                 e.start < _actualEnd(event, height))
-            .isEmpty;
-      }).toList();
-      final maxColumnWithoutIntersections = cols.max() ?? position.column;
+            .isNotEmpty;
+        if (hasOverlapInColumn) {
+          break;
+        }
 
+        columnSpan++;
+      }
       positions.eventPositions[event] = position.copyWith(
-        columnSpan: maxColumnWithoutIntersections - position.column + 1,
+        columnSpan: columnSpan,
       );
     }
 

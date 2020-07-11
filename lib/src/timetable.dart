@@ -17,7 +17,7 @@ typedef AllDayEventBuilder<E extends Event> = Widget Function(
 );
 
 /// Signature for [Timetable.weekIndicatorBuilder] and
-/// [Timetable.weekIndicatorBuilder] params
+/// [Timetable.weekIndicatorBuilder].
 typedef HeaderBuilder = Widget Function(
   BuildContext context,
   LocalDate date

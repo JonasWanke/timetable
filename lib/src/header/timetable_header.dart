@@ -39,12 +39,18 @@ class TimetableHeader<E extends Event> extends StatelessWidget {
           width: hourColumnWidth,
           child: ValueListenableBuilder<LocalDate>(
               valueListenable: controller.dateListenable,
-              builder: (context, date, _) {
-                return weekIndicatorBuilder?.call(context, date) ??
-                    Center(
-                        child: WeekIndicator(
-                            weekYearRule.getWeekOfWeekYear(date)));
-              }),
+            valueListenable: controller.dateListenable,
+            builder: (context, date, _) {
+              final customHeader = weekIndicatorBuilder?.call(context, date);
+              if (customHeader != null) {
+                return customHeader;
+              }
+
+              return Center(
+                child: WeekIndicator(weekYearRule.getWeekOfWeekYear(date)),
+              );
+            },
+          ),
         ),
         Expanded(
           child: Column(

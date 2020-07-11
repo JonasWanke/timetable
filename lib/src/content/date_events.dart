@@ -126,8 +126,9 @@ class _DayEventsLayoutDelegate<E extends Event>
           positions.groupColumnCounts[position.group];
       final columnLeft = columnWidth * position.column;
       final left = columnLeft + position.index * stackedEventSpacing;
-      final width =
-          columnWidth - position.index * stackedEventSpacing - eventSpacing;
+      final width = columnWidth * position.columnSpan -
+          position.index * stackedEventSpacing -
+          eventSpacing;
 
       final childSize = Size(width.coerceAtLeast(minWidth), height);
       layoutChild(event.id, BoxConstraints.tight(childSize));
@@ -217,6 +218,30 @@ class _DayEventsLayoutDelegate<E extends Event>
           positions.groupColumnCounts.length, minColumn, minIndex + 1);
       columns[minColumn].add(event);
     }
+
+    // Expand events to multiple columns if possible.
+    for (final event in currentGroup) {
+      final position = positions.eventPositions[event];
+      if (position.column == columns.length - 1) {
+        continue;
+      }
+
+      final cols =
+          (position.column + 1).rangeTo(columns.length - 1).where((column) {
+        return currentGroup
+            .where((e) => positions.eventPositions[e].column == column)
+            .where((e) =>
+                event.start < _actualEnd(e, height) &&
+                e.start < _actualEnd(event, height))
+            .isEmpty;
+      }).toList();
+      final maxColumnWithoutIntersections = cols.max() ?? position.column;
+
+      positions.eventPositions[event] = position.copyWith(
+        columnSpan: maxColumnWithoutIntersections - position.column + 1,
+      );
+    }
+
     positions.groupColumnCounts.add(columns.length);
   }
 
@@ -254,12 +279,27 @@ class _EventPositions {
 }
 
 class _SingleEventPosition {
-  _SingleEventPosition(this.group, this.column, this.index)
-      : assert(group != null),
+  _SingleEventPosition(
+    this.group,
+    this.column,
+    this.index, {
+    this.columnSpan = 1,
+  })  : assert(group != null),
         assert(column != null),
+        assert(columnSpan != null),
         assert(index != null);
 
   final int group;
   final int column;
+  final int columnSpan;
   final int index;
+
+  _SingleEventPosition copyWith({int columnSpan}) {
+    return _SingleEventPosition(
+      group,
+      column,
+      index,
+      columnSpan: columnSpan ?? this.columnSpan,
+    );
+  }
 }

@@ -38,7 +38,6 @@ class TimetableHeader<E extends Event> extends StatelessWidget {
         SizedBox(
           width: hourColumnWidth,
           child: ValueListenableBuilder<LocalDate>(
-              valueListenable: controller.dateListenable,
             valueListenable: controller.dateListenable,
             builder: (context, date, _) {
               final customHeader = weekIndicatorBuilder?.call(context, date);

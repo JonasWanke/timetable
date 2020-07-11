@@ -27,6 +27,8 @@ class TimetableThemeData {
     this.partDayEventMinimumDuration,
     this.partDayEventMinimumHeight,
     this.partDayEventSpacing,
+    this.enablePartDayEventStacking,
+    this.partDayEventMinimumDeltaForStacking,
     this.partDayStackedEventSpacing,
   })  : assert(allDayEventHeight == null || allDayEventHeight > 0),
         assert(minimumHourHeight == null || minimumHourHeight > 0),
@@ -135,12 +137,34 @@ class TimetableThemeData {
   /// Horizontal space between two parallel events shown next to each other.
   final double partDayEventSpacing;
 
+  /// Controls whether overlapping events may be stacked on top of each other.
+  ///
+  /// If set to `true`, intersecting events may be stacked if their start values
+  /// differ by at least [partDayEventMinimumDeltaForStacking]. If set to
+  /// `false`, intersecting events will always be shown next to each other and
+  /// not overlap.
+  ///
+  /// Defaults to `true`.
+  final bool enablePartDayEventStacking;
+
+  /// When the start values of two events differ by at least this value, they
+  /// may be stacked on top of each other.
+  ///
+  /// If the difference is less, they will be shown next to each other.
+  ///
+  /// Defaults to 15 min.
+  ///
+  /// See also:
+  /// - [enablePartDayEventStacking], which can disable the stacking behavior
+  ///   completely.
+  final Period partDayEventMinimumDeltaForStacking;
+
   /// Horizontal space between two parallel events stacked on top of each other.
   final double partDayStackedEventSpacing;
 
   @override
   int get hashCode {
-    return hashValues(
+    return hashList([
       primaryColor,
       weekIndicatorDecoration,
       weekIndicatorTextStyle,
@@ -160,8 +184,10 @@ class TimetableThemeData {
       partDayEventMinimumDuration,
       partDayEventMinimumHeight,
       partDayEventSpacing,
+      enablePartDayEventStacking,
+      partDayEventMinimumDeltaForStacking,
       partDayStackedEventSpacing,
-    );
+    ]);
   }
 
   @override
@@ -192,6 +218,9 @@ class TimetableThemeData {
         other.partDayEventMinimumDuration == partDayEventMinimumDuration &&
         other.partDayEventMinimumHeight == partDayEventMinimumHeight &&
         other.partDayEventSpacing == partDayEventSpacing &&
+        other.enablePartDayEventStacking == enablePartDayEventStacking &&
+        other.partDayEventMinimumDeltaForStacking ==
+            partDayEventMinimumDeltaForStacking &&
         other.partDayStackedEventSpacing == partDayStackedEventSpacing;
   }
 }

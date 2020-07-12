@@ -20,7 +20,7 @@ typedef AllDayEventBuilder<E extends Event> = Widget Function(
 /// [Timetable.dateHeaderBuilder].
 typedef HeaderWidgetBuilder = Widget Function(
   BuildContext context,
-  LocalDate date
+  LocalDate date,
 );
 
 /// Signature for [Timetable.onEventBackgroundTap].

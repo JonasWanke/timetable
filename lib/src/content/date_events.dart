@@ -34,7 +34,12 @@ class DateEvents<E extends Event> extends StatelessWidget {
   static const _defaultMinEventHeight = 16.0;
   static const _defaultEventSpacing = 1.0;
   static const _defaultStackedEventSpacing = 4.0;
-  static final Period minStackOverlap = Period(minutes: 15);
+  static final _defaultPartDayEventMinimumDeltaForStacking =
+      Period(minutes: 15);
+  @Deprecated('This is now configurable via '
+      '[TimetableThemeData.partDayEventMinimumDeltaForStacking].')
+  static Period get minStackOverlap =>
+      _defaultPartDayEventMinimumDeltaForStacking;
 
   final LocalDate date;
   final List<E> events;
@@ -54,6 +59,10 @@ class DateEvents<E extends Event> extends StatelessWidget {
             timetableTheme?.partDayEventMinimumHeight ?? _defaultMinEventHeight,
         eventSpacing:
             timetableTheme?.partDayEventSpacing ?? _defaultEventSpacing,
+        enableStacking: timetableTheme?.enablePartDayEventStacking ?? true,
+        minimumDeltaForStacking:
+            timetableTheme?.partDayEventMinimumDeltaForStacking ??
+                _defaultPartDayEventMinimumDeltaForStacking,
         stackedEventSpacing: timetableTheme?.partDayStackedEventSpacing ??
             _defaultStackedEventSpacing,
       ),
@@ -77,12 +86,16 @@ class _DayEventsLayoutDelegate<E extends Event>
     @required this.minEventDuration,
     @required this.minEventHeight,
     @required this.eventSpacing,
+    @required this.enableStacking,
+    @required this.minimumDeltaForStacking,
     @required this.stackedEventSpacing,
   })  : assert(date != null),
         assert(events != null),
         assert(minEventDuration != null),
         assert(minEventHeight != null),
         assert(eventSpacing != null),
+        assert(enableStacking != null),
+        assert(minimumDeltaForStacking != null),
         assert(stackedEventSpacing != null);
 
   static const minWidth = 4.0;
@@ -93,6 +106,8 @@ class _DayEventsLayoutDelegate<E extends Event>
   final Period minEventDuration;
   final double minEventHeight;
   final double eventSpacing;
+  final bool enableStacking;
+  final Period minimumDeltaForStacking;
   final double stackedEventSpacing;
 
   @override
@@ -184,7 +199,9 @@ class _DayEventsLayoutDelegate<E extends Event>
         final other = column.last;
 
         // No space in current column
-        if (event.start < other.start + DateEvents.minStackOverlap) {
+        if (!enableStacking && event.start < _actualEnd(other, height) ||
+            enableStacking &&
+                event.start < other.start + minimumDeltaForStacking) {
           continue;
         }
 
@@ -226,19 +243,22 @@ class _DayEventsLayoutDelegate<E extends Event>
         continue;
       }
 
-      final cols =
-          (position.column + 1).rangeTo(columns.length - 1).where((column) {
-        return currentGroup
-            .where((e) => positions.eventPositions[e].column == column)
+      var columnSpan = 1;
+      for (var i = position.column + 1; i < columns.length; i++) {
+        final hasOverlapInColumn = currentGroup
+            .where((e) => positions.eventPositions[e].column == i)
             .where((e) =>
                 event.start < _actualEnd(e, height) &&
                 e.start < _actualEnd(event, height))
-            .isEmpty;
-      }).toList();
-      final maxColumnWithoutIntersections = cols.max() ?? position.column;
+            .isNotEmpty;
+        if (hasOverlapInColumn) {
+          break;
+        }
 
+        columnSpan++;
+      }
       positions.eventPositions[event] = position.copyWith(
-        columnSpan: maxColumnWithoutIntersections - position.column + 1,
+        columnSpan: columnSpan,
       );
     }
 

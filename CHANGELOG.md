@@ -16,7 +16,17 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 ### 📦 Build & CI
 -->
 
-## [Unreleased](https://github.com/JonasWanke/timetable/compare/v0.2.5...master)
+## [Unreleased](https://github.com/JonasWanke/timetable/compare/v0.2.6...master)
+
+
+## [0.2.6](https://github.com/JonasWanke/timetable/compare/v0.2.5...v0.2.6) · 2020-07-12
+
+### 🎉 New Features
+- add custom builders for date header and leading area of the header (usually a week indicator) ([#28](https://github.com/JonasWanke/timetable/pull/28)), closes: [#27](https://github.com/JonasWanke/timetable/issues/27). Thanks to [@TatsuUkraine](https://github.com/TatsuUkraine)!
+- add theme properties for disabling event stacking and configuring the minimum overlap ([#34](https://github.com/JonasWanke/timetable/pull/34)), closes: [#31](https://github.com/JonasWanke/timetable/issues/31)
+
+### 🐛 Bug Fixes
+- Expand part-day events to fill empty columns ([#30](https://github.com/JonasWanke/timetable/pull/30)), closes: [#29](https://github.com/JonasWanke/timetable/issues/29)
 
 
 ## [0.2.5](https://github.com/JonasWanke/timetable/compare/v0.2.4...v0.2.5) · 2020-07-06

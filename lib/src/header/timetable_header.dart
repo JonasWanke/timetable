@@ -15,6 +15,8 @@ class TimetableHeader<E extends Event> extends StatelessWidget {
     @required this.controller,
     @required this.allDayEventBuilder,
     this.onEventBackgroundTap,
+    this.leadingHeaderBuilder,
+    this.dateHeaderBuilder,
   })  : assert(controller != null),
         assert(allDayEventBuilder != null),
         super(key: key);
@@ -22,6 +24,8 @@ class TimetableHeader<E extends Event> extends StatelessWidget {
   final TimetableController<E> controller;
   final AllDayEventBuilder<E> allDayEventBuilder;
   final OnEventBackgroundTapCallback onEventBackgroundTap;
+  final HeaderWidgetBuilder leadingHeaderBuilder;
+  final HeaderWidgetBuilder dateHeaderBuilder;
 
   @override
   Widget build(BuildContext context) {
@@ -33,12 +37,18 @@ class TimetableHeader<E extends Event> extends StatelessWidget {
       children: <Widget>[
         SizedBox(
           width: hourColumnWidth,
-          child: Center(
-            child: ValueListenableBuilder<LocalDate>(
-              valueListenable: controller.dateListenable,
-              builder: (context, date, _) =>
-                  WeekIndicator(weekYearRule.getWeekOfWeekYear(date)),
-            ),
+          child: ValueListenableBuilder<LocalDate>(
+            valueListenable: controller.dateListenable,
+            builder: (context, date, _) {
+              final customHeader = leadingHeaderBuilder?.call(context, date);
+              if (customHeader != null) {
+                return customHeader;
+              }
+
+              return Center(
+                child: WeekIndicator(weekYearRule.getWeekOfWeekYear(date)),
+              );
+            },
           ),
         ),
         Expanded(
@@ -47,7 +57,10 @@ class TimetableHeader<E extends Event> extends StatelessWidget {
             children: <Widget>[
               SizedBox(
                 height: context.timetableTheme?.totalDateIndicatorHeight ?? 72,
-                child: MultiDateHeader(controller: controller),
+                child: MultiDateHeader(
+                  controller: controller,
+                  builder: dateHeaderBuilder,
+                ),
               ),
               AllDayEvents<E>(
                 controller: controller,

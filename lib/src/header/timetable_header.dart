@@ -15,7 +15,7 @@ class TimetableHeader<E extends Event> extends StatelessWidget {
     @required this.controller,
     @required this.allDayEventBuilder,
     this.onEventBackgroundTap,
-    this.weekIndicatorBuilder,
+    this.leadingHeaderBuilder,
     this.dateHeaderBuilder,
   })  : assert(controller != null),
         assert(allDayEventBuilder != null),
@@ -24,7 +24,7 @@ class TimetableHeader<E extends Event> extends StatelessWidget {
   final TimetableController<E> controller;
   final AllDayEventBuilder<E> allDayEventBuilder;
   final OnEventBackgroundTapCallback onEventBackgroundTap;
-  final HeaderWidgetBuilder weekIndicatorBuilder;
+  final HeaderWidgetBuilder leadingHeaderBuilder;
   final HeaderWidgetBuilder dateHeaderBuilder;
 
   @override
@@ -40,7 +40,7 @@ class TimetableHeader<E extends Event> extends StatelessWidget {
           child: ValueListenableBuilder<LocalDate>(
             valueListenable: controller.dateListenable,
             builder: (context, date, _) {
-              final customHeader = weekIndicatorBuilder?.call(context, date);
+              final customHeader = leadingHeaderBuilder?.call(context, date);
               if (customHeader != null) {
                 return customHeader;
               }

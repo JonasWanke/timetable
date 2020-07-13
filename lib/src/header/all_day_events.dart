@@ -76,41 +76,44 @@ class AllDayEvents<E extends Event> extends StatelessWidget {
   ) {
     final tappedCell = details.localPosition.dx /
         (constraints.maxWidth / controller.visibleRange.visibleDays);
-    final date = LocalDate.fromEpochDay((page + tappedCell).floor());
+    final date = _centerDate.addDays((page + tappedCell).floor());
     onEventBackgroundTap(date.atMidnight(), true);
   }
+
+  LocalDate get _centerDate => controller.centerDate;
 
   Widget _buildEventLayout(
     BuildContext context,
     Iterable<E> events,
     double page,
   ) {
+    final daysSinceEpoch = _centerDate.epochDay + page;
     return _EventsWidget<E>(
       visibleRange: controller.visibleRange,
       currentlyVisibleDates: controller.currentlyVisibleDates,
-      page: page,
+      daysSinceEpoch: daysSinceEpoch,
       children: [
         for (final event in events)
           _EventParentDataWidget<E>(
             key: ValueKey(event.id),
             event: event,
-            child: _buildEvent(context, event, page),
+            child: _buildEvent(context, event, daysSinceEpoch),
           ),
       ],
     );
   }
 
-  Widget _buildEvent(BuildContext context, E event, double page) {
+  Widget _buildEvent(BuildContext context, E event, double daysSinceEpoch) {
     final visibleDays = controller.visibleRange.visibleDays;
     final eventStartPage = event.start.calendarDate.epochDay;
     final eventEndPage = (event.endDateInclusive + Period(days: 1)).epochDay;
-    final hiddenStartDays = (page - eventStartPage).coerceAtLeast(0);
+    final hiddenStartDays = (daysSinceEpoch - eventStartPage).coerceAtLeast(0);
     return allDayEventBuilder(
       context,
       event,
       AllDayEventLayoutInfo(
         hiddenStartDays: hiddenStartDays,
-        hiddenEndDays: (eventEndPage - page - visibleDays).coerceAtLeast(0),
+        hiddenEndDays: (eventEndPage - daysSinceEpoch - visibleDays).coerceAtLeast(0),
       ),
     );
   }
@@ -150,11 +153,11 @@ class _EventsWidget<E extends Event> extends MultiChildRenderObjectWidget {
   _EventsWidget({
     @required this.visibleRange,
     @required this.currentlyVisibleDates,
-    @required this.page,
+    @required this.daysSinceEpoch,
     @required List<_EventParentDataWidget<E>> children,
   })  : assert(visibleRange != null),
         assert(currentlyVisibleDates != null),
-        assert(page != null),
+        assert(daysSinceEpoch != null),
         assert(children != null),
         super(children: children);
 
@@ -162,14 +165,14 @@ class _EventsWidget<E extends Event> extends MultiChildRenderObjectWidget {
 
   final VisibleRange visibleRange;
   final DateInterval currentlyVisibleDates;
-  final double page;
+  final double daysSinceEpoch;
 
   @override
   RenderObject createRenderObject(BuildContext context) {
     return _EventsLayout<E>(
       visibleRange: visibleRange,
       currentlyVisibleDates: currentlyVisibleDates,
-      page: page,
+      daysSinceEpoch: daysSinceEpoch,
       eventHeight:
           context.timetableTheme?.allDayEventHeight ?? _defaultEventHeight,
     );
@@ -180,7 +183,7 @@ class _EventsWidget<E extends Event> extends MultiChildRenderObjectWidget {
     renderObject
       ..visibleRange = visibleRange
       ..currentlyVisibleDates = currentlyVisibleDates
-      ..page = page
+      ..daysSinceEpoch = daysSinceEpoch
       ..eventHeight =
           context.timetableTheme?.allDayEventHeight ?? _defaultEventHeight;
   }
@@ -198,14 +201,14 @@ class _EventsLayout<E extends Event> extends RenderBox
   _EventsLayout({
     @required VisibleRange visibleRange,
     @required DateInterval currentlyVisibleDates,
-    @required double page,
+    @required double daysSinceEpoch,
     @required double eventHeight,
   })  : assert(visibleRange != null),
         _visibleRange = visibleRange,
         assert(currentlyVisibleDates != null),
         _currentlyVisibleDates = currentlyVisibleDates,
-        assert(page != null),
-        _page = page,
+        assert(daysSinceEpoch != null),
+        _daysSinceEpoch = daysSinceEpoch,
         assert(eventHeight != null),
         _eventHeight = eventHeight;
 
@@ -223,6 +226,20 @@ class _EventsLayout<E extends Event> extends RenderBox
     markNeedsLayout();
   }
 
+  double _daysSinceEpoch;
+
+  double get daysSinceEpoch => _daysSinceEpoch;
+
+  set daysSinceEpoch(double days) {
+    assert(days != null);
+    if (_daysSinceEpoch == days) {
+      return;
+    }
+
+    _daysSinceEpoch = days;
+    markNeedsLayout();
+  }
+
   DateInterval _currentlyVisibleDates;
 
   DateInterval get currentlyVisibleDates => _currentlyVisibleDates;
@@ -234,20 +251,6 @@ class _EventsLayout<E extends Event> extends RenderBox
     }
 
     _currentlyVisibleDates = value;
-    markNeedsLayout();
-  }
-
-  double _page;
-
-  double get page => _page;
-
-  set page(double value) {
-    assert(value != null);
-    if (_page == value) {
-      return;
-    }
-
-    _page = value;
     markNeedsLayout();
   }
 
@@ -312,9 +315,9 @@ class _EventsLayout<E extends Event> extends RenderBox
     }
 
     _updateEventPositions();
-    final oldParallelEvents = parallelEventsFrom(page.floor());
-    final newParallelEvents = parallelEventsFrom(page.ceil());
-    final t = page - page.floorToDouble();
+    final oldParallelEvents = parallelEventsFrom(daysSinceEpoch.floor());
+    final newParallelEvents = parallelEventsFrom(daysSinceEpoch.ceil());
+    final t = daysSinceEpoch - daysSinceEpoch.floorToDouble();
     return lerpDouble(oldParallelEvents, newParallelEvents, t);
   }
 
@@ -392,10 +395,10 @@ class _EventsLayout<E extends Event> extends RenderBox
       final event = child.data.event;
 
       final startDate = event.start.calendarDate;
-      final left = ((startDate.epochDay - page) * dateWidth).coerceAtLeast(0);
+      final left = ((startDate.epochDay - daysSinceEpoch) * dateWidth).coerceAtLeast(0);
       final endDate = event.endDateInclusive;
       final right =
-          ((endDate.epochDay + 1 - page) * dateWidth).coerceAtMost(size.width);
+          ((endDate.epochDay + 1 - daysSinceEpoch) * dateWidth).coerceAtMost(size.width);
 
       child.layout(BoxConstraints.tightFor(
         width: right - left,

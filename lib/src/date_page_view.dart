@@ -25,6 +25,7 @@ class DatePageView<E extends Event> extends StatefulWidget {
 }
 
 class _DatePageViewState extends State<DatePageView> {
+  final Key _centerKey = UniqueKey();
   ScrollController _controller;
 
   @override
@@ -42,6 +43,7 @@ class _DatePageViewState extends State<DatePageView> {
   @override
   Widget build(BuildContext context) {
     final visibleDays = widget.controller.visibleRange.visibleDays;
+    final centerDate = widget.controller.centerDate;
 
     return Scrollable(
       axisDirection: AxisDirection.right,
@@ -52,13 +54,26 @@ class _DatePageViewState extends State<DatePageView> {
           axisDirection: AxisDirection.right,
           offset: position,
           anchor: 0,
+          center: _centerKey,
           slivers: <Widget>[
             SliverFillViewport(
+              viewportFraction: 1 / visibleDays,
+              padEnds: false,
+              delegate: SliverChildBuilderDelegate(
+                (context, index) => widget.builder(
+                  context,
+                  centerDate.subtractDays(index + 1),
+                ),
+              ),
+            ),
+            SliverFillViewport(
+              key: _centerKey,
+              padEnds: false,
               viewportFraction: 1 / visibleDays,
               delegate: SliverChildBuilderDelegate(
                 (context, index) => widget.builder(
                   context,
-                  LocalDate.fromEpochDay(index + visibleDays ~/ 2),
+                  centerDate.addDays(index),
                 ),
               ),
             ),

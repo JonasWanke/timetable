@@ -30,6 +30,8 @@ abstract class VisibleRange {
 
   final int visibleDays;
 
+  LocalDate getPeriodStartDate(LocalDate date, DayOfWeek firstDayOfWeek);
+
   /// Convenience method of [getTargetPageForFocus] taking a [LocalDate].
   double getTargetPageForFocusDate(
       LocalDate focusDate, DayOfWeek firstDayOfWeek) {
@@ -81,6 +83,9 @@ class DaysVisibleRange extends VisibleRange {
     final velocityAddition = getDefaultVelocityAddition(velocity, tolerance);
     return (focusPage + velocityAddition).roundToDouble();
   }
+
+  @override
+  LocalDate getPeriodStartDate(LocalDate date, DayOfWeek _) => date;
 }
 
 /// The [Timetable] will show exactly one week and will snap to week boundaries.
@@ -102,14 +107,11 @@ class WeekVisibleRange extends VisibleRange {
     assert(velocity != null);
     assert(tolerance != null);
 
-    final epochWeekDayOffset =
-        firstDayOfWeek.value - LocalDate.fromEpochDay(0).dayOfWeek.value;
-    final focusWeek =
-        (focusPage - epochWeekDayOffset) / TimeConstants.daysPerWeek;
+    final focusWeek = focusPage / TimeConstants.daysPerWeek;
 
     final velocityAddition = getDefaultVelocityAddition(velocity, tolerance);
     final targetWeek = (focusWeek + velocityAddition).floorToDouble();
-    return targetWeek * TimeConstants.daysPerWeek + epochWeekDayOffset;
+    return targetWeek * TimeConstants.daysPerWeek;
   }
 
   @override
@@ -125,5 +127,12 @@ class WeekVisibleRange extends VisibleRange {
       velocity: velocity,
       tolerance: tolerance,
     );
+  }
+
+  @override
+  LocalDate getPeriodStartDate(LocalDate date, DayOfWeek firstDayOfWeek) {
+    final epochWeekDayOffset = date.dayOfWeek.value - firstDayOfWeek.value;
+
+    return date.subtractDays(epochWeekDayOffset);
   }
 }

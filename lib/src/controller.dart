@@ -20,23 +20,21 @@ class TimetableController<E extends Event> {
     this.visibleRange = const VisibleRange.week(),
     this.firstDayOfWeek = DayOfWeek.monday,
   })  : assert(eventProvider != null),
-        initialDate = initialDate ?? LocalDate.today(),
+        centerDate = visibleRange.getPeriodStartDate(initialDate ?? LocalDate.today(), firstDayOfWeek),
         assert(initialTimeRange != null),
         assert(firstDayOfWeek != null),
         assert(visibleRange != null) {
     _scrollControllers = LinkedScrollControllerGroup(
-      initialPage: visibleRange.getTargetPageForFocusDate(
-          this.initialDate, firstDayOfWeek),
       viewportFraction: 1 / visibleRange.visibleDays,
     );
 
     _dateListenable = scrollControllers.pageListenable
-        .map((page) => LocalDate.fromEpochDay(page.floor()));
+        .map((page) => centerDate.addDays(page.floor()));
     _currentlyVisibleDatesListenable = scrollControllers.pageListenable
         .map((page) {
       return DateInterval(
-        LocalDate.fromEpochDay(page.floor()),
-        LocalDate.fromEpochDay(page.ceil() + visibleRange.visibleDays - 1),
+        centerDate.addDays(page.floor()),
+        centerDate.addDays(page.ceil() + visibleRange.visibleDays - 1),
       );
     })
           ..addListener(
@@ -54,8 +52,11 @@ class TimetableController<E extends Event> {
 
   /// The initially focused date.
   ///
-  /// This defaults to [LocalDate.today];
-  final LocalDate initialDate;
+  /// For days range this defaults to [LocalDate.today];
+  ///
+  /// For weeks range this defaults to first day of the week,
+  /// based on initialDate specified
+  final LocalDate centerDate;
 
   /// Determines how many days are visible and how these snap to the viewport.
   ///
@@ -100,7 +101,10 @@ class TimetableController<E extends Event> {
     Duration duration = const Duration(milliseconds: 200),
   }) async {
     await scrollControllers.animateTo(
-      visibleRange.getTargetPageForFocusDate(date, firstDayOfWeek),
+      visibleRange.getTargetPageForFocus(
+        (date.epochDay - centerDate.epochDay).toDouble(),
+        firstDayOfWeek
+      ),
       curve: curve,
       duration: duration,
     );

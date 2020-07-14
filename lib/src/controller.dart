@@ -20,11 +20,13 @@ class TimetableController<E extends Event> {
     this.visibleRange = const VisibleRange.week(),
     this.firstDayOfWeek = DayOfWeek.monday,
   })  : assert(eventProvider != null),
-        assert(visibleRange.dateInsideAvailableRange(initialDate ?? LocalDate.today())),
-        initialDate = visibleRange.getPeriodStartDate(initialDate ?? LocalDate.today(), firstDayOfWeek),
         assert(initialTimeRange != null),
         assert(firstDayOfWeek != null),
-        assert(visibleRange != null) {
+        assert(visibleRange != null),
+        initialDate = visibleRange.getPeriodStartDate(initialDate ?? LocalDate.today(), firstDayOfWeek) {
+
+    assert(visibleRange.dateInsideAvailableRange(this.initialDate), 'Initial date should be within available date range');
+
     _scrollControllers = LinkedScrollControllerGroup(
       viewportFraction: 1 / visibleRange.visibleDays,
     );

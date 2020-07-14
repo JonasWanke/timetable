@@ -95,11 +95,6 @@ class TimetableController<E extends Event> {
   }) =>
       animateTo(LocalDate.today(), curve: curve, duration: duration);
 
-  Future<void> animateToInitialDate({
-    Curve curve = Curves.easeInOut,
-    Duration duration = const Duration(milliseconds: 200),
-  }) => animateTo(initialDate, curve: curve, duration: duration);
-
   /// Animates the given [date] into view.
   ///
   /// The alignment of today inside the viewport depends on [visibleRange].
@@ -121,8 +116,6 @@ class TimetableController<E extends Event> {
   }
 
   void jumpToToday() => jumpTo(LocalDate.today());
-
-  void jumpToInitialDate() => jumpTo(initialDate);
 
   void jumpTo(LocalDate date) {
     assert(visibleRange.isDateInAvailableRange(date));

@@ -70,7 +70,7 @@ class _DatePageViewState extends State<DatePageView> {
       padEnds: false,
       viewportFraction: 1 / visibleRange.visibleDays,
       delegate: SliverChildBuilderDelegate(
-            (context, index) => widget.builder(
+        (context, index) => widget.builder(
           context,
           centerDate.addDays(index),
         ),

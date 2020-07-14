@@ -61,11 +61,11 @@ abstract class VisibleRange {
     assert(velocity != null);
     assert(tolerance != null);
 
-    final focusWeek = focusPage / swipeRange;
+    final swipeRangeIndex = focusPage / swipeRange;
 
     final velocityAddition = getDefaultVelocityAddition(velocity, tolerance);
-    final targetWeek = (focusWeek + velocityAddition).floorToDouble();
-    return targetWeek * swipeRange;
+    final targetRangeIndex = (swipeRangeIndex + velocityAddition).floorToDouble();
+    return targetRangeIndex * swipeRange;
   }
 
   /// Gets the page to align to the viewport's left side based on the
@@ -91,10 +91,22 @@ abstract class VisibleRange {
 
     return velocity.abs() > tolerance.velocity ? 0.5 * velocity.sign : 0.0;
   }
-  
-  bool dateInsideAvailableRange(LocalDate date);
-  num getDaysBefore(LocalDate date);
-  num getDaysAfter(LocalDate date);
+
+  /// Defines if provided date is inside
+  /// the specified available range
+  bool dateInsideAvailableRange(LocalDate date) => true;
+
+  /// Provides number of days that are available
+  /// for rendering in the past.
+  ///
+  /// [date] is a calculated center date, where scroll is starts
+  double getDaysBefore(LocalDate date) => double.infinity;
+
+  /// Provides number of days that are available
+  /// for rendering in the future
+  ///
+  /// [date] is a calculated center date, where scroll is starts
+  double getDaysAfter(LocalDate date) => double.infinity;
 }
 
 class DaysVisibleRange extends VisibleRange {
@@ -127,21 +139,21 @@ class DaysVisibleRange extends VisibleRange {
           (maxDate == null || date <= maxDate);
 
   @override
-  num getDaysAfter(LocalDate date) {
+  double getDaysAfter(LocalDate date) {
     if (maxDate == null) {
       return double.infinity;
     }
 
-    return maxDate.epochDay - date.epochDay + 1;
+    return (maxDate.epochDay - date.epochDay + 1).toDouble();
   }
 
   @override
-  num getDaysBefore(LocalDate date) {
+  double getDaysBefore(LocalDate date) {
     if (minDate == null) {
       return double.infinity;
     }
 
-    return date.epochDay - minDate.epochDay;
+    return (date.epochDay - minDate.epochDay).toDouble();
   }
 }
 
@@ -158,13 +170,4 @@ class WeekVisibleRange extends VisibleRange {
 
     return date.subtractDays(epochWeekDayOffset);
   }
-  
-  @override
-  bool dateInsideAvailableRange(LocalDate _) => true;
-
-  @override
-  num getDaysAfter(LocalDate _) => double.infinity;
-
-  @override
-  num getDaysBefore(LocalDate _) => double.infinity;
 }

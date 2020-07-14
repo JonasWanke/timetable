@@ -110,11 +110,11 @@ class DaysVisibleRange extends VisibleRange {
 
   @override
   LocalDate getPeriodStartDate(LocalDate date, DayOfWeek _) {
-    if (maxDate != null && maxDate.epochDay - visibleDays < date.epochDay) {
-      return LocalDate.fromEpochDay(maxDate.epochDay - visibleDays);
+    if (maxDate != null && maxDate.epochDay - visibleDays + 1 < date.epochDay) {
+      return LocalDate.fromEpochDay(maxDate.epochDay - visibleDays + 1);
     }
     
-    if (minDate != null && minDate.epochDay + visibleDays > date.epochDay) {
+    if (minDate != null && minDate.epochDay + visibleDays >= date.epochDay) {
       return minDate;
     }
     
@@ -132,7 +132,7 @@ class DaysVisibleRange extends VisibleRange {
       return double.infinity;
     }
 
-    return maxDate.epochDay - date.epochDay;
+    return maxDate.epochDay - date.epochDay + 1;
   }
 
   @override

@@ -97,7 +97,7 @@ abstract class VisibleRange {
 
   /// Defines if provided date is inside
   /// the specified available range
-  bool dateInsideAvailableRange(LocalDate date) => true;
+  bool isDateInAvailableRange(LocalDate date) => true;
 
   /// Provides number of days that are available
   /// for rendering in the past.
@@ -136,7 +136,7 @@ class DaysVisibleRange extends VisibleRange {
   }
 
   @override
-  bool dateInsideAvailableRange(LocalDate date) =>
+  bool isDateInAvailableRange(LocalDate date) =>
       (minDate == null || date >= minDate) &&
           (maxDate == null || date <= maxDate);
 

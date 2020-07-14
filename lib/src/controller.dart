@@ -25,7 +25,7 @@ class TimetableController<E extends Event> {
         assert(visibleRange != null),
         initialDate = visibleRange.getPeriodStartDate(initialDate ?? LocalDate.today(), firstDayOfWeek) {
 
-    assert(visibleRange.dateInsideAvailableRange(this.initialDate), 'Initial date should be within available date range');
+    assert(visibleRange.isDateInAvailableRange(this.initialDate), 'Initial date should be within available date range');
 
     _scrollControllers = LinkedScrollControllerGroup(
       viewportFraction: 1 / visibleRange.visibleDays,
@@ -108,7 +108,7 @@ class TimetableController<E extends Event> {
     Curve curve = Curves.easeInOut,
     Duration duration = const Duration(milliseconds: 200),
   }) async {
-    assert(visibleRange.dateInsideAvailableRange(date));
+    assert(visibleRange.isDateInAvailableRange(date));
 
     await scrollControllers.animateTo(
       visibleRange.getTargetPageForFocus(
@@ -125,7 +125,7 @@ class TimetableController<E extends Event> {
   void jumpToInitialDate() => jumpTo(initialDate);
 
   void jumpTo(LocalDate date) {
-    assert(visibleRange.dateInsideAvailableRange(date));
+    assert(visibleRange.isDateInAvailableRange(date));
 
     scrollControllers.jumpTo(
       visibleRange.getTargetPageForFocus(

@@ -22,8 +22,8 @@ abstract class VisibleRange {
   /// will be aligned to the left.
   const factory VisibleRange.days(
     int count, {
-    LocalDate startDate,
-    LocalDate endDate,
+    LocalDate minDate,
+    LocalDate maxDate,
     int swipeRange,
   }) = DaysVisibleRange;
 
@@ -91,21 +91,58 @@ abstract class VisibleRange {
 
     return velocity.abs() > tolerance.velocity ? 0.5 * velocity.sign : 0.0;
   }
+  
+  bool dateInsideAvailableRange(LocalDate date);
+  num getDaysBefore(LocalDate date);
+  num getDaysAfter(LocalDate date);
 }
 
 class DaysVisibleRange extends VisibleRange {
   const DaysVisibleRange(
     int count, {
-    this.startDate,
-    this.endDate,
+    this.minDate,
+    this.maxDate,
     int swipeRange = 1,
   }) : super(visibleDays: count, swipeRange: swipeRange);
 
-  final LocalDate startDate;
-  final LocalDate endDate;
+  final LocalDate minDate;
+  final LocalDate maxDate;
 
   @override
-  LocalDate getPeriodStartDate(LocalDate date, DayOfWeek _) => date;
+  LocalDate getPeriodStartDate(LocalDate date, DayOfWeek _) {
+    if (maxDate != null && maxDate.epochDay - visibleDays < date.epochDay) {
+      return LocalDate.fromEpochDay(maxDate.epochDay - visibleDays);
+    }
+    
+    if (minDate != null && minDate.epochDay + visibleDays > date.epochDay) {
+      return minDate;
+    }
+    
+    return date;
+  }
+
+  @override
+  bool dateInsideAvailableRange(LocalDate date) =>
+      (minDate == null || date >= minDate) &&
+          (maxDate == null || date <= maxDate);
+
+  @override
+  num getDaysAfter(LocalDate date) {
+    if (maxDate == null) {
+      return double.infinity;
+    }
+
+    return maxDate.epochDay - date.epochDay;
+  }
+
+  @override
+  num getDaysBefore(LocalDate date) {
+    if (minDate == null) {
+      return double.infinity;
+    }
+
+    return date.epochDay - minDate.epochDay;
+  }
 }
 
 /// The [Timetable] will show exactly one week and will snap to week boundaries.
@@ -121,4 +158,13 @@ class WeekVisibleRange extends VisibleRange {
 
     return date.subtractDays(epochWeekDayOffset);
   }
+  
+  @override
+  bool dateInsideAvailableRange(LocalDate _) => true;
+
+  @override
+  num getDaysAfter(LocalDate _) => double.infinity;
+
+  @override
+  num getDaysBefore(LocalDate _) => double.infinity;
 }

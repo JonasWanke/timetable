@@ -42,9 +42,6 @@ class _DatePageViewState extends State<DatePageView> {
 
   @override
   Widget build(BuildContext context) {
-    final visibleDays = widget.controller.visibleRange.visibleDays;
-    final centerDate = widget.controller.initialDate;
-
     return Scrollable(
       axisDirection: AxisDirection.right,
       physics: TimetableScrollPhysics(widget.controller),
@@ -55,31 +52,55 @@ class _DatePageViewState extends State<DatePageView> {
           offset: position,
           anchor: 0,
           center: _centerKey,
-          slivers: <Widget>[
-            SliverFillViewport(
-              viewportFraction: 1 / visibleDays,
-              padEnds: false,
-              delegate: SliverChildBuilderDelegate(
-                (context, index) => widget.builder(
-                  context,
-                  centerDate.subtractDays(index + 1),
-                ),
-              ),
-            ),
-            SliverFillViewport(
-              key: _centerKey,
-              padEnds: false,
-              viewportFraction: 1 / visibleDays,
-              delegate: SliverChildBuilderDelegate(
-                (context, index) => widget.builder(
-                  context,
-                  centerDate.addDays(index),
-                ),
-              ),
-            ),
-          ],
+          slivers: _slivers,
         );
       },
     );
+  }
+
+  List<Widget> get _slivers {
+    final visibleRange = widget.controller.visibleRange;
+    final centerDate = widget.controller.initialDate;
+
+    final daysAfter = visibleRange.getDaysAfter(centerDate);
+    final daysBefore = visibleRange.getDaysBefore(centerDate);
+
+    final positiveSliver = SliverFillViewport(
+      key: _centerKey,
+      padEnds: false,
+      viewportFraction: 1 / visibleRange.visibleDays,
+      delegate: SliverChildBuilderDelegate(
+            (context, index) => widget.builder(
+          context,
+          centerDate.addDays(index),
+        ),
+        childCount: daysAfter == double.infinity
+            ? null
+            : daysAfter.toInt(),
+      ),
+    );
+
+    if (daysBefore == 0) {
+      return [
+        positiveSliver,
+      ];
+    }
+
+    return [
+      SliverFillViewport(
+        viewportFraction: 1 / visibleRange.visibleDays,
+        padEnds: false,
+        delegate: SliverChildBuilderDelegate(
+          (context, index) => widget.builder(
+            context,
+            centerDate.subtractDays(index + 1),
+          ),
+          childCount: daysBefore == double.infinity
+              ? null
+              : daysBefore.toInt(),
+        ),
+      ),
+      positiveSliver,
+    ];
   }
 }

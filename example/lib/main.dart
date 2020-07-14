@@ -69,7 +69,10 @@ class _TimetableExampleState extends State<TimetableExample> {
         endTime: LocalTime(20, 0, 0),
       ),
       initialDate: LocalDate.today(),
-      visibleRange: VisibleRange.week(),
+      visibleRange: VisibleRange.days(
+        3,
+        maxDate: LocalDate.today().addDays(5),
+      ),
       firstDayOfWeek: DayOfWeek.monday,
     );
   }

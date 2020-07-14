@@ -20,6 +20,7 @@ class TimetableController<E extends Event> {
     this.visibleRange = const VisibleRange.week(),
     this.firstDayOfWeek = DayOfWeek.monday,
   })  : assert(eventProvider != null),
+        assert(visibleRange.dateInsideAvailableRange(initialDate ?? LocalDate.today())),
         initialDate = visibleRange.getPeriodStartDate(initialDate ?? LocalDate.today(), firstDayOfWeek),
         assert(initialTimeRange != null),
         assert(firstDayOfWeek != null),
@@ -105,6 +106,8 @@ class TimetableController<E extends Event> {
     Curve curve = Curves.easeInOut,
     Duration duration = const Duration(milliseconds: 200),
   }) async {
+    assert(visibleRange.dateInsideAvailableRange(date));
+
     await scrollControllers.animateTo(
       visibleRange.getTargetPageForFocus(
         (date.epochDay - initialDate.epochDay).toDouble(),
@@ -120,6 +123,8 @@ class TimetableController<E extends Event> {
   void jumpToInitialDate() => jumpTo(initialDate);
 
   void jumpTo(LocalDate date) {
+    assert(visibleRange.dateInsideAvailableRange(date));
+
     scrollControllers.jumpTo(
       visibleRange.getTargetPageForFocus(
         (date.epochDay - initialDate.epochDay).toDouble(),

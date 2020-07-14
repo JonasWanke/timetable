@@ -1,6 +1,7 @@
 import 'package:flutter/physics.dart';
 import 'package:meta/meta.dart';
 import 'package:time_machine/time_machine.dart';
+import 'package:dartx/dartx.dart';
 
 import 'controller.dart';
 import 'timetable.dart';
@@ -39,7 +40,9 @@ abstract class VisibleRange {
   final int visibleDays;
   final int swipeRange;
 
-  LocalDate getPeriodStartDate(LocalDate date, DayOfWeek firstDayOfWeek);
+  /// Defines actual center date for scroll area based on
+  /// initialDate passed in to the controller
+  LocalDate getPeriodStartDate(LocalDate date, DayOfWeek firstDayOfWeek) => date;
 
   /// Convenience method of [getTargetPageForFocus] taking a [LocalDate].
   double getTargetPageForFocusDate(
@@ -115,22 +118,21 @@ class DaysVisibleRange extends VisibleRange {
     this.minDate,
     this.maxDate,
     int swipeRange = 1,
-  }) : super(visibleDays: count, swipeRange: swipeRange);
+  })  : assert(minDate == null || maxDate == null || minDate < maxDate),
+        super(visibleDays: count, swipeRange: swipeRange);
 
   final LocalDate minDate;
   final LocalDate maxDate;
 
   @override
   LocalDate getPeriodStartDate(LocalDate date, DayOfWeek _) {
-    if (maxDate != null && maxDate.epochDay - visibleDays + 1 < date.epochDay) {
-      return LocalDate.fromEpochDay(maxDate.epochDay - visibleDays + 1);
+    if (maxDate == null) {
+      return date;
     }
-    
-    if (minDate != null && minDate.epochDay + visibleDays >= date.epochDay) {
-      return minDate;
-    }
-    
-    return date;
+
+    return LocalDate.fromEpochDay(
+      date.epochDay.coerceAtMost(maxDate.epochDay - visibleDays + 1)
+    );
   }
 
   @override

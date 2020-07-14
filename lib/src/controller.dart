@@ -20,7 +20,7 @@ class TimetableController<E extends Event> {
     this.visibleRange = const VisibleRange.week(),
     this.firstDayOfWeek = DayOfWeek.monday,
   })  : assert(eventProvider != null),
-        centerDate = visibleRange.getPeriodStartDate(initialDate ?? LocalDate.today(), firstDayOfWeek),
+        initialDate = visibleRange.getPeriodStartDate(initialDate ?? LocalDate.today(), firstDayOfWeek),
         assert(initialTimeRange != null),
         assert(firstDayOfWeek != null),
         assert(visibleRange != null) {
@@ -29,12 +29,12 @@ class TimetableController<E extends Event> {
     );
 
     _dateListenable = scrollControllers.pageListenable
-        .map((page) => centerDate.addDays(page.floor()));
+        .map((page) => this.initialDate.addDays(page.floor()));
     _currentlyVisibleDatesListenable = scrollControllers.pageListenable
         .map((page) {
       return DateInterval(
-        centerDate.addDays(page.floor()),
-        centerDate.addDays(page.ceil() + visibleRange.visibleDays - 1),
+        this.initialDate.addDays(page.floor()),
+        this.initialDate.addDays(page.ceil() + visibleRange.visibleDays - 1),
       );
     })
           ..addListener(
@@ -56,7 +56,7 @@ class TimetableController<E extends Event> {
   ///
   /// For weeks range this defaults to first day of the week,
   /// based on initialDate specified
-  final LocalDate centerDate;
+  final LocalDate initialDate;
 
   /// Determines how many days are visible and how these snap to the viewport.
   ///
@@ -92,6 +92,11 @@ class TimetableController<E extends Event> {
   }) =>
       animateTo(LocalDate.today(), curve: curve, duration: duration);
 
+  Future<void> animateToInitialDate({
+    Curve curve = Curves.easeInOut,
+    Duration duration = const Duration(milliseconds: 200),
+  }) => animateTo(initialDate, curve: curve, duration: duration);
+
   /// Animates the given [date] into view.
   ///
   /// The alignment of today inside the viewport depends on [visibleRange].
@@ -102,11 +107,24 @@ class TimetableController<E extends Event> {
   }) async {
     await scrollControllers.animateTo(
       visibleRange.getTargetPageForFocus(
-        (date.epochDay - centerDate.epochDay).toDouble(),
+        (date.epochDay - initialDate.epochDay).toDouble(),
         firstDayOfWeek
       ),
       curve: curve,
       duration: duration,
+    );
+  }
+
+  void jumpToToday() => jumpTo(LocalDate.today());
+
+  void jumpToInitialDate() => jumpTo(initialDate);
+
+  void jumpTo(LocalDate date) {
+    scrollControllers.jumpTo(
+      visibleRange.getTargetPageForFocus(
+        (date.epochDay - initialDate.epochDay).toDouble(),
+        firstDayOfWeek
+      )
     );
   }
 

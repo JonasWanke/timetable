@@ -43,7 +43,7 @@ class _DatePageViewState extends State<DatePageView> {
   @override
   Widget build(BuildContext context) {
     final visibleDays = widget.controller.visibleRange.visibleDays;
-    final centerDate = widget.controller.centerDate;
+    final centerDate = widget.controller.initialDate;
 
     return Scrollable(
       axisDirection: AxisDirection.right,

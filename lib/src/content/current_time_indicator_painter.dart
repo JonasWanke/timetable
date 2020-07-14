@@ -33,7 +33,7 @@ class CurrentTimeIndicatorPainter<E extends Event> extends CustomPainter {
     final dateWidth = size.width / controller.visibleRange.visibleDays;
 
     final temporalOffset =
-        LocalDate.today().epochDay - (controller.centerDate.epochDay + controller.scrollControllers.page);
+        LocalDate.today().epochDay - (controller.initialDate.epochDay + controller.scrollControllers.page);
     final left = temporalOffset * dateWidth;
     final right = left + dateWidth;
 

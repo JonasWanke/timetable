@@ -80,7 +80,7 @@ class AllDayEvents<E extends Event> extends StatelessWidget {
     onEventBackgroundTap(date.atMidnight(), true);
   }
 
-  LocalDate get _centerDate => controller.centerDate;
+  LocalDate get _centerDate => controller.initialDate;
 
   Widget _buildEventLayout(
     BuildContext context,

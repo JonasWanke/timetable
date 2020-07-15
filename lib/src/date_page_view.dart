@@ -52,13 +52,13 @@ class _DatePageViewState extends State<DatePageView> {
           offset: position,
           anchor: 0,
           center: _centerKey,
-          slivers: _slivers,
+          slivers: _buildSlivers(),
         );
       },
     );
   }
 
-  List<Widget> get _slivers {
+  List<Widget> _buildSlivers() {
     final visibleRange = widget.controller.visibleRange;
     final centerDate = widget.controller.initialDate;
 

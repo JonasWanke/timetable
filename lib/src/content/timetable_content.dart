@@ -47,6 +47,7 @@ class TimetableContent<E extends Event> extends StatelessWidget {
                       color: context.theme.disabledOnBackground,
                     ),
                 textDirection: context.directionality,
+                formatHour: timetableTheme.formatHour,
               ),
               size: Size.infinite,
             ),

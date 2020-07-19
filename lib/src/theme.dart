@@ -20,6 +20,7 @@ class TimetableThemeData {
     this.dateIndicatorTextStyle,
     this.allDayEventHeight,
     this.hourTextStyle,
+    this.formatHour,
     this.timeIndicatorColor,
     this.dividerColor,
     this.minimumHourHeight,
@@ -105,6 +106,9 @@ class TimetableThemeData {
 
   /// [TextStyle] used to display the hours of the day.
   final TextStyle hourTextStyle;
+
+  /// [HourFormatter] used to format the hours of the day string.
+  final HourFormatter formatHour;
 
   /// [Color] for painting the current time indicator.
   final Color timeIndicatorColor;
@@ -273,3 +277,5 @@ extension TimetableThemeBuildContext on BuildContext {
   /// Shortcut for `TimetableTheme.of(context)`.
   TimetableThemeData get timetableTheme => TimetableTheme.of(this);
 }
+
+typedef HourFormatter = String Function(LocalTime time);

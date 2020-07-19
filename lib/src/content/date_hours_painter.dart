@@ -8,13 +8,16 @@ class DateHoursPainter extends CustomPainter {
   DateHoursPainter({
     @required this.textStyle,
     @required this.textDirection,
+    @required String Function(LocalTime) formatHour,
   })  : assert(textStyle != null),
         assert(textDirection != null),
         _painters = [
           for (final h in innerDateHours)
             TextPainter(
               text: TextSpan(
-                text: _pattern.format(LocalTime(h, 0, 0)),
+                text: formatHour != null
+                    ? formatHour(LocalTime(h, 0, 0))
+                    : _pattern.format(LocalTime(h, 0, 0)),
                 style: textStyle,
               ),
               textDirection: textDirection,

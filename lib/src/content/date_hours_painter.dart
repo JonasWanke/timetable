@@ -8,7 +8,7 @@ class DateHoursPainter extends CustomPainter {
   DateHoursPainter({
     @required this.textStyle,
     @required this.textDirection,
-    @required String Function(LocalTime) formatHour,
+    String Function(LocalTime) formatHour,
   })  : assert(textStyle != null),
         assert(textDirection != null),
         _painters = [

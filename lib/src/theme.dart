@@ -20,6 +20,7 @@ class TimetableThemeData {
     this.dateIndicatorTextStyle,
     this.allDayEventHeight,
     this.hourTextStyle,
+    this.hourColumnWidth,
     this.formatHour,
     this.timeIndicatorColor,
     this.dividerColor,
@@ -107,6 +108,11 @@ class TimetableThemeData {
   /// [TextStyle] used to display the hours of the day.
   final TextStyle hourTextStyle;
 
+  /// Width of hour of day column
+  ///
+  /// Default to 48
+  final double hourColumnWidth;
+
   /// [HourFormatter] used to format the hours of the day string.
   final HourFormatter formatHour;
 
@@ -181,6 +187,8 @@ class TimetableThemeData {
       dateIndicatorTextStyle,
       allDayEventHeight,
       hourTextStyle,
+      hourColumnWidth,
+      formatHour,
       timeIndicatorColor,
       dividerColor,
       minimumHourHeight,

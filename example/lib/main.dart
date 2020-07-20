@@ -96,8 +96,11 @@ class _TimetableExampleState extends State<TimetableExample> {
       ),
       body: Timetable<BasicEvent>(
         theme: TimetableThemeData(
-            formatHour: (time) =>
-                '${time.hourOf12HourClock} ${time.hourOfDay > 11 ? "PM" : "AM"}'),
+          hourTextStyle: TextStyle(fontSize: 9, color: Colors.blueGrey),
+          formatHour: (time) =>
+              '${time.hourOf12HourClock} ${time.hourOfDay > 11 ? "PM" : "AM"}',
+          hourColumnWidth: 40,
+        ),
         controller: _controller,
         onEventBackgroundTap: (start, isAllDay) {
           _showSnackBar('Background tapped $start is all day event $isAllDay');

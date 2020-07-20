@@ -36,7 +36,7 @@ class TimetableHeader<E extends Event> extends StatelessWidget {
     return Row(
       children: <Widget>[
         SizedBox(
-          width: hourColumnWidth,
+          width: context?.timetableTheme?.hourColumnWidth ?? hourColumnWidth,
           child: ValueListenableBuilder<LocalDate>(
             valueListenable: controller.dateListenable,
             builder: (context, date, _) {

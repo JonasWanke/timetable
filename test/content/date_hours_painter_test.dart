@@ -5,7 +5,8 @@ import 'package:timetable/src/content/date_hours_painter.dart';
 
 void main() {
   testWidgets('Format hour', (tester) async {
-    final painter = DateHoursPainter(textDirection: TextDirection.ltr, textStyle: TextStyle());
+    final painter = DateHoursPainter(
+        textDirection: TextDirection.ltr, textStyle: TextStyle());
     await tester.pumpWidget(CustomPaint(painter: painter));
     // find.text('01:00') does not work with text painters :(
   });

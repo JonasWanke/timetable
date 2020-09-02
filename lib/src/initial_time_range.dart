@@ -19,7 +19,7 @@ abstract class InitialTimeRange {
 class _FactorInitialTimeRange extends InitialTimeRange {
   const _FactorInitialTimeRange(this.zoom)
       : assert(zoom != null),
-        assert(VerticalZoom.zoomMin <= zoom && zoom <= VerticalZoom.zoomMax);
+        assert(zoom > 0);
 
   final double zoom;
 

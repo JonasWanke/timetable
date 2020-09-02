@@ -3,6 +3,8 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
+import '../theme.dart';
+
 @immutable
 abstract class InitialZoom {
   const InitialZoom();
@@ -20,7 +22,7 @@ abstract class InitialZoom {
 class _FactorInitialZoom extends InitialZoom {
   const _FactorInitialZoom(this.zoom)
       : assert(zoom != null),
-        assert(VerticalZoom.zoomMin <= zoom && zoom <= VerticalZoom.zoomMax);
+        assert(zoom > 0);
 
   final double zoom;
 
@@ -41,9 +43,7 @@ class _RangeInitialZoom extends InitialZoom {
         assert(0 <= startFraction),
         assert(endFraction != null),
         assert(endFraction <= 1),
-        assert(startFraction < endFraction),
-        assert(VerticalZoom.zoomMin <= 1 / (endFraction - startFraction) &&
-            1 / (endFraction - startFraction) <= VerticalZoom.zoomMax);
+        assert(startFraction < endFraction);
 
   final double startFraction;
   final double endFraction;
@@ -73,8 +73,6 @@ class VerticalZoom extends StatefulWidget {
         assert(minChildHeight <= maxChildHeight),
         super(key: key);
 
-  static const zoomMax = 4;
-  static const zoomMin = 1;
   final InitialZoom initialZoom;
 
   final Widget child;
@@ -106,11 +104,17 @@ class _VerticalZoomState extends State<VerticalZoom> {
 
   @override
   Widget build(BuildContext context) {
+    final timetableTheme = context.timetableTheme;
+
     return LayoutBuilder(
       builder: (context, constraints) {
         final height = constraints.maxHeight;
 
-        _contentHeight ??= widget.initialZoom.getContentHeight(height);
+        _contentHeight ??= _coerceContentHeight(
+          widget.initialZoom.getContentHeight(height),
+          height,
+          timetableTheme,
+        );
         _scrollController ??= ScrollController(
           initialScrollOffset:
               widget.initialZoom.getOffset(height, _contentHeight),
@@ -119,7 +123,8 @@ class _VerticalZoomState extends State<VerticalZoom> {
         return GestureDetector(
           dragStartBehavior: DragStartBehavior.down,
           onScaleStart: (details) => _onZoomStart(height, details),
-          onScaleUpdate: (details) => _onZoomUpdate(height, details),
+          onScaleUpdate: (details) =>
+              _onZoomUpdate(height, details, timetableTheme),
           child: SingleChildScrollView(
             // We handle scrolling manually to improve zoom detection.
             physics: NeverScrollableScrollPhysics(),
@@ -139,10 +144,17 @@ class _VerticalZoomState extends State<VerticalZoom> {
     _lastFocus = _getFocus(height, details.localFocalPoint);
   }
 
-  void _onZoomUpdate(double height, ScaleUpdateDetails details) {
+  void _onZoomUpdate(
+    double height,
+    ScaleUpdateDetails details,
+    TimetableThemeData theme,
+  ) {
     setState(() {
-      _contentHeight = (details.verticalScale * _contentHeightUpdateReference)
-          .coerceIn(widget.minChildHeight, widget.maxChildHeight);
+      _contentHeight = _coerceContentHeight(
+        details.verticalScale * _contentHeightUpdateReference,
+        height,
+        theme,
+      );
 
       final scrollOffset =
           _lastFocus * _contentHeight - details.localFocalPoint.dy;
@@ -151,6 +163,19 @@ class _VerticalZoomState extends State<VerticalZoom> {
 
       _lastFocus = _getFocus(height, details.localFocalPoint);
     });
+  }
+
+  double _coerceContentHeight(
+    double childHeight,
+    double parentHeight,
+    TimetableThemeData theme,
+  ) {
+    return childHeight
+        .coerceIn(widget.minChildHeight, widget.maxChildHeight)
+        .coerceIn(
+          (theme?.minimumHourZoom ?? 0) * parentHeight,
+          (theme?.maximumHourZoom ?? double.infinity) * parentHeight,
+        );
   }
 
   double _getFocus(double height, Offset focalPoint) =>

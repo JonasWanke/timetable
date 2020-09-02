@@ -24,6 +24,8 @@ class TimetableThemeData {
     this.dividerColor,
     this.minimumHourHeight,
     this.maximumHourHeight,
+    this.minimumHourZoom,
+    this.maximumHourZoom,
     this.partDayEventMinimumDuration,
     this.partDayEventMinimumHeight,
     this.partDayEventSpacing,
@@ -35,7 +37,12 @@ class TimetableThemeData {
         assert(maximumHourHeight == null || maximumHourHeight > 0),
         assert(minimumHourHeight == null ||
             maximumHourHeight == null ||
-            minimumHourHeight <= maximumHourHeight);
+            minimumHourHeight <= maximumHourHeight),
+        assert(minimumHourZoom == null || minimumHourZoom > 0),
+        assert(maximumHourZoom == null || maximumHourZoom > 0),
+        assert(minimumHourZoom == null ||
+            minimumHourZoom == null ||
+            minimumHourZoom <= minimumHourZoom);
 
   /// Used by default for indicating the current date.
   ///
@@ -124,6 +131,26 @@ class TimetableThemeData {
   /// Defaults to 64.
   final double maximumHourHeight;
 
+  /// Minimum time zoom factor.
+  ///
+  /// `1` means that the hours content is exactly as high as the parent. Larger
+  /// values mean zooming in, and smaller values mean zooming out.
+  ///
+  /// If both hour height limits ([minimumHourHeight] or [maximumHourHeight])
+  /// and hour zoom limits (this property or [maximumHourZoom]) are set, zoom
+  /// limits take precedence.
+  ///
+  /// Defaults to 0.
+  final double minimumHourZoom;
+
+  /// Maximum time zoom factor.
+  ///
+  /// Defaults to [double.infinity].
+  ///
+  /// See also:
+  /// - [minimumHourZoom] for an explanation of zoom values.
+  final double maximumHourZoom;
+
   /// Minimum [Period] to size a part-day event.
   ///
   /// Can be used together with [partDayEventMinimumHeight].
@@ -181,6 +208,8 @@ class TimetableThemeData {
       dividerColor,
       minimumHourHeight,
       maximumHourHeight,
+      minimumHourZoom,
+      maximumHourZoom,
       partDayEventMinimumDuration,
       partDayEventMinimumHeight,
       partDayEventSpacing,
@@ -215,6 +244,8 @@ class TimetableThemeData {
         other.dividerColor == dividerColor &&
         other.minimumHourHeight == minimumHourHeight &&
         other.maximumHourHeight == maximumHourHeight &&
+        other.minimumHourZoom == minimumHourZoom &&
+        other.maximumHourZoom == maximumHourZoom &&
         other.partDayEventMinimumDuration == partDayEventMinimumDuration &&
         other.partDayEventMinimumHeight == partDayEventMinimumHeight &&
         other.partDayEventSpacing == partDayEventSpacing &&

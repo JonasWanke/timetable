@@ -33,7 +33,8 @@ class _RangeInitialTimeRange extends InitialTimeRange {
     LocalTime endTime,
   })  : startTime = startTime ?? LocalTime.minValue,
         endTime = endTime ?? LocalTime.maxValue,
-        assert(startTime < endTime);
+        assert((startTime ?? LocalTime.minValue) <
+            (endTime ?? LocalTime.maxValue));
 
   final LocalTime startTime;
   final LocalTime endTime;

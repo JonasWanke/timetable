@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
+This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
 <!-- Template:
@@ -16,7 +16,19 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 ### 📦 Build & CI
 -->
 
-## [Unreleased](https://github.com/JonasWanke/timetable/compare/v0.2.6...master)
+## [Unreleased](https://github.com/JonasWanke/timetable/compare/v0.2.7...master)
+
+
+## [0.2.7](https://github.com/JonasWanke/timetable/compare/v0.2.6...v0.2.7) · 2020-09-02
+
+### 🎉 New Features
+- add `TimetableThemeData.minimumHourZoom` & `.maximumHourZoom`, closes: [#40](https://github.com/JonasWanke/timetable/issues/40) & [#45](https://github.com/JonasWanke/timetable/issues/45)
+
+### 🐛 Bug Fixes
+- support null values in `InitialTimeRange.range`
+
+### 📦 Build & CI
+- update <kbd>dartx</kbd> to `^0.5.0`
 
 
 ## [0.2.6](https://github.com/JonasWanke/timetable/compare/v0.2.5...v0.2.6) · 2020-07-12
@@ -35,7 +47,7 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 - add Localization section to the README
 
 ### 📦 Build & CI
-- update <kbd>dartx</kbd> to v0.4.0
+- update <kbd>dartx</kbd> to `^0.4.0`
 
 
 ## [0.2.4](https://github.com/JonasWanke/timetable/compare/v0.2.3...v0.2.4) · 2020-06-25

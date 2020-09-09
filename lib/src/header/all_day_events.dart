@@ -398,7 +398,7 @@ class _EventsLayout<E extends Event> extends RenderBox
           ((endDate.epochDay + 1 - page) * dateWidth).coerceAtMost(size.width);
 
       child.layout(BoxConstraints.tightFor(
-        width: right - left,
+        width: abs(right - left),
         height: eventHeight,
       ));
 

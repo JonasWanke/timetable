@@ -33,44 +33,48 @@ class TimetableHeader<E extends Event> extends StatelessWidget {
     final weekYearRule =
         WeekYearRules.forMinDaysInFirstWeek(4, controller.firstDayOfWeek);
 
-    return Row(
-      children: <Widget>[
-        SizedBox(
-          width: hourColumnWidth,
-          child: ValueListenableBuilder<LocalDate>(
-            valueListenable: controller.dateListenable,
-            builder: (context, date, _) {
-              final customHeader = leadingHeaderBuilder?.call(context, date);
-              if (customHeader != null) {
-                return customHeader;
-              }
+    return IntrinsicHeight(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          SizedBox(
+            width: hourColumnWidth,
+            child: ValueListenableBuilder<LocalDate>(
+              valueListenable: controller.dateListenable,
+              builder: (context, date, _) {
+                final customHeader = leadingHeaderBuilder?.call(context, date);
+                if (customHeader != null) {
+                  return customHeader;
+                }
 
-              return Center(
-                child: WeekIndicator(weekYearRule.getWeekOfWeekYear(date)),
-              );
-            },
+                return Center(
+                  child: WeekIndicator(weekYearRule.getWeekOfWeekYear(date)),
+                );
+              },
+            ),
           ),
-        ),
-        Expanded(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              SizedBox(
-                height: context.timetableTheme?.totalDateIndicatorHeight ?? 72,
-                child: MultiDateHeader(
-                  controller: controller,
-                  builder: dateHeaderBuilder,
+          Expanded(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                SizedBox(
+                  height:
+                      context.timetableTheme?.totalDateIndicatorHeight ?? 72,
+                  child: MultiDateHeader(
+                    controller: controller,
+                    builder: dateHeaderBuilder,
+                  ),
                 ),
-              ),
-              AllDayEvents<E>(
-                controller: controller,
-                onEventBackgroundTap: onEventBackgroundTap,
-                allDayEventBuilder: allDayEventBuilder,
-              ),
-            ],
+                AllDayEvents<E>(
+                  controller: controller,
+                  onEventBackgroundTap: onEventBackgroundTap,
+                  allDayEventBuilder: allDayEventBuilder,
+                ),
+              ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

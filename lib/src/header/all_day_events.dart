@@ -31,8 +31,8 @@ class AllDayEvents<E extends Event> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ClipRect(
-      child: LayoutBuilder(
-        builder: (context, constraints) {
+      child: Builder(
+        builder: (wrapperContext) {
           return ValueListenableBuilder<DateInterval>(
             valueListenable: controller.currentlyVisibleDatesListenable,
             builder: (_, visibleDates, __) {
@@ -49,16 +49,8 @@ class AllDayEvents<E extends Event> extends StatelessWidget {
                   return ValueListenableBuilder(
                     valueListenable:
                         controller.scrollControllers.pageListenable,
-                    builder: (context, page, __) => GestureDetector(
-                      behavior: HitTestBehavior.translucent,
-                      onTapUp: onEventBackgroundTap != null
-                          ? (details) {
-                              _callOnAllDayEventBackgroundTap(
-                                  details, page, constraints);
-                            }
-                          : null,
-                      child: _buildEventLayout(context, events, page),
-                    ),
+                    builder: (context, page, __) =>
+                        _buildContent(wrapperContext, context, events, page),
                   );
                 },
               );
@@ -69,13 +61,34 @@ class AllDayEvents<E extends Event> extends StatelessWidget {
     );
   }
 
+  Widget _buildContent(
+    BuildContext wrapperContext,
+    BuildContext context,
+    Iterable<E> events,
+    double page,
+  ) {
+    return GestureDetector(
+      behavior: HitTestBehavior.translucent,
+      onTapUp: onEventBackgroundTap != null
+          ? (details) {
+              _callOnAllDayEventBackgroundTap(
+                details,
+                page,
+                (wrapperContext.findRenderObject() as RenderBox).size.width,
+              );
+            }
+          : null,
+      child: _buildEventLayout(context, events, page),
+    );
+  }
+
   void _callOnAllDayEventBackgroundTap(
     TapUpDetails details,
     double page,
-    BoxConstraints constraints,
+    double width,
   ) {
     final tappedCell = details.localPosition.dx /
-        (constraints.maxWidth / controller.visibleRange.visibleDays);
+        (width / controller.visibleRange.visibleDays);
     final date = LocalDate.fromEpochDay((page + tappedCell).floor());
     onEventBackgroundTap(date.atMidnight(), true);
   }

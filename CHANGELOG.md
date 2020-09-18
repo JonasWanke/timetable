@@ -16,7 +16,13 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### 📦 Build & CI
 -->
 
-## [Unreleased](https://github.com/JonasWanke/timetable/compare/v0.2.7...master)
+## [Unreleased](https://github.com/JonasWanke/timetable/compare/v0.2.8...master)
+
+
+## [0.2.8](https://github.com/JonasWanke/timetable/compare/v0.2.7...v0.2.8) · 2020-09-18
+
+### 🐛 Bug Fixes
+- Allow full-height `leadingHeaderBuilder`s ([#50](https://github.com/JonasWanke/timetable/pull/50)), closes: [#49](https://github.com/JonasWanke/timetable/issues/49)
 
 
 ## [0.2.7](https://github.com/JonasWanke/timetable/compare/v0.2.6...v0.2.7) · 2020-09-02

@@ -1,6 +1,6 @@
 name: timetable_example
 description: A simple example app for the timetable package
-version: 0.2.7
+version: 0.2.9
 
 environment:
   sdk: ">=2.7.0 <3.0.0"

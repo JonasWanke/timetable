@@ -3,7 +3,7 @@ name: "timetable"
 description: "📅 Customizable, animated calendar widget including day, week and month views"
 homepage: "https://github.com/JonasWanke/timetable"
 license: "apache-2.0"
-version: "0.2.8"
+version: "0.2.9"
 categorization:
   component:
     values:

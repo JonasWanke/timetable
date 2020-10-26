@@ -112,7 +112,7 @@ class _LinkedScrollController extends ScrollController {
         position is _LinkedScrollPosition,
         '_LinkedScrollControllers can only be used with'
         ' _LinkedScrollPositions.');
-    final _LinkedScrollPosition linkedPosition = position;
+    final linkedPosition = position as _LinkedScrollPosition;
     assert(linkedPosition.owner == this,
         '_LinkedScrollPosition cannot change controllers once created.');
     super.attach(position);
@@ -131,7 +131,7 @@ class _LinkedScrollController extends ScrollController {
   }
 
   @override
-  _LinkedScrollPosition get position => super.position;
+  _LinkedScrollPosition get position => super.position as _LinkedScrollPosition;
 
   Iterable<_LinkedScrollController> get _allPeersWithClients =>
       _controllers._attachedControllers.where((peer) => peer != this);
@@ -149,7 +149,7 @@ class _LinkedScrollController extends ScrollController {
     assert(hasClients);
     final activities = <_LinkedScrollActivity>[];
     // ignore: prefer_final_in_for_each
-    for (_LinkedScrollPosition position in positions) {
+    for (final position in positions.cast<_LinkedScrollPosition>()) {
       activities.add(position.link(driver));
     }
     return activities;
@@ -293,7 +293,7 @@ class _LinkedScrollPosition extends ScrollPositionWithSingleContext {
     if (this.activity is! _LinkedScrollActivity) {
       beginActivity(_LinkedScrollActivity(this));
     }
-    final _LinkedScrollActivity activity = this.activity;
+    final activity = this.activity as _LinkedScrollActivity;
     // ignore: cascade_invocations
     activity.link(driver);
     return activity;
@@ -321,7 +321,7 @@ class _LinkedScrollActivity extends ScrollActivity {
   _LinkedScrollActivity(_LinkedScrollPosition delegate) : super(delegate);
 
   @override
-  _LinkedScrollPosition get delegate => super.delegate;
+  _LinkedScrollPosition get delegate => super.delegate as _LinkedScrollPosition;
 
   final Set<_LinkedScrollPosition> drivers = <_LinkedScrollPosition>{};
 

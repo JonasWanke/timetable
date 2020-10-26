@@ -135,7 +135,8 @@ class _DayEventsLayoutDelegate<E extends Event>
           .coerceAtMost(size.height - periodToY(minEventDuration))
           .coerceAtMost(size.height - minEventHeight);
       final height = periodToY(_durationOn(event, date, size.height))
-          .clamp(0, size.height - top);
+          .clamp(0, size.height - top)
+          .toDouble();
 
       final columnWidth = (size.width - eventSpacing) /
           positions.groupColumnCounts[position.group];
@@ -210,7 +211,7 @@ class _DayEventsLayoutDelegate<E extends Event>
                 .map((e) => positions.eventPositions[e].index)
                 .max() ??
             -1;
-        final previousEnd = column.fold(
+        final previousEnd = column.fold<LocalDateTime>(
           TimetableLocalDateTime.maxIsoValue,
           (max, e) => LocalDateTime.max(max, e.end),
         );

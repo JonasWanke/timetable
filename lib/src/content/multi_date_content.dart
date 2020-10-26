@@ -33,7 +33,7 @@ class MultiDateContent<E extends Event> extends StatefulWidget {
 class _MultiDateContentState<E extends Event>
     extends State<MultiDateContent<E>> {
   final _timeListenable =
-      StreamChangeNotifier(Stream.periodic(Duration(seconds: 10)));
+      StreamChangeNotifier(Stream<void>.periodic(Duration(seconds: 10)));
 
   @override
   void dispose() {

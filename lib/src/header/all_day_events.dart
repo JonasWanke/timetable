@@ -145,7 +145,7 @@ class _EventParentDataWidget<E extends Event>
   @override
   void applyParentData(RenderObject renderObject) {
     assert(renderObject.parentData is _EventParentData<E>);
-    final _EventParentData<E> parentData = renderObject.parentData;
+    final parentData = renderObject.parentData as _EventParentData<E>;
 
     if (parentData.event == event) {
       return;
@@ -278,7 +278,7 @@ class _EventsLayout<E extends Event> extends RenderBox
     markNeedsLayout();
   }
 
-  Iterable<E> get events => children.map((child) => child.data.event);
+  Iterable<E> get events => children.map((child) => child.data.event as E);
 
   @override
   void setupParentData(RenderObject child) {

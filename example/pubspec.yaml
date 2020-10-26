@@ -14,6 +14,7 @@ dependencies:
   time_machine: ^0.9.12
 
 dependency_overrides:
+  # https://github.com/Dana-Ferguson/time_machine/issues/44
   meta: 1.3.0-nullsafety.3
 
 flutter:

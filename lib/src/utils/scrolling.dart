@@ -196,9 +196,10 @@ class _LinkedScrollPosition extends ScrollPositionWithSingleContext {
 
   @override
   bool applyViewportDimension(double viewportDimension) {
-    final oldViewportDimension = this.viewportDimension;
+    final oldViewportDimension =
+        hasViewportDimension ? this.viewportDimension : null;
     final result = super.applyViewportDimension(viewportDimension);
-    final oldPixels = pixels;
+    final oldPixels = hasPixels ? pixels : null;
     final page = (oldPixels == null || oldViewportDimension == 0.0)
         ? initialPage
         : oldPixels /

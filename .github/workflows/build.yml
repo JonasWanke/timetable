@@ -9,7 +9,6 @@ on:
 env:
   JAVA_VERSION: 12.x
   FLUTTER_CHANNEL: beta
-  FLUTTER_VERSION: 1.23.0-13.0.pre
 
 jobs:
   install:
@@ -119,7 +118,7 @@ jobs:
       - name: Install Flutter
         uses: subosito/flutter-action@v1
         with:
-          channel: "stable"
+          channel: ${{ env.FLUTTER_CHANNEL }}
 
       - name: Checkout source
         uses: actions/download-artifact@v2

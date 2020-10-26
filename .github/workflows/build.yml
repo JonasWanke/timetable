@@ -8,8 +8,8 @@ on:
 
 env:
   JAVA_VERSION: 12.x
-  FLUTTER_CHANNEL: stable
-  FLUTTER_VERSION: 1.17.x
+  FLUTTER_CHANNEL: beta
+  FLUTTER_VERSION: 1.23.0-13.0.pre
 
 jobs:
   install:

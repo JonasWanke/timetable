@@ -1,32 +1,32 @@
-import 'package:dartx/dartx.dart';
+import 'package:supercharged/supercharged.dart';
 import 'package:test/test.dart';
-import 'package:time_machine/time_machine.dart';
-import 'package:timetable/src/visible_range.dart';
+import 'package:timetable/src/old/visible_range.dart';
+import 'package:timetable/src/utils.dart';
 
 void main() {
-  VisibleRange visibleRange;
+  late VisibleRange visibleRange;
 
   group('VisibleRange.days', () {
     setUp(() => visibleRange = VisibleRange.days(3));
 
     test('getTargetPageForFocus', () {
       // Monday of week 2020-01
-      final startDate = LocalDate(2019, 12, 30);
+      final startDate = DateTime.utc(2019, 12, 30);
 
       expect(
-        0.rangeTo(2).map((offset) {
+        0.until(2).map((offset) {
           return visibleRange.getTargetPageForFocusDate(
-            startDate + Period(days: offset),
-            DayOfWeek.monday,
+            startDate + offset.days,
+            DateTime.monday,
           );
         }),
-        equals(0.rangeTo(2).map((offset) => startDate.epochDay + offset)),
+        equals(0.until(2).map((offset) => startDate.page + offset)),
       );
     });
 
     test('getTargetPageForCurrent', () {
       // Monday of week 2020-01
-      final startPage = LocalDate(2019, 12, 30).epochDay.toDouble();
+      final startPage = DateTime.utc(2019, 12, 30).page;
 
       final values = {
         startPage: startPage,
@@ -38,7 +38,7 @@ void main() {
         values.keys.map((current) {
           return visibleRange.getTargetPageForCurrent(
             current,
-            DayOfWeek.monday,
+            DateTime.monday,
           );
         }),
         equals(values.values),
@@ -50,50 +50,47 @@ void main() {
     setUp(() => visibleRange = VisibleRange.week());
 
     group('getTargetPageForFocus', () {
-      LocalDate getTargetDate(LocalDate focusDate) {
+      DateTime getTargetDate(DateTime focusDate) {
         final targetPage =
-            visibleRange.getTargetPageForFocusDate(focusDate, DayOfWeek.monday);
-        return LocalDate.fromEpochDay(targetPage.toInt());
+            visibleRange.getTargetPageForFocusDate(focusDate, DateTime.monday);
+        return DateTimeTimetable.dateFromPage(targetPage.toInt());
       }
 
-      Iterable<LocalDate> getTargetDates(int weekNumber) {
+      Iterable<DateTime> getTargetDates(DateTime weekStart) {
         return [
-          DayOfWeek.monday,
-          DayOfWeek.tuesday,
-          DayOfWeek.wednesday,
-          DayOfWeek.thursday,
-          DayOfWeek.friday,
-          DayOfWeek.saturday,
-          DayOfWeek.sunday,
-        ]
-            .map((d) => WeekYearRules.iso
-                .getLocalDate(2020, weekNumber, d, CalendarSystem.iso))
-            .map(getTargetDate);
+          DateTime.monday,
+          DateTime.tuesday,
+          DateTime.wednesday,
+          DateTime.thursday,
+          DateTime.friday,
+          DateTime.saturday,
+          DateTime.sunday,
+        ].map((d) => weekStart + (d - 1).days).map(getTargetDate);
       }
 
-      test('week 2020-1', () {
+      test('week 2020-W01', () {
         expect(
-          getTargetDates(1),
-          everyElement(equals(LocalDate(2019, 12, 30))),
+          getTargetDates(DateTime.utc(2019, 12, 30)),
+          everyElement(equals(DateTime.utc(2019, 12, 30))),
         );
       });
-      test('week 2020-18', () {
+      test('week 2020-W18', () {
         expect(
-          getTargetDates(18),
-          everyElement(equals(LocalDate(2020, 4, 27))),
+          getTargetDates(DateTime.utc(2020, 04, 27)),
+          everyElement(equals(DateTime.utc(2020, 4, 27))),
         );
       });
     });
 
     test('getTargetPageForCurrent', () {
-      // Monday of week 2020-01
-      final startPage = LocalDate(2019, 12, 30).epochDay.toDouble();
+      // Monday of week 2020-W01
+      final startPage = DateTime.utc(2019, 12, 30).page;
 
       expect(
-        (-3).rangeTo(3).map((offset) {
+        (-3).until(3).map((offset) {
           return visibleRange.getTargetPageForCurrent(
             startPage + offset,
-            DayOfWeek.monday,
+            DateTime.monday,
           );
         }),
         everyElement(equals(startPage)),

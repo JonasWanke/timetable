@@ -1,6 +1,5 @@
+import 'package:black_hole_flutter/black_hole_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:time_machine/time_machine.dart';
 import 'package:timetable/timetable.dart';
 
 // ignore: unused_import
@@ -8,10 +7,7 @@ import 'positioning_demo.dart';
 import 'utils.dart';
 
 void main() async {
-  setTargetPlatformForDesktop();
-
   WidgetsFlutterBinding.ensureInitialized();
-  await TimeMachine.initialize({'rootBundle': rootBundle});
   runApp(ExampleApp(child: TimetableExample()));
 }
 
@@ -20,103 +16,176 @@ class TimetableExample extends StatefulWidget {
   _TimetableExampleState createState() => _TimetableExampleState();
 }
 
-class _TimetableExampleState extends State<TimetableExample> {
+class _TimetableExampleState extends State<TimetableExample>
+    with TickerProviderStateMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
-  TimetableController<BasicEvent> _controller;
 
-  @override
-  void initState() {
-    super.initState();
+  final _dateController = DateController(
+    // All parameters are optional.
+    initialDate: DateTimeTimetable.today(),
+    firstDayOfWeek: DateTime.monday,
+  );
 
-    _controller = TimetableController(
-      // A basic EventProvider containing a single event:
-      // eventProvider: EventProvider.list([
-      //   BasicEvent(
-      //     id: 0,
-      //     title: 'My Event',
-      //     color: Colors.blue,
-      //     start: LocalDate.today().at(LocalTime(13, 0, 0)),
-      //     end: LocalDate.today().at(LocalTime(15, 0, 0)),
-      //   ),
-      // ]),
+  final _timeController = TimeController(
+    // All parameters are optional.
+    // initialRange: TimeRange(8.hours, 20.hours),
+    maxRange: TimeRange(0.hours, 24.hours),
+  );
 
-      // For a demo of overlapping events, use this one instead:
-      eventProvider: positioningDemoEventProvider,
-
-      // Or even this short example using a Stream:
-      // eventProvider: EventProvider.stream(
-      //   eventGetter: (range) => Stream.periodic(
-      //     Duration(milliseconds: 16),
-      //     (i) {
-      //       final start =
-      //           LocalDate.today().atMidnight() + Period(minutes: i * 2);
-      //       return [
-      //         BasicEvent(
-      //           id: 0,
-      //           title: 'Event',
-      //           color: Colors.blue,
-      //           start: start,
-      //           end: start + Period(hours: 5),
-      //         ),
-      //       ];
-      //     },
-      //   ),
-      // ),
-
-      // Other (optional) parameters:
-      initialTimeRange: InitialTimeRange.range(
-        startTime: LocalTime(8, 0, 0),
-        endTime: LocalTime(20, 0, 0),
-      ),
-      initialDate: LocalDate.today(),
-      visibleRange: VisibleRange.days(3),
-      firstDayOfWeek: DayOfWeek.monday,
-    );
-  }
+  final visibleRange = VisibleRange.week();
 
   @override
   void dispose() {
-    _controller.dispose();
+    _timeController.dispose();
+    _dateController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    // return _buildSimpleTimetable();
+    return _buildCustomizedTimetable();
+    // return _buildCustomTimetable();
+  }
+
+  // ignore: unused_element
+  Widget _buildSimpleTimetable() {
     return Scaffold(
       key: _scaffoldKey,
-      appBar: AppBar(
-        title: Text('Timetable example'),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.today),
-            onPressed: () => _controller.animateToToday(),
-            tooltip: 'Jump to today',
-          ),
-        ],
+      appBar: _buildAppBar(isFlat: false),
+      body: MultiDateTimetable<BasicEvent>(
+        controller: _dateController,
+        timeController: _timeController,
+        visibleRange: visibleRange,
+        headerEventProvider: positioningDemoHeaderEventProvider,
+        headerEventBuilder: (context, event, info) =>
+            BasicAllDayEventWidget(event, info: info),
+        contentEventProvider: positioningDemoContentEventProvider,
+        contentEventBuilder: (event) => BasicEventWidget(event),
       ),
-      body: Timetable<BasicEvent>(
-        controller: _controller,
-        onEventBackgroundTap: (start, isAllDay) {
-          _showSnackBar('Background tapped $start is all day event $isAllDay');
+    );
+  }
+
+  // ignore: unused_element
+  Widget _buildCustomizedTimetable() {
+    return Scaffold(
+      key: _scaffoldKey,
+      appBar: _buildAppBar(isFlat: false),
+      body: MultiDateTimetable<BasicEvent>(
+        controller: _dateController,
+        timeController: _timeController,
+        visibleRange: visibleRange,
+        headerEventProvider: positioningDemoHeaderEventProvider,
+        headerEventBuilder: (context, event, info) {
+          return BasicAllDayEventWidget(
+            event,
+            info: info,
+            onTap: () => _showSnackBar('All-day event $event tapped'),
+          );
         },
-        eventBuilder: (event) {
+        onHeaderDateTap: (date) =>
+            _showSnackBar('Header tapped on date $date.'),
+        onHeaderBackgroundTap: (date) =>
+            _showSnackBar('Multi-day header background tapped at $date'),
+        contentEventProvider: positioningDemoContentEventProvider,
+        contentEventBuilder: (event) {
           return BasicEventWidget(
             event,
             onTap: () => _showSnackBar('Part-day event $event tapped'),
           );
         },
-        allDayEventBuilder: (context, event, info) => BasicAllDayEventWidget(
-          event,
-          info: info,
-          onTap: () => _showSnackBar('All-day event $event tapped'),
-        ),
+        onContentBackgroundTap: (dateTime) =>
+            _showSnackBar('Part-day background tapped at $dateTime'),
+        contentStyle: MultiDateContentStyle(
+            // timeIndicatorStyle:
+            //     MultiDateCurrentTimeIndicatorStyle(color: Colors.green),
+            // dividerColor: Colors.orange,
+            ),
       ),
     );
   }
 
-  void _showSnackBar(String content) {
-    _scaffoldKey.currentState.showSnackBar(SnackBar(
-      content: Text(content),
-    ));
+  // ignore: unused_element
+  Widget _buildCustomTimetable() {
+    return Scaffold(
+      key: _scaffoldKey,
+      body: Column(
+        children: [
+          Material(
+            color: context.theme.scaffoldBackgroundColor,
+            elevation: 4,
+            child: Column(
+              children: [
+                _buildAppBar(isFlat: true),
+                MultiDateTimetableHeader<BasicEvent>(
+                  controller: _dateController,
+                  visibleRange: visibleRange,
+                  eventProvider: positioningDemoHeaderEventProvider,
+                  eventBuilder: (context, event, info) {
+                    return BasicAllDayEventWidget(
+                      event,
+                      info: info,
+                      onTap: () => _showSnackBar('All-day event $event tapped'),
+                    );
+                  },
+                  onDateTap: (date) =>
+                      _showSnackBar('Header tapped on date $date.'),
+                  onBackgroundTap: (date) => _showSnackBar(
+                      'Multi-day header background tapped at $date'),
+                  padding: EdgeInsets.only(bottom: 4),
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            child: MultiDateTimetableContent<BasicEvent>(
+              dateController: _dateController,
+              timeController: _timeController,
+              visibleRange: visibleRange,
+              eventProvider: positioningDemoContentEventProvider,
+              eventBuilder: (event) {
+                return BasicEventWidget(
+                  event,
+                  onTap: () => _showSnackBar('Part-day event $event tapped'),
+                );
+              },
+              onBackgroundTap: (dateTime) =>
+                  _showSnackBar('Part-day background tapped at $dateTime'),
+              style: MultiDateContentStyle(
+                  // timeIndicatorStyle:
+                  //     MultiDateCurrentTimeIndicatorStyle(color: Colors.green),
+                  // dividerColor: Colors.orange,
+                  ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
+
+  PreferredSizeWidget _buildAppBar({required bool isFlat}) {
+    return AppBar(
+      backwardsCompatibility: false,
+      elevation: isFlat ? 0 : null,
+      brightness: isFlat ? null : Brightness.dark,
+      foregroundColor:
+          isFlat ? context.theme.brightness.mediumEmphasisOnColor : null,
+      backgroundColor: isFlat ? Colors.transparent : null,
+      title: Text('Timetable example'),
+      actions: <Widget>[
+        IconButton(
+          icon: Icon(Icons.today),
+          onPressed: () {
+            _dateController.animateToToday(vsync: this);
+            _timeController.animateToShowFullDay(vsync: this);
+            // _timeController.value = TimeRange(6.hours, 18.hours);
+          },
+          tooltip: 'Go to today',
+        ),
+      ],
+    );
+  }
+
+  void _showSnackBar(String content) =>
+      context.scaffoldMessenger.showSnackBar(SnackBar(content: Text(content)));
 }

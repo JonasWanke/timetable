@@ -1,16 +1,7 @@
-import 'dart:io';
-
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-void setTargetPlatformForDesktop() {
-  if (Platform.isLinux || Platform.isWindows) {
-    debugDefaultTargetPlatformOverride = TargetPlatform.fuchsia;
-  }
-}
-
 class ExampleApp extends StatelessWidget {
-  const ExampleApp({@required this.child}) : assert(child != null);
+  const ExampleApp({required this.child});
 
   final Widget child;
 
@@ -20,17 +11,31 @@ class ExampleApp extends StatelessWidget {
       title: 'Timetable example',
       theme: _createTheme(Brightness.light),
       darkTheme: _createTheme(Brightness.dark),
+      // themeMode: ThemeMode.dark,
       home: child,
     );
   }
 
   ThemeData _createTheme(Brightness brightness) {
-    return ThemeData(
+    var theme = ThemeData(
       brightness: brightness,
+      applyElevationOverlayColor: true,
       primaryColor: Colors.blue,
-      snackBarTheme: SnackBarThemeData(
-        behavior: SnackBarBehavior.floating,
-      ),
+      primarySwatch: Colors.blue,
+      snackBarTheme: SnackBarThemeData(behavior: SnackBarBehavior.floating),
     );
+    theme = theme.copyWith(
+      textTheme: theme.textTheme.copyWith(
+        headline6:
+            theme.textTheme.headline6!.copyWith(fontWeight: FontWeight.normal),
+      ),
+      // appBarTheme: theme.appBarTheme.copyWith(
+      //   // backgroundColor: brightness.isDark ? Color(0xFF30313F) : Colors.white,
+      //   foregroundColor: brightness.mediumEmphasisOnColor,
+      //   titleTextStyle:
+      //       theme.textTheme.headline6!.copyWith(fontWeight: FontWeight.normal),
+      // ),
+    );
+    return theme;
   }
 }

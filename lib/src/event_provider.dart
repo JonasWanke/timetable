@@ -2,12 +2,11 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:time_machine/time_machine.dart';
 
-import 'controller.dart';
 import 'event.dart';
+import 'utils.dart';
 
-/// Provides [Event]s to a [TimetableController].
+/// Provides [Event]s to timetable widgets.
 ///
 /// We provide the following implementations:
 /// - [EventProvider.list], if you have a non-changing list of [Event]s.
@@ -15,6 +14,7 @@ import 'event.dart';
 /// - [EventProvider.stream], if your events may change or you have many events
 ///   and only want to load a relevant subset.
 abstract class EventProvider<E extends Event> {
+  // TODO(JonasWanke): change to lambda
   const EventProvider();
 
   /// Creates an [EventProvider] based on a fixed list of [Event]s.
@@ -30,14 +30,12 @@ abstract class EventProvider<E extends Event> {
   /// - [EventProvider]'s class comment for an overview of provided
   ///   implementations.
   factory EventProvider.simpleStream(Stream<List<E>> eventStream) {
-    assert(eventStream != null);
-
     final baseStream = eventStream.publishValue();
     final subscription = baseStream.connect();
     return EventProvider<E>.stream(
       eventGetter: (dates) {
         return baseStream.map((e) {
-          return e.intersectingInterval(dates);
+          return e.where((it) => it.interval.intersects(dates));
         });
       },
       onDispose: subscription.cancel,
@@ -51,14 +49,13 @@ abstract class EventProvider<E extends Event> {
   /// - [EventProvider]'s class comment for an overview of provided
   ///   implementations.
   factory EventProvider.stream({
-    @required StreamedEventGetter<E> eventGetter,
+    required StreamedEventGetter<E> eventGetter,
     VoidCallback onDispose,
   }) = StreamEventProvider<E>;
 
-  void onVisibleDatesChanged(DateInterval visibleRange) {}
+  void onVisibleDatesChanged(Interval visibleRange) {}
 
-  Stream<Iterable<E>> getAllDayEventsIntersecting(DateInterval interval);
-  Stream<Iterable<E>> getPartDayEventsIntersecting(LocalDate date);
+  Stream<Iterable<E>> getEventsIntersecting(Interval interval);
 
   /// Discards any resources used by the object.
   ///
@@ -77,44 +74,44 @@ abstract class EventProvider<E extends Event> {
 /// - [EventProvider.stream], if your events change or you have lots of them.
 class ListEventProvider<E extends Event> extends EventProvider<E> {
   ListEventProvider(List<E> events)
-      : assert(events != null),
+      : assert(
+          events.every(
+            (it) =>
+                it.start.isValidTimetableDateTime &&
+                it.end.isValidTimetableDateTime,
+          ),
+        ),
         _events = events;
 
   final List<E> _events;
 
   @override
-  Stream<Iterable<E>> getAllDayEventsIntersecting(DateInterval interval) {
-    final events = _events.allDayEvents.intersectingInterval(interval);
-    return Stream.value(events);
-  }
-
-  @override
-  Stream<Iterable<E>> getPartDayEventsIntersecting(LocalDate date) {
-    final events = _events.partDayEvents.intersectingDate(date);
-    return Stream.value(events);
+  Stream<Iterable<E>> getEventsIntersecting(Interval interval) {
+    return Stream.value(
+      _events.where((it) => it.interval.intersects(interval)),
+    );
   }
 }
 
 mixin VisibleDatesStreamEventProviderMixin<E extends Event>
     on EventProvider<E> {
-  final _visibleDates = BehaviorSubject<DateInterval>();
-  ValueStream<DateInterval> get visibleDates => _visibleDates.stream;
+  final _visibleDates = BehaviorSubject<Interval>();
+  ValueStream<Interval> get visibleDates => _visibleDates.stream;
 
   @mustCallSuper
   @override
-  void onVisibleDatesChanged(DateInterval visibleRange) {
+  void onVisibleDatesChanged(Interval visibleRange) {
     _visibleDates.add(visibleRange);
   }
 
   @mustCallSuper
   @override
-  void dispose() {
-    _visibleDates.close();
-  }
+  void dispose() => _visibleDates.close();
 }
 
 typedef StreamedEventGetter<E extends Event> = Stream<Iterable<E>> Function(
-    DateInterval dates);
+  Interval dates,
+);
 
 /// An [EventProvider] accepting a [Stream] of [Event]s based on the currently
 /// visible range.
@@ -125,27 +122,30 @@ typedef StreamedEventGetter<E extends Event> = Stream<Iterable<E>> Function(
 ///   change.
 class StreamEventProvider<E extends Event> extends EventProvider<E>
     with VisibleDatesStreamEventProviderMixin<E> {
-  StreamEventProvider({@required this.eventGetter, this.onDispose})
-      : assert(eventGetter != null) {
-    _events = visibleDates.switchMap(eventGetter).publishValue();
+  StreamEventProvider({required this.eventGetter, this.onDispose}) {
+    _events = visibleDates.switchMap(eventGetter).doOnData((it) {
+      assert(
+        it.every(
+          (it) =>
+              it.start.isValidTimetableDateTime &&
+              it.end.isValidTimetableDateTime,
+        ),
+      );
+    }).publishValue();
     _eventsSubscription = _events.connect();
   }
 
   final StreamedEventGetter<E> eventGetter;
-  final VoidCallback onDispose;
+  final VoidCallback? onDispose;
 
-  ValueConnectableStream<Iterable<E>> _events;
-  StreamSubscription<Iterable<E>> _eventsSubscription;
-
-  @override
-  Stream<Iterable<E>> getAllDayEventsIntersecting(DateInterval interval) {
-    return _events
-        .map((events) => events.allDayEvents.intersectingInterval(interval));
-  }
+  late ValueConnectableStream<Iterable<E>> _events;
+  late StreamSubscription<Iterable<E>> _eventsSubscription;
 
   @override
-  Stream<Iterable<E>> getPartDayEventsIntersecting(LocalDate date) {
-    return _events.map((events) => events.partDayEvents.intersectingDate(date));
+  Stream<Iterable<E>> getEventsIntersecting(Interval interval) {
+    return _events.map((events) {
+      return events.where((it) => it.interval.intersects(interval));
+    });
   }
 
   @override

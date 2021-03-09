@@ -1,15 +1,12 @@
 import 'package:flutter/physics.dart';
 import 'package:meta/meta.dart';
-import 'package:time_machine/time_machine.dart';
 
+import '../utils.dart';
 import 'controller.dart';
-import 'timetable.dart';
 
 abstract class VisibleRange {
-  const VisibleRange({
-    @required this.visibleDays,
-  })  : assert(visibleDays != null),
-        assert(visibleDays > 0);
+  const VisibleRange({required this.visibleDayCount})
+      : assert(visibleDayCount > 0);
 
   /// Display a fixed number of days.
   ///
@@ -28,56 +25,47 @@ abstract class VisibleRange {
   /// containing that date will fill the viewport.
   const factory VisibleRange.week() = WeekVisibleRange;
 
-  final int visibleDays;
+  final int visibleDayCount;
 
   /// Convenience method of [getTargetPageForFocus] taking a [LocalDate].
-  double getTargetPageForFocusDate(
-      LocalDate focusDate, DayOfWeek firstDayOfWeek) {
-    assert(focusDate != null);
-    return getTargetPageForFocus(focusDate.epochDay.toDouble(), firstDayOfWeek);
+  double getTargetPageForFocusDate(DateTime focusDate, int firstDayOfWeek) {
+    assert(focusDate.isAtStartOfDay);
+
+    return getTargetPageForFocus(focusDate.page, firstDayOfWeek);
   }
 
   /// Gets the page to align to the viewport's left side based on the
   /// [focusPage] to show.
-  double getTargetPageForFocus(double focusPage, DayOfWeek firstDayOfWeek);
+  double getTargetPageForFocus(double focusPage, int firstDayOfWeek);
 
   /// Gets the page to align to the viewport's left side based on the
   /// [currentPage] in that position.
   double getTargetPageForCurrent(
     double currentPage,
-    DayOfWeek firstDayOfWeek, {
+    int firstDayOfWeek, {
     double velocity = 0,
     Tolerance tolerance = Tolerance.defaultTolerance,
   });
 
   @protected
-  double getDefaultVelocityAddition(double velocity, Tolerance tolerance) {
-    assert(velocity != null);
-    assert(tolerance != null);
-
-    return velocity.abs() > tolerance.velocity ? 0.5 * velocity.sign : 0.0;
-  }
+  double getDefaultVelocityAddition(double velocity, Tolerance tolerance) =>
+      velocity.abs() > tolerance.velocity ? 0.5 * velocity.sign : 0.0;
 }
 
 class DaysVisibleRange extends VisibleRange {
-  const DaysVisibleRange(int count) : super(visibleDays: count);
+  const DaysVisibleRange(int count) : super(visibleDayCount: count);
 
   @override
-  double getTargetPageForFocus(double focusPage, DayOfWeek firstDayOfWeek) =>
+  double getTargetPageForFocus(double focusPage, int firstDayOfWeek) =>
       getTargetPageForCurrent(focusPage, firstDayOfWeek);
 
   @override
   double getTargetPageForCurrent(
     double focusPage,
-    DayOfWeek firstDayOfWeek, {
+    int firstDayOfWeek, {
     double velocity = 0,
     Tolerance tolerance = Tolerance.defaultTolerance,
   }) {
-    assert(focusPage != null);
-    assert(firstDayOfWeek != null);
-    assert(velocity != null);
-    assert(tolerance != null);
-
     final velocityAddition = getDefaultVelocityAddition(velocity, tolerance);
     return (focusPage + velocityAddition).roundToDouble();
   }
@@ -88,39 +76,33 @@ class DaysVisibleRange extends VisibleRange {
 /// You can configure the first day of a week via
 /// [TimetableController.firstDayOfWeek].
 class WeekVisibleRange extends VisibleRange {
-  const WeekVisibleRange() : super(visibleDays: TimeConstants.daysPerWeek);
+  const WeekVisibleRange() : super(visibleDayCount: DateTime.daysPerWeek);
 
   @override
   double getTargetPageForFocus(
     double focusPage,
-    DayOfWeek firstDayOfWeek, {
+    int firstDayOfWeek, {
     double velocity = 0,
     Tolerance tolerance = Tolerance.defaultTolerance,
   }) {
-    assert(focusPage != null);
-    assert(firstDayOfWeek != null);
-    assert(velocity != null);
-    assert(tolerance != null);
-
     final epochWeekDayOffset =
-        firstDayOfWeek.value - LocalDate.fromEpochDay(0).dayOfWeek.value;
-    final focusWeek =
-        (focusPage - epochWeekDayOffset) / TimeConstants.daysPerWeek;
+        firstDayOfWeek - DateTimeTimetable.dateFromPage(0).weekday;
+    final focusWeek = (focusPage - epochWeekDayOffset) / DateTime.daysPerWeek;
 
     final velocityAddition = getDefaultVelocityAddition(velocity, tolerance);
     final targetWeek = (focusWeek + velocityAddition).floorToDouble();
-    return targetWeek * TimeConstants.daysPerWeek + epochWeekDayOffset;
+    return targetWeek * DateTime.daysPerWeek + epochWeekDayOffset;
   }
 
   @override
   double getTargetPageForCurrent(
     double focusPage,
-    DayOfWeek firstDayOfWeek, {
+    int firstDayOfWeek, {
     double velocity = 0,
     Tolerance tolerance = Tolerance.defaultTolerance,
   }) {
     return getTargetPageForFocus(
-      focusPage + TimeConstants.daysPerWeek / 2,
+      focusPage + DateTime.daysPerWeek / 2,
       firstDayOfWeek,
       velocity: velocity,
       tolerance: tolerance,

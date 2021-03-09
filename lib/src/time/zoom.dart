@@ -4,7 +4,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/physics.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
-
 import '../utils.dart';
 import 'controller.dart';
 import 'time_range.dart';
@@ -14,18 +13,11 @@ class TimeZoom extends StatefulWidget {
     Key? key,
     required this.controller,
     required this.child,
-    this.minChildHeight = 1,
-    this.maxChildHeight = double.infinity,
-  })  : assert(minChildHeight > 0),
-        assert(maxChildHeight > 0),
-        assert(minChildHeight <= maxChildHeight),
-        super(key: key);
+  }) : super(key: key);
 
   final TimeController controller;
 
   final Widget child;
-  final double minChildHeight;
-  final double maxChildHeight;
 
   @override
   _TimeZoomState createState() => _TimeZoomState();

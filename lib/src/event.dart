@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:flutter/foundation.dart';
 import 'package:meta/meta.dart';
 import 'package:collection/collection.dart';
 
@@ -10,7 +11,7 @@ import 'utils.dart';
 ///
 /// See also:
 /// - [BasicEvent], which provides a basic implementation to get you started.
-abstract class Event {
+abstract class Event with Diagnosticable {
   const Event({
     required this.id,
     required this.start,
@@ -56,7 +57,12 @@ abstract class Event {
   int get hashCode => hashList([runtimeType, id, start, end]);
 
   @override
-  String toString() => id.toString();
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty('id', id));
+    properties.add(DiagnosticsProperty('start', start));
+    properties.add(DiagnosticsProperty('end', end));
+  }
 }
 
 extension TimetableEventIterable<E extends Event> on Iterable<E> {

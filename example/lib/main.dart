@@ -57,10 +57,9 @@ class _TimetableExampleState extends State<TimetableExample>
         controller: _dateController,
         timeController: _timeController,
         visibleRange: visibleRange,
-        headerEventProvider: positioningDemoHeaderEventProvider,
+        eventProvider: eventProviderFromFixedList(positioningDemoEvents),
         headerEventBuilder: (context, event, info) =>
             BasicAllDayEventWidget(event, info: info),
-        contentEventProvider: positioningDemoContentEventProvider,
         contentEventBuilder: (event) => BasicEventWidget(event),
       ),
     );
@@ -75,7 +74,7 @@ class _TimetableExampleState extends State<TimetableExample>
         controller: _dateController,
         timeController: _timeController,
         visibleRange: visibleRange,
-        headerEventProvider: positioningDemoHeaderEventProvider,
+        eventProvider: eventProviderFromFixedList(positioningDemoEvents),
         headerEventBuilder: (context, event, info) {
           return BasicAllDayEventWidget(
             event,
@@ -87,7 +86,6 @@ class _TimetableExampleState extends State<TimetableExample>
             _showSnackBar('Header tapped on date $date.'),
         onHeaderBackgroundTap: (date) =>
             _showSnackBar('Multi-day header background tapped at $date'),
-        contentEventProvider: positioningDemoContentEventProvider,
         contentEventBuilder: (event) {
           return BasicEventWidget(
             event,
@@ -120,7 +118,9 @@ class _TimetableExampleState extends State<TimetableExample>
                 MultiDateTimetableHeader<BasicEvent>(
                   controller: _dateController,
                   visibleRange: visibleRange,
-                  eventProvider: positioningDemoHeaderEventProvider,
+                  eventProvider: eventProviderFromFixedList(
+                    positioningDemoEvents.where((it) => it.isAllDay).toList(),
+                  ),
                   eventBuilder: (context, event, info) {
                     return BasicAllDayEventWidget(
                       event,
@@ -142,7 +142,9 @@ class _TimetableExampleState extends State<TimetableExample>
               dateController: _dateController,
               timeController: _timeController,
               visibleRange: visibleRange,
-              eventProvider: positioningDemoContentEventProvider,
+              eventProvider: eventProviderFromFixedList(
+                positioningDemoEvents.where((it) => it.isPartDay).toList(),
+              ),
               eventBuilder: (event) {
                 return BasicEventWidget(
                   event,

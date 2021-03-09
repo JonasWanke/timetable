@@ -13,29 +13,29 @@ import '../time/controller.dart';
 import '../time/zoom.dart';
 
 class MultiDateTimetable<E extends Event> extends StatefulWidget {
-  const MultiDateTimetable({
+  MultiDateTimetable({
     Key? key,
     this.controller,
     this.timeController,
     this.visibleRange = const VisibleRange.week(),
-    required this.headerEventProvider,
+    required EventProvider<E> eventProvider,
     required this.headerEventBuilder,
     this.onHeaderDateTap,
     this.onHeaderBackgroundTap,
     this.headerStyle = const MultiDateEventHeaderStyle(),
     this.headerPadding = EdgeInsets.zero,
-    required this.contentEventProvider,
     required this.contentEventBuilder,
     this.onContentBackgroundTap,
     this.contentStyle,
-  }) : super(key: key);
+  })  : eventProvider = eventProvider.debugChecked,
+        super(key: key);
 
   final DateController? controller;
   final TimeController? timeController;
   final VisibleRange visibleRange;
+  final EventProvider<E> eventProvider;
 
   // Header:
-  final EventProvider<E> headerEventProvider;
   final MultiDateHeaderTapCallback? onHeaderDateTap;
   final MultiDateEventHeaderEventBuilder<E> headerEventBuilder;
   final MultiDateEventHeaderBackgroundTapCallback? onHeaderBackgroundTap;
@@ -43,7 +43,6 @@ class MultiDateTimetable<E extends Event> extends StatefulWidget {
   final EdgeInsetsGeometry headerPadding;
 
   // Content:
-  final EventProvider<E> contentEventProvider;
   final MultiDateContentEventBuilder<E> contentEventBuilder;
   final MultiDateContentBackgroundTapCallback? onContentBackgroundTap;
   final MultiDateContentStyle? contentStyle;
@@ -72,7 +71,10 @@ class _MultiDateTimetableState<E extends Event>
         MultiDateTimetableHeader<E>(
           controller: _dateController,
           visibleRange: widget.visibleRange,
-          eventProvider: widget.headerEventProvider,
+          eventProvider: (visibleDates) => widget
+              .eventProvider(visibleDates)
+              .where((it) => it.isAllDay)
+              .toList(),
           eventBuilder: widget.headerEventBuilder,
           onBackgroundTap: widget.onHeaderBackgroundTap,
           style: widget.headerStyle,
@@ -83,7 +85,10 @@ class _MultiDateTimetableState<E extends Event>
             dateController: _dateController,
             timeController: _timeController,
             visibleRange: widget.visibleRange,
-            eventProvider: widget.contentEventProvider,
+            eventProvider: (visibleDates) => widget
+                .eventProvider(visibleDates)
+                .where((it) => it.isPartDay)
+                .toList(),
             eventBuilder: widget.contentEventBuilder,
             onBackgroundTap: widget.onContentBackgroundTap,
             style: widget.contentStyle,
@@ -95,17 +100,18 @@ class _MultiDateTimetableState<E extends Event>
 }
 
 class MultiDateTimetableHeader<E extends Event> extends StatelessWidget {
-  const MultiDateTimetableHeader({
+  MultiDateTimetableHeader({
     Key? key,
     required this.controller,
-    required this.eventProvider,
+    required EventProvider<E> eventProvider,
     required this.visibleRange,
     required this.eventBuilder,
     this.onDateTap,
     this.onBackgroundTap,
     this.style = const MultiDateEventHeaderStyle(),
     this.padding = EdgeInsets.zero,
-  }) : super(key: key);
+  })  : eventProvider = eventProvider.debugChecked,
+        super(key: key);
 
   final DateController controller;
   final EventProvider<E> eventProvider;
@@ -151,16 +157,17 @@ class MultiDateTimetableHeader<E extends Event> extends StatelessWidget {
 }
 
 class MultiDateTimetableContent<E extends Event> extends StatelessWidget {
-  const MultiDateTimetableContent({
+  MultiDateTimetableContent({
     Key? key,
     required this.dateController,
     required this.timeController,
     required this.visibleRange,
-    required this.eventProvider,
+    required EventProvider<E> eventProvider,
     required this.eventBuilder,
     this.onBackgroundTap,
     this.style,
-  }) : super(key: key);
+  })  : eventProvider = eventProvider.debugChecked,
+        super(key: key);
 
   final DateController dateController;
   final TimeController timeController;

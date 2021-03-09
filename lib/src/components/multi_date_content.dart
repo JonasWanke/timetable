@@ -27,15 +27,12 @@ class MultiDateContent<E extends Event> extends StatefulWidget {
     required this.dateController,
     required this.timeController,
     required this.visibleRange,
-    required this.eventProvider,
+    required EventProvider<E> eventProvider,
     required this.eventBuilder,
     this.onBackgroundTap,
     this.style,
-  }) : super(key: key) {
-    final fullInterval =
-        Interval(DateTime.utc(2021, 1, 1), DateTime.utc(2021, 12, 31));
-    eventProvider.onVisibleDatesChanged(fullInterval);
-  }
+  })  : eventProvider = eventProvider.debugChecked,
+        super(key: key);
 
   final DateController dateController;
   final TimeController timeController;
@@ -105,19 +102,11 @@ class _MultiDateContentState<E extends Event>
                   widget.onBackgroundTap!(date + (y / height).days);
                 }
               : null,
-          child: StreamBuilder<Iterable<E>>(
-            key: ValueKey(date),
-            stream: widget.eventProvider
-                .getEventsIntersecting(date.fullDayInterval),
-            builder: (context, snapshot) {
-              final events = snapshot.data ?? [];
-              return DateEvents<E>(
-                date: date,
-                events: events,
-                eventBuilder: widget.eventBuilder,
-                style: widget.style?.dateEventsStyle ?? DateEventsStyle(),
-              );
-            },
+          child: DateEvents<E>(
+            date: date,
+            events: widget.eventProvider(date.fullDayInterval),
+            eventBuilder: widget.eventBuilder,
+            style: widget.style?.dateEventsStyle ?? DateEventsStyle(),
           ),
         );
       },

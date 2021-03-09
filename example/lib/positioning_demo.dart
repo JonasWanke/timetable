@@ -6,11 +6,6 @@ import 'package:supercharged/supercharged.dart' hide DateTimeSC;
 import 'package:timetable/timetable.dart';
 import 'package:timetable/src/utils.dart';
 
-final EventProvider<BasicEvent> positioningDemoHeaderEventProvider =
-    EventProvider.list(_events.where((it) => it.isAllDay).toList());
-final EventProvider<BasicEvent> positioningDemoContentEventProvider =
-    EventProvider.list(_events.where((it) => it.isPartDay).toList());
-
 // A basic EventProvider containing a single event:
 // eventProvider: EventProvider.list([
 //   BasicEvent(
@@ -52,7 +47,7 @@ final EventProvider<BasicEvent> positioningDemoContentEventProvider =
 //   print('New time range: ${_timeController.value}');
 // });
 
-final _events = <BasicEvent>[
+final positioningDemoEvents = <BasicEvent>[
   _DemoEvent(0, 0, Duration(hours: 10), Duration(hours: 11)),
   _DemoEvent(0, 1, Duration(hours: 11), Duration(hours: 12)),
   _DemoEvent(0, 2, Duration(hours: 12), Duration(hours: 13)),

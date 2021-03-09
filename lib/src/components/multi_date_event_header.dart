@@ -3,9 +3,6 @@ import 'dart:ui';
 import 'package:black_hole_flutter/black_hole_flutter.dart';
 import 'package:flutter/material.dart' hide Interval;
 import 'package:flutter/rendering.dart';
-import 'package:listenable_stream/listenable_stream.dart';
-import 'package:rxdart/rxdart.dart';
-import 'package:tuple/tuple.dart';
 
 import '../all_day.dart';
 import '../controller.dart';
@@ -29,17 +26,13 @@ class MultiDateEventHeader<E extends Event> extends StatelessWidget {
     Key? key,
     required this.controller,
     required this.visibleRange,
-    required this.eventProvider,
+    required EventProvider<E> eventProvider,
     required this.eventBuilder,
     this.onBackgroundTap,
     this.style = const MultiDateEventHeaderStyle(),
     this.padding = EdgeInsets.zero,
-  }) : super(key: key) {
-    // TODO(JonasWanke): calculate this dynamically
-    final fullInterval =
-        Interval(DateTime.utc(2021, 1, 1), DateTime.utc(2021, 12, 31));
-    eventProvider.onVisibleDatesChanged(fullInterval);
-  }
+  })  : eventProvider = eventProvider.debugChecked,
+        super(key: key);
 
   final DateController controller;
   final VisibleRange visibleRange;
@@ -64,28 +57,14 @@ class MultiDateEventHeader<E extends Event> extends StatelessWidget {
   }
 
   Widget _buildContent(double width) {
-    return StreamBuilder<Tuple2<Interval, Iterable<E>>>(
-      stream: controller.date
-          .map((it) {
-            return Interval(
-              controller.date.value,
-              controller.date.value + visibleRange.visibleDayCount.days,
-            ).dateInterval;
-          })
-          .toValueStream(replayValue: true)
-          .switchMap((visibleDates) => eventProvider
-              .getEventsIntersecting(visibleDates)
-              .map((it) => Tuple2(visibleDates, it))),
-      builder: (_, snapshot) {
-        final data = snapshot.data;
-        if (data == null) return SizedBox();
-
-        final visibleDates = data.item1;
-        var events = data.item2;
-        // The StreamBuilder gets recycled and initially still has a
-        // list of old events.
-        events = events.where((e) => e.interval.intersects(visibleDates));
-
+    return ValueListenableBuilder<Interval>(
+      valueListenable: controller.date.map((it) {
+        return Interval(
+          controller.date.value,
+          controller.date.value + visibleRange.visibleDayCount.days,
+        ).dateInterval;
+      }),
+      builder: (_, visibleDates, __) {
         return ValueListenableBuilder<double>(
           valueListenable: controller,
           builder: (context, page, __) => GestureDetector(
@@ -93,7 +72,7 @@ class MultiDateEventHeader<E extends Event> extends StatelessWidget {
             onTapUp: onBackgroundTap != null
                 ? (details) => _callOnBackgroundTap(details, page, width)
                 : null,
-            child: _buildEventLayout(context, visibleDates, events, page),
+            child: _buildEventLayout(context, visibleDates, page),
           ),
         );
       },
@@ -110,7 +89,6 @@ class MultiDateEventHeader<E extends Event> extends StatelessWidget {
   Widget _buildEventLayout(
     BuildContext context,
     Interval visibleDates,
-    Iterable<E> events,
     double page,
   ) {
     assert(visibleDates.isValidTimetableDateInterval);
@@ -121,7 +99,7 @@ class MultiDateEventHeader<E extends Event> extends StatelessWidget {
       page: page,
       style: style,
       children: [
-        for (final event in events)
+        for (final event in eventProvider(visibleDates))
           _EventParentDataWidget<E>(
             key: ValueKey(event.id),
             event: event,
@@ -380,7 +358,7 @@ class _EventsLayout<E extends Event> extends RenderBox
 
       final startPage = dateInterval.start.page;
       final left = ((startPage - page) * dateWidth).coerceAtLeast(0);
-      final endPage = dateInterval.end.page.ceil();
+      final endPage = dateInterval.end.page.ceilToDouble();
       final right = ((endPage - page) * dateWidth).coerceAtMost(size.width);
 
       child.layout(BoxConstraints.tightFor(

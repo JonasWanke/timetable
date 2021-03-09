@@ -2,7 +2,6 @@ import 'package:flutter/physics.dart';
 import 'package:meta/meta.dart';
 
 import '../utils.dart';
-import 'controller.dart';
 
 abstract class VisibleRange {
   const VisibleRange({required this.visibleDayCount})

@@ -14,7 +14,7 @@ export 'src/components/week_indicator.dart';
 export 'src/components/weekday_indicator.dart';
 export 'src/controller.dart';
 export 'src/event.dart';
-export 'src/event_provider.dart' show EventProvider, StreamedEventGetter;
+export 'src/event_provider.dart';
 export 'src/layouts/multi_date.dart';
 export 'src/old/visible_range.dart';
 export 'src/time/controller.dart';

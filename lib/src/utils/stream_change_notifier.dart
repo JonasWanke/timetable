@@ -3,11 +3,11 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 
 class StreamChangeNotifier extends ChangeNotifier {
-  StreamChangeNotifier(Stream<dynamic> stream) {
-    _subscription = stream.listen((dynamic _) => notifyListeners());
+  StreamChangeNotifier(Stream<void> stream) {
+    _subscription = stream.listen((_) => notifyListeners());
   }
 
-  late StreamSubscription<dynamic> _subscription;
+  late final StreamSubscription<void> _subscription;
 
   @override
   void dispose() {

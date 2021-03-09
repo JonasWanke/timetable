@@ -5,12 +5,12 @@ import '../controller.dart';
 import '../date_page_view.dart';
 import '../event.dart';
 import '../event_provider.dart';
-import '../old/stream_change_notifier.dart';
+import '../utils/stream_change_notifier.dart';
 import '../old/visible_range.dart';
 import '../time/controller.dart';
 import '../time/zoom.dart';
 import '../utils.dart';
-import 'current_time_indicator.dart';
+import 'now_indicator_painter.dart';
 import 'date_dividers_painter.dart';
 import 'date_events.dart';
 import 'hour_dividers_painter.dart';
@@ -51,7 +51,7 @@ class MultiDateContent<E extends Event> extends StatefulWidget {
 class _MultiDateContentState<E extends Event>
     extends State<MultiDateContent<E>> {
   final _timeListenable =
-      StreamChangeNotifier(Stream<void>.periodic(Duration(seconds: 10)));
+      StreamChangeNotifier(Stream<void>.periodic(10.seconds));
 
   @override
   void dispose() {
@@ -82,6 +82,7 @@ class _MultiDateContentState<E extends Event>
                 MultiDateNowIndicatorStyle(
                   color: theme.highEmphasisOnBackground,
                 ),
+            repaint: _timeListenable,
           ),
           child: DatePageView(
             controller: widget.dateController,

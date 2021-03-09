@@ -10,8 +10,8 @@ class NowIndicatorPainter extends CustomPainter {
     required this.controller,
     required this.visibleDayCount,
     required this.style,
-    Listenable? repaint,
-  })  : _paint = Paint()
+    required Listenable repaint,
+  })   : _paint = Paint()
           ..color = style.color
           ..strokeWidth = style.lineWidth,
         super(repaint: Listenable.merge([controller, repaint]));

@@ -2,7 +2,7 @@ library timetable;
 
 export 'src/all_day.dart' show AllDayEventLayoutInfo;
 export 'src/basic.dart';
-export 'src/components/current_time_indicator.dart';
+export 'src/components/now_indicator_painter.dart';
 export 'src/components/date_dividers_painter.dart';
 export 'src/components/date_events.dart';
 export 'src/components/date_indicator.dart';

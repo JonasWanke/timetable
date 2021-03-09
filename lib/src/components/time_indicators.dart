@@ -195,9 +195,9 @@ class _TimeIndicatorsLayout extends RenderBox
       final yAnchor = time / 1.days * size.height;
       final outerRect = Rect.fromLTRB(
         0,
-        (yAnchor - child.size.height).coerceAtLeast(0),
+        yAnchor - child.size.height,
         size.width,
-        (yAnchor + child.size.height).coerceAtMost(size.height),
+        yAnchor + child.size.height,
       );
       (child.parentData! as _TimeIndicatorParentData).offset =
           alignment.inscribe(child.size, outerRect).topLeft;

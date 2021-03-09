@@ -179,6 +179,7 @@ class _MultiDateScrollPosition extends ScrollPositionWithSingleContext {
         );
 
   final _MultiDateScrollController owner;
+  DateController get controller => owner.controller;
   double initialPage;
 
   @override
@@ -197,11 +198,17 @@ class _MultiDateScrollPosition extends ScrollPositionWithSingleContext {
   }
 
   @override
+  double applyBoundaryConditions(double value) {
+    // TODO(JonasWanke): move this to ScrollPhysics
+    return value - _pageToPixels(controller.coercePage(_pixelsToPage(value)));
+  }
+
+  @override
   double setPixels(double newPixels) {
     if (newPixels == pixels) return 0;
 
     _updateUserScrollDirectionFromDelta(newPixels - pixels);
-    owner.controller.value = _pixelsToPage(newPixels);
+    controller.value = controller.coercePage(_pixelsToPage(newPixels));
     return super.setPixels(newPixels);
   }
 
@@ -210,7 +217,7 @@ class _MultiDateScrollPosition extends ScrollPositionWithSingleContext {
     if (value == pixels) return;
 
     _updateUserScrollDirectionFromDelta(value - pixels);
-    // owner.controller.page.value = _pixelsToPage(value);
+    // controller.page.value = _pixelsToPage(value);
     super.forcePixels(value);
   }
 

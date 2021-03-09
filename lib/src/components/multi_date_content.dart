@@ -11,8 +11,9 @@ import '../time/controller.dart';
 import '../time/zoom.dart';
 import '../utils.dart';
 import 'current_time_indicator.dart';
+import 'date_dividers_painter.dart';
 import 'date_events.dart';
-import 'multi_date_background_painter.dart';
+import 'hour_dividers_painter.dart';
 
 typedef MultiDateContentEventBuilder<E extends Event> = Widget Function(
   E event,
@@ -62,26 +63,31 @@ class _MultiDateContentState<E extends Event>
   Widget build(BuildContext context) {
     final theme = context.theme;
 
-    return TimeZoom(
-      controller: widget.timeController,
-      child: CustomPaint(
-        painter: MultiDateBackgroundPainter(
-          controller: widget.dateController,
-          visibleDayCount: widget.visibleRange.visibleDayCount,
-          dividerColor: widget.style?.dividerColor ?? theme.dividerColor,
-        ),
-        foregroundPainter: NowIndicatorPainter(
-          controller: widget.dateController,
-          visibleDayCount: widget.visibleRange.visibleDayCount,
-          style: widget.style?.nowIndicatorStyle ??
-              MultiDateNowIndicatorStyle(
-                color: theme.highEmphasisOnBackground,
-              ),
-        ),
-        child: DatePageView(
-          controller: widget.dateController,
-          visibleRange: widget.visibleRange,
-          builder: (_, date) => _buildDate(date),
+    return CustomPaint(
+      painter: DateDividersPainter(
+        controller: widget.dateController,
+        visibleDayCount: widget.visibleRange.visibleDayCount,
+        dividerColor: widget.style?.dividerColor ?? theme.dividerColor,
+      ),
+      child: TimeZoom(
+        controller: widget.timeController,
+        child: CustomPaint(
+          painter: HourDividersPainter(
+            dividerColor: widget.style?.dividerColor ?? theme.dividerColor,
+          ),
+          foregroundPainter: NowIndicatorPainter(
+            controller: widget.dateController,
+            visibleDayCount: widget.visibleRange.visibleDayCount,
+            style: widget.style?.nowIndicatorStyle ??
+                MultiDateNowIndicatorStyle(
+                  color: theme.highEmphasisOnBackground,
+                ),
+          ),
+          child: DatePageView(
+            controller: widget.dateController,
+            visibleRange: widget.visibleRange,
+            builder: (_, date) => _buildDate(date),
+          ),
         ),
       ),
     );

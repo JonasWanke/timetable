@@ -1,4 +1,6 @@
+import 'package:black_hole_flutter/black_hole_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class ExampleApp extends StatelessWidget {
   const ExampleApp({required this.child});
@@ -35,6 +37,12 @@ class ExampleApp extends StatelessWidget {
       //   titleTextStyle:
       //       theme.textTheme.headline6!.copyWith(fontWeight: FontWeight.normal),
       // ),
+    );
+
+    // We want to extend Timetable behind the navigation bar.
+    SystemChrome.setSystemUIOverlayStyle(
+      brightness.contrastSystemUiOverlayStyle
+          .copyWith(systemNavigationBarColor: Colors.transparent),
     );
     return theme;
   }

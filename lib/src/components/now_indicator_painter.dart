@@ -2,13 +2,12 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
-import '../controller.dart';
+import '../date/controller.dart';
 import '../utils.dart';
 
 class NowIndicatorPainter extends CustomPainter {
   NowIndicatorPainter({
     required this.controller,
-    required this.visibleDayCount,
     required this.style,
     required Listenable repaint,
   })   : _paint = Paint()
@@ -17,13 +16,12 @@ class NowIndicatorPainter extends CustomPainter {
         super(repaint: Listenable.merge([controller, repaint]));
 
   final DateController controller;
-  final int visibleDayCount;
   final Paint _paint;
   final MultiDateNowIndicatorStyle style;
 
   @override
   void paint(Canvas canvas, Size size) {
-    final dateWidth = size.width / visibleDayCount;
+    final dateWidth = size.width / controller.visibleRange.visibleDayCount;
     final now = DateTime.now();
     final temporalXOffset = now.toUtc().atStartOfDay.page - controller.value;
     final left = temporalXOffset * dateWidth;

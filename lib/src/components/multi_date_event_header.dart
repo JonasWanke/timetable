@@ -5,10 +5,10 @@ import 'package:flutter/material.dart' hide Interval;
 import 'package:flutter/rendering.dart';
 
 import '../all_day.dart';
-import '../controller.dart';
+import '../date/controller.dart';
+import '../date/visible_date_range.dart';
 import '../event.dart';
 import '../event_provider.dart';
-import '../old/visible_range.dart';
 import '../utils.dart';
 
 typedef MultiDateEventHeaderEventBuilder<E extends Event> = Widget Function(
@@ -25,7 +25,6 @@ class MultiDateEventHeader<E extends Event> extends StatelessWidget {
   MultiDateEventHeader({
     Key? key,
     required this.controller,
-    required this.visibleRange,
     required EventProvider<E> eventProvider,
     required this.eventBuilder,
     this.onBackgroundTap,
@@ -35,7 +34,6 @@ class MultiDateEventHeader<E extends Event> extends StatelessWidget {
         super(key: key);
 
   final DateController controller;
-  final VisibleRange visibleRange;
   final EventProvider<E> eventProvider;
   final MultiDateEventHeaderEventBuilder<E> eventBuilder;
 
@@ -58,11 +56,17 @@ class MultiDateEventHeader<E extends Event> extends StatelessWidget {
 
   Widget _buildContent(double width) {
     return ValueListenableBuilder<Interval>(
-      valueListenable: controller.date.map((it) {
-        return Interval(
-          controller.date.value,
-          controller.date.value + visibleRange.visibleDayCount.days,
-        ).dateInterval;
+      valueListenable: controller.map((it) {
+        final interval = Interval(
+          DateTimeTimetable.dateFromPage(controller.value.floor()),
+          DateTimeTimetable.dateFromPage(
+                (controller.value + controller.visibleRange.visibleDayCount)
+                    .ceil(),
+              ) -
+              1.milliseconds,
+        );
+        assert(interval.isValidTimetableDateInterval);
+        return interval;
       }),
       builder: (_, visibleDates, __) {
         return ValueListenableBuilder<double>(
@@ -80,9 +84,10 @@ class MultiDateEventHeader<E extends Event> extends StatelessWidget {
   }
 
   void _callOnBackgroundTap(TapUpDetails details, double page, double width) {
-    final tappedCell =
-        details.localPosition.dx / width * visibleRange.visibleDayCount;
-    final date = DateTimeTimetable.dateFromPage((page + tappedCell).toInt());
+    final tappedCell = details.localPosition.dx /
+        width *
+        controller.visibleRange.visibleDayCount;
+    final date = DateTimeTimetable.dateFromPage((page + tappedCell).floor());
     onBackgroundTap!(date);
   }
 
@@ -94,7 +99,7 @@ class MultiDateEventHeader<E extends Event> extends StatelessWidget {
     assert(visibleDates.isValidTimetableDateInterval);
 
     return _EventsWidget<E>(
-      visibleRange: visibleRange,
+      visibleRange: controller.visibleRange,
       currentlyVisibleDates: visibleDates,
       page: page,
       style: style,
@@ -110,7 +115,7 @@ class MultiDateEventHeader<E extends Event> extends StatelessWidget {
   }
 
   Widget _buildEvent(BuildContext context, E event, double page) {
-    final visibleDayCount = visibleRange.visibleDayCount;
+    final visibleDayCount = controller.visibleRange.visibleDayCount;
     final eventStartPage = event.start.page;
     final eventEndPage = event.end.page.ceil();
     final hiddenStartDays = (page - eventStartPage).coerceAtLeast(0);
@@ -176,7 +181,7 @@ class _EventsWidget<E extends Event> extends MultiChildRenderObjectWidget {
     required List<_EventParentDataWidget<E>> children,
   }) : super(children: children);
 
-  final VisibleRange visibleRange;
+  final VisibleDateRange visibleRange;
   final Interval currentlyVisibleDates;
   final double page;
   final MultiDateEventHeaderStyle style;
@@ -211,7 +216,7 @@ class _EventsLayout<E extends Event> extends RenderBox
         ContainerRenderObjectMixin<RenderBox, _EventParentData<E>>,
         RenderBoxContainerDefaultsMixin<RenderBox, _EventParentData<E>> {
   _EventsLayout({
-    required VisibleRange visibleRange,
+    required VisibleDateRange visibleRange,
     required Interval currentlyVisibleDates,
     required double page,
     required double eventHeight,
@@ -221,9 +226,9 @@ class _EventsLayout<E extends Event> extends RenderBox
         _page = page,
         _eventHeight = eventHeight;
 
-  VisibleRange _visibleRange;
-  VisibleRange get visibleRange => _visibleRange;
-  set visibleRange(VisibleRange value) {
+  VisibleDateRange _visibleRange;
+  VisibleDateRange get visibleRange => _visibleRange;
+  set visibleRange(VisibleDateRange value) {
     if (_visibleRange == value) return;
 
     _visibleRange = value;

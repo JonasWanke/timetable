@@ -1,7 +1,7 @@
 import 'package:black_hole_flutter/black_hole_flutter.dart';
 import 'package:flutter/material.dart';
-import '../controller.dart';
 
+import '../date/controller.dart';
 import '../utils.dart';
 
 class WeekIndicatorComponent extends StatelessWidget {

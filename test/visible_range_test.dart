@@ -4,10 +4,10 @@ import 'package:timetable/src/old/visible_range.dart';
 import 'package:timetable/src/utils.dart';
 
 void main() {
-  late VisibleRange visibleRange;
+  late VisibleDateRange visibleRange;
 
-  group('VisibleRange.days', () {
-    setUp(() => visibleRange = VisibleRange.days(3));
+  group('VisibleDateRange.days', () {
+    setUp(() => visibleRange = VisibleDateRange.days(3));
 
     test('getTargetPageForFocus', () {
       // Monday of week 2020-01
@@ -46,8 +46,8 @@ void main() {
     });
   });
 
-  group('VisibleRange.week', () {
-    setUp(() => visibleRange = VisibleRange.week());
+  group('VisibleDateRange.week', () {
+    setUp(() => visibleRange = VisibleDateRange.week());
 
     group('getTargetPageForFocus', () {
       DateTime getTargetDate(DateTime focusDate) {

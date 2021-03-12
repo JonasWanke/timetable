@@ -56,7 +56,6 @@ class _TimetableExampleState extends State<TimetableExample>
       body: MultiDateTimetable<BasicEvent>(
         controller: _dateController,
         timeController: _timeController,
-        visibleRange: visibleRange,
         eventProvider: eventProviderFromFixedList(positioningDemoEvents),
         headerEventBuilder: (context, event, info) =>
             BasicAllDayEventWidget(event, info: info),
@@ -73,7 +72,6 @@ class _TimetableExampleState extends State<TimetableExample>
       body: MultiDateTimetable<BasicEvent>(
         controller: _dateController,
         timeController: _timeController,
-        visibleRange: visibleRange,
         eventProvider: eventProviderFromFixedList(positioningDemoEvents),
         headerEventBuilder: (context, event, info) {
           return BasicAllDayEventWidget(
@@ -117,7 +115,6 @@ class _TimetableExampleState extends State<TimetableExample>
                 _buildAppBar(isFlat: true),
                 MultiDateTimetableHeader<BasicEvent>(
                   controller: _dateController,
-                  visibleRange: visibleRange,
                   eventProvider: eventProviderFromFixedList(
                     positioningDemoEvents.where((it) => it.isAllDay).toList(),
                   ),
@@ -141,7 +138,6 @@ class _TimetableExampleState extends State<TimetableExample>
             child: MultiDateTimetableContent<BasicEvent>(
               dateController: _dateController,
               timeController: _timeController,
-              visibleRange: visibleRange,
               eventProvider: eventProviderFromFixedList(
                 positioningDemoEvents.where((it) => it.isPartDay).toList(),
               ),

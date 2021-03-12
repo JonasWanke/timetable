@@ -5,10 +5,10 @@ import '../components/multi_date_event_header.dart';
 import '../components/multi_date_header.dart';
 import '../components/time_indicators.dart';
 import '../components/week_indicator.dart';
-import '../controller.dart';
+import '../date/controller.dart';
+import '../date/visible_date_range.dart';
 import '../event.dart';
 import '../event_provider.dart';
-import '../old/visible_range.dart';
 import '../time/controller.dart';
 import '../time/zoom.dart';
 
@@ -17,7 +17,6 @@ class MultiDateTimetable<E extends Event> extends StatefulWidget {
     Key? key,
     this.controller,
     this.timeController,
-    this.visibleRange = const VisibleRange.week(),
     required EventProvider<E> eventProvider,
     required this.headerEventBuilder,
     this.onHeaderDateTap,
@@ -32,7 +31,6 @@ class MultiDateTimetable<E extends Event> extends StatefulWidget {
 
   final DateController? controller;
   final TimeController? timeController;
-  final VisibleRange visibleRange;
   final EventProvider<E> eventProvider;
 
   // Header:
@@ -70,7 +68,6 @@ class _MultiDateTimetableState<E extends Event>
       children: [
         MultiDateTimetableHeader<E>(
           controller: _dateController,
-          visibleRange: widget.visibleRange,
           eventProvider: (visibleDates) => widget
               .eventProvider(visibleDates)
               .where((it) => it.isAllDay)
@@ -84,7 +81,6 @@ class _MultiDateTimetableState<E extends Event>
           child: MultiDateTimetableContent<E>(
             dateController: _dateController,
             timeController: _timeController,
-            visibleRange: widget.visibleRange,
             eventProvider: (visibleDates) => widget
                 .eventProvider(visibleDates)
                 .where((it) => it.isPartDay)
@@ -104,7 +100,6 @@ class MultiDateTimetableHeader<E extends Event> extends StatelessWidget {
     Key? key,
     required this.controller,
     required EventProvider<E> eventProvider,
-    required this.visibleRange,
     required this.eventBuilder,
     this.onDateTap,
     this.onBackgroundTap,
@@ -115,7 +110,6 @@ class MultiDateTimetableHeader<E extends Event> extends StatelessWidget {
 
   final DateController controller;
   final EventProvider<E> eventProvider;
-  final VisibleRange visibleRange;
   final MultiDateEventHeaderEventBuilder<E> eventBuilder;
 
   final MultiDateHeaderTapCallback? onDateTap;
@@ -134,15 +128,10 @@ class MultiDateTimetableHeader<E extends Event> extends StatelessWidget {
         Expanded(
           child: Column(
             children: [
-              MultiDateHeader(
-                controller: controller,
-                visibleRange: visibleRange,
-                onTap: onDateTap,
-              ),
+              MultiDateHeader(controller: controller, onTap: onDateTap),
               MultiDateEventHeader<E>(
                 controller: controller,
                 eventProvider: eventProvider,
-                visibleRange: visibleRange,
                 eventBuilder: eventBuilder,
                 onBackgroundTap: onBackgroundTap,
                 style: style,
@@ -161,7 +150,6 @@ class MultiDateTimetableContent<E extends Event> extends StatelessWidget {
     Key? key,
     required this.dateController,
     required this.timeController,
-    required this.visibleRange,
     required EventProvider<E> eventProvider,
     required this.eventBuilder,
     this.onBackgroundTap,
@@ -171,7 +159,6 @@ class MultiDateTimetableContent<E extends Event> extends StatelessWidget {
 
   final DateController dateController;
   final TimeController timeController;
-  final VisibleRange visibleRange;
   final EventProvider<E> eventProvider;
   final MultiDateContentEventBuilder<E> eventBuilder;
 
@@ -195,7 +182,6 @@ class MultiDateTimetableContent<E extends Event> extends StatelessWidget {
             dateController: dateController,
             eventProvider: eventProvider,
             timeController: timeController,
-            visibleRange: visibleRange,
             eventBuilder: eventBuilder,
             onBackgroundTap: onBackgroundTap,
             style: style,

@@ -4,15 +4,19 @@ import 'package:flutter/animation.dart' hide Interval;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/scheduler.dart';
 
-import 'utils.dart';
+import '../utils.dart';
+import 'visible_date_range.dart';
 
 class DateController extends ValueNotifier<double> {
   DateController({
     DateTime? initialDate,
+    VisibleDateRange? visibleRange,
     this.firstDayOfWeek = DateTime.monday,
     this.minDate,
     this.maxDate,
   })  : assert(initialDate.isValidTimetableDate),
+        visibleRange = visibleRange ??
+            VisibleDateRange.week(firstDayOfWeek: firstDayOfWeek),
         assert(minDate.isValidTimetableDate),
         assert(maxDate.isValidTimetableDate),
         assert(minDate == null || maxDate == null || minDate <= maxDate),
@@ -33,6 +37,7 @@ class DateController extends ValueNotifier<double> {
     });
   }
 
+  final VisibleDateRange visibleRange;
   final int firstDayOfWeek;
   final DateTime? minDate;
   final DateTime? maxDate;
@@ -53,11 +58,7 @@ class DateController extends ValueNotifier<double> {
 
   DateTime coerceDate(DateTime date) {
     assert(date.isValidTimetableDate);
-
     return DateTimeTimetable.dateFromPage(coercePage(date.page).floor());
-    // if (minDate != null && date < minDate!) return minDate!;
-    // if (maxDate != null && date >= maxDate!) return maxDate!;
-    // return date;
   }
 
   double coercePage(double page) {
@@ -109,8 +110,13 @@ class DateController extends ValueNotifier<double> {
     _animationController =
         AnimationController(debugLabel: 'TimeController', vsync: vsync)
           ..addListener(() {
-            value =
+            super.value =
                 lerpDouble(previousPage, page, _animationController!.value)!;
+          })
+          ..addStatusListener((status) {
+            if (status != AnimationStatus.completed) return;
+            _animationController!.dispose();
+            _animationController = null;
           })
           ..animateTo(1, duration: duration, curve: curve);
   }

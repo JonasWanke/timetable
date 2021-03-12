@@ -26,7 +26,7 @@ class TimeZoom extends StatefulWidget {
 class _TimeZoomState extends State<TimeZoom>
     with SingleTickerProviderStateMixin {
   // Taken from [_InteractiveViewerState._kDrag].
-  static const double _kDrag = 0.0000135;
+  static const _kDrag = 0.0000135;
   late AnimationController _animationController;
   Animation<double>? _animation;
 

@@ -208,9 +208,7 @@ class _DayEventsLayoutDelegate<E extends Event>
       } else if (dateTime.atStartOfDay > date) {
         return size.height;
       } else {
-        final progress =
-            dateTime.timeOfDay.inMicroseconds / Duration.microsecondsPerDay;
-        return lerpDouble(0, size.height, progress)!;
+        return lerpDouble(0, size.height, dateTime.timeOfDay / 1.days)!;
       }
     }
 
@@ -358,10 +356,7 @@ class _DayEventsLayoutDelegate<E extends Event>
   }
 
   DateTime _actualEnd(E event, double height) {
-    final minDurationForHeight = Duration(
-      microseconds:
-          (minEventHeight / height * Duration.microsecondsPerDay).toInt(),
-    );
+    final minDurationForHeight = (minEventHeight / height).days;
     return event.end
         .coerceAtLeast(event.start + minEventDuration)
         .coerceAtLeast(event.start + minDurationForHeight);

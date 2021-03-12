@@ -34,31 +34,12 @@ extension DateTimeTimetable on DateTime {
     int minute = 0,
     int second = 0,
     int millisecond = 0,
-    int microsecond = 0,
     bool isUtc = true,
   }) {
     if (isUtc) {
-      return DateTime.utc(
-        year,
-        month,
-        day,
-        hour,
-        minute,
-        second,
-        millisecond,
-        microsecond,
-      );
+      return DateTime.utc(year, month, day, hour, minute, second, millisecond);
     }
-    return DateTime(
-      year,
-      month,
-      day,
-      hour,
-      minute,
-      second,
-      millisecond,
-      microsecond,
-    );
+    return DateTime(year, month, day, hour, minute, second, millisecond);
   }
 
   static DateTime date(int year, [int month = 1, int day = 1]) {
@@ -66,19 +47,6 @@ extension DateTimeTimetable on DateTime {
     assert(date.isValidTimetableDate);
     return date;
   }
-
-  // static DateTime time([
-  //   int hour = 0,
-  //   int minute = 0,
-  //   int second = 0,
-  //   int millisecond = 0,
-  //   int microsecond = 0,
-  // ]) {
-  //   final time =
-  //       DateTime.utc(0, 1, 1, hour, minute, second, millisecond, microsecond);
-  //   assert(time.isValidTimetableTime);
-  //   return time;
-  // }
 
   DateTime copyWith({
     int? year,
@@ -88,7 +56,6 @@ extension DateTimeTimetable on DateTime {
     int? minute,
     int? second,
     int? millisecond,
-    int? microsecond,
     bool? isUtc,
   }) {
     return DateTimeTimetable.create(
@@ -99,7 +66,6 @@ extension DateTimeTimetable on DateTime {
       minute: minute ?? this.minute,
       second: second ?? this.second,
       millisecond: millisecond ?? this.millisecond,
-      microsecond: microsecond ?? this.microsecond,
       isUtc: isUtc ?? this.isUtc,
     );
   }
@@ -113,16 +79,10 @@ extension DateTimeTimetable on DateTime {
   Duration get timeOfDay => difference(atStartOfDay);
 
   DateTime get atStartOfDay =>
-      copyWith(hour: 0, minute: 0, second: 0, millisecond: 0, microsecond: 0);
+      copyWith(hour: 0, minute: 0, second: 0, millisecond: 0);
   bool get isAtStartOfDay => this == atStartOfDay;
   DateTime get atEndOfDay {
-    return copyWith(
-      hour: 23,
-      minute: 59,
-      second: 59,
-      millisecond: 999,
-      microsecond: 999,
-    );
+    return copyWith(hour: 23, minute: 59, second: 59, millisecond: 999);
   }
 
   bool get isAtEndOfDay => this == atEndOfDay;
@@ -143,12 +103,12 @@ extension DateTimeTimetable on DateTime {
 
   double get page {
     assert(isUtc);
-    return microsecondsSinceEpoch / Duration.microsecondsPerDay;
+    return millisecondsSinceEpoch / Duration.millisecondsPerDay;
   }
 
   static DateTime dateFromPage(int page) {
-    final date = DateTime.fromMicrosecondsSinceEpoch(
-      (page * Duration.microsecondsPerDay).toInt(),
+    final date = DateTime.fromMillisecondsSinceEpoch(
+      (page * Duration.millisecondsPerDay).toInt(),
       isUtc: true,
     );
     assert(date.isValidTimetableDate);
@@ -156,8 +116,8 @@ extension DateTimeTimetable on DateTime {
   }
 
   static DateTime dateTimeFromPage(double page) {
-    return DateTime.fromMicrosecondsSinceEpoch(
-      (page * Duration.microsecondsPerDay).toInt(),
+    return DateTime.fromMillisecondsSinceEpoch(
+      (page * Duration.millisecondsPerDay).toInt(),
       isUtc: true,
     );
   }
@@ -183,7 +143,7 @@ extension IntervalTimetable on Interval {
   Interval get dateInterval {
     final interval = Interval(
       start.atStartOfDay,
-      (end - 1.microseconds).atEndOfDay,
+      (end - 1.milliseconds).atEndOfDay,
     );
     assert(interval.isValidTimetableDateInterval);
     return interval;

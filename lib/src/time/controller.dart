@@ -8,7 +8,7 @@ import 'time_range.dart';
 
 class TimeController extends ValueNotifier<TimeRange> {
   TimeController({
-    this.minDuration = const Duration(microseconds: 1),
+    this.minDuration = const Duration(milliseconds: 1),
     TimeRange? initialRange,
     TimeRange? maxRange,
   })  : assert(!minDuration.isNegative),

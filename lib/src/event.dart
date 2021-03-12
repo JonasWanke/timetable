@@ -35,7 +35,7 @@ abstract class Event with Diagnosticable {
 
   @nonVirtual
   Interval get interval =>
-      Interval(start, start == end ? end : end - Duration(microseconds: 1));
+      Interval(start, start == end ? end : end - 1.milliseconds);
 
   // @nonVirtual
   // DateInterval get intersectingDates =>

@@ -21,6 +21,7 @@ export 'src/event.dart';
 export 'src/event_provider.dart';
 export 'src/layouts/multi_date.dart';
 export 'src/localization.dart';
+export 'src/styling.dart';
 export 'src/time/controller.dart';
 export 'src/time/time_range.dart';
 export 'src/time/zoom.dart';

@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:meta/meta.dart';
 
+import '../styling.dart';
 import '../utils.dart';
 
 extension DateTimeWeekInfoTimetable on DateTime {
@@ -18,7 +19,7 @@ extension DateTimeWeekInfoTimetable on DateTime {
 }
 
 @immutable
-class WeekInfo {
+class WeekInfo implements Comparable<WeekInfo> {
   const WeekInfo(this.weekBasedYear, this.weekOfYear)
       : assert(weekOfYear >= 1 && weekOfYear <= 53);
   factory WeekInfo.forDate(DateTime date) {
@@ -46,6 +47,20 @@ class WeekInfo {
 
   final int weekBasedYear;
   final int weekOfYear;
+
+  @override
+  int compareTo(WeekInfo other) {
+    final result = weekBasedYear.compareTo(other.weekBasedYear);
+    if (result != 0) return result;
+    return weekOfYear.compareTo(other.weekOfYear);
+  }
+
+  TemporalState get state {
+    final result = compareTo(DateTimeTimetable.today().weekInfo);
+    if (result < 0) return TemporalState.past;
+    if (result > 0) return TemporalState.future;
+    return TemporalState.present;
+  }
 
   @override
   int get hashCode => hashValues(weekBasedYear, weekOfYear);

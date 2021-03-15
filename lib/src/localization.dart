@@ -75,6 +75,11 @@ abstract class TimetableLocalizations {
   String weekOfYear(WeekInfo weekInfo);
 }
 
+extension BuildContextTimetableLocalizations on BuildContext {
+  TimetableLocalizations get timetableLocalizations =>
+      TimetableLocalizations.of(this);
+}
+
 class TimetableLocalizationDe extends TimetableLocalizations {
   const TimetableLocalizationDe();
 

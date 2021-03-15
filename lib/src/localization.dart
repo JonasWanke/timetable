@@ -1,15 +1,21 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
+import 'package:intl/intl.dart';
 import 'utils.dart';
 
 class TimetableLocalizationsDelegate
     extends LocalizationsDelegate<TimetableLocalizations> {
+  const TimetableLocalizationsDelegate({this.setIntlLocale = true});
+
+  final bool setIntlLocale;
+
   @override
   bool isSupported(Locale locale) => _getLocalization(locale) != null;
 
   @override
   Future<TimetableLocalizations> load(Locale locale) {
     assert(isSupported(locale));
+    if (setIntlLocale) Intl.defaultLocale = locale.toLanguageTag();
     return SynchronousFuture(_getLocalization(locale)!);
   }
 
@@ -91,7 +97,7 @@ class TimetableLocalizationDe extends TimetableLocalizations {
 
   @override
   String weekOfYear(WeekInfo weekInfo) =>
-      'Kalenderwoche ${weekInfo.weekOfYear} in ${weekInfo.weekBasedYear}';
+      'Kalenderwoche ${weekInfo.weekOfYear}, ${weekInfo.weekBasedYear}';
 }
 
 class TimetableLocalizationEn extends TimetableLocalizations {
@@ -105,5 +111,5 @@ class TimetableLocalizationEn extends TimetableLocalizations {
 
   @override
   String weekOfYear(WeekInfo weekInfo) =>
-      'Week ${weekInfo.weekOfYear} in ${weekInfo.weekBasedYear}';
+      'Week ${weekInfo.weekOfYear}, ${weekInfo.weekBasedYear}';
 }

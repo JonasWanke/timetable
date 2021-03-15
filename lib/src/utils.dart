@@ -5,6 +5,7 @@ export 'package:dart_date/dart_date.dart' show Interval;
 export 'package:supercharged/supercharged.dart';
 
 export 'utils/listenable.dart';
+export 'utils/size_reporting_widget.dart';
 export 'utils/week.dart';
 
 extension DoubleTimetable on double {

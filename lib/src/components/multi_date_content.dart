@@ -3,7 +3,6 @@ import 'package:flutter/widgets.dart' hide Interval;
 
 import '../date/controller.dart';
 import '../date/date_page_view.dart';
-import '../date/visible_date_range.dart';
 import '../event.dart';
 import '../event_provider.dart';
 import '../time/controller.dart';

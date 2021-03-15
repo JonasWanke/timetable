@@ -6,7 +6,6 @@ import 'package:flutter/rendering.dart';
 import '../utils.dart';
 import 'controller.dart';
 import 'scroll_physics.dart';
-import 'size_reporting_widget.dart';
 
 // "DateTimes can represent time values that are at a distance of at most
 /// 100,000,000 days from epoch […]".
@@ -103,7 +102,7 @@ class _DatePageViewState extends State<DatePageView> {
   Widget _buildPage(BuildContext context, int page) {
     var child = widget.builder(context, DateTimeTimetable.dateFromPage(page));
     if (widget.shrinkWrapInCrossAxis) {
-      child = OverflowPage(
+      child = _OverflowPage(
         onSizeChanged: (size) => setState(() => _heights[page] = size.height),
         child: child,
       );
@@ -259,5 +258,23 @@ class MultiDateScrollPosition extends ScrollPositionWithSingleContext {
   void debugFillDescription(List<String> description) {
     super.debugFillDescription(description);
     description.add('owner: $owner');
+  }
+}
+
+// Copied and modified from: https://github.com/Limbou/expandable_page_view/blob/d692cff38f9e098ad5c020d80123a13ab2a53083/lib/expandable_page_view.dart
+class _OverflowPage extends StatelessWidget {
+  const _OverflowPage({required this.onSizeChanged, required this.child});
+
+  final ValueChanged<Size> onSizeChanged;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return OverflowBox(
+      minHeight: 0,
+      maxHeight: double.infinity,
+      alignment: Alignment.topCenter,
+      child: SizeReportingWidget(onSizeChanged: onSizeChanged, child: child),
+    );
   }
 }

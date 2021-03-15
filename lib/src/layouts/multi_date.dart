@@ -6,11 +6,11 @@ import '../components/multi_date_header.dart';
 import '../components/time_indicators.dart';
 import '../components/week_indicator.dart';
 import '../date/controller.dart';
-import '../date/visible_date_range.dart';
 import '../event.dart';
 import '../event_provider.dart';
 import '../time/controller.dart';
 import '../time/zoom.dart';
+import '../utils.dart';
 
 class MultiDateTimetable<E extends Event> extends StatefulWidget {
   MultiDateTimetable({
@@ -53,6 +53,7 @@ class _MultiDateTimetableState<E extends Event>
     extends State<MultiDateTimetable<E>> {
   late DateController _dateController;
   late TimeController _timeController;
+  double? _weekIndicatorWidth;
 
   @override
   void initState() {
@@ -73,6 +74,7 @@ class _MultiDateTimetableState<E extends Event>
               .where((it) => it.isAllDay)
               .toList(),
           eventBuilder: widget.headerEventBuilder,
+          weekIndicatorWidth: _weekIndicatorWidth,
           onBackgroundTap: widget.onHeaderBackgroundTap,
           style: widget.headerStyle,
           padding: widget.headerPadding,
@@ -86,6 +88,9 @@ class _MultiDateTimetableState<E extends Event>
                 .where((it) => it.isPartDay)
                 .toList(),
             eventBuilder: widget.contentEventBuilder,
+            onTimeIndicatorsWidthChanged: (width) {
+              setState(() => _weekIndicatorWidth = width);
+            },
             onBackgroundTap: widget.onContentBackgroundTap,
             style: widget.contentStyle,
           ),
@@ -101,6 +106,7 @@ class MultiDateTimetableHeader<E extends Event> extends StatelessWidget {
     required this.controller,
     required EventProvider<E> eventProvider,
     required this.eventBuilder,
+    this.weekIndicatorWidth,
     this.onDateTap,
     this.onBackgroundTap,
     this.style = const MultiDateEventHeaderStyle(),
@@ -111,6 +117,7 @@ class MultiDateTimetableHeader<E extends Event> extends StatelessWidget {
   final DateController controller;
   final EventProvider<E> eventProvider;
   final MultiDateEventHeaderEventBuilder<E> eventBuilder;
+  final double? weekIndicatorWidth;
 
   final MultiDateHeaderTapCallback? onDateTap;
   final MultiDateEventHeaderBackgroundTapCallback? onBackgroundTap;
@@ -121,11 +128,13 @@ class MultiDateTimetableHeader<E extends Event> extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Padding(
-          padding: EdgeInsets.all(8),
-          child: ValueListenableBuilder<DateTime>(
-            valueListenable: controller.date,
-            builder: (context, date, _) => WeekIndicator.forDate(date),
+        SizedBox(
+          width: weekIndicatorWidth,
+          child: Center(
+            child: ValueListenableBuilder<DateTime>(
+              valueListenable: controller.date,
+              builder: (context, date, _) => WeekIndicator.forDate(date),
+            ),
           ),
         ),
         Expanded(
@@ -155,6 +164,7 @@ class MultiDateTimetableContent<E extends Event> extends StatelessWidget {
     required this.timeController,
     required EventProvider<E> eventProvider,
     required this.eventBuilder,
+    this.onTimeIndicatorsWidthChanged,
     this.onBackgroundTap,
     this.style,
   })  : eventProvider = eventProvider.debugChecked,
@@ -164,6 +174,7 @@ class MultiDateTimetableContent<E extends Event> extends StatelessWidget {
   final TimeController timeController;
   final EventProvider<E> eventProvider;
   final MultiDateContentEventBuilder<E> eventBuilder;
+  final ValueChanged<double>? onTimeIndicatorsWidthChanged;
 
   final MultiDateContentBackgroundTapCallback? onBackgroundTap;
   final MultiDateContentStyle? style;
@@ -172,11 +183,15 @@ class MultiDateTimetableContent<E extends Event> extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 8),
-          child: TimeZoom(
-            controller: timeController,
-            child: TimeIndicators.hours(),
+        SizeReportingWidget(
+          onSizeChanged: (size) =>
+              onTimeIndicatorsWidthChanged?.call(size.width),
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 8),
+            child: TimeZoom(
+              controller: timeController,
+              child: TimeIndicators.hours(),
+            ),
           ),
         ),
         VerticalDivider(width: 0),

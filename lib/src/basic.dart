@@ -27,11 +27,10 @@ class BasicEvent extends Event {
   final Color color;
 
   @override
+  int get hashCode => hashList([super.hashCode, title, color]);
+  @override
   bool operator ==(dynamic other) =>
       super == other && title == other.title && color == other.color;
-
-  @override
-  int get hashCode => hashList([super.hashCode, title, color]);
 }
 
 /// A simple [Widget] for displaying a [BasicEvent].
@@ -40,6 +39,7 @@ class BasicEventWidget extends StatelessWidget {
     this.event, {
     Key? key,
     this.onTap,
+    this.margin = const EdgeInsets.only(right: 1),
   }) : super(key: key);
 
   /// The [BasicEvent] to be displayed.
@@ -49,28 +49,33 @@ class BasicEventWidget extends StatelessWidget {
   /// widget.
   final VoidCallback? onTap;
 
+  final EdgeInsetsGeometry margin;
+
   @override
   Widget build(BuildContext context) {
-    return Material(
-      shape: RoundedRectangleBorder(
-        side: BorderSide(
-          color: context.theme.scaffoldBackgroundColor,
-          width: 0.75,
+    return Padding(
+      padding: margin,
+      child: Material(
+        shape: RoundedRectangleBorder(
+          side: BorderSide(
+            color: context.theme.scaffoldBackgroundColor,
+            width: 0.75,
+          ),
+          borderRadius: BorderRadius.circular(4),
         ),
-        borderRadius: BorderRadius.circular(4),
-      ),
-      clipBehavior: Clip.hardEdge,
-      color: event.color,
-      child: InkWell(
-        onTap: onTap,
-        child: Padding(
-          padding: EdgeInsets.fromLTRB(4, 2, 4, 0),
-          child: DefaultTextStyle(
-            style: context.textTheme.bodyText2!.copyWith(
-              fontSize: 12,
-              color: event.color.highEmphasisOnColor,
+        clipBehavior: Clip.hardEdge,
+        color: event.color,
+        child: InkWell(
+          onTap: onTap,
+          child: Padding(
+            padding: EdgeInsets.fromLTRB(4, 2, 4, 0),
+            child: DefaultTextStyle(
+              style: context.textTheme.bodyText2!.copyWith(
+                fontSize: 12,
+                color: event.color.highEmphasisOnColor,
+              ),
+              child: Text(event.title),
             ),
-            child: Text(event.title),
           ),
         ),
       ),

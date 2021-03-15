@@ -33,25 +33,20 @@ class DateEvents<E extends Event> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomMultiChildLayout(
-      delegate: _DayEventsLayoutDelegate(
-        date: date,
-        events: events,
-        minEventDuration: style.minEventDuration,
-        minEventHeight: style.minEventHeight,
-        eventSpacing: style.eventSpacing,
-        enableStacking: style.enableEventStacking,
-        minDeltaForStacking: style.minEventDeltaForStacking,
-        stackedEventSpacing: style.stackedEventSpacing,
+    return Padding(
+      padding: style.padding,
+      child: CustomMultiChildLayout(
+        delegate:
+            _DayEventsLayoutDelegate(date: date, events: events, style: style),
+        children: [
+          for (final event in events)
+            LayoutId(
+              key: ValueKey(event.id),
+              id: event.id,
+              child: eventBuilder(event),
+            ),
+        ],
       ),
-      children: [
-        for (final event in events)
-          LayoutId(
-            key: ValueKey(event.id),
-            id: event.id,
-            child: eventBuilder(event),
-          ),
-      ],
     );
   }
 }
@@ -61,8 +56,8 @@ class DateEventsStyle {
   const DateEventsStyle({
     this.minEventDuration = const Duration(minutes: 30),
     this.minEventHeight = 16,
-    this.eventSpacing = 1,
-    this.enableEventStacking = true,
+    this.padding = const EdgeInsets.only(right: 1),
+    this.enableStacking = true,
     this.minEventDeltaForStacking = const Duration(minutes: 15),
     this.stackedEventSpacing = 4,
   });
@@ -77,9 +72,7 @@ class DateEventsStyle {
   /// Can be used together with [minEventDuration].
   final double minEventHeight;
 
-  /// Horizontal space between two parallel events shown next to each other.
-  // TODO(JonasWanke): Can we convert this to margin of individual events?
-  final double eventSpacing;
+  final EdgeInsetsGeometry padding;
 
   /// Controls whether overlapping events may be stacked on top of each other.
   ///
@@ -87,7 +80,7 @@ class DateEventsStyle {
   /// differ by at least [minEventDeltaForStacking]. If set to
   /// `false`, intersecting events will always be shown next to each other and
   /// not overlap.
-  final bool enableEventStacking;
+  final bool enableStacking;
 
   /// When the start values of two events differ by at least this value, they
   /// may be stacked on top of each other.
@@ -95,8 +88,7 @@ class DateEventsStyle {
   /// If the difference is less, they will be shown next to each other.
   ///
   /// See also:
-  /// - [enableEventStacking], which can disable the stacking behavior
-  ///   completely.
+  /// - [enableStacking], which can disable the stacking behavior completely.
   final Duration minEventDeltaForStacking;
 
   /// Horizontal space between two parallel events stacked on top of each other.
@@ -107,8 +99,8 @@ class DateEventsStyle {
     return hashList([
       minEventDuration,
       minEventHeight,
-      eventSpacing,
-      enableEventStacking,
+      padding,
+      enableStacking,
       minEventDeltaForStacking,
       stackedEventSpacing,
     ]);
@@ -119,8 +111,8 @@ class DateEventsStyle {
     return other is DateEventsStyle &&
         other.minEventDuration == minEventDuration &&
         other.minEventHeight == minEventHeight &&
-        other.eventSpacing == eventSpacing &&
-        other.enableEventStacking == enableEventStacking &&
+        other.padding == padding &&
+        other.enableStacking == enableStacking &&
         other.minEventDeltaForStacking == minEventDeltaForStacking &&
         other.stackedEventSpacing == stackedEventSpacing;
   }
@@ -131,62 +123,44 @@ class _DayEventsLayoutDelegate<E extends Event>
   _DayEventsLayoutDelegate({
     required this.date,
     required this.events,
-    required this.minEventDuration,
-    required this.minEventHeight,
-    required this.eventSpacing,
-    required this.enableStacking,
-    required this.minDeltaForStacking,
-    required this.stackedEventSpacing,
-  })   : assert(date.isValidTimetableDate),
-        assert(!minEventDuration.isNegative),
-        assert(!minDeltaForStacking.isNegative);
+    required this.style,
+  }) : assert(date.isValidTimetableDate);
 
   static const minWidth = 4.0;
 
   final DateTime date;
   final List<E> events;
 
-  final Duration minEventDuration;
-  final double minEventHeight;
-  final double eventSpacing;
-  final bool enableStacking;
-  final Duration minDeltaForStacking;
-  final double stackedEventSpacing;
+  final DateEventsStyle style;
 
   @override
   void performLayout(Size size) {
     final positions = _calculatePositions(size.height);
 
+    double durationToY(Duration duration) => size.height * (duration / 1.days);
     double timeToY(DateTime dateTime) {
       assert(dateTime.isValidTimetableDateTime);
 
-      if (dateTime < date) {
-        return 0;
-      } else if (dateTime.atStartOfDay > date) {
-        return size.height;
-      } else {
-        return lerpDouble(0, size.height, dateTime.timeOfDay / 1.days)!;
-      }
+      if (dateTime < date) return 0;
+      if (dateTime.atStartOfDay > date) return size.height;
+      return durationToY(dateTime.timeOfDay);
     }
-
-    double durationToY(Duration duration) => timeToY(date + duration);
 
     for (final event in events) {
       final position = positions.eventPositions[event]!;
       final top = timeToY(event.start)
-          .coerceAtMost(size.height - durationToY(minEventDuration))
-          .coerceAtMost(size.height - minEventHeight);
+          .coerceAtMost(size.height - durationToY(style.minEventDuration))
+          .coerceAtMost(size.height - style.minEventHeight);
       final height = durationToY(_durationOn(event, date, size.height))
           .clamp(0, size.height - top)
           .toDouble();
 
-      final columnWidth = (size.width - eventSpacing) /
-          positions.groupColumnCounts[position.group];
+      final columnWidth =
+          size.width / positions.groupColumnCounts[position.group];
       final columnLeft = columnWidth * position.column;
-      final left = columnLeft + position.index * stackedEventSpacing;
+      final left = columnLeft + position.index * style.stackedEventSpacing;
       final width = columnWidth * position.columnSpan -
-          position.index * stackedEventSpacing -
-          eventSpacing;
+          position.index * style.stackedEventSpacing;
 
       final childSize = Size(width.coerceAtLeast(minWidth), height);
       layoutChild(event.id, BoxConstraints.tight(childSize));
@@ -245,8 +219,9 @@ class _DayEventsLayoutDelegate<E extends Event>
         final other = column.last;
 
         // No space in current column
-        if (!enableStacking && event.start < _actualEnd(other, height) ||
-            enableStacking && event.start < other.start + minDeltaForStacking) {
+        if (!style.enableStacking && event.start < _actualEnd(other, height) ||
+            style.enableStacking &&
+                event.start < other.start + style.minEventDeltaForStacking) {
           continue;
         }
 
@@ -313,9 +288,9 @@ class _DayEventsLayoutDelegate<E extends Event>
   }
 
   DateTime _actualEnd(E event, double height) {
-    final minDurationForHeight = (minEventHeight / height).days;
+    final minDurationForHeight = (style.minEventHeight / height).days;
     return event.end
-        .coerceAtLeast(event.start + minEventDuration)
+        .coerceAtLeast(event.start + style.minEventDuration)
         .coerceAtLeast(event.start + minDurationForHeight);
   }
 
@@ -330,10 +305,7 @@ class _DayEventsLayoutDelegate<E extends Event>
   @override
   bool shouldRelayout(_DayEventsLayoutDelegate<E> oldDelegate) {
     return date != oldDelegate.date ||
-        minEventDuration != oldDelegate.minEventDuration ||
-        minEventHeight != oldDelegate.minEventHeight ||
-        eventSpacing != oldDelegate.eventSpacing ||
-        stackedEventSpacing != oldDelegate.stackedEventSpacing ||
+        style != oldDelegate.style ||
         !DeepCollectionEquality().equals(events, oldDelegate.events);
   }
 }

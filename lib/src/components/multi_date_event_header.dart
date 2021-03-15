@@ -116,15 +116,13 @@ class MultiDateEventHeader<E extends Event> extends StatelessWidget {
 
   Widget _buildEvent(BuildContext context, E event, double page) {
     final visibleDayCount = controller.visibleRange.visibleDayCount;
-    final eventStartPage = event.start.page;
-    final eventEndPage = event.end.page.ceil();
-    final hiddenStartDays = (page - eventStartPage).coerceAtLeast(0);
     return eventBuilder(
       context,
       event,
       AllDayEventLayoutInfo(
-        hiddenStartDays: hiddenStartDays,
-        hiddenEndDays: (eventEndPage - page - visibleDayCount).coerceAtLeast(0),
+        hiddenStartDays: (page - event.start.page).coerceAtLeast(0),
+        hiddenEndDays:
+            (event.end.page.ceil() - page - visibleDayCount).coerceAtLeast(0),
       ),
     );
   }
@@ -351,15 +349,14 @@ class _EventsLayout<E extends Event> extends RenderBox
   }
 
   void _setSize() {
-    final parallelEvents = _parallelEventCount();
-    size = Size(constraints.maxWidth, parallelEvents * eventHeight);
+    size = Size(constraints.maxWidth, _parallelEventCount() * eventHeight);
   }
 
   void _positionEvents() {
     final dateWidth = size.width / visibleRange.visibleDayCount;
     for (final child in children) {
-      final event = child.data<E>().event!;
-      final dateInterval = event.interval.dateInterval;
+      final data = child.data<E>();
+      final dateInterval = data.event!.interval.dateInterval;
 
       final startPage = dateInterval.start.page;
       final left = ((startPage - page) * dateWidth).coerceAtLeast(0);
@@ -370,7 +367,7 @@ class _EventsLayout<E extends Event> extends RenderBox
         width: right - left,
         height: eventHeight,
       ));
-      child.data<E>().offset = Offset(left, _yPositions[event]! * eventHeight);
+      data.offset = Offset(left, _yPositions[data.event!]! * eventHeight);
     }
   }
 

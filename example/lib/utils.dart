@@ -1,6 +1,8 @@
 import 'package:black_hole_flutter/black_hole_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:timetable/timetable.dart';
 
 class ExampleApp extends StatelessWidget {
   const ExampleApp({required this.child});
@@ -13,7 +15,13 @@ class ExampleApp extends StatelessWidget {
       title: 'Timetable example',
       theme: _createTheme(Brightness.light),
       darkTheme: _createTheme(Brightness.dark),
-      // themeMode: ThemeMode.dark,
+      localizationsDelegates: [
+        TimetableLocalizationsDelegate(),
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: [const Locale('de'), const Locale('en')],
       home: child,
     );
   }

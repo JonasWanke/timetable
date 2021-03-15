@@ -59,48 +59,13 @@ class DateEvents<E extends Event> extends StatelessWidget {
 /// Defines visual properties for [MultiDateContent].
 class DateEventsStyle {
   const DateEventsStyle({
-    this.minHourHeight = 16,
-    this.maxHourHeight = 64,
-    this.minHourZoom = 0,
-    this.maxHourZoom = double.infinity,
     this.minEventDuration = const Duration(minutes: 30),
     this.minEventHeight = 16,
     this.eventSpacing = 1,
     this.enableEventStacking = true,
     this.minEventDeltaForStacking = const Duration(minutes: 15),
     this.stackedEventSpacing = 4,
-  })  : assert(minHourHeight > 0),
-        assert(maxHourHeight > 0),
-        assert(minHourHeight <= maxHourHeight),
-        // For some reason, the following line produces a
-        // "const_eval_throws_exception" error:
-        // assert(minHourZoom > 0),
-        assert(maxHourZoom > 0),
-        assert(minHourZoom <= minHourZoom);
-
-  /// Minimum height of a single hour when zooming in.
-  final double minHourHeight;
-
-  /// Maximum height of a single hour when zooming in.
-  ///
-  /// [double.infinity] is supported.
-  final double maxHourHeight;
-
-  /// Minimum time zoom factor.
-  ///
-  /// `1` means that the hours content is exactly as high as the parent. Larger
-  /// values mean zooming in, and smaller values mean zooming out.
-  ///
-  /// If both hour height limits ([minHourHeight] or [maxHourHeight])
-  /// and hour zoom limits (this property or [maxHourZoom]) are set, zoom
-  /// limits take precedence.
-  final double minHourZoom;
-
-  /// Maximum time zoom factor.
-  ///
-  /// See also:
-  /// - [minHourZoom] for an explanation of zoom values.
-  final double maxHourZoom;
+  });
 
   /// Minimum [Duration] to size a part-day event.
   ///
@@ -140,10 +105,6 @@ class DateEventsStyle {
   @override
   int get hashCode {
     return hashList([
-      minHourHeight,
-      maxHourHeight,
-      minHourZoom,
-      maxHourZoom,
       minEventDuration,
       minEventHeight,
       eventSpacing,
@@ -156,10 +117,6 @@ class DateEventsStyle {
   @override
   bool operator ==(Object other) {
     return other is DateEventsStyle &&
-        other.minHourHeight == minHourHeight &&
-        other.maxHourHeight == maxHourHeight &&
-        other.minHourZoom == minHourZoom &&
-        other.maxHourZoom == maxHourZoom &&
         other.minEventDuration == minEventDuration &&
         other.minEventHeight == minEventHeight &&
         other.eventSpacing == eventSpacing &&

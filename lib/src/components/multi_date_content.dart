@@ -120,83 +120,24 @@ class MultiDateContentStyle {
   const MultiDateContentStyle({
     this.nowIndicatorStyle,
     this.dividerColor,
-    this.minimumHourHeight,
-    this.maximumHourHeight,
-    this.minimumHourZoom,
-    this.maximumHourZoom,
     this.dateEventsStyle,
-  })  : assert(minimumHourHeight == null || minimumHourHeight > 0),
-        assert(maximumHourHeight == null || maximumHourHeight > 0),
-        assert(minimumHourHeight == null ||
-            maximumHourHeight == null ||
-            minimumHourHeight <= maximumHourHeight),
-        assert(minimumHourZoom == null || minimumHourZoom > 0),
-        assert(maximumHourZoom == null || maximumHourZoom > 0),
-        assert(minimumHourZoom == null ||
-            maximumHourZoom == null ||
-            minimumHourZoom <= minimumHourZoom);
+  });
 
   final MultiDateNowIndicatorStyle? nowIndicatorStyle;
 
   /// [Color] for painting hour and day dividers in the part-day event area.
   final Color? dividerColor;
 
-  /// Minimum height of a single hour when zooming in.
-  ///
-  /// Defaults to 16.
-  final double? minimumHourHeight;
-
-  /// Maximum height of a single hour when zooming in.
-  ///
-  /// [double.infinity] is supported!
-  ///
-  /// Defaults to 64.
-  final double? maximumHourHeight;
-
-  /// Minimum time zoom factor.
-  ///
-  /// `1` means that the hours content is exactly as high as the parent. Larger
-  /// values mean zooming in, and smaller values mean zooming out.
-  ///
-  /// If both hour height limits ([minimumHourHeight] or [maximumHourHeight])
-  /// and hour zoom limits (this property or [maximumHourZoom]) are set, zoom
-  /// limits take precedence.
-  ///
-  /// Defaults to 0.
-  final double? minimumHourZoom;
-
-  /// Maximum time zoom factor.
-  ///
-  /// Defaults to [double.infinity].
-  ///
-  /// See also:
-  /// - [minimumHourZoom] for an explanation of zoom values.
-  final double? maximumHourZoom;
-
   final DateEventsStyle? dateEventsStyle;
 
   @override
-  int get hashCode {
-    return hashList([
-      nowIndicatorStyle,
-      dividerColor,
-      minimumHourHeight,
-      maximumHourHeight,
-      minimumHourZoom,
-      maximumHourZoom,
-      dateEventsStyle,
-    ]);
-  }
-
+  int get hashCode =>
+      hashList([nowIndicatorStyle, dividerColor, dateEventsStyle]);
   @override
   bool operator ==(Object other) {
     return other is MultiDateContentStyle &&
         other.nowIndicatorStyle == nowIndicatorStyle &&
         other.dividerColor == dividerColor &&
-        other.minimumHourHeight == minimumHourHeight &&
-        other.maximumHourHeight == maximumHourHeight &&
-        other.minimumHourZoom == minimumHourZoom &&
-        other.maximumHourZoom == maximumHourZoom &&
         other.dateEventsStyle == dateEventsStyle;
   }
 }

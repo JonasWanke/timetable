@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart' hide Interval;
 import 'package:meta/meta.dart';
 import 'package:collection/collection.dart';
 
@@ -84,3 +85,5 @@ extension TimetableEventIterable<E extends Event> on Iterable<E> {
     return sorted(comparator);
   }
 }
+
+typedef EventBuilder<E extends Event> = Widget Function(E event);

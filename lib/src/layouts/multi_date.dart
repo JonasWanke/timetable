@@ -41,7 +41,7 @@ class MultiDateTimetable<E extends Event> extends StatefulWidget {
   final EdgeInsetsGeometry headerPadding;
 
   // Content:
-  final MultiDateContentEventBuilder<E> contentEventBuilder;
+  final EventBuilder<E> contentEventBuilder;
   final MultiDateContentBackgroundTapCallback? onContentBackgroundTap;
   final MultiDateContentStyle? contentStyle;
 
@@ -173,7 +173,7 @@ class MultiDateTimetableContent<E extends Event> extends StatelessWidget {
   final DateController dateController;
   final TimeController timeController;
   final EventProvider<E> eventProvider;
-  final MultiDateContentEventBuilder<E> eventBuilder;
+  final EventBuilder<E> eventBuilder;
   final ValueChanged<double>? onTimeIndicatorsWidthChanged;
 
   final MultiDateContentBackgroundTapCallback? onBackgroundTap;

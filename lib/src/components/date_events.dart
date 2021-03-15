@@ -28,7 +28,7 @@ class DateEvents<E extends Event> extends StatelessWidget {
 
   final DateTime date;
   final List<E> events;
-  final MultiDateContentEventBuilder<E> eventBuilder;
+  final EventBuilder<E> eventBuilder;
   final DateEventsStyle style;
 
   @override
@@ -137,7 +137,11 @@ class _DayEventsLayoutDelegate<E extends Event>
   void performLayout(Size size) {
     final positions = _calculatePositions(size.height);
 
-    double durationToY(Duration duration) => size.height * (duration / 1.days);
+    double durationToY(Duration duration) {
+      assert(duration.isValidTimetableTimeOfDay);
+      return size.height * (duration / 1.days);
+    }
+
     double timeToY(DateTime dateTime) {
       assert(dateTime.isValidTimetableDateTime);
 
@@ -151,7 +155,7 @@ class _DayEventsLayoutDelegate<E extends Event>
       final top = timeToY(event.start)
           .coerceAtMost(size.height - durationToY(style.minEventDuration))
           .coerceAtMost(size.height - style.minEventHeight);
-      final height = durationToY(_durationOn(event, date, size.height))
+      final height = durationToY(_durationOn(event, size.height))
           .clamp(0, size.height - top)
           .toDouble();
 
@@ -294,12 +298,10 @@ class _DayEventsLayoutDelegate<E extends Event>
         .coerceAtLeast(event.start + minDurationForHeight);
   }
 
-  Duration _durationOn(E event, DateTime date, double height) {
-    assert(date.isValidTimetableDate);
-
-    final todayStart = event.start.coerceAtLeast(date);
-    final todayEnd = _actualEnd(event, height).coerceAtMost(date + 1.days);
-    return todayEnd.difference(todayStart);
+  Duration _durationOn(E event, double height) {
+    final start = event.start.coerceAtLeast(date);
+    final end = _actualEnd(event, height).coerceAtMost(date + 1.days);
+    return end.difference(start);
   }
 
   @override

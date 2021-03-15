@@ -9,14 +9,12 @@ import '../time/controller.dart';
 import '../time/zoom.dart';
 import '../utils.dart';
 import '../utils/stream_change_notifier.dart';
+import 'date_content.dart';
 import 'date_dividers_painter.dart';
 import 'date_events.dart';
 import 'hour_dividers_painter.dart';
 import 'now_indicator_painter.dart';
 
-typedef MultiDateContentEventBuilder<E extends Event> = Widget Function(
-  E event,
-);
 typedef MultiDateContentBackgroundTapCallback = void Function(
   DateTime dateTime,
 );
@@ -36,7 +34,7 @@ class MultiDateContent<E extends Event> extends StatefulWidget {
   final DateController dateController;
   final TimeController timeController;
   final EventProvider<E> eventProvider;
-  final MultiDateContentEventBuilder<E> eventBuilder;
+  final EventBuilder<E> eventBuilder;
 
   final MultiDateContentBackgroundTapCallback? onBackgroundTap;
   final MultiDateContentStyle? style;
@@ -81,36 +79,16 @@ class _MultiDateContentState<E extends Event>
           ),
           child: DatePageView(
             controller: widget.dateController,
-            builder: (_, date) => _buildDate(date),
+            builder: (_, date) => DateContent(
+              date: date,
+              events: widget.eventProvider(date.fullDayInterval),
+              eventBuilder: widget.eventBuilder,
+              onBackgroundTap: widget.onBackgroundTap,
+              eventsStyle: widget.style?.dateEventsStyle ?? DateEventsStyle(),
+            ),
           ),
         ),
       ),
-    );
-  }
-
-  Widget _buildDate(DateTime date) {
-    assert(date.isValidTimetableDate);
-
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final height = constraints.maxHeight;
-
-        return GestureDetector(
-          behavior: HitTestBehavior.translucent,
-          onTapUp: widget.onBackgroundTap != null
-              ? (details) {
-                  final y = details.localPosition.dy;
-                  widget.onBackgroundTap!(date + (y / height).days);
-                }
-              : null,
-          child: DateEvents<E>(
-            date: date,
-            events: widget.eventProvider(date.fullDayInterval),
-            eventBuilder: widget.eventBuilder,
-            style: widget.style?.dateEventsStyle ?? DateEventsStyle(),
-          ),
-        );
-      },
     );
   }
 }

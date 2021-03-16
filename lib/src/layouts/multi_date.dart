@@ -9,6 +9,7 @@ import '../date/controller.dart';
 import '../event.dart';
 import '../event_provider.dart';
 import '../time/controller.dart';
+import '../time/overlay.dart';
 import '../time/zoom.dart';
 import '../utils.dart';
 
@@ -24,6 +25,7 @@ class MultiDateTimetable<E extends Event> extends StatefulWidget {
     this.headerStyle = const MultiDateEventHeaderStyle(),
     this.headerPadding = EdgeInsets.zero,
     required this.contentEventBuilder,
+    this.contentOverlayProvider = emptyOverlayProvider,
     this.onContentBackgroundTap,
     this.contentStyle,
   })  : eventProvider = eventProvider.debugChecked,
@@ -42,6 +44,7 @@ class MultiDateTimetable<E extends Event> extends StatefulWidget {
 
   // Content:
   final EventBuilder<E> contentEventBuilder;
+  final TimeOverlayProvider contentOverlayProvider;
   final MultiDateContentBackgroundTapCallback? onContentBackgroundTap;
   final MultiDateContentStyle? contentStyle;
 
@@ -88,6 +91,7 @@ class _MultiDateTimetableState<E extends Event>
                 .where((it) => it.isPartDay)
                 .toList(),
             eventBuilder: widget.contentEventBuilder,
+            overlayProvider: widget.contentOverlayProvider,
             onTimeIndicatorsWidthChanged: (width) {
               setState(() => _weekIndicatorWidth = width);
             },
@@ -115,8 +119,10 @@ class MultiDateTimetableHeader<E extends Event> extends StatelessWidget {
         super(key: key);
 
   final DateController controller;
+
   final EventProvider<E> eventProvider;
   final MultiDateEventHeaderEventBuilder<E> eventBuilder;
+
   final double? weekIndicatorWidth;
 
   final MultiDateHeaderTapCallback? onDateTap;
@@ -164,6 +170,7 @@ class MultiDateTimetableContent<E extends Event> extends StatelessWidget {
     required this.timeController,
     required EventProvider<E> eventProvider,
     required this.eventBuilder,
+    this.overlayProvider = emptyOverlayProvider,
     this.onTimeIndicatorsWidthChanged,
     this.onBackgroundTap,
     this.style,
@@ -172,8 +179,12 @@ class MultiDateTimetableContent<E extends Event> extends StatelessWidget {
 
   final DateController dateController;
   final TimeController timeController;
+
   final EventProvider<E> eventProvider;
   final EventBuilder<E> eventBuilder;
+
+  final TimeOverlayProvider overlayProvider;
+
   final ValueChanged<double>? onTimeIndicatorsWidthChanged;
 
   final MultiDateContentBackgroundTapCallback? onBackgroundTap;
@@ -198,9 +209,10 @@ class MultiDateTimetableContent<E extends Event> extends StatelessWidget {
         Expanded(
           child: MultiDateContent<E>(
             dateController: dateController,
-            eventProvider: eventProvider,
             timeController: timeController,
+            eventProvider: eventProvider,
             eventBuilder: eventBuilder,
+            overlayProvider: overlayProvider,
             onBackgroundTap: onBackgroundTap,
             style: style,
           ),

@@ -203,3 +203,22 @@ class _DemoEvent extends BasicEvent {
         .toColor();
   }
 }
+
+List<TimeOverlay> positioningDemoOverlayProvider(
+  BuildContext context,
+  DateTime date,
+) {
+  assert(date.isValidTimetableDate);
+
+  final widget =
+      ColoredBox(color: context.theme.brightness.contrastColor.withOpacity(.1));
+
+  if (DateTime.monday <= date.weekday && date.weekday <= DateTime.friday) {
+    return [
+      TimeOverlay(start: 0.hours, end: 8.hours, widget: widget),
+      TimeOverlay(start: 20.hours, end: 24.hours, widget: widget),
+    ];
+  } else {
+    return [TimeOverlay(start: 0.hours, end: 24.hours, widget: widget)];
+  }
+}

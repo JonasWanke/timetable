@@ -1,8 +1,10 @@
 import 'package:flutter/widgets.dart';
 
 import '../event.dart';
+import '../overlay.dart';
 import '../utils.dart';
 import 'date_events.dart';
+import 'overlays.dart';
 
 typedef DateContentBackgroundTapCallback = void Function(DateTime dateTime);
 
@@ -12,8 +14,9 @@ class DateContent<E extends Event> extends StatelessWidget {
     required this.date,
     required Iterable<E> events,
     required this.eventBuilder,
+    this.overlays = const [],
     this.onBackgroundTap,
-    this.eventsStyle = const DateEventsStyle(),
+    this.dateEventsStyle = const DateEventsStyle(),
   })  : assert(date.isValidTimetableDate),
         assert(
           events.every((e) => e.interval.intersects(date.fullDayInterval)),
@@ -27,10 +30,14 @@ class DateContent<E extends Event> extends StatelessWidget {
         super(key: key);
 
   final DateTime date;
+
   final List<E> events;
   final EventBuilder<E> eventBuilder;
+
+  final List<TimeOverlay> overlays;
+
   final DateContentBackgroundTapCallback? onBackgroundTap;
-  final DateEventsStyle eventsStyle;
+  final DateEventsStyle dateEventsStyle;
 
   @override
   Widget build(BuildContext context) {
@@ -45,11 +52,16 @@ class DateContent<E extends Event> extends StatelessWidget {
           onTapUp: onBackgroundTap != null
               ? (details) => _onBackgroundTap(height, details.localPosition.dy)
               : null,
-          child: DateEvents<E>(
-            date: date,
-            events: events,
-            eventBuilder: eventBuilder,
-            style: eventsStyle,
+          child: Stack(
+            children: [
+              Positioned.fill(child: TimeOverlays(overlays: overlays)),
+              DateEvents<E>(
+                date: date,
+                events: events,
+                eventBuilder: eventBuilder,
+                style: dateEventsStyle,
+              ),
+            ],
           ),
         );
       },

@@ -23,6 +23,7 @@ export 'src/layouts/multi_date.dart';
 export 'src/localization.dart';
 export 'src/styling.dart';
 export 'src/time/controller.dart';
+export 'src/time/overlay.dart';
 export 'src/time/time_range.dart';
 export 'src/time/zoom.dart';
 export 'src/utils.dart';

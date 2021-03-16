@@ -6,6 +6,7 @@ import '../date/date_page_view.dart';
 import '../event.dart';
 import '../event_provider.dart';
 import '../time/controller.dart';
+import '../time/overlay.dart';
 import '../time/zoom.dart';
 import '../utils.dart';
 import '../utils/stream_change_notifier.dart';
@@ -26,6 +27,7 @@ class MultiDateContent<E extends Event> extends StatefulWidget {
     required this.timeController,
     required EventProvider<E> eventProvider,
     required this.eventBuilder,
+    this.overlayProvider = emptyOverlayProvider,
     this.onBackgroundTap,
     this.style,
   })  : eventProvider = eventProvider.debugChecked,
@@ -33,8 +35,11 @@ class MultiDateContent<E extends Event> extends StatefulWidget {
 
   final DateController dateController;
   final TimeController timeController;
+
   final EventProvider<E> eventProvider;
   final EventBuilder<E> eventBuilder;
+
+  final TimeOverlayProvider overlayProvider;
 
   final MultiDateContentBackgroundTapCallback? onBackgroundTap;
   final MultiDateContentStyle? style;
@@ -79,12 +84,14 @@ class _MultiDateContentState<E extends Event>
           ),
           child: DatePageView(
             controller: widget.dateController,
-            builder: (_, date) => DateContent(
+            builder: (context, date) => DateContent(
               date: date,
               events: widget.eventProvider(date.fullDayInterval),
               eventBuilder: widget.eventBuilder,
+              overlays: widget.overlayProvider(context, date),
               onBackgroundTap: widget.onBackgroundTap,
-              eventsStyle: widget.style?.dateEventsStyle ?? DateEventsStyle(),
+              dateEventsStyle:
+                  widget.style?.dateEventsStyle ?? DateEventsStyle(),
             ),
           ),
         ),

@@ -60,6 +60,7 @@ class _TimetableExampleState extends State<TimetableExample>
         headerEventBuilder: (context, event, info) =>
             BasicAllDayEventWidget(event, info: info),
         contentEventBuilder: (event) => BasicEventWidget(event),
+        contentOverlayProvider: positioningDemoOverlayProvider,
       ),
     );
   }
@@ -90,6 +91,7 @@ class _TimetableExampleState extends State<TimetableExample>
             onTap: () => _showSnackBar('Part-day event $event tapped'),
           );
         },
+        contentOverlayProvider: positioningDemoOverlayProvider,
         onContentBackgroundTap: (dateTime) =>
             _showSnackBar('Part-day background tapped at $dateTime'),
         contentStyle: MultiDateContentStyle(
@@ -147,6 +149,7 @@ class _TimetableExampleState extends State<TimetableExample>
                   onTap: () => _showSnackBar('Part-day event $event tapped'),
                 );
               },
+              overlayProvider: positioningDemoOverlayProvider,
               onBackgroundTap: (dateTime) =>
                   _showSnackBar('Part-day background tapped at $dateTime'),
               style: MultiDateContentStyle(

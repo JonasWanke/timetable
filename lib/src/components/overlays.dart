@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../overlay.dart';
+import '../time/overlay.dart';
 import '../utils.dart';
 
 class TimeOverlays extends StatelessWidget {

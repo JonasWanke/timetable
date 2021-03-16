@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 
 import '../event.dart';
-import '../overlay.dart';
+import '../time/overlay.dart';
 import '../utils.dart';
 import 'date_events.dart';
 import 'overlays.dart';

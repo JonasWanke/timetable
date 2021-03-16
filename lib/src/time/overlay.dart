@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
-import 'utils.dart';
+import '../utils.dart';
 
 @immutable
 class TimeOverlay {

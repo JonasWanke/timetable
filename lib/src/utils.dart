@@ -82,10 +82,8 @@ extension DateTimeTimetable on DateTime {
   DateTime get atStartOfDay =>
       copyWith(hour: 0, minute: 0, second: 0, millisecond: 0);
   bool get isAtStartOfDay => this == atStartOfDay;
-  DateTime get atEndOfDay {
-    return copyWith(hour: 23, minute: 59, second: 59, millisecond: 999);
-  }
-
+  DateTime get atEndOfDay =>
+      copyWith(hour: 23, minute: 59, second: 59, millisecond: 999);
   bool get isAtEndOfDay => this == atEndOfDay;
 
   static DateTime today() {
@@ -103,7 +101,7 @@ extension DateTimeTimetable on DateTime {
   }
 
   double get page {
-    assert(isUtc);
+    assert(isValidTimetableDateTime);
     return millisecondsSinceEpoch / Duration.millisecondsPerDay;
   }
 

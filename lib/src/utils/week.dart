@@ -11,7 +11,7 @@ extension DateTimeWeekInfoTimetable on DateTime {
   int get dayOfYear {
     const common = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334];
     const leapOffsets = [0, 31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335];
-    final offsets = isLeapYear ? common : leapOffsets;
+    final offsets = isLeapYear ? leapOffsets : common;
     return offsets[month - 1] + day;
   }
 
@@ -22,6 +22,7 @@ extension DateTimeWeekInfoTimetable on DateTime {
 class WeekInfo implements Comparable<WeekInfo> {
   const WeekInfo(this.weekBasedYear, this.weekOfYear)
       : assert(weekOfYear >= 1 && weekOfYear <= 53);
+
   factory WeekInfo.forDate(DateTime date) {
     assert(date.isValidTimetableDate);
 

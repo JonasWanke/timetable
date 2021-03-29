@@ -250,9 +250,13 @@ class MultiDateScrollPosition extends ScrollPositionWithSingleContext {
   }
 
   double pixelsToPage(double pixels) =>
-      _minPage + pixels * owner.visibleDayCount / viewportDimension;
-  double pageToPixels(double page) =>
-      (page - _minPage) / owner.visibleDayCount * viewportDimension;
+      _minPage + pixelDeltaToPageDelta(pixels);
+  double pageToPixels(double page) => pageDeltaToPixelDelta(page - _minPage);
+
+  double pixelDeltaToPageDelta(double pixels) =>
+      pixels * owner.visibleDayCount / viewportDimension;
+  double pageDeltaToPixelDelta(double page) =>
+      page / owner.visibleDayCount * viewportDimension;
 
   @override
   void debugFillDescription(List<String> description) {

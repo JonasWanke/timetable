@@ -105,6 +105,11 @@ extension DateTimeTimetable on DateTime {
     return millisecondsSinceEpoch / Duration.millisecondsPerDay;
   }
 
+  int get datePage {
+    assert(isValidTimetableDate);
+    return page.floor();
+  }
+
   static DateTime dateFromPage(int page) {
     final date = DateTime.fromMillisecondsSinceEpoch(
       (page * Duration.millisecondsPerDay).toInt(),

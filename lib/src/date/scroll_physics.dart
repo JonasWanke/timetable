@@ -3,7 +3,6 @@ import 'package:flutter/widgets.dart';
 import 'controller.dart';
 import 'date_page_view.dart';
 
-// Inspired by [PageScrollPhysics]
 class DateScrollPhysics extends ScrollPhysics {
   const DateScrollPhysics(this.controller, {ScrollPhysics? parent})
       : super(parent: parent);
@@ -33,16 +32,13 @@ class DateScrollPhysics extends ScrollPhysics {
       return super.createBallisticSimulation(position, velocity);
     }
 
-    final pixelsToPages =
-        controller.visibleRange.visibleDayCount / position.viewportDimension;
     final targetPage = controller.visibleRange.getTargetPageForCurrent(
       position.page,
-      controller.firstDayOfWeek,
-      velocity: velocity * pixelsToPages,
+      velocity: position.pixelDeltaToPageDelta(velocity),
       tolerance: Tolerance(
-        distance: tolerance.distance * pixelsToPages,
+        distance: position.pixelDeltaToPageDelta(tolerance.distance),
         time: tolerance.time,
-        velocity: tolerance.velocity * pixelsToPages,
+        velocity: position.pixelDeltaToPageDelta(tolerance.velocity),
       ),
     );
     final target = position.pageToPixels(targetPage);

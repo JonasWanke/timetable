@@ -1,100 +1,73 @@
-import 'package:supercharged/supercharged.dart';
+import 'package:glados/glados.dart';
 import 'package:test/test.dart';
-import 'package:timetable/src/old/visible_range.dart';
-import 'package:timetable/src/utils.dart';
+import 'package:timetable/timetable.dart';
+import 'package:tuple_glados/tuple_glados.dart';
 
 void main() {
-  late VisibleDateRange visibleRange;
-
   group('VisibleDateRange.days', () {
-    setUp(() => visibleRange = VisibleDateRange.days(3));
-
-    test('getTargetPageForFocus', () {
-      // Monday of week 2020-01
-      final startDate = DateTime.utc(2019, 12, 30);
-
+    Glados(any.tuple2(any.positiveInt, any.int)).test('getTargetPageForFocus',
+        (it) {
+      final rangeSize = it.item1;
+      final page = it.item2.toDouble();
       expect(
-        0.until(2).map((offset) {
-          return visibleRange.getTargetPageForFocusDate(
-            startDate + offset.days,
-            DateTime.monday,
-          );
-        }),
-        equals(0.until(2).map((offset) => startDate.page + offset)),
+        VisibleDateRange.days(rangeSize).getTargetPageForFocus(page),
+        page,
       );
     });
 
-    test('getTargetPageForCurrent', () {
-      // Monday of week 2020-01
-      final startPage = DateTime.utc(2019, 12, 30).page;
-
-      final values = {
-        startPage: startPage,
-        startPage - 0.4: startPage,
-        startPage + 0.4: startPage,
-        startPage + 1: startPage + 1,
-      };
+    Glados(any.tuple2(any.positiveInt, any.double))
+        .test('getTargetPageForCurrent', (it) {
+      final rangeSize = it.item1;
+      final page = it.item2;
       expect(
-        values.keys.map((current) {
-          return visibleRange.getTargetPageForCurrent(
-            current,
-            DateTime.monday,
-          );
-        }),
-        equals(values.values),
+        VisibleDateRange.days(rangeSize).getTargetPageForCurrent(page),
+        page.round(),
       );
     });
   });
 
   group('VisibleDateRange.week', () {
-    setUp(() => visibleRange = VisibleDateRange.week());
+    Glados(any.tuple2(any.dayOfWeek, any.int)).test('getTargetPageForFocus',
+        (it) {
+      final firstDayOfWeek = it.item1;
+      final page = it.item2;
 
-    group('getTargetPageForFocus', () {
-      DateTime getTargetDate(DateTime focusDate) {
-        final targetPage =
-            visibleRange.getTargetPageForFocusDate(focusDate, DateTime.monday);
-        return DateTimeTimetable.dateFromPage(targetPage.toInt());
-      }
-
-      Iterable<DateTime> getTargetDates(DateTime weekStart) {
-        return [
-          DateTime.monday,
-          DateTime.tuesday,
-          DateTime.wednesday,
-          DateTime.thursday,
-          DateTime.friday,
-          DateTime.saturday,
-          DateTime.sunday,
-        ].map((d) => weekStart + (d - 1).days).map(getTargetDate);
-      }
-
-      test('week 2020-W01', () {
-        expect(
-          getTargetDates(DateTime.utc(2019, 12, 30)),
-          everyElement(equals(DateTime.utc(2019, 12, 30))),
-        );
-      });
-      test('week 2020-W18', () {
-        expect(
-          getTargetDates(DateTime.utc(2020, 04, 27)),
-          everyElement(equals(DateTime.utc(2020, 4, 27))),
-        );
-      });
+      final daysFromWeekStart =
+          (DateTimeTimetable.dateFromPage(page).weekday - firstDayOfWeek) %
+              DateTime.daysPerWeek;
+      expect(
+        VisibleDateRange.week(firstDayOfWeek: firstDayOfWeek)
+            .getTargetPageForFocus(page.toDouble()),
+        page - daysFromWeekStart,
+      );
     });
 
-    test('getTargetPageForCurrent', () {
-      // Monday of week 2020-W01
-      final startPage = DateTime.utc(2019, 12, 30).page;
+    Glados(any.tuple2(any.dayOfWeek, any.double))
+        .test('getTargetPageForCurrent', (it) {
+      final firstDayOfWeek = it.item1;
+      final page = it.item2;
+
+      final daysFromWeekStart =
+          (DateTimeTimetable.dateFromPage(page.floor()).weekday +
+                  page % 1 -
+                  firstDayOfWeek) %
+              DateTime.daysPerWeek;
+      var targetPage = page - daysFromWeekStart;
+      if (daysFromWeekStart > DateTime.daysPerWeek / 2) {
+        targetPage += DateTime.daysPerWeek;
+      }
 
       expect(
-        (-3).until(3).map((offset) {
-          return visibleRange.getTargetPageForCurrent(
-            startPage + offset,
-            DateTime.monday,
-          );
-        }),
-        everyElement(equals(startPage)),
+        VisibleDateRange.week(firstDayOfWeek: firstDayOfWeek)
+            .getTargetPageForCurrent(page.toDouble()),
+        targetPage,
       );
     });
   });
+}
+
+extension AnyTimetable on Any {
+  Generator<DateTime> get date => any.int.map(DateTimeTimetable.dateFromPage);
+  Generator<int> get dayOfWeek =>
+      any.intInRange(DateTime.monday, DateTime.sunday);
 }

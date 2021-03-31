@@ -22,7 +22,7 @@ class _TimetableExampleState extends State<TimetableExample>
 
   final _dateController = DateController(
     // All parameters are optional.
-    initialDate: DateTimeTimetable.today(),
+    // initialDate: DateTimeTimetable.today(),
     visibleRange: VisibleDateRange.week(
       minDate: DateTimeTimetable.today() - 5.days,
       maxDate: DateTimeTimetable.today() + 5.days,

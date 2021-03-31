@@ -70,26 +70,33 @@ class DateController extends ValueNotifier<double> {
     required TickerProvider vsync,
   }) async {
     _animationController?.dispose();
+    final controller =
+        AnimationController(debugLabel: 'TimeController', vsync: vsync);
+    _animationController = controller;
+
     final previousPage = value;
-    _animationController =
-        AnimationController(debugLabel: 'TimeController', vsync: vsync)
-          ..addListener(() {
-            super.value =
-                lerpDouble(previousPage, page, _animationController!.value)!;
-          })
-          ..addStatusListener((status) {
-            if (status != AnimationStatus.completed) return;
-            _animationController!.dispose();
-            _animationController = null;
-          })
-          ..animateTo(1, duration: duration, curve: curve);
+    final targetPage = visibleRange.getTargetPageForFocus(page);
+    controller.addListener(() {
+      value = lerpDouble(previousPage, targetPage, controller.value)!;
+    });
+
+    controller.addStatusListener((status) {
+      if (status != AnimationStatus.completed) return;
+      controller.dispose();
+      _animationController = null;
+    });
+
+    await controller.animateTo(1, duration: duration, curve: curve);
   }
 
   void jumpToToday() => jumpTo(DateTimeTimetable.today());
   void jumpTo(DateTime date) {
     assert(date.isValidTimetableDate);
-    value = date.page;
+    jumpToPage(date.page);
   }
+
+  void jumpToPage(double page) =>
+      value = visibleRange.getTargetPageForFocus(page);
 
   @override
   void dispose() {

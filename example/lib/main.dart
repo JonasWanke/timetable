@@ -23,6 +23,10 @@ class _TimetableExampleState extends State<TimetableExample>
   final _dateController = DateController(
     // All parameters are optional.
     initialDate: DateTimeTimetable.today(),
+    visibleRange: VisibleDateRange.week(
+      minDate: DateTimeTimetable.today() - 5.days,
+      maxDate: DateTimeTimetable.today() + 5.days,
+    ),
     firstDayOfWeek: DateTime.monday,
   );
 
@@ -32,7 +36,6 @@ class _TimetableExampleState extends State<TimetableExample>
     maxRange: TimeRange(0.hours, 24.hours),
   );
 
-  final visibleRange = VisibleRange.week();
 
   @override
   void dispose() {
@@ -190,3 +193,5 @@ class _TimetableExampleState extends State<TimetableExample>
   void _showSnackBar(String content) =>
       context.scaffoldMessenger.showSnackBar(SnackBar(content: Text(content)));
 }
+
+// ignore_for_file: avoid_print

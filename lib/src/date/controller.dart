@@ -12,60 +12,26 @@ class DateController extends ValueNotifier<double> {
     DateTime? initialDate,
     VisibleDateRange? visibleRange,
     this.firstDayOfWeek = DateTime.monday,
-    this.minDate,
-    this.maxDate,
   })  : assert(initialDate.isValidTimetableDate),
         visibleRange = visibleRange ??
             VisibleDateRange.week(firstDayOfWeek: firstDayOfWeek),
-        assert(minDate.isValidTimetableDate),
-        assert(maxDate.isValidTimetableDate),
-        assert(minDate == null || maxDate == null || minDate <= maxDate),
-        assert(
-          minDate == null || initialDate == null || minDate <= initialDate,
-        ),
-        assert(
-          maxDate == null || initialDate == null || maxDate >= initialDate,
-        ),
         // We set the correct value in the body below.
         super(0) {
-    final startDate = initialDate ?? coerceDate(DateTimeTimetable.today());
-    value = startDate.page;
-
-    _date = _DateValueNotifier(startDate);
+    // The correct value is set via the listener when we assign to our value.
+    _date = _DateValueNotifier(DateTimeTimetable.dateFromPage(0));
     addListener(() {
       _date.value = DateTimeTimetable.dateFromPage(value.floor());
     });
+
+    final rawStartPage = initialDate?.page ?? DateTimeTimetable.today().page;
+    value = this.visibleRange.getTargetPageForFocus(rawStartPage);
   }
 
   final VisibleDateRange visibleRange;
   final int firstDayOfWeek;
-  final DateTime? minDate;
-  final DateTime? maxDate;
 
   late final ValueNotifier<DateTime> _date;
   ValueListenable<DateTime> get date => _date;
-
-  @override
-  set value(double value) {
-    assert(_isInRange(value));
-    super.value = value;
-  }
-
-  bool _isInRange(double page) {
-    final date = DateTimeTimetable.dateFromPage(page.floor());
-    return date == coerceDate(date);
-  }
-
-  DateTime coerceDate(DateTime date) {
-    assert(date.isValidTimetableDate);
-    return DateTimeTimetable.dateFromPage(coercePage(date.page).floor());
-  }
-
-  double coercePage(double page) {
-    if (minDate != null && page < minDate!.page) return minDate!.page;
-    if (maxDate != null && page >= maxDate!.page) return maxDate!.page;
-    return page;
-  }
 
   // Animation
   AnimationController? _animationController;
@@ -103,8 +69,6 @@ class DateController extends ValueNotifier<double> {
     Duration duration = const Duration(milliseconds: 200),
     required TickerProvider vsync,
   }) async {
-    assert(_isInRange(page));
-
     _animationController?.dispose();
     final previousPage = value;
     _animationController =
@@ -124,8 +88,6 @@ class DateController extends ValueNotifier<double> {
   void jumpToToday() => jumpTo(DateTimeTimetable.today());
   void jumpTo(DateTime date) {
     assert(date.isValidTimetableDate);
-    assert(_isInRange(date.page));
-
     value = date.page;
   }
 

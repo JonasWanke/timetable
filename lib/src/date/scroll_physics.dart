@@ -15,6 +15,27 @@ class DateScrollPhysics extends ScrollPhysics {
   }
 
   @override
+  double applyBoundaryConditions(ScrollMetrics position, double value) {
+    if (position is! MultiDateScrollPosition) {
+      throw ArgumentError(
+        'DateScrollPhysics must be used with MultiDateScrollPosition.',
+      );
+    }
+
+    final page = position.pixelsToPage(value);
+    final overscrollPages =
+        controller.visibleRange.applyBoundaryConditions(controller, page);
+    final overscroll = position.pageDeltaToPixelDelta(overscrollPages);
+
+    // Flutter doesn't allow boundary conditions to apply greater differences
+    // than the actual delta. Due to numbers having a limited precision, this
+    // occurs fairly often after conversion between pixels and pages, hence we
+    // clamp the final value.
+    final maximumDelta = (value - position.pixels).abs();
+    return overscroll.clamp(-maximumDelta, maximumDelta);
+  }
+
+  @override
   Simulation? createBallisticSimulation(
     ScrollMetrics position,
     double velocity,

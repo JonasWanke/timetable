@@ -218,19 +218,14 @@ class MultiDateScrollPosition extends ScrollPositionWithSingleContext {
     super.goBallistic(velocity);
   }
 
-  // @override
-  // double applyBoundaryConditions(double value) {
-  //   // TODO(JonasWanke): move this to ScrollPhysics
-  //   return value - pageToPixels(controller.coercePage(pixelsToPage(value)));
-  // }
-
   @override
   double setPixels(double newPixels) {
     if (newPixels == pixels) return 0;
 
     _updateUserScrollDirectionFromDelta(newPixels - pixels);
-    controller.value = controller.coercePage(pixelsToPage(newPixels));
-    return super.setPixels(newPixels);
+    final overscroll = super.setPixels(newPixels);
+    controller.value = pixelsToPage(pixels);
+    return overscroll;
   }
 
   void forcePage(double page) => forcePixels(pageToPixels(page));
@@ -239,7 +234,6 @@ class MultiDateScrollPosition extends ScrollPositionWithSingleContext {
     if (value == pixels) return;
 
     _updateUserScrollDirectionFromDelta(value - pixels);
-    // controller.page.value = pixelsToPage(value);
     super.forcePixels(value);
   }
 

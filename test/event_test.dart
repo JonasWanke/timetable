@@ -43,19 +43,19 @@ void main() {
         },
         {
           Interval(start - 1.days, start - 1.days): false,
-          Interval(start, start): true,
+          Interval(start, start): false,
           Interval(start, start + 1.days): true,
           Interval(start + 1.days, start + 1.days): false,
         },
         {
           Interval(start - 1.days, start - 1.days): false,
-          Interval(start, start): true,
+          Interval(start, start): false,
           Interval(start, start + 1.days): true,
           Interval(start + 1.days, start + 1.days): true,
         },
         {
           Interval(start - 1.days, start - 1.days): false,
-          Interval(start, start): true,
+          Interval(start, start): false,
           Interval(start, start + 1.days): true,
           Interval(start + 1.days, start + 1.days): true,
         },

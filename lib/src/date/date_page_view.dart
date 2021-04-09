@@ -33,7 +33,7 @@ class DatePageView extends StatefulWidget {
 }
 
 class _DatePageViewState extends State<DatePageView> {
-  int get visibleDayCount => widget.controller.visibleRange.visibleDayCount;
+  // int get visibleDayCount => widget.controller.value.visibleRange.visibleDayCount;
   late _MultiDateScrollController _scrollController;
 
   // TODO(JonasWanke): remove old entries
@@ -62,11 +62,15 @@ class _DatePageViewState extends State<DatePageView> {
           axisDirection: AxisDirection.right,
           offset: position,
           slivers: <Widget>[
-            SliverFillViewport(
-              padEnds: false,
-              viewportFraction: 1 / visibleDayCount,
-              delegate: SliverChildBuilderDelegate(
-                (context, index) => _buildPage(context, _minPage + index),
+            ValueListenableBuilder<int>(
+              valueListenable:
+                  widget.controller.map((it) => it.visibleDayCount),
+              builder: (context, visibleDayCount, _) => SliverFillViewport(
+                padEnds: false,
+                viewportFraction: 1 / visibleDayCount,
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) => _buildPage(context, _minPage + index),
+                ),
               ),
             ),
           ],
@@ -75,27 +79,27 @@ class _DatePageViewState extends State<DatePageView> {
     );
 
     if (widget.shrinkWrapInCrossAxis) {
-      child = ValueListenableBuilder<double>(
+      child = ValueListenableBuilder<DatePageValue>(
         valueListenable: widget.controller,
-        builder: (context, page, child) =>
-            SizedBox(height: _getHeight(page), child: child),
+        builder: (context, pageValue, child) =>
+            SizedBox(height: _getHeight(pageValue), child: child),
         child: child,
       );
     }
     return child;
   }
 
-  double _getHeight(double page) {
+  double _getHeight(DatePageValue pageValue) {
     double maxHeightFrom(int page) {
       return page
-          .until(page + visibleDayCount)
+          .until(page + pageValue.visibleDayCount)
           .map((it) => _heights[it] ?? 0)
           .max()!;
     }
 
-    final oldMaxHeight = maxHeightFrom(page.floor());
-    final newMaxHeight = maxHeightFrom(page.ceil());
-    final t = page - page.floorToDouble();
+    final oldMaxHeight = maxHeightFrom(pageValue.page.floor());
+    final newMaxHeight = maxHeightFrom(pageValue.page.ceil());
+    final t = pageValue.page - pageValue.page.floorToDouble();
     return lerpDouble(oldMaxHeight, newMaxHeight, t)!;
   }
 
@@ -113,16 +117,16 @@ class _DatePageViewState extends State<DatePageView> {
 
 class _MultiDateScrollController extends ScrollController {
   _MultiDateScrollController(this.controller)
-      : super(initialScrollOffset: controller.value) {
+      : super(initialScrollOffset: controller.value.page) {
     controller.addListener(_listenToController);
   }
 
   final DateController controller;
-  int get visibleDayCount => controller.visibleRange.visibleDayCount;
+  int get visibleDayCount => controller.value.visibleDayCount;
 
   double get page => position.page;
 
-  void _listenToController() => position.forcePage(controller.value);
+  void _listenToController() => position.forcePage(controller.value.page);
 
   @override
   void dispose() {
@@ -224,7 +228,7 @@ class MultiDateScrollPosition extends ScrollPositionWithSingleContext {
 
     _updateUserScrollDirectionFromDelta(newPixels - pixels);
     final overscroll = super.setPixels(newPixels);
-    controller.value = pixelsToPage(pixels);
+    controller.value = controller.value.copyWith(page: pixelsToPage(pixels));
     return overscroll;
   }
 

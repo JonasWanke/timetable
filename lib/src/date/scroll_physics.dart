@@ -24,7 +24,7 @@ class DateScrollPhysics extends ScrollPhysics {
 
     final page = position.pixelsToPage(value);
     final overscrollPages =
-        controller.visibleRange.applyBoundaryConditions(controller, page);
+        controller.value.visibleRange.applyBoundaryConditions(controller, page);
     final overscroll = position.pageDeltaToPixelDelta(overscrollPages);
 
     // Flutter doesn't allow boundary conditions to apply greater differences
@@ -53,7 +53,7 @@ class DateScrollPhysics extends ScrollPhysics {
       return super.createBallisticSimulation(position, velocity);
     }
 
-    final targetPage = controller.visibleRange.getTargetPageForCurrent(
+    final targetPage = controller.value.visibleRange.getTargetPageForCurrent(
       position.page,
       velocity: position.pixelDeltaToPageDelta(velocity),
       tolerance: Tolerance(

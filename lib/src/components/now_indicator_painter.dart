@@ -21,9 +21,10 @@ class NowIndicatorPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final dateWidth = size.width / controller.visibleRange.visibleDayCount;
+    final pageValue = controller.value;
+    final dateWidth = size.width / pageValue.visibleDayCount;
     final now = DateTime.now();
-    final temporalXOffset = now.toUtc().atStartOfDay.page - controller.value;
+    final temporalXOffset = now.toUtc().atStartOfDay.page - pageValue.page;
     final left = temporalXOffset * dateWidth;
     final right = left + dateWidth;
 

@@ -16,11 +16,10 @@ class DateDividersPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     canvas.drawLine(Offset(0, 0), Offset(0, size.height), dividerPaint);
 
-    final initialOffset = 1 - controller.value % 1;
-    final visibleDayCount = controller.visibleRange.visibleDayCount;
-    final widthPerDate = size.width / visibleDayCount;
-    for (var i = 0; i + initialOffset < visibleDayCount; i++) {
-      final x = (initialOffset + i) * widthPerDate;
+    final pageValue = controller.value;
+    final initialOffset = 1 - pageValue.page % 1;
+    for (var i = 0; i + initialOffset < pageValue.visibleDayCount; i++) {
+      final x = (initialOffset + i) * size.width / pageValue.visibleDayCount;
       canvas.drawLine(Offset(x, 0), Offset(x, size.height), dividerPaint);
     }
   }

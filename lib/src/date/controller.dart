@@ -7,27 +7,28 @@ import 'package:flutter/scheduler.dart';
 import '../utils.dart';
 import 'visible_date_range.dart';
 
-class DateController extends ValueNotifier<double> {
+class DateController extends ValueNotifier<DatePageValue> {
   DateController({
     DateTime? initialDate,
     VisibleDateRange? visibleRange,
     this.firstDayOfWeek = DateTime.monday,
   })  : assert(initialDate.isValidTimetableDate),
-        visibleRange = visibleRange ??
-            VisibleDateRange.week(firstDayOfWeek: firstDayOfWeek),
         // We set the correct value in the body below.
-        super(0) {
+        super(DatePageValue(
+          visibleRange ?? VisibleDateRange.week(firstDayOfWeek: firstDayOfWeek),
+          0,
+        )) {
     // The correct value is set via the listener when we assign to our value.
     _date = _DateValueNotifier(DateTimeTimetable.dateFromPage(0));
-    addListener(() {
-      _date.value = DateTimeTimetable.dateFromPage(value.floor());
-    });
+    addListener(() => _date.value = value.date);
 
     final rawStartPage = initialDate?.page ?? DateTimeTimetable.today().page;
-    value = this.visibleRange.getTargetPageForFocus(rawStartPage);
+    value = value.copyWith(
+      page: value.visibleRange.getTargetPageForFocus(rawStartPage),
+    );
   }
 
-  final VisibleDateRange visibleRange;
+  // VisibleDateRange get visibleRange => value.visibleRange;
   final int firstDayOfWeek;
 
   late final ValueNotifier<DateTime> _date;
@@ -74,10 +75,12 @@ class DateController extends ValueNotifier<double> {
         AnimationController(debugLabel: 'TimeController', vsync: vsync);
     _animationController = controller;
 
-    final previousPage = value;
-    final targetPage = visibleRange.getTargetPageForFocus(page);
+    final previousPage = value.page;
+    final targetPage = value.visibleRange.getTargetPageForFocus(page);
     controller.addListener(() {
-      value = lerpDouble(previousPage, targetPage, controller.value)!;
+      value = value.copyWith(
+        page: lerpDouble(previousPage, targetPage, controller.value)!,
+      );
     });
 
     controller.addStatusListener((status) {
@@ -95,8 +98,17 @@ class DateController extends ValueNotifier<double> {
     jumpToPage(date.page);
   }
 
-  void jumpToPage(double page) =>
-      value = visibleRange.getTargetPageForFocus(page);
+  void jumpToPage(double page) {
+    value =
+        value.copyWith(page: value.visibleRange.getTargetPageForFocus(page));
+  }
+
+  void setVisibleRange(VisibleDateRange visibleRange) {
+    value = value.copyWith(
+      page: visibleRange.getTargetPageForFocus(value.page),
+      visibleRange: visibleRange,
+    );
+  }
 
   @override
   void dispose() {
@@ -109,4 +121,32 @@ class _DateValueNotifier extends ValueNotifier<DateTime> {
   _DateValueNotifier(DateTime date)
       : assert(date.isValidTimetableDate),
         super(date);
+}
+
+@immutable
+class DatePageValue {
+  const DatePageValue(this.visibleRange, this.page);
+
+  final VisibleDateRange visibleRange;
+  int get visibleDayCount => visibleRange.visibleDayCount;
+
+  final double page;
+  DateTime get date => DateTimeTimetable.dateFromPage(page.floor());
+
+  DatePageValue copyWith({VisibleDateRange? visibleRange, double? page}) {
+    return DatePageValue(visibleRange ?? this.visibleRange, page ?? this.page);
+  }
+
+  @override
+  int get hashCode => hashValues(visibleRange, page);
+  @override
+  bool operator ==(Object other) {
+    return other is DatePageValue &&
+        visibleRange == other.visibleRange &&
+        page == other.page;
+  }
+
+  @override
+  String toString() =>
+      'DatePageValue(visibleRange = $visibleRange, page = $page)';
 }

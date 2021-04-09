@@ -20,13 +20,12 @@ class _TimetableExampleState extends State<TimetableExample>
     with TickerProviderStateMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
-  final _dateController = DateController(
+  var _visibleDateRange = PredefinedVisibleDateRange.week;
+
+  late final _dateController = DateController(
     // All parameters are optional.
     // initialDate: DateTimeTimetable.today(),
-    visibleRange: VisibleDateRange.week(
-      minDate: DateTimeTimetable.today() - 5.days,
-      maxDate: DateTimeTimetable.today() + 5.days,
-    ),
+    visibleRange: _visibleDateRange.visibleDateRange,
     firstDayOfWeek: DateTime.monday,
   );
 
@@ -36,6 +35,14 @@ class _TimetableExampleState extends State<TimetableExample>
     maxRange: TimeRange(0.hours, 24.hours),
   );
 
+  @override
+  void initState() {
+    super.initState();
+    _dateController.date.addListener(() {
+      print(
+          'Viewing Date ${_dateController.date.value.toIso8601String().substring(0, 10)} (${_dateController.value}).');
+    });
+  }
 
   @override
   void dispose() {
@@ -51,7 +58,6 @@ class _TimetableExampleState extends State<TimetableExample>
     // return _buildCustomTimetable();
   }
 
-  // ignore: unused_element
   Widget _buildSimpleTimetable() {
     return Scaffold(
       key: _scaffoldKey,
@@ -68,7 +74,6 @@ class _TimetableExampleState extends State<TimetableExample>
     );
   }
 
-  // ignore: unused_element
   Widget _buildCustomizedTimetable() {
     return Scaffold(
       key: _scaffoldKey,
@@ -98,15 +103,13 @@ class _TimetableExampleState extends State<TimetableExample>
         onContentBackgroundTap: (dateTime) =>
             _showSnackBar('Part-day background tapped at $dateTime'),
         contentStyle: MultiDateContentStyle(
-            // timeIndicatorStyle:
-            //     MultiDateCurrentTimeIndicatorStyle(color: Colors.green),
-            // dividerColor: Colors.orange,
-            ),
+          nowIndicatorStyle: MultiDateNowIndicatorStyle(color: Colors.green),
+          dividerColor: Colors.orange,
+        ),
       ),
     );
   }
 
-  // ignore: unused_element
   Widget _buildCustomTimetable() {
     return Scaffold(
       key: _scaffoldKey,
@@ -156,10 +159,10 @@ class _TimetableExampleState extends State<TimetableExample>
               onBackgroundTap: (dateTime) =>
                   _showSnackBar('Part-day background tapped at $dateTime'),
               style: MultiDateContentStyle(
-                  // timeIndicatorStyle:
-                  //     MultiDateCurrentTimeIndicatorStyle(color: Colors.green),
-                  // dividerColor: Colors.orange,
-                  ),
+                nowIndicatorStyle:
+                    MultiDateNowIndicatorStyle(color: Colors.green),
+                dividerColor: Colors.orange,
+              ),
             ),
           ),
         ],
@@ -182,10 +185,25 @@ class _TimetableExampleState extends State<TimetableExample>
           onPressed: () {
             _dateController.animateToToday(vsync: this);
             _timeController.animateToShowFullDay(vsync: this);
-            // _timeController.value = TimeRange(6.hours, 18.hours);
           },
           tooltip: 'Go to today',
         ),
+        DropdownButton<PredefinedVisibleDateRange>(
+          // Our `visibleDateRange` setter takes care
+          onChanged: (visibleRange) => setState(() {
+            _visibleDateRange = visibleRange!;
+            _dateController.setVisibleRange(visibleRange.visibleDateRange);
+          }),
+          value: _visibleDateRange,
+          items: [
+            for (final visibleRange in PredefinedVisibleDateRange.values)
+              DropdownMenuItem(
+                value: visibleRange,
+                child: Text(visibleRange.title),
+              ),
+          ],
+        ),
+        SizedBox(width: 16),
       ],
     );
   }
@@ -194,4 +212,34 @@ class _TimetableExampleState extends State<TimetableExample>
       context.scaffoldMessenger.showSnackBar(SnackBar(content: Text(content)));
 }
 
-// ignore_for_file: avoid_print
+enum PredefinedVisibleDateRange { day, threeDays, workWeek, week }
+
+extension on PredefinedVisibleDateRange {
+  VisibleDateRange get visibleDateRange {
+    switch (this) {
+      case PredefinedVisibleDateRange.day:
+        return VisibleDateRange.days(1);
+      case PredefinedVisibleDateRange.threeDays:
+        return VisibleDateRange.days(3);
+      case PredefinedVisibleDateRange.workWeek:
+        return VisibleDateRange.weekAligned(5);
+      case PredefinedVisibleDateRange.week:
+        return VisibleDateRange.week();
+    }
+  }
+
+  String get title {
+    switch (this) {
+      case PredefinedVisibleDateRange.day:
+        return 'Day';
+      case PredefinedVisibleDateRange.threeDays:
+        return '3 Days';
+      case PredefinedVisibleDateRange.workWeek:
+        return 'Work Week';
+      case PredefinedVisibleDateRange.week:
+        return 'Week';
+    }
+  }
+}
+
+// ignore_for_file: avoid_print, unused_element

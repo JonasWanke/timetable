@@ -58,10 +58,9 @@ class MultiDateEventHeader<E extends Event> extends StatelessWidget {
     return ValueListenableBuilder<Interval>(
       valueListenable: controller.map((it) {
         final interval = Interval(
-          DateTimeTimetable.dateFromPage(controller.value.floor()),
+          DateTimeTimetable.dateFromPage(it.page.floor()),
           DateTimeTimetable.dateFromPage(
-                (controller.value + controller.visibleRange.visibleDayCount)
-                    .ceil(),
+                (it.page + it.visibleDayCount).ceil(),
               ) -
               1.milliseconds,
         );
@@ -69,60 +68,64 @@ class MultiDateEventHeader<E extends Event> extends StatelessWidget {
         return interval;
       }),
       builder: (_, visibleDates, __) {
-        return ValueListenableBuilder<double>(
+        return ValueListenableBuilder<DatePageValue>(
           valueListenable: controller,
-          builder: (context, page, __) => GestureDetector(
+          builder: (context, pageValue, __) => GestureDetector(
             behavior: HitTestBehavior.translucent,
             onTapUp: onBackgroundTap != null
-                ? (details) => _callOnBackgroundTap(details, page, width)
+                ? (details) => _callOnBackgroundTap(details, pageValue, width)
                 : null,
-            child: _buildEventLayout(context, visibleDates, page),
+            child: _buildEventLayout(context, visibleDates, pageValue),
           ),
         );
       },
     );
   }
 
-  void _callOnBackgroundTap(TapUpDetails details, double page, double width) {
-    final tappedCell = details.localPosition.dx /
-        width *
-        controller.visibleRange.visibleDayCount;
-    final date = DateTimeTimetable.dateFromPage((page + tappedCell).floor());
+  void _callOnBackgroundTap(
+    TapUpDetails details,
+    DatePageValue pageValue,
+    double width,
+  ) {
+    final tappedCell =
+        details.localPosition.dx / width * pageValue.visibleDayCount;
+    final date =
+        DateTimeTimetable.dateFromPage((pageValue.page + tappedCell).floor());
     onBackgroundTap!(date);
   }
 
   Widget _buildEventLayout(
     BuildContext context,
     Interval visibleDates,
-    double page,
+    DatePageValue pageValue,
   ) {
     assert(visibleDates.isValidTimetableDateInterval);
 
     return _EventsWidget<E>(
-      visibleRange: controller.visibleRange,
+      visibleRange: pageValue.visibleRange,
       currentlyVisibleDates: visibleDates,
-      page: page,
+      page: pageValue.page,
       style: style,
       children: [
         for (final event in eventProvider(visibleDates))
           _EventParentDataWidget<E>(
             key: ValueKey(event.id),
             event: event,
-            child: _buildEvent(context, event, page),
+            child: _buildEvent(context, event, pageValue),
           ),
       ],
     );
   }
 
-  Widget _buildEvent(BuildContext context, E event, double page) {
-    final visibleDayCount = controller.visibleRange.visibleDayCount;
+  Widget _buildEvent(BuildContext context, E event, DatePageValue pageValue) {
     return eventBuilder(
       context,
       event,
       AllDayEventLayoutInfo(
-        hiddenStartDays: (page - event.start.page).coerceAtLeast(0),
+        hiddenStartDays: (pageValue.page - event.start.page).coerceAtLeast(0),
         hiddenEndDays:
-            (event.end.page.ceil() - page - visibleDayCount).coerceAtLeast(0),
+            (event.end.page.ceil() - pageValue.page - pageValue.visibleDayCount)
+                .coerceAtLeast(0),
       ),
     );
   }

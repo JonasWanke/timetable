@@ -7,7 +7,7 @@ import 'positioning_demo.dart';
 import 'utils.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  initDebugOverlay();
   runApp(ExampleApp(child: TimetableExample()));
 }
 
@@ -104,7 +104,6 @@ class _TimetableExampleState extends State<TimetableExample>
             _showSnackBar('Part-day background tapped at $dateTime'),
         contentStyle: MultiDateContentStyle(
           nowIndicatorStyle: MultiDateNowIndicatorStyle(color: Colors.green),
-          dividerColor: Colors.orange,
         ),
       ),
     );
@@ -161,7 +160,6 @@ class _TimetableExampleState extends State<TimetableExample>
               style: MultiDateContentStyle(
                 nowIndicatorStyle:
                     MultiDateNowIndicatorStyle(color: Colors.green),
-                dividerColor: Colors.orange,
               ),
             ),
           ),
@@ -172,7 +170,6 @@ class _TimetableExampleState extends State<TimetableExample>
 
   PreferredSizeWidget _buildAppBar({required bool isFlat}) {
     return AppBar(
-      backwardsCompatibility: false,
       elevation: isFlat ? 0 : null,
       brightness: isFlat ? null : Brightness.dark,
       foregroundColor:
@@ -188,8 +185,8 @@ class _TimetableExampleState extends State<TimetableExample>
           },
           tooltip: 'Go to today',
         ),
+        SizedBox(width: 8),
         DropdownButton<PredefinedVisibleDateRange>(
-          // Our `visibleDateRange` setter takes care
           onChanged: (visibleRange) => setState(() {
             _visibleDateRange = visibleRange!;
             _dateController.setVisibleRange(visibleRange.visibleDateRange);

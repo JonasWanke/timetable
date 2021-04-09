@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../date/controller.dart';
 
+import '../date/controller.dart';
+import '../localization.dart';
 import '../utils.dart';
 
 class MonthIndicator extends StatelessWidget {
@@ -15,6 +16,7 @@ class MonthIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    context.dependOnTimetableLocalizations();
     final date = DateTimeTimetable.date(2020, month, 1);
     return Text(DateFormat.MMMM().format(date));
   }

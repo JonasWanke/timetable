@@ -84,6 +84,11 @@ abstract class TimetableLocalizations {
 extension BuildContextTimetableLocalizations on BuildContext {
   TimetableLocalizations get timetableLocalizations =>
       TimetableLocalizations.of(this);
+  void dependOnTimetableLocalizations() {
+    // By accessing the localizations, this widget calling this method will get
+    // rebuilt when the locale changes.
+    TimetableLocalizations.of(this);
+  }
 }
 
 class TimetableLocalizationDe extends TimetableLocalizations {

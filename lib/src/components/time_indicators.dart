@@ -13,7 +13,7 @@ class TimeIndicators extends StatelessWidget {
 
   factory TimeIndicators.hours({
     Key? key,
-    DateFormat? format,
+    ValueGetter<DateFormat>? format,
     TextStyle? textStyle,
     AlignmentGeometry alignment = Alignment.centerRight,
   }) =>
@@ -32,7 +32,7 @@ class TimeIndicators extends StatelessWidget {
 
   factory TimeIndicators.halfHours({
     Key? key,
-    DateFormat? format,
+    ValueGetter<DateFormat>? format,
     TextStyle? textStyle,
     AlignmentGeometry alignment = Alignment.centerRight,
   }) =>
@@ -52,7 +52,7 @@ class TimeIndicators extends StatelessWidget {
   static TimeIndicatorsChild _buildChild(
     Duration time,
     AlignmentGeometry alignment,
-    DateFormat format,
+    ValueGetter<DateFormat> format,
     TextStyle? textStyle,
   ) {
     assert(time.isValidTimetableTimeOfDay);

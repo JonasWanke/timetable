@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:black_hole_flutter/black_hole_flutter.dart';
 
+import '../localization.dart';
 import '../utils.dart';
 
 class TimeIndicator extends StatelessWidget {
   TimeIndicator({
     Key? key,
     required this.time,
-    DateFormat? format,
+    ValueGetter<DateFormat>? format,
     this.textStyle,
   })  : assert(time.isValidTimetableTimeOfDay),
         formatter = _formatterFromDateFormat(format ?? formatHour),
@@ -21,16 +22,20 @@ class TimeIndicator extends StatelessWidget {
     this.textStyle,
   }) : super(key: key);
 
-  static final formatHour = DateFormat.j();
-  static final formatHourMinute = DateFormat.jm();
-  static final formatHourMinuteSecond = DateFormat.jms();
+  // We use getters instead of final fields because `DateFormat`'s constructor
+  // captures the locale, hence changing the app's locale doesn't affect already
+  // created `DateFormat`s.
+  static DateFormat formatHour() => DateFormat.j();
+  static DateFormat formatHourMinute() => DateFormat.jm();
+  static DateFormat formatHourMinuteSecond() => DateFormat.jms();
 
-  static final formatHour24 = DateFormat.H();
-  static final formatHour24Minute = DateFormat.Hm();
-  static final formatHour24MinuteSecond = DateFormat.Hms();
+  static DateFormat formatHour24() => DateFormat.H();
+  static DateFormat formatHour24Minute() => DateFormat.Hm();
+  static DateFormat formatHour24MinuteSecond() => DateFormat.Hms();
 
-  static TimeFormatter _formatterFromDateFormat(DateFormat format) {
-    return (time) => format.format(DateTime(0) + time);
+  static TimeFormatter _formatterFromDateFormat(
+      ValueGetter<DateFormat> format) {
+    return (time) => format().format(DateTime(0) + time);
   }
 
   final Duration time;
@@ -39,6 +44,7 @@ class TimeIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    context.dependOnTimetableLocalizations();
     return Text(
       formatter(time),
       style: textStyle ??

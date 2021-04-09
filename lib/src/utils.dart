@@ -141,6 +141,11 @@ extension NullableDurationTimetable on Duration? {
       this == null || (0.days <= this! && this! <= 1.days);
 }
 
+extension NullableIntTimetable on int? {
+  bool get isValidTimetableMonth =>
+      this == null || (1 <= this! && this! <= DateTime.monthsPerYear);
+}
+
 extension IntervalTimetable on Interval {
   bool intersects(Interval other) => start <= other.end && end >= other.start;
 

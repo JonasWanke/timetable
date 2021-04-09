@@ -178,7 +178,7 @@ class _TimetableExampleState extends State<TimetableExample>
       foregroundColor:
           isFlat ? context.theme.brightness.mediumEmphasisOnColor : null,
       backgroundColor: isFlat ? Colors.transparent : null,
-      title: Text('Timetable example'),
+      title: MonthIndicator.forController(_dateController),
       actions: <Widget>[
         IconButton(
           icon: Icon(Icons.today),

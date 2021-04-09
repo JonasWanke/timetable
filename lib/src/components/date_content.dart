@@ -47,6 +47,15 @@ class DateContent<E extends Event> extends StatelessWidget {
       builder: (context, constraints) {
         final height = constraints.maxHeight;
 
+        Widget buildOverlaysForPosition(DecorationPosition position) {
+          return Positioned.fill(
+            child: TimeOverlays(
+              overlays:
+                  overlays.where((it) => it.position == position).toList(),
+            ),
+          );
+        }
+
         return GestureDetector(
           behavior: HitTestBehavior.translucent,
           onTapUp: onBackgroundTap != null
@@ -54,13 +63,14 @@ class DateContent<E extends Event> extends StatelessWidget {
               : null,
           child: Stack(
             children: [
-              Positioned.fill(child: TimeOverlays(overlays: overlays)),
+              buildOverlaysForPosition(DecorationPosition.background),
               DateEvents<E>(
                 date: date,
                 events: events,
                 eventBuilder: eventBuilder,
                 style: dateEventsStyle,
               ),
+              buildOverlaysForPosition(DecorationPosition.foreground),
             ],
           ),
         );

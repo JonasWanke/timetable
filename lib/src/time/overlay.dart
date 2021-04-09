@@ -9,13 +9,15 @@ class TimeOverlay {
     required this.start,
     required this.end,
     required this.widget,
-  })   : assert(start.isValidTimetableTimeOfDay),
+    this.position = DecorationPosition.background,
+  })  : assert(start.isValidTimetableTimeOfDay),
         assert(end.isValidTimetableTimeOfDay),
         assert(start < end);
 
   final Duration start;
   final Duration end;
   final Widget widget;
+  final DecorationPosition position;
 }
 
 /// Provides [TimeOverlay]s to timetable widgets.

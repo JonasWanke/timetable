@@ -136,12 +136,7 @@ class MultiDateTimetableHeader<E extends Event> extends StatelessWidget {
       children: [
         SizedBox(
           width: weekIndicatorWidth,
-          child: Center(
-            child: ValueListenableBuilder<DateTime>(
-              valueListenable: controller.date,
-              builder: (context, date, _) => WeekIndicator.forDate(date),
-            ),
-          ),
+          child: Center(child: WeekIndicator.forController(controller)),
         ),
         Expanded(
           child: Column(

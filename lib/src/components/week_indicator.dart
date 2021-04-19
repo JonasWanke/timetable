@@ -12,11 +12,13 @@ class WeekIndicator extends StatelessWidget {
     this.weekInfo, {
     Key? key,
     this.style = const WeekIndicatorStyle(),
+    this.alwaysUseNarrowestVariant = false,
   }) : super(key: key);
   WeekIndicator.forDate(
     DateTime date, {
     Key? key,
     this.style = const WeekIndicatorStyle(),
+    this.alwaysUseNarrowestVariant = false,
   })  : assert(date.isValidTimetableDate),
         weekInfo = date.weekInfo,
         super(key: key);
@@ -25,6 +27,7 @@ class WeekIndicator extends StatelessWidget {
 
   final WeekInfo weekInfo;
   final WeekIndicatorStyle style;
+  final bool alwaysUseNarrowestVariant;
 
   @override
   Widget build(BuildContext context) {
@@ -62,6 +65,12 @@ class WeekIndicator extends StatelessWidget {
       return Tuple2(it, textPainter.size.width);
     });
 
+    final narrowestText =
+        measuredLabels.minBy((a, b) => a.item2.compareTo(b.item2))!.item1;
+    Widget build(String text) => Text(text, style: style, maxLines: 1);
+
+    if (alwaysUseNarrowestVariant) return build(narrowestText);
+
     return LayoutBuilder(
       builder: (context, constraints) {
         // Select the first one that fits, or otherwise the narrowest one.
@@ -69,13 +78,9 @@ class WeekIndicator extends StatelessWidget {
             .where((it) => it.item2 >= constraints.minWidth)
             .where((it) => it.item2 <= constraints.maxWidth)
             .map((it) => it.item1)
-            .firstOrElse(
-              () => measuredLabels
-                  .minBy((a, b) => a.item2.compareTo(b.item2))!
-                  .item1,
-            );
+            .firstOrElse(() => narrowestText);
 
-        return Text(text, style: style, maxLines: 1);
+        return build(text);
       },
     );
   }

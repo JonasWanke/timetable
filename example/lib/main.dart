@@ -1,5 +1,6 @@
 import 'package:black_hole_flutter/black_hole_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:timetable/timetable.dart';
 
 // ignore: unused_import
@@ -18,8 +19,6 @@ class TimetableExample extends StatefulWidget {
 
 class _TimetableExampleState extends State<TimetableExample>
     with TickerProviderStateMixin {
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
-
   var _visibleDateRange = PredefinedVisibleDateRange.week;
 
   late final _dateController = DateController(
@@ -59,122 +58,116 @@ class _TimetableExampleState extends State<TimetableExample>
   }
 
   Widget _buildSimpleTimetable() {
-    return Scaffold(
-      key: _scaffoldKey,
-      appBar: _buildAppBar(isFlat: false),
-      body: MultiDateTimetable<BasicEvent>(
-        controller: _dateController,
-        timeController: _timeController,
-        eventProvider: eventProviderFromFixedList(positioningDemoEvents),
-        headerEventBuilder: (context, event, info) =>
-            BasicAllDayEventWidget(event, info: info),
-        contentEventBuilder: (event) => BasicEventWidget(event),
-        contentOverlayProvider: positioningDemoOverlayProvider,
+    return Column(children: [
+      _buildAppBar(isFlat: false),
+      Expanded(
+        child: MultiDateTimetable<BasicEvent>(
+          controller: _dateController,
+          timeController: _timeController,
+          eventProvider: eventProviderFromFixedList(positioningDemoEvents),
+          headerEventBuilder: (context, event, info) =>
+              BasicAllDayEventWidget(event, info: info),
+          contentEventBuilder: (event) => BasicEventWidget(event),
+          contentOverlayProvider: positioningDemoOverlayProvider,
+        ),
       ),
-    );
+    ]);
   }
 
   Widget _buildCustomizedTimetable() {
-    return Scaffold(
-      key: _scaffoldKey,
-      appBar: _buildAppBar(isFlat: false),
-      body: MultiDateTimetable<BasicEvent>(
-        controller: _dateController,
-        timeController: _timeController,
-        eventProvider: eventProviderFromFixedList(positioningDemoEvents),
-        headerEventBuilder: (context, event, info) {
-          return BasicAllDayEventWidget(
-            event,
-            info: info,
-            onTap: () => _showSnackBar('All-day event $event tapped'),
-          );
-        },
-        onHeaderDateTap: (date) =>
-            _showSnackBar('Header tapped on date $date.'),
-        onHeaderBackgroundTap: (date) =>
-            _showSnackBar('Multi-day header background tapped at $date'),
-        contentEventBuilder: (event) {
-          return BasicEventWidget(
-            event,
-            onTap: () => _showSnackBar('Part-day event $event tapped'),
-          );
-        },
-        contentOverlayProvider: positioningDemoOverlayProvider,
-        onContentBackgroundTap: (dateTime) =>
-            _showSnackBar('Part-day background tapped at $dateTime'),
-        contentStyle: MultiDateContentStyle(
-          nowIndicatorStyle: MultiDateNowIndicatorStyle(color: Colors.green),
+    return Column(children: [
+      _buildAppBar(isFlat: false),
+      Expanded(
+        child: MultiDateTimetable<BasicEvent>(
+          controller: _dateController,
+          timeController: _timeController,
+          eventProvider: eventProviderFromFixedList(positioningDemoEvents),
+          headerEventBuilder: (context, event, info) {
+            return BasicAllDayEventWidget(
+              event,
+              info: info,
+              onTap: () => _showSnackBar('All-day event $event tapped'),
+            );
+          },
+          onHeaderDateTap: (date) =>
+              _showSnackBar('Header tapped on date $date.'),
+          onHeaderBackgroundTap: (date) =>
+              _showSnackBar('Multi-day header background tapped at $date'),
+          contentEventBuilder: (event) {
+            return BasicEventWidget(
+              event,
+              onTap: () => _showSnackBar('Part-day event $event tapped'),
+            );
+          },
+          contentOverlayProvider: positioningDemoOverlayProvider,
+          onContentBackgroundTap: (dateTime) =>
+              _showSnackBar('Part-day background tapped at $dateTime'),
+          contentStyle: MultiDateContentStyle(
+            nowIndicatorStyle: MultiDateNowIndicatorStyle(color: Colors.green),
+            dividerColor: Colors.orange.withOpacity(.3),
+          ),
         ),
       ),
-    );
+    ]);
   }
 
   Widget _buildCustomTimetable() {
-    return Scaffold(
-      key: _scaffoldKey,
-      body: Column(
-        children: [
-          Material(
-            color: context.theme.scaffoldBackgroundColor,
-            elevation: 4,
-            child: Column(
-              children: [
-                _buildAppBar(isFlat: true),
-                MultiDateTimetableHeader<BasicEvent>(
-                  controller: _dateController,
-                  eventProvider: eventProviderFromFixedList(
-                    positioningDemoEvents.where((it) => it.isAllDay).toList(),
-                  ),
-                  eventBuilder: (context, event, info) {
-                    return BasicAllDayEventWidget(
-                      event,
-                      info: info,
-                      onTap: () => _showSnackBar('All-day event $event tapped'),
-                    );
-                  },
-                  onDateTap: (date) =>
-                      _showSnackBar('Header tapped on date $date.'),
-                  onBackgroundTap: (date) => _showSnackBar(
-                      'Multi-day header background tapped at $date'),
-                  padding: EdgeInsets.only(bottom: 4),
-                ),
-              ],
+    return Column(children: [
+      Material(
+        color: context.theme.scaffoldBackgroundColor,
+        elevation: 4,
+        child: Column(children: [
+          _buildAppBar(isFlat: true),
+          MultiDateTimetableHeader<BasicEvent>(
+            controller: _dateController,
+            eventProvider: eventProviderFromFixedList(
+              positioningDemoEvents.where((it) => it.isAllDay).toList(),
             ),
+            eventBuilder: (context, event, info) {
+              return BasicAllDayEventWidget(
+                event,
+                info: info,
+                onTap: () => _showSnackBar('All-day event $event tapped'),
+              );
+            },
+            onDateTap: (date) => _showSnackBar('Header tapped on date $date.'),
+            onBackgroundTap: (date) =>
+                _showSnackBar('Multi-day header background tapped at $date'),
+            padding: EdgeInsets.only(bottom: 4),
           ),
-          Expanded(
-            child: MultiDateTimetableContent<BasicEvent>(
-              dateController: _dateController,
-              timeController: _timeController,
-              eventProvider: eventProviderFromFixedList(
-                positioningDemoEvents.where((it) => it.isPartDay).toList(),
-              ),
-              eventBuilder: (event) {
-                return BasicEventWidget(
-                  event,
-                  onTap: () => _showSnackBar('Part-day event $event tapped'),
-                );
-              },
-              overlayProvider: positioningDemoOverlayProvider,
-              onBackgroundTap: (dateTime) =>
-                  _showSnackBar('Part-day background tapped at $dateTime'),
-              style: MultiDateContentStyle(
-                nowIndicatorStyle:
-                    MultiDateNowIndicatorStyle(color: Colors.green),
-              ),
-            ),
-          ),
-        ],
+        ]),
       ),
-    );
+      Expanded(
+        child: MultiDateTimetableContent<BasicEvent>(
+          dateController: _dateController,
+          timeController: _timeController,
+          eventProvider: eventProviderFromFixedList(
+            positioningDemoEvents.where((it) => it.isPartDay).toList(),
+          ),
+          eventBuilder: (event) {
+            return BasicEventWidget(
+              event,
+              onTap: () => _showSnackBar('Part-day event $event tapped'),
+            );
+          },
+          overlayProvider: positioningDemoOverlayProvider,
+          onBackgroundTap: (dateTime) =>
+              _showSnackBar('Part-day background tapped at $dateTime'),
+          style: MultiDateContentStyle(
+            nowIndicatorStyle: MultiDateNowIndicatorStyle(color: Colors.green),
+            dividerColor: Colors.orange.withOpacity(.3),
+          ),
+        ),
+      ),
+    ]);
   }
 
-  PreferredSizeWidget _buildAppBar({required bool isFlat}) {
-    return AppBar(
-      elevation: isFlat ? 0 : null,
-      brightness: isFlat ? null : Brightness.dark,
-      foregroundColor:
-          isFlat ? context.theme.brightness.mediumEmphasisOnColor : null,
-      backgroundColor: isFlat ? Colors.transparent : null,
+  Widget _buildAppBar({required bool isFlat}) {
+    Widget child = AppBar(
+      backwardsCompatibility: false,
+      elevation: 0,
+      systemOverlayStyle: SystemUiOverlayStyle.light,
+      backgroundColor: Colors.transparent,
       title: MonthIndicator.forController(_dateController),
       actions: <Widget>[
         IconButton(
@@ -203,6 +196,18 @@ class _TimetableExampleState extends State<TimetableExample>
         SizedBox(width: 16),
       ],
     );
+
+    if (!isFlat) {
+      final colorScheme = context.theme.colorScheme;
+      child = Material(
+        color: colorScheme.brightness == Brightness.dark
+            ? colorScheme.surface
+            : colorScheme.primary,
+        elevation: 4,
+        child: child,
+      );
+    }
+    return child;
   }
 
   void _showSnackBar(String content) =>

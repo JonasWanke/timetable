@@ -42,7 +42,7 @@ class ExampleApp extends StatelessWidget {
           ],
           supportedLocales: _supportedLocales,
           builder: DebugOverlay.builder(),
-          home: child,
+          home: Scaffold(body: child),
         );
       },
     );

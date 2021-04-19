@@ -5,26 +5,34 @@ import 'package:intl/intl.dart';
 import '../utils.dart';
 
 class DateIndicator extends StatelessWidget {
-  DateIndicator(this.date, {Key? key})
-      : assert(date.isValidTimetableDate),
+  DateIndicator(
+    this.date, {
+    Key? key,
+    this.decoration,
+    this.textStyle,
+  })  : assert(date.isValidTimetableDate),
         super(key: key);
 
   final DateTime date;
+  final Decoration? decoration;
+  final TextStyle? textStyle;
 
   @override
   Widget build(BuildContext context) {
     final theme = context.theme;
 
     final primaryColor = theme.primaryColor;
-    final decoration = BoxDecoration(
-      shape: BoxShape.circle,
-      color: date.isToday ? primaryColor : Colors.transparent,
-    );
-    final textStyle = context.textTheme.subtitle1!.copyWith(
-      color: date.isToday
-          ? primaryColor.highEmphasisOnColor
-          : theme.highEmphasisOnBackground,
-    );
+    final decoration = this.decoration ??
+        BoxDecoration(
+          shape: BoxShape.circle,
+          color: date.isToday ? primaryColor : Colors.transparent,
+        );
+    final textStyle = this.textStyle ??
+        context.textTheme.subtitle1!.copyWith(
+          color: date.isToday
+              ? primaryColor.highEmphasisOnColor
+              : theme.highEmphasisOnBackground,
+        );
 
     return DecoratedBox(
       decoration: decoration,
@@ -33,12 +41,5 @@ class DateIndicator extends StatelessWidget {
         child: Text(DateFormat('d').format(date), style: textStyle),
       ),
     );
-  }
-
-  static Set<MaterialState> statesFor(DateTime date) {
-    return {
-      if (date < DateTimeTimetable.today()) MaterialState.disabled,
-      if (date.isToday) MaterialState.selected,
-    };
   }
 }

@@ -207,6 +207,14 @@ class _TimetableExampleState extends State<TimetableExample>
         child: child,
       );
     }
+
+    child = Column(children: [
+      child,
+      Padding(
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        child: MonthWidget(DateTimeTimetable.month(2021, 4)),
+      ),
+    ]);
     return child;
   }
 

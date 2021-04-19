@@ -7,6 +7,7 @@ export 'src/components/date_events.dart';
 export 'src/components/date_indicator.dart';
 export 'src/components/hour_dividers_painter.dart';
 export 'src/components/month_indicator.dart';
+export 'src/components/month_widget.dart';
 export 'src/components/multi_date_content.dart';
 export 'src/components/multi_date_event_header.dart';
 export 'src/components/multi_date_header.dart';

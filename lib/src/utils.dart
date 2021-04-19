@@ -1,6 +1,8 @@
 import 'package:dart_date/dart_date.dart' show Interval;
 import 'package:supercharged/supercharged.dart';
 
+import 'utils/week.dart';
+
 export 'package:dart_date/dart_date.dart' show Interval;
 export 'package:supercharged/supercharged.dart';
 
@@ -46,6 +48,12 @@ extension DateTimeTimetable on DateTime {
   static DateTime date(int year, [int month = 1, int day = 1]) {
     final date = DateTime.utc(year, month, day);
     assert(date.isValidTimetableDate);
+    return date;
+  }
+
+  static DateTime month(int year, int month) {
+    final date = DateTime.utc(year, month, 1);
+    assert(date.isValidTimetableMonth);
     return date;
   }
 
@@ -100,6 +108,29 @@ extension DateTimeTimetable on DateTime {
     return Interval(this, atEndOfDay);
   }
 
+  DateTime nextOrSame(int dayOfWeek) {
+    assert(isValidTimetableDate);
+    assert(weekday.isValidTimetableDayOfWeek);
+
+    return this + ((dayOfWeek - weekday) % DateTime.daysPerWeek).days;
+  }
+
+  DateTime previousOrSame(int weekday) {
+    assert(isValidTimetableDate);
+    assert(weekday.isValidTimetableDayOfWeek);
+
+    return this - ((weekday - this.weekday) % DateTime.daysPerWeek).days;
+  }
+
+  int get daysInMonth {
+    final february = isLeapYear ? 29 : 28;
+    final index = this.month - 1;
+    return [31, february, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][index];
+  }
+
+  DateTime get firstDayOfMonth => atStartOfDay.copyWith(day: 1);
+  DateTime get lastDayOfMonth => copyWith(day: daysInMonth);
+
   double get page {
     assert(isValidTimetableDateTime);
     return millisecondsSinceEpoch / Duration.millisecondsPerDay;
@@ -134,6 +165,8 @@ extension NullableDateTimeTimetable on DateTime? {
   bool get isValidTimetableDateTime => this == null || this!.isUtc;
   bool get isValidTimetableDate =>
       isValidTimetableDateTime && (this == null || this!.isAtStartOfDay);
+  bool get isValidTimetableMonth =>
+      isValidTimetableDate && (this == null || this!.day == 1);
 }
 
 extension NullableDurationTimetable on Duration? {
@@ -142,6 +175,8 @@ extension NullableDurationTimetable on Duration? {
 }
 
 extension NullableIntTimetable on int? {
+  bool get isValidTimetableDayOfWeek =>
+      this == null || (DateTime.monday <= this! && this! <= DateTime.sunday);
   bool get isValidTimetableMonth =>
       this == null || (1 <= this! && this! <= DateTime.monthsPerYear);
 }

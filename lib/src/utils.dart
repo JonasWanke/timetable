@@ -119,7 +119,7 @@ extension DateTimeTimetable on DateTime {
     assert(isValidTimetableDate);
     assert(weekday.isValidTimetableDayOfWeek);
 
-    return this - ((weekday - this.weekday) % DateTime.daysPerWeek).days;
+    return this - ((this.weekday - weekday) % DateTime.daysPerWeek).days;
   }
 
   int get daysInMonth {

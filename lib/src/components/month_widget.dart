@@ -50,13 +50,15 @@ class MonthWidget extends StatelessWidget {
           child: _buildWeeks(context, firstDay, weekCount),
         ),
         for (final week in 0.until(weekCount))
-          for (final weekday in 1.rangeTo(DateTime.daysPerWeek))
+          for (final weekday in 0.until(DateTime.daysPerWeek))
             GridPlacement(
-              columnStart: weekday,
+              columnStart: 1 + weekday,
               rowStart: 1 + week,
               child: Center(
-                child: _buildDate(context,
-                    firstDay + (DateTime.daysPerWeek * week + weekday).days),
+                child: _buildDate(
+                  context,
+                  firstDay + (DateTime.daysPerWeek * week + weekday).days,
+                ),
               ),
             ),
       ],

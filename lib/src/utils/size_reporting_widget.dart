@@ -1,15 +1,36 @@
 import 'package:flutter/widgets.dart';
 
+// Copied and modified from: https://github.com/Limbou/expandable_page_view/blob/d692cff38f9e098ad5c020d80123a13ab2a53083/lib/expandable_page_view.dart
+class SizeReportingOverflowPage extends StatelessWidget {
+  const SizeReportingOverflowPage({
+    required this.onSizeChanged,
+    required this.child,
+  });
+
+  final ValueChanged<Size> onSizeChanged;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return OverflowBox(
+      minHeight: 0,
+      maxHeight: double.infinity,
+      alignment: Alignment.topCenter,
+      child: SizeReportingWidget(onSizeChanged: onSizeChanged, child: child),
+    );
+  }
+}
+
 // Copied and modified from https://github.com/Limbou/expandable_page_view/blob/d692cff38f9e098ad5c020d80123a13ab2a53083/lib/size_reporting_widget.dart
 class SizeReportingWidget extends StatefulWidget {
   const SizeReportingWidget({
     Key? key,
-    required this.child,
     required this.onSizeChanged,
+    required this.child,
   }) : super(key: key);
 
-  final Widget child;
   final ValueChanged<Size> onSizeChanged;
+  final Widget child;
 
   @override
   _SizeReportingWidgetState createState() => _SizeReportingWidgetState();

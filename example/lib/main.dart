@@ -49,11 +49,6 @@ class _TimetableExampleState extends State<TimetableExample>
 
   @override
   Widget build(BuildContext context) {
-    return _buildCustomizedTimetable();
-    // return _buildCustomTimetable();
-  }
-
-  Widget _buildCustomizedTimetable() {
     return Column(children: [
       _buildAppBar(isFlat: false),
       Expanded(
@@ -77,49 +72,6 @@ class _TimetableExampleState extends State<TimetableExample>
           onContentBackgroundTap: (dateTime) =>
               _showSnackBar('Part-day background tapped at $dateTime'),
           contentStyle: MultiDateContentStyle(
-            nowIndicatorStyle: MultiDateNowIndicatorStyle(color: Colors.green),
-            dividerColor: Colors.orange.withOpacity(.3),
-          ),
-        ),
-      ),
-    ]);
-  }
-
-  Widget _buildCustomTimetable() {
-    return Column(children: [
-      Material(
-        color: context.theme.scaffoldBackgroundColor,
-        elevation: 4,
-        child: Column(children: [
-          _buildAppBar(isFlat: true),
-          MultiDateTimetableHeader<BasicEvent>(
-            controller: _dateController,
-            eventProvider: (visibleRange) => _eventProvider(visibleRange)
-                .where((it) => it.isAllDay)
-                .toList(),
-            eventBuilder: (context, event, info) => BasicAllDayEventWidget(
-              event,
-              info: info,
-              onTap: () => _showSnackBar('All-day event $event tapped'),
-            ),
-            onDateTap: (date) => _showSnackBar('Header tapped on date $date.'),
-            onBackgroundTap: (date) =>
-                _showSnackBar('Multi-day header background tapped at $date'),
-            padding: EdgeInsets.only(bottom: 4),
-          ),
-        ]),
-      ),
-      Expanded(
-        child: MultiDateTimetableContent<BasicEvent>(
-          dateController: _dateController,
-          timeController: _timeController,
-          eventProvider: (visibleRange) =>
-              _eventProvider(visibleRange).where((it) => it.isPartDay).toList(),
-          eventBuilder: (context, event) => _buildPartDayEvent(event),
-          overlayProvider: positioningDemoOverlayProvider,
-          onBackgroundTap: (dateTime) =>
-              _showSnackBar('Part-day background tapped at $dateTime'),
-          style: MultiDateContentStyle(
             nowIndicatorStyle: MultiDateNowIndicatorStyle(color: Colors.green),
             dividerColor: Colors.orange.withOpacity(.3),
           ),

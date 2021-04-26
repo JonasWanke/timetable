@@ -148,9 +148,7 @@ class _TimetableExampleState extends State<TimetableExample>
         );
       }),
       onDragEnd: (dateTime) {
-        setState(() {
-          _draggedEvents.removeWhere((it) => it.id == event.id);
-        });
+        setState(() => _draggedEvents.removeWhere((it) => it.id == event.id));
         _showSnackBar('Dragged to: ${roundTo15mins(dateTime ?? event.start)}');
       },
       child: BasicEventWidget(

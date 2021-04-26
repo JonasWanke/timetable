@@ -34,20 +34,27 @@ class DatePageView extends StatefulWidget {
 
 class _DatePageViewState extends State<DatePageView> {
   late _MultiDateScrollController _scrollController;
-
-  // TODO(JonasWanke): remove old entries
   final _heights = <int, double>{};
 
   @override
   void initState() {
     super.initState();
     _scrollController = _MultiDateScrollController(widget.controller);
+    widget.controller.date.addListener(_onDateChanged);
   }
 
   @override
   void dispose() {
+    widget.controller.date.removeListener(_onDateChanged);
     _scrollController.dispose();
     super.dispose();
+  }
+
+  void _onDateChanged() {
+    final datePageValue = widget.controller.value;
+    final firstPage = datePageValue.page.round();
+    final lastPage = datePageValue.page.round() + datePageValue.visibleDayCount;
+    _heights.removeWhere((key, _) => key < firstPage - 5 || key > lastPage + 5);
   }
 
   @override

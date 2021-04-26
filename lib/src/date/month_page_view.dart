@@ -27,8 +27,6 @@ class MonthPageView extends StatefulWidget {
 
 class _MonthPageViewState extends State<MonthPageView> {
   late final MonthPageController _controller;
-
-  // TODO(JonasWanke): remove old entries
   final _heights = <int, double>{};
 
   @override
@@ -36,6 +34,19 @@ class _MonthPageViewState extends State<MonthPageView> {
     super.initState();
     _controller = widget.monthPageController ??
         MonthPageController(initialMonth: DateTimeTimetable.currentMonth());
+    _controller.addListener(_onMonthChanged);
+  }
+
+  @override
+  void dispose() {
+    _controller.removeListener(_onMonthChanged);
+    if (widget.monthPageController == null) _controller.dispose();
+    super.dispose();
+  }
+
+  void _onMonthChanged() {
+    final page = _controller._pageController.page!.round();
+    _heights.removeWhere((key, _) => (key - page).abs() > 5);
   }
 
   @override

@@ -67,7 +67,7 @@ class _TimetableExampleState extends State<TimetableExample>
           eventProvider: eventProviderFromFixedList(positioningDemoEvents),
           headerEventBuilder: (context, event, info) =>
               BasicAllDayEventWidget(event, info: info),
-          contentEventBuilder: (event) => BasicEventWidget(event),
+          contentEventBuilder: (context, event) => BasicEventWidget(event),
           contentOverlayProvider: positioningDemoOverlayProvider,
         ),
       ),
@@ -93,7 +93,7 @@ class _TimetableExampleState extends State<TimetableExample>
               _showSnackBar('Header tapped on date $date.'),
           onHeaderBackgroundTap: (date) =>
               _showSnackBar('Multi-day header background tapped at $date'),
-          contentEventBuilder: (event) {
+          contentEventBuilder: (context, event) {
             return BasicEventWidget(
               event,
               onTap: () => _showSnackBar('Part-day event $event tapped'),
@@ -144,7 +144,7 @@ class _TimetableExampleState extends State<TimetableExample>
           eventProvider: eventProviderFromFixedList(
             positioningDemoEvents.where((it) => it.isPartDay).toList(),
           ),
-          eventBuilder: (event) {
+          eventBuilder: (context, event) {
             return BasicEventWidget(
               event,
               onTap: () => _showSnackBar('Part-day event $event tapped'),

@@ -86,4 +86,7 @@ extension TimetableEventIterable<E extends Event> on Iterable<E> {
   }
 }
 
-typedef EventBuilder<E extends Event> = Widget Function(E event);
+typedef EventBuilder<E extends Event> = Widget Function(
+  BuildContext context,
+  E event,
+);

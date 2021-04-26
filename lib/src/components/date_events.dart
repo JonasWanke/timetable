@@ -43,7 +43,7 @@ class DateEvents<E extends Event> extends StatelessWidget {
             LayoutId(
               key: ValueKey(event.id),
               id: event.id,
-              child: eventBuilder(event),
+              child: eventBuilder(context, event),
             ),
         ],
       ),

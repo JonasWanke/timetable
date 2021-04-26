@@ -14,9 +14,10 @@ class BasicEvent extends Event {
     required Object id,
     required this.title,
     required this.color,
+    bool showOnTop = false,
     required DateTime start,
     required DateTime end,
-  }) : super(id: id, start: start, end: end);
+  }) : super(id: id, showOnTop: showOnTop, start: start, end: end);
 
   /// A title for the user, used e.g. by [BasicEventWidget].
   final String title;
@@ -25,6 +26,24 @@ class BasicEvent extends Event {
   ///
   /// This is used e.g. by [BasicEventWidget] as the background color.
   final Color color;
+
+  BasicEvent copyWith({
+    Object? id,
+    String? title,
+    Color? color,
+    bool? showOnTop,
+    DateTime? start,
+    DateTime? end,
+  }) {
+    return BasicEvent(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      color: color ?? this.color,
+      showOnTop: showOnTop ?? this.showOnTop,
+      start: start ?? this.start,
+      end: end ?? this.end,
+    );
+  }
 
   @override
   int get hashCode => hashList([super.hashCode, title, color]);

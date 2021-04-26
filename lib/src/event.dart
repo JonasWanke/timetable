@@ -1,5 +1,4 @@
 import 'dart:ui';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart' hide Interval;
 import 'package:meta/meta.dart';
@@ -15,12 +14,15 @@ import 'utils.dart';
 abstract class Event with Diagnosticable {
   const Event({
     required this.id,
+    this.showOnTop = false,
     required this.start,
     required this.end,
   }) : assert(start <= end);
 
   /// A unique ID, used, e.g., for animating events.
   final Object id;
+
+  final bool showOnTop;
 
   /// Start of the event; inclusive.
   final DateTime start;
@@ -50,20 +52,30 @@ abstract class Event with Diagnosticable {
   bool operator ==(dynamic other) {
     return runtimeType == other.runtimeType &&
         id == other.id &&
+        showOnTop == other.showOnTop &&
         start == other.start &&
         end == other.end;
   }
 
   @override
-  int get hashCode => hashList([runtimeType, id, start, end]);
+  int get hashCode => hashList([runtimeType, id, showOnTop, start, end]);
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties.add(DiagnosticsProperty('id', id));
+    properties.add(FlagProperty(
+      'showOnTop',
+      value: showOnTop,
+      ifTrue: 'show on top of other events',
+    ));
     properties.add(DiagnosticsProperty('start', start));
     properties.add(DiagnosticsProperty('end', end));
   }
+}
+
+extension EventExtension on Event {
+  Duration get duration => end.difference(start);
 }
 
 extension TimetableEventIterable<E extends Event> on Iterable<E> {
@@ -75,8 +87,14 @@ extension TimetableEventIterable<E extends Event> on Iterable<E> {
   // Iterable<E> intersectingInterval(Interval interval) =>
   //     where((e) => e.intersectsInterval(interval));
 
-  List<E> sortedByStartLength() {
+  List<E> sortedByOnTopStartLength() {
     int comparator(E a, E b) {
+      if (!a.showOnTop && b.showOnTop) {
+        return -1;
+      } else if (a.showOnTop && !b.showOnTop) {
+        return 1;
+      }
+
       final result = a.start.compareTo(b.start);
       if (result != 0) return result;
       return a.end.compareTo(b.end);

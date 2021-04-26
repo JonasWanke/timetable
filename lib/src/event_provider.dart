@@ -17,6 +17,13 @@ EventProvider<E> eventProviderFromFixedList<E extends Event>(List<E> events) {
       events.where((it) => it.interval.intersects(visibleRange)).toList();
 }
 
+EventProvider<E> mergeEventProviders<E extends Event>(
+  List<EventProvider<E>> eventProviders,
+) {
+  return (visibleRange) =>
+      eventProviders.expand((it) => it(visibleRange)).toList();
+}
+
 extension EventProviderTimetable<E extends Event> on EventProvider<E> {
   EventProvider<E> get debugChecked {
     return (visibleRange) {

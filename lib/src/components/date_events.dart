@@ -20,10 +20,10 @@ class DateEvents<E extends Event> extends StatelessWidget {
           'All events must intersect the given date',
         ),
         assert(
-          events.map((e) => e.id).toSet().length == events.length,
-          'Events may not contain duplicate IDs',
+          events.toSet().length == events.length,
+          'Events may not contain duplicates',
         ),
-        events = events.sortedByStartLength(),
+        events = events.sortedByOnTopStartLength(),
         super(key: key);
 
   final DateTime date;
@@ -41,8 +41,8 @@ class DateEvents<E extends Event> extends StatelessWidget {
         children: [
           for (final event in events)
             LayoutId(
-              key: ValueKey(event.id),
-              id: event.id,
+              key: ValueKey(event),
+              id: event,
               child: eventBuilder(context, event),
             ),
         ],
@@ -151,7 +151,6 @@ class _DayEventsLayoutDelegate<E extends Event>
     }
 
     for (final event in events) {
-      final position = positions.eventPositions[event]!;
       final top = timeToY(event.start)
           .coerceAtMost(size.height - durationToY(style.minEventDuration))
           .coerceAtMost(size.height - style.minEventHeight);
@@ -159,16 +158,24 @@ class _DayEventsLayoutDelegate<E extends Event>
           .clamp(0, size.height - top)
           .toDouble();
 
-      final columnWidth =
-          size.width / positions.groupColumnCounts[position.group];
-      final columnLeft = columnWidth * position.column;
-      final left = columnLeft + position.index * style.stackedEventSpacing;
-      final width = columnWidth * position.columnSpan -
-          position.index * style.stackedEventSpacing;
+      final double left;
+      final double width;
+      if (event.showOnTop) {
+        left = 0;
+        width = size.width;
+      } else {
+        final position = positions.eventPositions[event]!;
+        final columnWidth =
+            size.width / positions.groupColumnCounts[position.group];
+        final columnLeft = columnWidth * position.column;
+        left = columnLeft + position.index * style.stackedEventSpacing;
+        width = columnWidth * position.columnSpan -
+            position.index * style.stackedEventSpacing;
+      }
 
       final childSize = Size(width.coerceAtLeast(minWidth), height);
-      layoutChild(event.id, BoxConstraints.tight(childSize));
-      positionChild(event.id, Offset(left, top));
+      layoutChild(event, BoxConstraints.tight(childSize));
+      positionChild(event, Offset(left, top));
     }
   }
 
@@ -182,7 +189,7 @@ class _DayEventsLayoutDelegate<E extends Event>
 
     var currentGroup = <E>[];
     DateTime? currentEnd;
-    for (final event in events) {
+    for (final event in events.where((it) => !it.showOnTop)) {
       if (currentEnd != null && event.start >= currentEnd) {
         _endGroup(positions, currentGroup, height);
         currentGroup = [];
@@ -201,7 +208,10 @@ class _DayEventsLayoutDelegate<E extends Event>
   }
 
   void _endGroup(
-      _EventPositions positions, List<E> currentGroup, double height) {
+    _EventPositions positions,
+    List<E> currentGroup,
+    double height,
+  ) {
     if (currentGroup.isEmpty) {
       return;
     }

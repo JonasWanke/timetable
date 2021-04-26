@@ -34,6 +34,12 @@ class _TimetableExampleState extends State<TimetableExample>
     maxRange: TimeRange(0.hours, 24.hours),
   );
 
+  final List<BasicEvent> _draggedEvents = [];
+  late final _eventProvider = mergeEventProviders([
+    eventProviderFromFixedList(positioningDemoEvents),
+    eventProviderFromFixedList(_draggedEvents),
+  ]);
+
   @override
   void dispose() {
     _timeController.dispose();
@@ -54,8 +60,7 @@ class _TimetableExampleState extends State<TimetableExample>
         child: MultiDateTimetable<BasicEvent>(
           controller: _dateController, // required
           timeController: _timeController, // required
-          eventProvider:
-              eventProviderFromFixedList(positioningDemoEvents), // required
+          eventProvider: _eventProvider, // required
           headerEventBuilder: (context, event, info) => // required
               BasicAllDayEventWidget(
             event,
@@ -66,11 +71,8 @@ class _TimetableExampleState extends State<TimetableExample>
               _showSnackBar('Header tapped on date $date.'),
           onHeaderBackgroundTap: (date) =>
               _showSnackBar('Multi-day header background tapped at $date'),
-          contentEventBuilder: (context, event) => // required
-              BasicEventWidget(
-            event,
-            onTap: () => _showSnackBar('Part-day event $event tapped'),
-          ),
+          contentEventBuilder: (context, event) =>
+              _buildPartDayEvent(event), // required
           contentOverlayProvider: positioningDemoOverlayProvider,
           onContentBackgroundTap: (dateTime) =>
               _showSnackBar('Part-day background tapped at $dateTime'),
@@ -92,9 +94,9 @@ class _TimetableExampleState extends State<TimetableExample>
           _buildAppBar(isFlat: true),
           MultiDateTimetableHeader<BasicEvent>(
             controller: _dateController,
-            eventProvider: eventProviderFromFixedList(
-              positioningDemoEvents.where((it) => it.isAllDay).toList(),
-            ),
+            eventProvider: (visibleRange) => _eventProvider(visibleRange)
+                .where((it) => it.isAllDay)
+                .toList(),
             eventBuilder: (context, event, info) => BasicAllDayEventWidget(
               event,
               info: info,
@@ -111,13 +113,9 @@ class _TimetableExampleState extends State<TimetableExample>
         child: MultiDateTimetableContent<BasicEvent>(
           dateController: _dateController,
           timeController: _timeController,
-          eventProvider: eventProviderFromFixedList(
-            positioningDemoEvents.where((it) => it.isPartDay).toList(),
-          ),
-          eventBuilder: (context, event) => BasicEventWidget(
-            event,
-            onTap: () => _showSnackBar('Part-day event $event tapped'),
-          ),
+          eventProvider: (visibleRange) =>
+              _eventProvider(visibleRange).where((it) => it.isPartDay).toList(),
+          eventBuilder: (context, event) => _buildPartDayEvent(event),
           overlayProvider: positioningDemoOverlayProvider,
           onBackgroundTap: (dateTime) =>
               _showSnackBar('Part-day background tapped at $dateTime'),
@@ -128,6 +126,38 @@ class _TimetableExampleState extends State<TimetableExample>
         ),
       ),
     ]);
+  }
+
+  Widget _buildPartDayEvent(BasicEvent event) {
+    DateTime roundTo15mins(DateTime dateTime) {
+      final intervalCount = (dateTime.timeOfDay / 15.minutes).floor();
+      return dateTime.atStartOfDay + 15.minutes * intervalCount;
+    }
+
+    return PartDayDraggableEvent(
+      onDragStart: () => setState(() {
+        _draggedEvents.add(event.copyWith(showOnTop: true));
+      }),
+      onDragUpdate: (dateTime) => setState(() {
+        dateTime = roundTo15mins(dateTime);
+        final index = _draggedEvents.indexWhere((it) => it.id == event.id);
+        final oldEvent = _draggedEvents[index];
+        _draggedEvents[index] = oldEvent.copyWith(
+          start: dateTime,
+          end: dateTime + oldEvent.duration,
+        );
+      }),
+      onDragEnd: (dateTime) {
+        setState(() {
+          _draggedEvents.removeWhere((it) => it.id == event.id);
+        });
+        _showSnackBar('Dragged to: ${roundTo15mins(dateTime ?? event.start)}');
+      },
+      child: BasicEventWidget(
+        event,
+        onTap: () => _showSnackBar('Part-day event $event tapped'),
+      ),
+    );
   }
 
   Widget _buildAppBar({required bool isFlat}) {

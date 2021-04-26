@@ -23,10 +23,10 @@ class DateContent<E extends Event> extends StatelessWidget {
           'All events must intersect the given date',
         ),
         assert(
-          events.map((e) => e.id).toSet().length == events.length,
-          'Events may not contain duplicate IDs',
+          events.toSet().length == events.length,
+          'Events may not contain duplicates',
         ),
-        events = events.sortedByStartLength(),
+        events = events.sortedByOnTopStartLength(),
         super(key: key);
 
   final DateTime date;
@@ -41,20 +41,9 @@ class DateContent<E extends Event> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    assert(date.isValidTimetableDate);
-
     return LayoutBuilder(
       builder: (context, constraints) {
         final height = constraints.maxHeight;
-
-        Widget buildOverlaysForPosition(DecorationPosition position) {
-          return Positioned.fill(
-            child: TimeOverlays(
-              overlays:
-                  overlays.where((it) => it.position == position).toList(),
-            ),
-          );
-        }
 
         return GestureDetector(
           behavior: HitTestBehavior.translucent,
@@ -63,18 +52,26 @@ class DateContent<E extends Event> extends StatelessWidget {
               : null,
           child: Stack(
             children: [
-              buildOverlaysForPosition(DecorationPosition.background),
+              _buildOverlaysForPosition(DecorationPosition.background),
               DateEvents<E>(
                 date: date,
                 events: events,
                 eventBuilder: eventBuilder,
                 style: dateEventsStyle,
               ),
-              buildOverlaysForPosition(DecorationPosition.foreground),
+              _buildOverlaysForPosition(DecorationPosition.foreground),
             ],
           ),
         );
       },
+    );
+  }
+
+  Widget _buildOverlaysForPosition(DecorationPosition position) {
+    return Positioned.fill(
+      child: TimeOverlays(
+        overlays: overlays.where((it) => it.position == position).toList(),
+      ),
     );
   }
 

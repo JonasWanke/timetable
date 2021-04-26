@@ -100,6 +100,12 @@ extension DateTimeTimetable on DateTime {
     return date;
   }
 
+  static DateTime currentMonth() {
+    final month = DateTimeTimetable.today().firstDayOfMonth;
+    assert(month.isValidTimetableMonth);
+    return month;
+  }
+
   bool get isToday => atStartOfDay == DateTimeTimetable.today();
 
   Interval get interval => Interval(atStartOfDay, atEndOfDay);

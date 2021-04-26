@@ -53,12 +53,11 @@ class TimeRange {
 
   @override
   int get hashCode => hashValues(startTime, endTime);
-
   @override
   bool operator ==(Object other) {
     return other is TimeRange &&
-        other.startTime == startTime &&
-        other.endTime == endTime;
+        startTime == other.startTime &&
+        endTime == other.endTime;
   }
 
   @override

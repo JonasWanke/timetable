@@ -109,7 +109,7 @@ class MultiDateEventHeader<E extends Event> extends StatelessWidget {
       children: [
         for (final event in eventProvider(visibleDates))
           _EventParentDataWidget<E>(
-            key: ValueKey(event.id),
+            key: ValueKey(event),
             event: event,
             child: _buildEvent(context, event, pageValue),
           ),

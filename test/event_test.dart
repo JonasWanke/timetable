@@ -71,32 +71,10 @@ void main() {
         );
       }
     });
-
-    // test('endDateInclusive', () {
-    //   expect(events.map((e) => e.endDateInclusive), [
-    //     start,
-    //     start,
-    //     start + 1.days,
-    //     start,
-    //     start + 1.days,
-    //     start + 2.days,
-    //   ]);
-    // });
-
-    // test('intersectingDates', () {
-    //   expect(events.map((e) => e.intersectingDates), [
-    //     DateInterval(start, start),
-    //     DateInterval(start, start),
-    //     DateInterval(start, start + 1.days),
-    //     DateInterval(start, start),
-    //     DateInterval(start, start + 1.days),
-    //     DateInterval(start, start + 2.days),
-    //   ]);
-    // });
   });
 }
 
 class _TestEvent extends Event {
   const _TestEvent(DateTime start, DateTime end)
-      : super(id: '', start: start, end: end);
+      : super(start: start, end: end);
 }

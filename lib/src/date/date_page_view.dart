@@ -7,7 +7,7 @@ import '../utils.dart';
 import 'controller.dart';
 import 'scroll_physics.dart';
 
-// "DateTimes can represent time values that are at a distance of at most
+/// "DateTimes can represent time values that are at a distance of at most
 /// 100,000,000 days from epoch […]".
 const _minPage = -100000000;
 
@@ -33,7 +33,6 @@ class DatePageView extends StatefulWidget {
 }
 
 class _DatePageViewState extends State<DatePageView> {
-  // int get visibleDayCount => widget.controller.value.visibleRange.visibleDayCount;
   late _MultiDateScrollController _scrollController;
 
   // TODO(JonasWanke): remove old entries

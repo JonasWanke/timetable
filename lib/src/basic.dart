@@ -8,16 +8,22 @@ import 'event.dart';
 /// A basic implementation of [Event] to get you started.
 ///
 /// See also:
-/// - [BasicEventWidget], which can display instances of [BasicEvent].
+/// * [BasicEventWidget], which can display instances of [BasicEvent].
 class BasicEvent extends Event {
   const BasicEvent({
-    required Object id,
+    required this.id,
     required this.title,
     required this.color,
     bool showOnTop = false,
     required DateTime start,
     required DateTime end,
-  }) : super(id: id, showOnTop: showOnTop, start: start, end: end);
+  }) : super(showOnTop: showOnTop, start: start, end: end);
+
+  /// An ID for this event.
+  ///
+  /// This is not used by timetable itself, but can be handy, e.g., when
+  /// implementing drag & drop.
+  final String id;
 
   /// A title for the user, used e.g. by [BasicEventWidget].
   final String title;
@@ -28,7 +34,7 @@ class BasicEvent extends Event {
   final Color color;
 
   BasicEvent copyWith({
-    Object? id,
+    String? id,
     String? title,
     Color? color,
     bool? showOnTop,

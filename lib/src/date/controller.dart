@@ -28,7 +28,6 @@ class DateController extends ValueNotifier<DatePageValue> {
     );
   }
 
-  // VisibleDateRange get visibleRange => value.visibleRange;
   final int firstDayOfWeek;
 
   late final ValueNotifier<DateTime> _date;

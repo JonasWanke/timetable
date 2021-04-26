@@ -14,13 +14,11 @@ class MultiDateHeader extends StatelessWidget {
     Key? key,
     required this.controller,
     this.onTap,
-    // this.style,
   }) : super(key: key);
 
   final DateController controller;
 
   final MultiDateHeaderTapCallback? onTap;
-  // final MultiDateHeaderStyle? style;
 
   @override
   Widget build(BuildContext context) {

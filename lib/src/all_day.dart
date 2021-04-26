@@ -119,29 +119,24 @@ class AllDayEventBorder extends ShapeBorder {
 }
 
 Path _getPath(Size size, AllDayEventLayoutInfo info, double radius) {
-  final height = size.height;
-  // final radius = borderRadius.coerceAtMost(width / 2);
-
-  final maxTipWidth = height / 4;
+  final maxTipWidth = size.height / 4;
   final leftTipWidth = info.hiddenStartDays.coerceAtMost(1) * maxTipWidth;
   final rightTipWidth = info.hiddenEndDays.coerceAtMost(1) * maxTipWidth;
 
-  final width = size.width;
-  // final leftTipBase = math.min(leftTipWidth + radius, width - radius);
-  // final rightTipBase = math.max(width - rightTipWidth - radius, radius);
   final leftTipBase = info.hiddenStartDays > 0
-      ? math.min(leftTipWidth + radius, width - radius)
+      ? math.min(leftTipWidth + radius, size.width - radius)
       : leftTipWidth + radius;
   final rightTipBase = info.hiddenEndDays > 0
-      ? math.max(width - rightTipWidth - radius, radius)
-      : width - rightTipWidth - radius;
+      ? math.max(size.width - rightTipWidth - radius, radius)
+      : size.width - rightTipWidth - radius;
 
   final tipSize = Size.square(radius * 2);
 
   // no tip:   0      ≈  0°
   // full tip: PI / 4 ≈ 45°
-  final leftTipAngle = math.pi / 2 - math.atan2(height / 2, leftTipWidth);
-  final rightTipAngle = math.pi / 2 - math.atan2(height / 2, rightTipWidth);
+  final leftTipAngle = math.pi / 2 - math.atan2(size.height / 2, leftTipWidth);
+  final rightTipAngle =
+      math.pi / 2 - math.atan2(size.height / 2, rightTipWidth);
 
   return Path()
     ..moveTo(leftTipBase, 0)
@@ -154,7 +149,7 @@ Path _getPath(Size size, AllDayEventLayoutInfo info, double radius) {
     )
     // Right tip
     ..arcTo(
-      Offset(rightTipBase + rightTipWidth - radius, height / 2 - radius) &
+      Offset(rightTipBase + rightTipWidth - radius, size.height / 2 - radius) &
           tipSize,
       -rightTipAngle,
       2 * rightTipAngle,
@@ -162,21 +157,21 @@ Path _getPath(Size size, AllDayEventLayoutInfo info, double radius) {
     )
     // Right bottom
     ..arcTo(
-      Offset(rightTipBase - radius, height - radius * 2) & tipSize,
+      Offset(rightTipBase - radius, size.height - radius * 2) & tipSize,
       rightTipAngle,
       math.pi / 2 - rightTipAngle,
       false,
     )
     // Left bottom
     ..arcTo(
-      Offset(leftTipBase - radius, height - radius * 2) & tipSize,
+      Offset(leftTipBase - radius, size.height - radius * 2) & tipSize,
       math.pi / 2,
       math.pi / 2 - leftTipAngle,
       false,
     )
     // Left tip
     ..arcTo(
-      Offset(leftTipBase - leftTipWidth - radius, height / 2 - radius) &
+      Offset(leftTipBase - leftTipWidth - radius, size.height / 2 - radius) &
           tipSize,
       math.pi - leftTipAngle,
       2 * leftTipAngle,

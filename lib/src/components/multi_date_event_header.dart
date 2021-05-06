@@ -54,18 +54,16 @@ class MultiDateEventHeader<E extends Event> extends StatelessWidget {
         assert(interval.isValidTimetableDateInterval);
         return interval;
       }),
-      builder: (_, visibleDates, __) {
-        return ValueListenableBuilder<DatePageValue>(
-          valueListenable: controller,
-          builder: (context, pageValue, __) => GestureDetector(
-            behavior: HitTestBehavior.translucent,
-            onTapUp: onBackgroundTap != null
-                ? (details) => _callOnBackgroundTap(details, pageValue, width)
-                : null,
-            child: _buildEventLayout(context, visibleDates, pageValue),
-          ),
-        );
-      },
+      builder: (_, visibleDates, __) => ValueListenableBuilder<DatePageValue>(
+        valueListenable: controller,
+        builder: (context, pageValue, __) => GestureDetector(
+          behavior: HitTestBehavior.translucent,
+          onTapUp: onBackgroundTap != null
+              ? (details) => _callOnBackgroundTap(details, pageValue, width)
+              : null,
+          child: _buildEventLayout(context, visibleDates, pageValue),
+        ),
+      ),
     );
   }
 
@@ -105,7 +103,7 @@ class MultiDateEventHeader<E extends Event> extends StatelessWidget {
   }
 
   Widget _buildEvent(BuildContext context, E event, DatePageValue pageValue) {
-    return DefaultAllDayEventBuilder.of(context)!(
+    return DefaultAllDayEventBuilder.of<E>(context)!(
       context,
       event,
       AllDayEventLayoutInfo(

@@ -16,7 +16,7 @@ class DefaultEventBuilder<E extends Event> extends InheritedWidget {
   final EventBuilder<E> builder;
 
   @override
-  bool updateShouldNotify(DefaultEventBuilder oldWidget) =>
+  bool updateShouldNotify(DefaultEventBuilder<E> oldWidget) =>
       builder != oldWidget.builder;
 
   static EventBuilder<E>? of<E extends Event>(BuildContext context) {

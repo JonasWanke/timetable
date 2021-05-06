@@ -66,8 +66,8 @@ class _TimetableExampleState extends State<TimetableExample>
           //     _showSnackBar('Header tapped on date $date.'),
           // onHeaderBackgroundTap: (date) =>
           //     _showSnackBar('Multi-day header background tapped at $date'),
-          // contentEventBuilder: (context, event) =>
-          //     _buildPartDayEvent(event), // required
+          eventBuilder: (context, event) => // required
+              _buildPartDayEvent(event),
           // contentOverlayProvider: positioningDemoOverlayProvider,
           // onContentBackgroundTap: (dateTime) =>
           //     _showSnackBar('Part-day background tapped at $dateTime'),

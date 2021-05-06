@@ -24,7 +24,7 @@ class DefaultAllDayEventBuilder<E extends Event> extends InheritedWidget {
   final AllDayEventBuilder<E> builder;
 
   @override
-  bool updateShouldNotify(DefaultAllDayEventBuilder oldWidget) =>
+  bool updateShouldNotify(DefaultAllDayEventBuilder<E> oldWidget) =>
       builder != oldWidget.builder;
 
   static AllDayEventBuilder<E>? of<E extends Event>(BuildContext context) {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../components/multi_date_content.dart';
+import '../components/multi_date_event_header.dart';
 import '../components/multi_date_header.dart';
 import '../components/time_indicators.dart';
 import '../components/week_indicator.dart';
@@ -45,7 +46,7 @@ class MultiDateTimetable<E extends Event> extends StatefulWidget {
                 )),
         contentBuilder = contentBuilder ??
             ((context, onLeadingWidthChanged) => MultiDateTimetableContent<E>(
-                  content: SizeReportingWidget(
+                  leading: SizeReportingWidget(
                     onSizeChanged: (size) => onLeadingWidthChanged(size.width),
                     child: Padding(
                       padding: EdgeInsets.symmetric(horizontal: 8),
@@ -71,36 +72,37 @@ class MultiDateTimetable<E extends Event> extends StatefulWidget {
 
 class _MultiDateTimetableState<E extends Event>
     extends State<MultiDateTimetable<E>> {
-  late final DateController _dateController = widget.dateController ??
-      DefaultDateController.of(context) ??
-      DateController();
-  late final TimeController _timeController = widget.timeController ??
-      DefaultTimeController.of(context) ??
-      TimeController();
-  late final EventProvider<E> _eventProvider =
-      widget.eventProvider ?? DefaultEventProvider.of<E>(context) ?? (_) => [];
-  late final EventBuilder<E> _eventBuilder =
-      widget.eventBuilder ?? DefaultEventBuilder.of<E>(context)!;
-  late final AllDayEventBuilder<E> _allDayEventBuilder =
-      widget.allDayEventBuilder ??
-          (widget.eventBuilder != null
-              ? (context, event, _) => widget.eventBuilder!(context, event)
-              : null) ??
-          DefaultAllDayEventBuilder.of<E>(context)!;
-  late final TimeOverlayProvider _timeOverlayProvider =
-      widget.timeOverlayProvider ??
-          DefaultTimeOverlayProvider.of(context) ??
-          emptyOverlayProvider;
-
   double? _leadingWidth;
 
   @override
   Widget build(BuildContext context) {
+    final _dateController = widget.dateController ??
+        DefaultDateController.of(context) ??
+        DateController();
+    final _timeController = widget.timeController ??
+        DefaultTimeController.of(context) ??
+        TimeController();
+    final _eventProvider = widget.eventProvider ??
+        DefaultEventProvider.of<E>(context) ??
+        (_) => [];
+    final _eventBuilder =
+        widget.eventBuilder ?? DefaultEventBuilder.of<E>(context)!;
+    final _allDayEventBuilder = widget.allDayEventBuilder ??
+        (widget.eventBuilder != null
+            ? (context, event, _) => widget.eventBuilder!(context, event)
+            : null) ??
+        DefaultAllDayEventBuilder.of<E>(context)!;
+    final _timeOverlayProvider = widget.timeOverlayProvider ??
+        DefaultTimeOverlayProvider.of(context) ??
+        emptyOverlayProvider;
+
     final child = Column(children: [
       DefaultEventProvider<E>(
         eventProvider: (visibleDates) =>
             _eventProvider(visibleDates).where((it) => it.isAllDay).toList(),
-        child: widget.headerBuilder(context, _leadingWidth),
+        child: Builder(
+          builder: (context) => widget.headerBuilder(context, _leadingWidth),
+        ),
       ),
       Expanded(
         child: DefaultEventProvider<E>(
@@ -112,7 +114,6 @@ class _MultiDateTimetableState<E extends Event>
               (newWidth) => setState(() => _leadingWidth = newWidth),
             ),
           ),
-          // ),
         ),
       ),
     ]);
@@ -145,7 +146,7 @@ class MultiDateTimetableHeader<E extends Event> extends StatelessWidget {
   })  : leading = leading ?? Center(child: WeekIndicator.forController(null)),
         dateHeaderBuilder =
             dateHeaderBuilder ?? ((context, date) => DateHeader(date)),
-        bottom = bottom ?? SizedBox.shrink(),
+        bottom = bottom ?? MultiDateEventHeader<E>(),
         super(key: key);
 
   final Widget leading;

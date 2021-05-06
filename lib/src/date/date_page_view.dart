@@ -33,26 +33,34 @@ class DatePageView extends StatefulWidget {
 }
 
 class _DatePageViewState extends State<DatePageView> {
-  DateController get _controller =>
-      widget.controller ?? DefaultDateController.of(context)!;
-  late final _scrollController = _MultiDateScrollController(_controller);
+  DateController? _controller;
+  _MultiDateScrollController? _scrollController;
   final _heights = <int, double>{};
 
   @override
   void initState() {
     super.initState();
-    _controller.date.addListener(_onDateChanged);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _controller?.date.removeListener(_onDateChanged);
+    _controller = widget.controller ?? DefaultDateController.of(context)!;
+    _scrollController?.dispose();
+    _scrollController = _MultiDateScrollController(_controller!);
+    _controller!.date.addListener(_onDateChanged);
   }
 
   @override
   void dispose() {
-    _controller.date.removeListener(_onDateChanged);
-    _scrollController.dispose();
+    _controller!.date.removeListener(_onDateChanged);
+    _scrollController!.dispose();
     super.dispose();
   }
 
   void _onDateChanged() {
-    final datePageValue = _controller.value;
+    final datePageValue = _controller!.value;
     final firstPage = datePageValue.page.round();
     final lastPage = datePageValue.page.round() + datePageValue.visibleDayCount;
     _heights.removeWhere((key, _) => key < firstPage - 5 || key > lastPage + 5);
@@ -62,15 +70,15 @@ class _DatePageViewState extends State<DatePageView> {
   Widget build(BuildContext context) {
     Widget child = Scrollable(
       axisDirection: AxisDirection.right,
-      physics: DateScrollPhysics(_controller),
-      controller: _scrollController,
+      physics: DateScrollPhysics(_controller!),
+      controller: _scrollController!,
       viewportBuilder: (context, position) {
         return Viewport(
           axisDirection: AxisDirection.right,
           offset: position,
           slivers: <Widget>[
             ValueListenableBuilder<int>(
-              valueListenable: _controller.map((it) => it.visibleDayCount),
+              valueListenable: _controller!.map((it) => it.visibleDayCount),
               builder: (context, visibleDayCount, _) => SliverFillViewport(
                 padEnds: false,
                 viewportFraction: 1 / visibleDayCount,
@@ -86,7 +94,7 @@ class _DatePageViewState extends State<DatePageView> {
 
     if (widget.shrinkWrapInCrossAxis) {
       child = ValueListenableBuilder<DatePageValue>(
-        valueListenable: _controller,
+        valueListenable: _controller!,
         builder: (context, pageValue, child) =>
             SizedBox(height: _getHeight(pageValue), child: child),
         child: child,

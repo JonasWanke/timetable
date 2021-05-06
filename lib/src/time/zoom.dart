@@ -4,6 +4,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/physics.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
+
 import '../utils.dart';
 import 'controller.dart';
 import 'time_range.dart';
@@ -11,12 +12,11 @@ import 'time_range.dart';
 class TimeZoom extends StatefulWidget {
   const TimeZoom({
     Key? key,
-    required this.controller,
+    this.controller,
     required this.child,
   }) : super(key: key);
 
-  final TimeController controller;
-
+  final TimeController? controller;
   final Widget child;
 
   @override
@@ -30,11 +30,13 @@ class _TimeZoomState extends State<TimeZoom>
   late AnimationController _animationController;
   Animation<double>? _animation;
 
+  TimeController get _controller =>
+      widget.controller ?? DefaultTimeController.of(context)!;
+
   late double _parentHeight;
-  double get _offset =>
-      -widget.controller.value.startTime / 1.days * _childHeight;
+  double get _offset => -_controller.value.startTime / 1.days * _childHeight;
   double get _childHeight =>
-      _parentHeight / (widget.controller.value.duration / 1.days);
+      _parentHeight / (_controller.value.duration / 1.days);
 
   late TimeRange? _initialRange;
   late Duration? _lastFocus;
@@ -63,7 +65,7 @@ class _TimeZoomState extends State<TimeZoom>
           onScaleEnd: _onScaleEnd,
           child: ClipRect(
             child: ValueListenableBuilder<TimeRange>(
-              valueListenable: widget.controller,
+              valueListenable: _controller,
               builder: (context, _, child) {
                 return _VerticalOverflowBox(
                   height: _childHeight,
@@ -80,16 +82,13 @@ class _TimeZoomState extends State<TimeZoom>
   }
 
   void _onScaleStart(ScaleStartDetails details) {
-    _initialRange = widget.controller.value;
+    _initialRange = _controller.value;
     _lastFocus = _getFocusTime(details.localFocalPoint.dy);
   }
 
   void _onScaleUpdate(ScaleUpdateDetails details) {
-    final newDuration =
-        (_initialRange!.duration * (1 / details.verticalScale)).coerceIn(
-      widget.controller.minDuration,
-      widget.controller.maxRange.duration,
-    );
+    final newDuration = (_initialRange!.duration * (1 / details.verticalScale))
+        .coerceIn(_controller.minDuration, _controller.maxRange.duration);
 
     final newFocus = _focusToDuration(details.localFocalPoint.dy, newDuration);
     final newStart = _lastFocus! - newFocus;
@@ -134,12 +133,12 @@ class _TimeZoomState extends State<TimeZoom>
 
     _setNewTimeRange(
       1.days * (-_animation!.value / _childHeight),
-      widget.controller.value.duration,
+      _controller.value.duration,
     );
   }
 
   Duration _getFocusTime(double focalPoint) {
-    final range = widget.controller.value;
+    final range = _controller.value;
     return range.startTime + _focusToDuration(focalPoint, range.duration);
   }
 
@@ -150,10 +149,10 @@ class _TimeZoomState extends State<TimeZoom>
       visibleDuration * (focalPoint / _parentHeight);
   void _setNewTimeRange(Duration startTime, Duration duration) {
     final actualStartTime = startTime.coerceIn(
-      widget.controller.maxRange.startTime,
-      widget.controller.maxRange.endTime - duration,
+      _controller.maxRange.startTime,
+      _controller.maxRange.endTime - duration,
     );
-    widget.controller.value =
+    _controller.value =
         TimeRange.fromStartAndDuration(actualStartTime, duration);
   }
 }

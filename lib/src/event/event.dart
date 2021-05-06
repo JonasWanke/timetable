@@ -1,11 +1,12 @@
 import 'dart:ui';
+
+import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart' hide Interval;
 import 'package:meta/meta.dart';
-import 'package:collection/collection.dart';
 
+import '../utils.dart';
 import 'basic.dart';
-import 'utils.dart';
 
 /// The base class of all events.
 ///
@@ -79,8 +80,3 @@ extension TimetableEventIterable<E extends Event> on Iterable<E> {
     return sorted(comparator);
   }
 }
-
-typedef EventBuilder<E extends Event> = Widget Function(
-  BuildContext context,
-  E event,
-);

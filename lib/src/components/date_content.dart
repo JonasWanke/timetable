@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 
-import '../event.dart';
+import '../event/event.dart';
 import '../time/overlay.dart';
 import '../utils.dart';
 import 'date_events.dart';
@@ -13,7 +13,6 @@ class DateContent<E extends Event> extends StatelessWidget {
     Key? key,
     required this.date,
     required Iterable<E> events,
-    required this.eventBuilder,
     this.overlays = const [],
     this.onBackgroundTap,
     this.dateEventsStyle = const DateEventsStyle(),
@@ -32,8 +31,6 @@ class DateContent<E extends Event> extends StatelessWidget {
   final DateTime date;
 
   final List<E> events;
-  final EventBuilder<E> eventBuilder;
-
   final List<TimeOverlay> overlays;
 
   final DateContentBackgroundTapCallback? onBackgroundTap;
@@ -41,30 +38,25 @@ class DateContent<E extends Event> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final height = constraints.maxHeight;
+    return LayoutBuilder(builder: (context, constraints) {
+      final height = constraints.maxHeight;
 
-        return GestureDetector(
-          behavior: HitTestBehavior.translucent,
-          onTapUp: onBackgroundTap != null
-              ? (details) => _onBackgroundTap(height, details.localPosition.dy)
-              : null,
-          child: Stack(
-            children: [
-              _buildOverlaysForPosition(DecorationPosition.background),
-              DateEvents<E>(
-                date: date,
-                events: events,
-                eventBuilder: eventBuilder,
-                style: dateEventsStyle,
-              ),
-              _buildOverlaysForPosition(DecorationPosition.foreground),
-            ],
+      return GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        onTapUp: onBackgroundTap != null
+            ? (details) => _onBackgroundTap(height, details.localPosition.dy)
+            : null,
+        child: Stack(children: [
+          _buildOverlaysForPosition(DecorationPosition.background),
+          DateEvents<E>(
+            date: date,
+            events: events,
+            style: dateEventsStyle,
           ),
-        );
-      },
-    );
+          _buildOverlaysForPosition(DecorationPosition.foreground),
+        ]),
+      );
+    });
   }
 
   Widget _buildOverlaysForPosition(DecorationPosition position) {

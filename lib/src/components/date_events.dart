@@ -3,7 +3,8 @@ import 'dart:ui';
 import 'package:collection/collection.dart';
 import 'package:flutter/widgets.dart';
 
-import '../event.dart';
+import '../event/builder.dart';
+import '../event/event.dart';
 import '../utils.dart';
 import 'multi_date_content.dart';
 
@@ -12,7 +13,7 @@ class DateEvents<E extends Event> extends StatelessWidget {
     Key? key,
     required this.date,
     required Iterable<E> events,
-    required this.eventBuilder,
+    this.eventBuilder,
     this.style = const DateEventsStyle(),
   })  : assert(date.isValidTimetableDate),
         assert(
@@ -28,11 +29,13 @@ class DateEvents<E extends Event> extends StatelessWidget {
 
   final DateTime date;
   final List<E> events;
-  final EventBuilder<E> eventBuilder;
+  final EventBuilder<E>? eventBuilder;
   final DateEventsStyle style;
 
   @override
   Widget build(BuildContext context) {
+    final eventBuilder =
+        this.eventBuilder ?? DefaultEventBuilder.of<E>(context)!;
     return Padding(
       padding: style.padding,
       child: CustomMultiChildLayout(

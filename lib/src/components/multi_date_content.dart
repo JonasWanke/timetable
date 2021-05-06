@@ -4,9 +4,8 @@ import 'package:flutter/widgets.dart' hide Interval;
 
 import '../date/controller.dart';
 import '../date/date_page_view.dart';
-import '../event.dart';
-import '../event_provider.dart';
-import '../time/controller.dart';
+import '../event/event.dart';
+import '../event/provider.dart';
 import '../time/overlay.dart';
 import '../time/zoom.dart';
 import '../utils.dart';
@@ -22,25 +21,11 @@ typedef MultiDateContentBackgroundTapCallback = void Function(
 );
 
 class MultiDateContent<E extends Event> extends StatefulWidget {
-  MultiDateContent({
+  const MultiDateContent({
     Key? key,
-    required this.dateController,
-    required this.timeController,
-    required EventProvider<E> eventProvider,
-    required this.eventBuilder,
-    this.overlayProvider = emptyOverlayProvider,
     this.onBackgroundTap,
     this.style,
-  })  : eventProvider = eventProvider.debugChecked,
-        super(key: key);
-
-  final DateController dateController;
-  final TimeController timeController;
-
-  final EventProvider<E> eventProvider;
-  final EventBuilder<E> eventBuilder;
-
-  final TimeOverlayProvider overlayProvider;
+  }) : super(key: key);
 
   final MultiDateContentBackgroundTapCallback? onBackgroundTap;
   final MultiDateContentStyle? style;
@@ -64,19 +49,20 @@ class _MultiDateContentState<E extends Event>
   Widget build(BuildContext context) {
     final theme = context.theme;
 
+    final dateController = DefaultDateController.of(context)!;
+
     return CustomPaint(
       painter: DateDividersPainter(
-        controller: widget.dateController,
+        controller: dateController,
         dividerColor: widget.style?.dividerColor ?? theme.dividerColor,
       ),
       child: TimeZoom(
-        controller: widget.timeController,
         child: CustomPaint(
           painter: HourDividersPainter(
             dividerColor: widget.style?.dividerColor ?? theme.dividerColor,
           ),
           foregroundPainter: NowIndicatorPainter(
-            controller: widget.dateController,
+            controller: dateController,
             style: widget.style?.nowIndicatorStyle ??
                 MultiDateNowIndicatorStyle(
                   color: theme.highEmphasisOnBackground,
@@ -85,25 +71,28 @@ class _MultiDateContentState<E extends Event>
           ),
           child: LayoutBuilder(
             builder: (context, constraints) =>
-                _buildEvents(context, constraints.biggest),
+                _buildEvents(context, dateController, constraints.biggest),
           ),
         ),
       ),
     );
   }
 
-  Widget _buildEvents(BuildContext context, Size size) {
+  Widget _buildEvents(
+    BuildContext context,
+    DateController dateController,
+    Size size,
+  ) {
     return _DragInfos(
       context: context,
-      dateController: widget.dateController,
+      dateController: dateController,
       size: size,
       child: DatePageView(
-        controller: widget.dateController,
+        controller: dateController,
         builder: (context, date) => DateContent(
           date: date,
-          events: widget.eventProvider(date.fullDayInterval),
-          eventBuilder: widget.eventBuilder,
-          overlays: widget.overlayProvider(context, date),
+          events: DefaultEventProvider.of<E>(context)!(date.fullDayInterval),
+          overlays: DefaultTimeOverlayProvider.of(context)!(context, date),
           onBackgroundTap: widget.onBackgroundTap,
           dateEventsStyle: widget.style?.dateEventsStyle ?? DateEventsStyle(),
         ),

@@ -1,7 +1,8 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart' hide Interval;
 
+import '../utils.dart';
 import 'event.dart';
-import 'utils.dart';
 
 /// Provides [Event]s to timetable widgets.
 ///
@@ -59,5 +60,25 @@ extension EventProviderTimetable<E extends Event> on EventProvider<E> {
 
       return events;
     };
+  }
+}
+
+class DefaultEventProvider<E extends Event> extends InheritedWidget {
+  DefaultEventProvider({
+    required EventProvider<E> eventProvider,
+    required Widget child,
+  })   : eventProvider = eventProvider.debugChecked,
+        super(child: child);
+
+  final EventProvider<E> eventProvider;
+
+  @override
+  bool updateShouldNotify(DefaultEventProvider oldWidget) =>
+      eventProvider != oldWidget.eventProvider;
+
+  static EventProvider<E>? of<E extends Event>(BuildContext context) {
+    return context
+        .dependOnInheritedWidgetOfExactType<DefaultEventProvider<E>>()
+        ?.eventProvider;
   }
 }

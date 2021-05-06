@@ -1,52 +1,69 @@
 import 'package:flutter/material.dart';
 
 import '../components/multi_date_content.dart';
-import '../components/multi_date_event_header.dart';
 import '../components/multi_date_header.dart';
 import '../components/time_indicators.dart';
 import '../components/week_indicator.dart';
 import '../date/controller.dart';
-import '../event.dart';
-import '../event_provider.dart';
+import '../date/date_page_view.dart';
+import '../event/all_day.dart';
+import '../event/builder.dart';
+import '../event/event.dart';
+import '../event/provider.dart';
 import '../time/controller.dart';
 import '../time/overlay.dart';
 import '../time/zoom.dart';
 import '../utils.dart';
 
+typedef MultiDateTimetableHeaderBuilder = Widget Function(
+  BuildContext context,
+  double? leadingWidth,
+);
+typedef MultiDateTimetableContentBuilder = Widget Function(
+  BuildContext context,
+  ValueChanged<double> onLeadingWidthChanged,
+);
+
 class MultiDateTimetable<E extends Event> extends StatefulWidget {
   MultiDateTimetable({
     Key? key,
-    this.controller,
+    this.dateController,
     this.timeController,
-    required EventProvider<E> eventProvider,
-    required this.headerEventBuilder,
-    this.onHeaderDateTap,
-    this.onHeaderBackgroundTap,
-    this.headerStyle = const MultiDateEventHeaderStyle(),
-    this.headerPadding = EdgeInsets.zero,
-    required this.contentEventBuilder,
-    this.contentOverlayProvider = emptyOverlayProvider,
-    this.onContentBackgroundTap,
-    this.contentStyle,
-  })  : eventProvider = eventProvider.debugChecked,
+    EventProvider<E>? eventProvider,
+    this.eventBuilder,
+    this.allDayEventBuilder,
+    this.timeOverlayProvider,
+    MultiDateTimetableHeaderBuilder? headerBuilder,
+    MultiDateTimetableContentBuilder? contentBuilder,
+  })  : eventProvider = eventProvider?.debugChecked,
+        headerBuilder = headerBuilder ??
+            ((context, leadingWidth) => MultiDateTimetableHeader<E>(
+                  leading: SizedBox(
+                    width: leadingWidth,
+                    child: Center(child: WeekIndicator.forController(null)),
+                  ),
+                )),
+        contentBuilder = contentBuilder ??
+            ((context, onLeadingWidthChanged) => MultiDateTimetableContent<E>(
+                  content: SizeReportingWidget(
+                    onSizeChanged: (size) => onLeadingWidthChanged(size.width),
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8),
+                      child: TimeZoom(child: TimeIndicators.hours()),
+                    ),
+                  ),
+                )),
         super(key: key);
 
-  final DateController? controller;
+  final DateController? dateController;
   final TimeController? timeController;
-  final EventProvider<E> eventProvider;
+  final EventProvider<E>? eventProvider;
+  final EventBuilder<E>? eventBuilder;
+  final AllDayEventBuilder<E>? allDayEventBuilder;
+  final TimeOverlayProvider? timeOverlayProvider;
 
-  // Header:
-  final MultiDateHeaderTapCallback? onHeaderDateTap;
-  final MultiDateEventHeaderEventBuilder<E> headerEventBuilder;
-  final MultiDateEventHeaderBackgroundTapCallback? onHeaderBackgroundTap;
-  final MultiDateEventHeaderStyle headerStyle;
-  final EdgeInsetsGeometry headerPadding;
-
-  // Content:
-  final EventBuilder<E> contentEventBuilder;
-  final TimeOverlayProvider contentOverlayProvider;
-  final MultiDateContentBackgroundTapCallback? onContentBackgroundTap;
-  final MultiDateContentStyle? contentStyle;
+  final MultiDateTimetableHeaderBuilder headerBuilder;
+  final MultiDateTimetableContentBuilder contentBuilder;
 
   @override
   _MultiDateTimetableState<E> createState() => _MultiDateTimetableState();
@@ -54,52 +71,67 @@ class MultiDateTimetable<E extends Event> extends StatefulWidget {
 
 class _MultiDateTimetableState<E extends Event>
     extends State<MultiDateTimetable<E>> {
-  late DateController _dateController;
-  late TimeController _timeController;
-  double? _weekIndicatorWidth;
+  late final DateController _dateController = widget.dateController ??
+      DefaultDateController.of(context) ??
+      DateController();
+  late final TimeController _timeController = widget.timeController ??
+      DefaultTimeController.of(context) ??
+      TimeController();
+  late final EventProvider<E> _eventProvider =
+      widget.eventProvider ?? DefaultEventProvider.of<E>(context) ?? (_) => [];
+  late final EventBuilder<E> _eventBuilder =
+      widget.eventBuilder ?? DefaultEventBuilder.of<E>(context)!;
+  late final AllDayEventBuilder<E> _allDayEventBuilder =
+      widget.allDayEventBuilder ??
+          (widget.eventBuilder != null
+              ? (context, event, _) => widget.eventBuilder!(context, event)
+              : null) ??
+          DefaultAllDayEventBuilder.of<E>(context)!;
+  late final TimeOverlayProvider _timeOverlayProvider =
+      widget.timeOverlayProvider ??
+          DefaultTimeOverlayProvider.of(context) ??
+          emptyOverlayProvider;
 
-  @override
-  void initState() {
-    super.initState();
-
-    _dateController = widget.controller ?? DateController();
-    _timeController = widget.timeController ?? TimeController();
-  }
+  double? _leadingWidth;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        MultiDateTimetableHeader<E>(
-          controller: _dateController,
-          eventProvider: (visibleDates) => widget
-              .eventProvider(visibleDates)
-              .where((it) => it.isAllDay)
-              .toList(),
-          eventBuilder: widget.headerEventBuilder,
-          weekIndicatorWidth: _weekIndicatorWidth,
-          onBackgroundTap: widget.onHeaderBackgroundTap,
-          style: widget.headerStyle,
-          padding: widget.headerPadding,
+    final child = Column(children: [
+      DefaultEventProvider<E>(
+        eventProvider: (visibleDates) =>
+            _eventProvider(visibleDates).where((it) => it.isAllDay).toList(),
+        child: widget.headerBuilder(context, _leadingWidth),
+      ),
+      Expanded(
+        child: DefaultEventProvider<E>(
+          eventProvider: (visibleDates) =>
+              _eventProvider(visibleDates).where((it) => it.isPartDay).toList(),
+          child: Builder(
+            builder: (contxt) => widget.contentBuilder(
+              context,
+              (newWidth) => setState(() => _leadingWidth = newWidth),
+            ),
+          ),
+          // ),
         ),
-        Expanded(
-          child: MultiDateTimetableContent<E>(
-            dateController: _dateController,
-            timeController: _timeController,
-            eventProvider: (visibleDates) => widget
-                .eventProvider(visibleDates)
-                .where((it) => it.isPartDay)
-                .toList(),
-            eventBuilder: widget.contentEventBuilder,
-            overlayProvider: widget.contentOverlayProvider,
-            onTimeIndicatorsWidthChanged: (width) {
-              setState(() => _weekIndicatorWidth = width);
-            },
-            onBackgroundTap: widget.onContentBackgroundTap,
-            style: widget.contentStyle,
+      ),
+    ]);
+
+    return DefaultDateController(
+      controller: _dateController,
+      child: DefaultTimeController(
+        controller: _timeController,
+        child: DefaultEventBuilder(
+          builder: _eventBuilder,
+          child: DefaultAllDayEventBuilder(
+            builder: _allDayEventBuilder,
+            child: DefaultTimeOverlayProvider(
+              overlayProvider: _timeOverlayProvider,
+              child: child,
+            ),
           ),
         ),
-      ],
+      ),
     );
   }
 }
@@ -107,112 +139,58 @@ class _MultiDateTimetableState<E extends Event>
 class MultiDateTimetableHeader<E extends Event> extends StatelessWidget {
   MultiDateTimetableHeader({
     Key? key,
-    required this.controller,
-    required EventProvider<E> eventProvider,
-    required this.eventBuilder,
-    this.weekIndicatorWidth,
-    this.onDateTap,
-    this.onBackgroundTap,
-    this.style = const MultiDateEventHeaderStyle(),
-    this.padding = EdgeInsets.zero,
-  })  : eventProvider = eventProvider.debugChecked,
+    Widget? leading,
+    DateWidgetBuilder? dateHeaderBuilder,
+    Widget? bottom,
+  })  : leading = leading ?? Center(child: WeekIndicator.forController(null)),
+        dateHeaderBuilder =
+            dateHeaderBuilder ?? ((context, date) => DateHeader(date)),
+        bottom = bottom ?? SizedBox.shrink(),
         super(key: key);
 
-  final DateController controller;
-
-  final EventProvider<E> eventProvider;
-  final MultiDateEventHeaderEventBuilder<E> eventBuilder;
-
-  final double? weekIndicatorWidth;
-
-  final MultiDateHeaderTapCallback? onDateTap;
-  final MultiDateEventHeaderBackgroundTapCallback? onBackgroundTap;
-  final MultiDateEventHeaderStyle style;
-  final EdgeInsetsGeometry padding;
+  final Widget leading;
+  final DateWidgetBuilder dateHeaderBuilder;
+  final Widget bottom;
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        SizedBox(
-          width: weekIndicatorWidth,
-          child: Center(child: WeekIndicator.forController(controller)),
-        ),
-        Expanded(
-          child: Column(
-            children: [
-              MultiDateHeader(controller: controller, onTap: onDateTap),
-              MultiDateEventHeader<E>(
-                controller: controller,
-                eventProvider: eventProvider,
-                eventBuilder: eventBuilder,
-                onBackgroundTap: onBackgroundTap,
-                style: style,
-                padding: padding,
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
+    return Row(children: [
+      leading,
+      Expanded(
+        child: Column(children: [
+          DatePageView(shrinkWrapInCrossAxis: true, builder: dateHeaderBuilder),
+          bottom,
+        ]),
+      ),
+    ]);
   }
 }
 
 class MultiDateTimetableContent<E extends Event> extends StatelessWidget {
   MultiDateTimetableContent({
     Key? key,
-    required this.dateController,
-    required this.timeController,
-    required EventProvider<E> eventProvider,
-    required this.eventBuilder,
-    this.overlayProvider = emptyOverlayProvider,
-    this.onTimeIndicatorsWidthChanged,
-    this.onBackgroundTap,
-    this.style,
-  })  : eventProvider = eventProvider.debugChecked,
+    Widget? leading,
+    Widget? divider,
+    Widget? content,
+  })  : leading = leading ??
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 8),
+              child: TimeZoom(child: TimeIndicators.hours()),
+            ),
+        divider = divider ?? VerticalDivider(width: 0),
+        content = content ?? MultiDateContent<E>(),
         super(key: key);
 
-  final DateController dateController;
-  final TimeController timeController;
-
-  final EventProvider<E> eventProvider;
-  final EventBuilder<E> eventBuilder;
-
-  final TimeOverlayProvider overlayProvider;
-
-  final ValueChanged<double>? onTimeIndicatorsWidthChanged;
-
-  final MultiDateContentBackgroundTapCallback? onBackgroundTap;
-  final MultiDateContentStyle? style;
+  final Widget leading;
+  final Widget divider;
+  final Widget content;
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        SizeReportingWidget(
-          onSizeChanged: (size) =>
-              onTimeIndicatorsWidthChanged?.call(size.width),
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 8),
-            child: TimeZoom(
-              controller: timeController,
-              child: TimeIndicators.hours(),
-            ),
-          ),
-        ),
-        VerticalDivider(width: 0),
-        Expanded(
-          child: MultiDateContent<E>(
-            dateController: dateController,
-            timeController: timeController,
-            eventProvider: eventProvider,
-            eventBuilder: eventBuilder,
-            overlayProvider: overlayProvider,
-            onBackgroundTap: onBackgroundTap,
-            style: style,
-          ),
-        ),
-      ],
-    );
+    return Row(children: [
+      leading,
+      divider,
+      Expanded(child: content),
+    ]);
   }
 }

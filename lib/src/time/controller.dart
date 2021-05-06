@@ -83,3 +83,22 @@ class TimeController extends ValueNotifier<TimeRange> {
 
   void jumpToShowFullDay() => value = TimeRange.fullDay;
 }
+
+class DefaultTimeController extends InheritedWidget {
+  const DefaultTimeController({
+    required this.controller,
+    required Widget child,
+  }) : super(child: child);
+
+  final TimeController controller;
+
+  @override
+  bool updateShouldNotify(DefaultTimeController oldWidget) =>
+      controller != oldWidget.controller;
+
+  static TimeController? of(BuildContext context) {
+    return context
+        .dependOnInheritedWidgetOfExactType<DefaultTimeController>()
+        ?.controller;
+  }
+}

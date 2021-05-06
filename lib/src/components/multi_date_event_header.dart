@@ -4,38 +4,24 @@ import 'package:black_hole_flutter/black_hole_flutter.dart';
 import 'package:flutter/material.dart' hide Interval;
 import 'package:flutter/rendering.dart';
 
-import '../all_day.dart';
 import '../date/controller.dart';
 import '../date/visible_date_range.dart';
-import '../event.dart';
-import '../event_provider.dart';
+import '../event/all_day.dart';
+import '../event/event.dart';
+import '../event/provider.dart';
 import '../utils.dart';
-
-typedef MultiDateEventHeaderEventBuilder<E extends Event> = Widget Function(
-  BuildContext context,
-  E event,
-  AllDayEventLayoutInfo info,
-);
 
 typedef MultiDateEventHeaderBackgroundTapCallback = void Function(
   DateTime date,
 );
 
 class MultiDateEventHeader<E extends Event> extends StatelessWidget {
-  MultiDateEventHeader({
+  const MultiDateEventHeader({
     Key? key,
-    required this.controller,
-    required EventProvider<E> eventProvider,
-    required this.eventBuilder,
     this.onBackgroundTap,
     this.style = const MultiDateEventHeaderStyle(),
     this.padding = EdgeInsets.zero,
-  })  : eventProvider = eventProvider.debugChecked,
-        super(key: key);
-
-  final DateController controller;
-  final EventProvider<E> eventProvider;
-  final MultiDateEventHeaderEventBuilder<E> eventBuilder;
+  }) : super(key: key);
 
   final MultiDateEventHeaderBackgroundTapCallback? onBackgroundTap;
   final MultiDateEventHeaderStyle style;
@@ -48,13 +34,14 @@ class MultiDateEventHeader<E extends Event> extends StatelessWidget {
         padding: padding,
         child: LayoutBuilder(
           builder: (context, constraints) =>
-              _buildContent(constraints.maxWidth),
+              _buildContent(context, constraints.maxWidth),
         ),
       ),
     );
   }
 
-  Widget _buildContent(double width) {
+  Widget _buildContent(BuildContext context, double width) {
+    final controller = DefaultDateController.of(context)!;
     return ValueListenableBuilder<Interval>(
       valueListenable: controller.map((it) {
         final interval = Interval(
@@ -107,7 +94,7 @@ class MultiDateEventHeader<E extends Event> extends StatelessWidget {
       page: pageValue.page,
       style: style,
       children: [
-        for (final event in eventProvider(visibleDates))
+        for (final event in DefaultEventProvider.of<E>(context)!(visibleDates))
           _EventParentDataWidget<E>(
             key: ValueKey(event),
             event: event,
@@ -118,7 +105,7 @@ class MultiDateEventHeader<E extends Event> extends StatelessWidget {
   }
 
   Widget _buildEvent(BuildContext context, E event, DatePageValue pageValue) {
-    return eventBuilder(
+    return DefaultAllDayEventBuilder.of(context)!(
       context,
       event,
       AllDayEventLayoutInfo(

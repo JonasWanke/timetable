@@ -19,12 +19,12 @@ typedef DateWidgetBuilder = Widget Function(
 class DatePageView extends StatefulWidget {
   const DatePageView({
     Key? key,
-    required this.controller,
+    this.controller,
     this.shrinkWrapInCrossAxis = false,
     required this.builder,
   }) : super(key: key);
 
-  final DateController controller;
+  final DateController? controller;
   final bool shrinkWrapInCrossAxis;
   final DateWidgetBuilder builder;
 
@@ -33,25 +33,26 @@ class DatePageView extends StatefulWidget {
 }
 
 class _DatePageViewState extends State<DatePageView> {
-  late _MultiDateScrollController _scrollController;
+  DateController get _controller =>
+      widget.controller ?? DefaultDateController.of(context)!;
+  late final _scrollController = _MultiDateScrollController(_controller);
   final _heights = <int, double>{};
 
   @override
   void initState() {
     super.initState();
-    _scrollController = _MultiDateScrollController(widget.controller);
-    widget.controller.date.addListener(_onDateChanged);
+    _controller.date.addListener(_onDateChanged);
   }
 
   @override
   void dispose() {
-    widget.controller.date.removeListener(_onDateChanged);
+    _controller.date.removeListener(_onDateChanged);
     _scrollController.dispose();
     super.dispose();
   }
 
   void _onDateChanged() {
-    final datePageValue = widget.controller.value;
+    final datePageValue = _controller.value;
     final firstPage = datePageValue.page.round();
     final lastPage = datePageValue.page.round() + datePageValue.visibleDayCount;
     _heights.removeWhere((key, _) => key < firstPage - 5 || key > lastPage + 5);
@@ -61,7 +62,7 @@ class _DatePageViewState extends State<DatePageView> {
   Widget build(BuildContext context) {
     Widget child = Scrollable(
       axisDirection: AxisDirection.right,
-      physics: DateScrollPhysics(widget.controller),
+      physics: DateScrollPhysics(_controller),
       controller: _scrollController,
       viewportBuilder: (context, position) {
         return Viewport(
@@ -69,8 +70,7 @@ class _DatePageViewState extends State<DatePageView> {
           offset: position,
           slivers: <Widget>[
             ValueListenableBuilder<int>(
-              valueListenable:
-                  widget.controller.map((it) => it.visibleDayCount),
+              valueListenable: _controller.map((it) => it.visibleDayCount),
               builder: (context, visibleDayCount, _) => SliverFillViewport(
                 padEnds: false,
                 viewportFraction: 1 / visibleDayCount,
@@ -86,7 +86,7 @@ class _DatePageViewState extends State<DatePageView> {
 
     if (widget.shrinkWrapInCrossAxis) {
       child = ValueListenableBuilder<DatePageValue>(
-        valueListenable: widget.controller,
+        valueListenable: _controller,
         builder: (context, pageValue, child) =>
             SizedBox(height: _getHeight(pageValue), child: child),
         child: child,

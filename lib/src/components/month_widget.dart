@@ -30,9 +30,9 @@ class MonthWidget extends StatelessWidget {
         padding: EdgeInsets.all(4),
         child: DateIndicator(
           date,
-          textStyle: date.firstDayOfMonth != month
-              ? TextStyle(color: context.theme.disabledOnBackground)
-              : null,
+          // textStyle: date.firstDayOfMonth != month
+          //     ? TextStyle(color: context.theme.disabledOnBackground)
+          //     : null,
         ),
       );
     };

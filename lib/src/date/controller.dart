@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/animation.dart' hide Interval;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter/widgets.dart';
 
 import '../utils.dart';
 import 'visible_date_range.dart';
@@ -148,4 +149,23 @@ class DatePageValue {
   @override
   String toString() =>
       'DatePageValue(visibleRange = $visibleRange, page = $page)';
+}
+
+class DefaultDateController extends InheritedWidget {
+  const DefaultDateController({
+    required this.controller,
+    required Widget child,
+  }) : super(child: child);
+
+  final DateController controller;
+
+  @override
+  bool updateShouldNotify(DefaultDateController oldWidget) =>
+      controller != oldWidget.controller;
+
+  static DateController? of(BuildContext context) {
+    return context
+        .dependOnInheritedWidgetOfExactType<DefaultDateController>()
+        ?.controller;
+  }
 }

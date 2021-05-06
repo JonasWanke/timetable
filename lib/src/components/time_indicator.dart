@@ -34,7 +34,8 @@ class TimeIndicator extends StatelessWidget {
   static DateFormat formatHour24MinuteSecond() => DateFormat.Hms();
 
   static TimeFormatter _formatterFromDateFormat(
-      ValueGetter<DateFormat> format) {
+    ValueGetter<DateFormat> format,
+  ) {
     return (time) => format().format(DateTime(0) + time);
   }
 

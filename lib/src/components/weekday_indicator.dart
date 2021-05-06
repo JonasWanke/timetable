@@ -5,11 +5,15 @@ import 'package:intl/intl.dart';
 import '../utils.dart';
 
 class WeekdayIndicator extends StatelessWidget {
-  WeekdayIndicator(this.date, {Key? key})
-      : assert(date.isValidTimetableDate),
+  WeekdayIndicator(
+    this.date, {
+    Key? key,
+    this.style,
+  })  : assert(date.isValidTimetableDate),
         super(key: key);
 
   final DateTime date;
+  final WeekdayIndicatorStyle? style;
 
   @override
   Widget build(BuildContext context) {
@@ -21,5 +25,29 @@ class WeekdayIndicator extends StatelessWidget {
     );
 
     return Text(DateFormat('EEE').format(date), style: textStyle);
+  }
+}
+
+/// Style for [WeekdayIndicator].
+@immutable
+class WeekdayIndicatorStyle {
+  const WeekdayIndicatorStyle({
+    this.decoration,
+    this.padding,
+    this.textStyle,
+  });
+
+  final Decoration? decoration;
+  final EdgeInsetsGeometry? padding;
+  final TextStyle? textStyle;
+
+  @override
+  int get hashCode => hashList([decoration, padding, textStyle]);
+  @override
+  bool operator ==(Object other) {
+    return other is WeekdayIndicatorStyle &&
+        decoration == other.decoration &&
+        padding == other.padding &&
+        textStyle == other.textStyle;
   }
 }

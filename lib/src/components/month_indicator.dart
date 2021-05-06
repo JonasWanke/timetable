@@ -9,7 +9,7 @@ class MonthIndicator extends StatelessWidget {
   MonthIndicator(this.month, {Key? key})
       : assert(month.isValidTimetableMonth),
         super(key: key);
-  static Widget forController(DateController controller, {Key? key}) =>
+  static Widget forController(DateController? controller, {Key? key}) =>
       _MonthIndicatorForController(controller, key: key);
 
   final int month;
@@ -26,10 +26,11 @@ class _MonthIndicatorForController extends StatelessWidget {
   const _MonthIndicatorForController(this.controller, {Key? key})
       : super(key: key);
 
-  final DateController controller;
+  final DateController? controller;
 
   @override
   Widget build(BuildContext context) {
+    final controller = this.controller ?? DefaultDateController.of(context)!;
     return ValueListenableBuilder<int>(
       valueListenable: controller.date.map((it) => it.month),
       builder: (context, month, _) => MonthIndicator(month),

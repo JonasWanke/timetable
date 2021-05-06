@@ -53,28 +53,28 @@ class _TimetableExampleState extends State<TimetableExample>
       _buildAppBar(isFlat: false),
       Expanded(
         child: MultiDateTimetable<BasicEvent>(
-          controller: _dateController, // required
+          dateController: _dateController, // required
           timeController: _timeController, // required
           eventProvider: _eventProvider, // required
-          headerEventBuilder: (context, event, info) => // required
+          allDayEventBuilder: (context, event, info) => // required
               BasicAllDayEventWidget(
             event,
             info: info,
             onTap: () => _showSnackBar('All-day event $event tapped'),
           ),
-          onHeaderDateTap: (date) =>
-              _showSnackBar('Header tapped on date $date.'),
-          onHeaderBackgroundTap: (date) =>
-              _showSnackBar('Multi-day header background tapped at $date'),
-          contentEventBuilder: (context, event) =>
-              _buildPartDayEvent(event), // required
-          contentOverlayProvider: positioningDemoOverlayProvider,
-          onContentBackgroundTap: (dateTime) =>
-              _showSnackBar('Part-day background tapped at $dateTime'),
-          contentStyle: MultiDateContentStyle(
-            nowIndicatorStyle: MultiDateNowIndicatorStyle(color: Colors.green),
-            dividerColor: Colors.orange.withOpacity(.3),
-          ),
+          // onHeaderDateTap: (date) =>
+          //     _showSnackBar('Header tapped on date $date.'),
+          // onHeaderBackgroundTap: (date) =>
+          //     _showSnackBar('Multi-day header background tapped at $date'),
+          // contentEventBuilder: (context, event) =>
+          //     _buildPartDayEvent(event), // required
+          // contentOverlayProvider: positioningDemoOverlayProvider,
+          // onContentBackgroundTap: (dateTime) =>
+          //     _showSnackBar('Part-day background tapped at $dateTime'),
+          // contentStyle: MultiDateContentStyle(
+          //   nowIndicatorStyle: MultiDateNowIndicatorStyle(color: Colors.green),
+          //   dividerColor: Colors.orange.withOpacity(.3),
+          // ),
         ),
       ),
     ]);

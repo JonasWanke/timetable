@@ -33,3 +33,22 @@ List<TimeOverlay> emptyOverlayProvider(
   assert(date.isValidTimetableDate);
   return [];
 }
+
+class DefaultTimeOverlayProvider extends InheritedWidget {
+  const DefaultTimeOverlayProvider({
+    required this.overlayProvider,
+    required Widget child,
+  }) : super(child: child);
+
+  final TimeOverlayProvider overlayProvider;
+
+  @override
+  bool updateShouldNotify(DefaultTimeOverlayProvider oldWidget) =>
+      overlayProvider != oldWidget.overlayProvider;
+
+  static TimeOverlayProvider? of(BuildContext context) {
+    return context
+        .dependOnInheritedWidgetOfExactType<DefaultTimeOverlayProvider>()
+        ?.overlayProvider;
+  }
+}

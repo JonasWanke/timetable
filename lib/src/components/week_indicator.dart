@@ -8,6 +8,7 @@ import '../styling.dart';
 import '../utils.dart';
 
 class WeekIndicator extends StatelessWidget {
+  // TODO(JonasWanke): onTap
   const WeekIndicator(
     this.weekInfo, {
     Key? key,
@@ -22,7 +23,7 @@ class WeekIndicator extends StatelessWidget {
   })  : assert(date.isValidTimetableDate),
         weekInfo = date.weekInfo,
         super(key: key);
-  static Widget forController(DateController controller, {Key? key}) =>
+  static Widget forController(DateController? controller, {Key? key}) =>
       _WeekIndicatorForController(controller, key: key);
 
   final WeekInfo weekInfo;
@@ -130,12 +131,14 @@ class _WeekIndicatorForController extends StatelessWidget {
   const _WeekIndicatorForController(this.controller, {Key? key})
       : super(key: key);
 
-  final DateController controller;
+  final DateController? controller;
 
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<WeekInfo>(
-      valueListenable: controller.date.map((it) => it.weekInfo),
+      valueListenable: (controller ?? DefaultDateController.of(context)!)
+          .date
+          .map((it) => it.weekInfo),
       builder: (context, month, _) => WeekIndicator(month),
     );
   }

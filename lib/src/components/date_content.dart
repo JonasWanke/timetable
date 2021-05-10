@@ -12,7 +12,7 @@ class DateContent<E extends Event> extends StatelessWidget {
   DateContent({
     Key? key,
     required this.date,
-    required Iterable<E> events,
+    required List<E> events,
     this.overlays = const [],
     this.onBackgroundTap,
     this.dateEventsStyle = const DateEventsStyle(),
@@ -25,7 +25,7 @@ class DateContent<E extends Event> extends StatelessWidget {
           events.toSet().length == events.length,
           'Events may not contain duplicates',
         ),
-        events = events.sortedByOnTopStartLength(),
+        events = events.sortedByStartLength(),
         super(key: key);
 
   final DateTime date;

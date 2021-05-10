@@ -1,4 +1,5 @@
 import 'package:black_hole_flutter/black_hole_flutter.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:timetable/timetable.dart';
@@ -34,11 +35,7 @@ class _TimetableExampleState extends State<TimetableExample>
     maxRange: TimeRange(0.hours, 24.hours),
   );
 
-  final List<BasicEvent> _draggedEvents = [];
-  late final _eventProvider = mergeEventProviders([
-    eventProviderFromFixedList(positioningDemoEvents),
-    eventProviderFromFixedList(_draggedEvents),
-  ]);
+  final _draggedEvents = <BasicEvent>[];
 
   @override
   void dispose() {
@@ -53,11 +50,13 @@ class _TimetableExampleState extends State<TimetableExample>
       _buildAppBar(isFlat: false),
       Expanded(
         child: MultiDateTimetable<BasicEvent>(
-          dateController: _dateController, // required
-          timeController: _timeController, // required
-          eventProvider: _eventProvider, // required
-          allDayEventBuilder: (context, event, info) => // required
-              BasicAllDayEventWidget(
+          // Required:
+          dateController: _dateController,
+          timeController: _timeController,
+          eventProvider: eventProviderFromFixedList(positioningDemoEvents),
+          eventBuilder: (context, event) => _buildPartDayEvent(event),
+          // Optional:
+          allDayEventBuilder: (context, event, info) => BasicAllDayEventWidget(
             event,
             info: info,
             onTap: () => _showSnackBar('All-day event $event tapped'),
@@ -66,9 +65,14 @@ class _TimetableExampleState extends State<TimetableExample>
           //     _showSnackBar('Header tapped on date $date.'),
           // onHeaderBackgroundTap: (date) =>
           //     _showSnackBar('Multi-day header background tapped at $date'),
-          eventBuilder: (context, event) => // required
-              _buildPartDayEvent(event),
-          // contentOverlayProvider: positioningDemoOverlayProvider,
+          timeOverlayProvider: mergeTimeOverlayProviders([
+            positioningDemoOverlayProvider,
+            (context, date) => _draggedEvents
+                .map((it) =>
+                    it.toTimeOverlay(date: date, widget: BasicEventWidget(it)))
+                .whereNotNull()
+                .toList(),
+          ]),
           // onContentBackgroundTap: (dateTime) =>
           //     _showSnackBar('Part-day background tapped at $dateTime'),
           // contentStyle: MultiDateContentStyle(

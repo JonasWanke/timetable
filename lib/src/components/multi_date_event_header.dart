@@ -313,7 +313,7 @@ class _EventsLayout<E extends Event> extends RenderBox
     // Insert new events.
     final sortedEvents = events
         .where((it) => !_yPositions.containsKey(it))
-        .sortedByOnTopStartLength();
+        .sortedByStartLength();
 
     Iterable<E> eventsWithPosition(int y) {
       return _yPositions.entries.where((e) => e.value == y).map((e) => e.key);

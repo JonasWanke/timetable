@@ -12,7 +12,7 @@ class DateEvents<E extends Event> extends StatelessWidget {
   DateEvents({
     Key? key,
     required this.date,
-    required Iterable<E> events,
+    required List<E> events,
     this.eventBuilder,
     this.style = const DateEventsStyle(),
   })  : assert(date.isValidTimetableDate),
@@ -24,7 +24,7 @@ class DateEvents<E extends Event> extends StatelessWidget {
           events.toSet().length == events.length,
           'Events may not contain duplicates',
         ),
-        events = events.sortedByOnTopStartLength(),
+        events = events.sortedByStartLength(),
         super(key: key);
 
   final DateTime date;
@@ -161,20 +161,13 @@ class _DayEventsLayoutDelegate<E extends Event>
           .clamp(0, size.height - top)
           .toDouble();
 
-      final double left;
-      final double width;
-      if (event.showOnTop) {
-        left = 0;
-        width = size.width;
-      } else {
-        final position = positions.eventPositions[event]!;
-        final columnWidth =
-            size.width / positions.groupColumnCounts[position.group];
-        final columnLeft = columnWidth * position.column;
-        left = columnLeft + position.index * style.stackedEventSpacing;
-        width = columnWidth * position.columnSpan -
-            position.index * style.stackedEventSpacing;
-      }
+      final position = positions.eventPositions[event]!;
+      final columnWidth =
+          size.width / positions.groupColumnCounts[position.group];
+      final columnLeft = columnWidth * position.column;
+      final left = columnLeft + position.index * style.stackedEventSpacing;
+      final width = columnWidth * position.columnSpan -
+          position.index * style.stackedEventSpacing;
 
       final childSize = Size(width.coerceAtLeast(minWidth), height);
       layoutChild(event, BoxConstraints.tight(childSize));
@@ -192,7 +185,7 @@ class _DayEventsLayoutDelegate<E extends Event>
 
     var currentGroup = <E>[];
     DateTime? currentEnd;
-    for (final event in events.where((it) => !it.showOnTop)) {
+    for (final event in events) {
       if (currentEnd != null && event.start >= currentEnd) {
         _endGroup(positions, currentGroup, height);
         currentGroup = [];

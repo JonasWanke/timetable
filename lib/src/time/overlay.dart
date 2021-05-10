@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
+import '../event/event.dart';
 import '../utils.dart';
 
 @immutable
@@ -26,12 +27,19 @@ typedef TimeOverlayProvider = List<TimeOverlay> Function(
   DateTime date,
 );
 
-List<TimeOverlay> emptyOverlayProvider(
+List<TimeOverlay> emptyTimeOverlayProvider(
   BuildContext context,
   DateTime date,
 ) {
   assert(date.isValidTimetableDate);
   return [];
+}
+
+TimeOverlayProvider mergeTimeOverlayProviders(
+  List<TimeOverlayProvider> overlayProviders,
+) {
+  return (context, date) =>
+      overlayProviders.expand((it) => it(context, date)).toList();
 }
 
 class DefaultTimeOverlayProvider extends InheritedWidget {
@@ -50,5 +58,25 @@ class DefaultTimeOverlayProvider extends InheritedWidget {
     return context
         .dependOnInheritedWidgetOfExactType<DefaultTimeOverlayProvider>()
         ?.overlayProvider;
+  }
+}
+
+extension EventToTimeOverlay on Event {
+  TimeOverlay? toTimeOverlay({
+    required DateTime date,
+    required Widget widget,
+    DecorationPosition position = DecorationPosition.foreground,
+  }) {
+    assert(date.isValidTimetableDate);
+
+    if (start.atStartOfDay > date || endInclusive.atStartOfDay < date)
+      return null;
+
+    return TimeOverlay(
+      start: start.difference(date).coerceAtLeast(Duration.zero),
+      end: endInclusive.difference(date).coerceAtMost(1.days),
+      widget: widget,
+      position: position,
+    );
   }
 }

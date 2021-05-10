@@ -14,10 +14,9 @@ class BasicEvent extends Event {
     required this.id,
     required this.title,
     required this.color,
-    bool showOnTop = false,
     required DateTime start,
     required DateTime end,
-  }) : super(showOnTop: showOnTop, start: start, end: end);
+  }) : super(start: start, end: end);
 
   /// An ID for this event.
   ///
@@ -45,14 +44,13 @@ class BasicEvent extends Event {
       id: id ?? this.id,
       title: title ?? this.title,
       color: color ?? this.color,
-      showOnTop: showOnTop ?? this.showOnTop,
       start: start ?? this.start,
       end: end ?? this.end,
     );
   }
 
   @override
-  int get hashCode => hashList([super.hashCode, title, color]);
+  int get hashCode => hashValues(super.hashCode, title, color);
   @override
   bool operator ==(dynamic other) =>
       super == other && title == other.title && color == other.color;

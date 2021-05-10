@@ -94,7 +94,7 @@ class _MultiDateTimetableState<E extends Event>
         DefaultAllDayEventBuilder.of<E>(context)!;
     final _timeOverlayProvider = widget.timeOverlayProvider ??
         DefaultTimeOverlayProvider.of(context) ??
-        emptyOverlayProvider;
+        emptyTimeOverlayProvider;
 
     final child = Column(children: [
       DefaultEventProvider<E>(

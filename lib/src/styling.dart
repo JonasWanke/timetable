@@ -1,43 +1,71 @@
-enum TemporalState { past, present, future }
+import 'package:flutter/material.dart';
 
-/// Signature for the function that returns a value of type `T` based on a given
-/// state.
-typedef TimetablePropertyResolver<T> = T Function(TemporalState state);
+import 'components/date_indicator.dart';
+import 'components/week_indicator.dart';
+import 'localization.dart';
+import 'utils.dart';
 
-abstract class TemporalStateProperty<T> {
-  /// Convenience method for creating a [TemporalStateProperty] from a
-  /// [TimetablePropertyResolver] function alone.
-  static TemporalStateProperty<T> resolveWith<T>(
-    TimetablePropertyResolver<T> callback,
-  ) =>
-      _TemporalStatePropertyWith<T>(callback);
+typedef DateBasedStyleProvider<T> = T Function(DateTime date);
+typedef WeekBasedStyleProvider<T> = T Function(WeekInfo week);
 
-  /// Convenience method for creating a [TemporalStateProperty] that resolves
-  /// to a single value for all state.
-  static TemporalStateProperty<T> all<T>(T value) =>
-      _TemporalStatePropertyAll<T>(value);
+@immutable
+class TimetableThemeData {
+  factory TimetableThemeData({
+    required ColorScheme colorScheme,
+    required TextTheme textTheme,
+    required TimetableLocalizations localizations,
+    DateBasedStyleProvider<DateIndicatorStyle>? dateIndicatorStyleProvider,
+    WeekBasedStyleProvider<WeekIndicatorStyle>? weekIndicatorStyleProvider,
+  }) {
+    return TimetableThemeData.raw(
+      dateIndicatorStyleProvider: dateIndicatorStyleProvider ??
+          (date) => DateIndicatorStyle(
+                date: date,
+                colorScheme: colorScheme,
+                textTheme: textTheme,
+              ),
+      weekIndicatorStyleProvider: weekIndicatorStyleProvider ??
+          (week) => WeekIndicatorStyle(
+                week: week,
+                colorScheme: colorScheme,
+                textTheme: textTheme,
+                localizations: localizations,
+              ),
+    );
+  }
 
-  /// Returns a value of type `T` that depends on [state].
-  T resolve(TemporalState state);
+  const TimetableThemeData.raw({
+    required this.dateIndicatorStyleProvider,
+    required this.weekIndicatorStyleProvider,
+  });
+
+  final DateBasedStyleProvider<DateIndicatorStyle> dateIndicatorStyleProvider;
+  final WeekBasedStyleProvider<WeekIndicatorStyle> weekIndicatorStyleProvider;
+
+  @override
+  int get hashCode => hashValues(
+        dateIndicatorStyleProvider,
+        weekIndicatorStyleProvider,
+      );
+  @override
+  bool operator ==(Object other) {
+    return other is TimetableThemeData &&
+        dateIndicatorStyleProvider == other.dateIndicatorStyleProvider &&
+        weekIndicatorStyleProvider == other.weekIndicatorStyleProvider;
+  }
 }
 
-class _TemporalStatePropertyWith<T> implements TemporalStateProperty<T> {
-  _TemporalStatePropertyWith(this._resolve);
+class TimetableTheme extends InheritedWidget {
+  const TimetableTheme({
+    required this.data,
+    required Widget child,
+  }) : super(child: child);
 
-  final TimetablePropertyResolver<T> _resolve;
-
-  @override
-  T resolve(TemporalState state) => _resolve(state);
-}
-
-class _TemporalStatePropertyAll<T> implements TemporalStateProperty<T> {
-  _TemporalStatePropertyAll(this.value);
-
-  final T value;
+  final TimetableThemeData data;
 
   @override
-  T resolve(TemporalState state) => value;
+  bool updateShouldNotify(TimetableTheme oldWidget) => data != oldWidget.data;
 
-  @override
-  String toString() => 'TemporalStateProperty.all($value)';
+  static TimetableThemeData? of(BuildContext context) =>
+      context.dependOnInheritedWidgetOfExactType<TimetableTheme>()?.data;
 }

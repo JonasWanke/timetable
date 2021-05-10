@@ -92,26 +92,20 @@ class MonthWidget extends StatelessWidget {
   Widget _buildWeeks(BuildContext context, DateTime firstDay, int weekCount) {
     assert(firstDay.isValidTimetableDate);
 
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: context.theme.brightness.contrastColor.withOpacity(0.2),
-        borderRadius: BorderRadius.circular(4),
-      ),
-      child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 12),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            for (final index in 0.until(weekCount))
-              WeekIndicator.forDate(
-                firstDay + (index * DateTime.daysPerWeek).days,
-                style: WeekIndicatorStyle(
-                  decoration: TemporalStateProperty.all(BoxDecoration()),
-                ),
-                alwaysUseNarrowestVariant: true,
-              ),
-          ],
-        ),
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 12),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          for (final index in 0.until(weekCount))
+            WeekIndicator.forDate(
+              firstDay + (index * DateTime.daysPerWeek).days,
+              // style: WeekIndicatorStyle(
+              //   decoration: TemporalStateProperty.all(BoxDecoration()),
+              // ),
+              alwaysUseNarrowestVariant: true,
+            ),
+        ],
       ),
     );
   }

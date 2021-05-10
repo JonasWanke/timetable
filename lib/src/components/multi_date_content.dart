@@ -94,7 +94,6 @@ class _MultiDateContentState<E extends Event>
           events: DefaultEventProvider.of<E>(context)!(date.fullDayInterval),
           overlays: DefaultTimeOverlayProvider.of(context)!(context, date),
           onBackgroundTap: widget.onBackgroundTap,
-          dateEventsStyle: widget.style?.dateEventsStyle ?? DateEventsStyle(),
         ),
       ),
     );

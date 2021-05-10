@@ -46,42 +46,42 @@ class _TimetableExampleState extends State<TimetableExample>
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: [
-      _buildAppBar(isFlat: false),
-      Expanded(
-        child: MultiDateTimetable<BasicEvent>(
-          // Required:
-          dateController: _dateController,
-          timeController: _timeController,
-          eventProvider: eventProviderFromFixedList(positioningDemoEvents),
-          eventBuilder: (context, event) => _buildPartDayEvent(event),
-          // Optional:
-          allDayEventBuilder: (context, event, info) => BasicAllDayEventWidget(
-            event,
-            info: info,
-            onTap: () => _showSnackBar('All-day event $event tapped'),
-          ),
-          // onHeaderDateTap: (date) =>
-          //     _showSnackBar('Header tapped on date $date.'),
-          // onHeaderBackgroundTap: (date) =>
-          //     _showSnackBar('Multi-day header background tapped at $date'),
-          timeOverlayProvider: mergeTimeOverlayProviders([
-            positioningDemoOverlayProvider,
-            (context, date) => _draggedEvents
-                .map((it) =>
-                    it.toTimeOverlay(date: date, widget: BasicEventWidget(it)))
-                .whereNotNull()
-                .toList(),
-          ]),
-          // onContentBackgroundTap: (dateTime) =>
-          //     _showSnackBar('Part-day background tapped at $dateTime'),
-          // contentStyle: MultiDateContentStyle(
-          //   nowIndicatorStyle: MultiDateNowIndicatorStyle(color: Colors.green),
-          //   dividerColor: Colors.orange.withOpacity(.3),
-          // ),
-        ),
+    return TimetableConfig<BasicEvent>(
+      // Required:
+      dateController: _dateController,
+      timeController: _timeController,
+      eventBuilder: (context, event) => _buildPartDayEvent(event),
+      // Optional:
+      eventProvider: eventProviderFromFixedList(positioningDemoEvents),
+      allDayEventBuilder: (context, event, info) => BasicAllDayEventWidget(
+        event,
+        info: info,
+        onTap: () => _showSnackBar('All-day event $event tapped'),
       ),
-    ]);
+      timeOverlayProvider: mergeTimeOverlayProviders([
+        positioningDemoOverlayProvider,
+        (context, date) => _draggedEvents
+            .map((it) =>
+                it.toTimeOverlay(date: date, widget: BasicEventWidget(it)))
+            .whereNotNull()
+            .toList(),
+      ]),
+      callbacks: TimetableCallbacks(
+        onWeekTap: (week) => _showSnackBar('Tapped on week $week.'),
+        onDateTap: (date) => _showSnackBar('Tapped on date $date.'),
+        onDateBackgroundTap: (dateTime) =>
+            _showSnackBar('Part-day background tapped at $dateTime.'),
+      ),
+      // contentStyle: MultiDateContentStyle(
+      //   nowIndicatorStyle: MultiDateNowIndicatorStyle(color: Colors.green),
+      //   dividerColor: Colors.orange.withOpacity(.3),
+      // ),
+      // Required:
+      child: Column(children: [
+        _buildAppBar(),
+        Expanded(child: MultiDateTimetable<BasicEvent>()),
+      ]),
+    );
   }
 
   Widget _buildPartDayEvent(BasicEvent event) {
@@ -114,10 +114,12 @@ class _TimetableExampleState extends State<TimetableExample>
     );
   }
 
-  Widget _buildAppBar({required bool isFlat}) {
+  Widget _buildAppBar() {
+    final colorScheme = context.theme.colorScheme;
     Widget child = AppBar(
-      backwardsCompatibility: false,
       elevation: 0,
+      titleTextStyle: TextStyle(color: colorScheme.onSurface),
+      iconTheme: IconThemeData(color: colorScheme.onSurface),
       systemOverlayStyle: SystemUiOverlayStyle.light,
       backgroundColor: Colors.transparent,
       title: MonthIndicator.forController(_dateController),
@@ -153,21 +155,18 @@ class _TimetableExampleState extends State<TimetableExample>
       child,
       Padding(
         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        child: CompactMonthTimetable(dateController: _dateController),
+        child: TimetableTheme(
+          data: TimetableThemeData(
+            colorScheme: colorScheme,
+            textTheme: context.textTheme,
+            localizations: TimetableLocalizations.of(context),
+          ),
+          child: CompactMonthTimetable(dateController: _dateController),
+        ),
       ),
     ]);
 
-    if (!isFlat) {
-      final colorScheme = context.theme.colorScheme;
-      child = Material(
-        color: colorScheme.brightness == Brightness.dark
-            ? colorScheme.surface
-            : colorScheme.primary,
-        elevation: 4,
-        child: child,
-      );
-    }
-    return child;
+    return Material(color: colorScheme.surface, elevation: 4, child: child);
   }
 
   void _showSnackBar(String content) =>

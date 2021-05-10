@@ -1,65 +1,78 @@
 import 'package:black_hole_flutter/black_hole_flutter.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:tuple/tuple.dart';
 
+import '../callbacks.dart';
 import '../date/controller.dart';
 import '../localization.dart';
 import '../styling.dart';
 import '../utils.dart';
 
 class WeekIndicator extends StatelessWidget {
-  // TODO(JonasWanke): onTap
   const WeekIndicator(
-    this.weekInfo, {
+    this.week, {
     Key? key,
-    this.style = const WeekIndicatorStyle(),
     this.alwaysUseNarrowestVariant = false,
+    this.onTap,
+    this.style,
   }) : super(key: key);
   WeekIndicator.forDate(
     DateTime date, {
     Key? key,
-    this.style = const WeekIndicatorStyle(),
     this.alwaysUseNarrowestVariant = false,
+    this.onTap,
+    this.style,
   })  : assert(date.isValidTimetableDate),
-        weekInfo = date.weekInfo,
+        week = date.weekInfo,
         super(key: key);
-  static Widget forController(DateController? controller, {Key? key}) =>
-      _WeekIndicatorForController(controller, key: key);
+  static Widget forController(
+    DateController? controller, {
+    Key? key,
+    bool alwaysUseNarrowestVariant = false,
+    VoidCallback? onTap,
+    WeekIndicatorStyle? style,
+  }) =>
+      _WeekIndicatorForController(
+        controller,
+        key: key,
+        alwaysUseNarrowestVariant: alwaysUseNarrowestVariant,
+        onTap: onTap,
+        style: style,
+      );
 
-  final WeekInfo weekInfo;
-  final WeekIndicatorStyle style;
+  final WeekInfo week;
   final bool alwaysUseNarrowestVariant;
+  final VoidCallback? onTap;
+  final WeekIndicatorStyle? style;
 
   @override
   Widget build(BuildContext context) {
-    final theme = context.theme;
-    final state = weekInfo.state;
+    final style = this.style ??
+        TimetableTheme.of(context)!.weekIndicatorStyleProvider(week);
+    final defaultOnTap = DefaultTimetableCallbacks.of(context)?.onWeekTap;
 
-    return Tooltip(
-      message: context.timetableLocalizations.weekOfYear(weekInfo),
-      child: DecoratedBox(
-        decoration: style.decoration?.resolve(state) ??
-            BoxDecoration(
-              color: theme.dividerColor,
-              borderRadius: BorderRadius.circular(4),
-            ),
-        child: Padding(
-          padding: style.padding?.resolve(state) ??
-              EdgeInsets.symmetric(horizontal: 12, vertical: 2),
-          child: _buildText(context),
+    return InkResponse(
+      onTap: onTap ?? (defaultOnTap != null ? () => defaultOnTap(week) : null),
+      child: Tooltip(
+        message: style.tooltip,
+        child: DecoratedBox(
+          decoration: style.decoration,
+          child: Padding(
+            padding: style.padding,
+            child: _buildText(context, style),
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildText(BuildContext context) {
-    final style = _getEffectiveTextStyle(context);
+  Widget _buildText(BuildContext context, WeekIndicatorStyle style) {
+    final textStyle = _getEffectiveTextStyle(context, style.textStyle);
 
-    final labels = context.timetableLocalizations.weekLabels(weekInfo);
-    assert(labels.isNotEmpty);
-    final measuredLabels = labels.map((it) {
+    final measuredLabels = style.labels.map((it) {
       final textPainter = TextPainter(
-        text: TextSpan(text: it, style: style),
+        text: TextSpan(text: it, style: textStyle),
         maxLines: 1,
         textDirection: TextDirection.ltr,
       )..layout(minWidth: 0, maxWidth: double.infinity);
@@ -68,7 +81,7 @@ class WeekIndicator extends StatelessWidget {
 
     final narrowestText =
         measuredLabels.minBy((a, b) => a.item2.compareTo(b.item2))!.item1;
-    Widget build(String text) => Text(text, style: style, maxLines: 1);
+    Widget build(String text) => Text(text, style: textStyle, maxLines: 1);
 
     if (alwaysUseNarrowestVariant) return build(narrowestText);
 
@@ -86,12 +99,8 @@ class WeekIndicator extends StatelessWidget {
     );
   }
 
-  TextStyle _getEffectiveTextStyle(BuildContext context) {
-    var effectiveTextStyle = TextStyle(
-      color: context.theme.dividerColor
-          .alphaBlendOn(context.theme.scaffoldBackgroundColor)
-          .mediumEmphasisOnColor,
-    );
+  TextStyle _getEffectiveTextStyle(BuildContext context, TextStyle textStyle) {
+    var effectiveTextStyle = textStyle;
     if (effectiveTextStyle.inherit) {
       effectiveTextStyle =
           context.defaultTextStyle.style.merge(effectiveTextStyle);
@@ -105,33 +114,73 @@ class WeekIndicator extends StatelessWidget {
 }
 
 /// Defines visual properties for [WeekIndicator].
+@immutable
 class WeekIndicatorStyle {
-  const WeekIndicatorStyle({
-    this.decoration,
-    this.padding,
-    this.textStyle,
-  });
+  factory WeekIndicatorStyle({
+    required WeekInfo week,
+    required ColorScheme colorScheme,
+    required TextTheme textTheme,
+    required TimetableLocalizations localizations,
+    Decoration? decoration,
+    EdgeInsetsGeometry? padding,
+    TextStyle? textStyle,
+  }) {
+    return WeekIndicatorStyle.raw(
+      tooltip: localizations.weekOfYear(week),
+      decoration: decoration ??
+          BoxDecoration(
+            color: colorScheme.brightness.contrastColor.withOpacity(0.05),
+            borderRadius: BorderRadius.circular(4),
+          ),
+      padding: padding ?? EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+      textStyle: textStyle ??
+          textTheme.bodyText2!
+              .copyWith(color: colorScheme.background.mediumEmphasisOnColor),
+      labels: localizations.weekLabels(week),
+    );
+  }
 
-  final TemporalStateProperty<Decoration?>? decoration;
-  final TemporalStateProperty<EdgeInsetsGeometry?>? padding;
-  final TemporalStateProperty<TextStyle?>? textStyle;
+  const WeekIndicatorStyle.raw({
+    required this.tooltip,
+    required this.decoration,
+    required this.padding,
+    required this.textStyle,
+    required this.labels,
+  }) : assert(labels.length > 0);
+
+  final String tooltip;
+  final Decoration decoration;
+  final EdgeInsetsGeometry padding;
+  final TextStyle textStyle;
+  final List<String> labels;
 
   @override
-  int get hashCode => hashList([decoration, padding, textStyle]);
+  int get hashCode =>
+      hashValues(tooltip, decoration, padding, textStyle, labels);
   @override
   bool operator ==(Object other) {
     return other is WeekIndicatorStyle &&
-        other.decoration == decoration &&
-        other.padding == padding &&
-        other.textStyle == textStyle;
+        tooltip == other.tooltip &&
+        decoration == other.decoration &&
+        padding == other.padding &&
+        textStyle == other.textStyle &&
+        DeepCollectionEquality().equals(labels, other.labels);
   }
 }
 
 class _WeekIndicatorForController extends StatelessWidget {
-  const _WeekIndicatorForController(this.controller, {Key? key})
-      : super(key: key);
+  const _WeekIndicatorForController(
+    this.controller, {
+    Key? key,
+    this.alwaysUseNarrowestVariant = false,
+    this.onTap,
+    this.style,
+  }) : super(key: key);
 
   final DateController? controller;
+  final bool alwaysUseNarrowestVariant;
+  final VoidCallback? onTap;
+  final WeekIndicatorStyle? style;
 
   @override
   Widget build(BuildContext context) {
@@ -139,7 +188,12 @@ class _WeekIndicatorForController extends StatelessWidget {
       valueListenable: (controller ?? DefaultDateController.of(context)!)
           .date
           .map((it) => it.weekInfo),
-      builder: (context, month, _) => WeekIndicator(month),
+      builder: (context, week, _) => WeekIndicator(
+        week,
+        alwaysUseNarrowestVariant: alwaysUseNarrowestVariant,
+        onTap: onTap,
+        style: style,
+      ),
     );
   }
 }

@@ -1,5 +1,6 @@
 library timetable;
 
+export 'src/callbacks.dart';
 export 'src/components/date_dividers_painter.dart';
 export 'src/components/date_events.dart';
 export 'src/components/date_indicator.dart';
@@ -14,6 +15,7 @@ export 'src/components/time_indicator.dart';
 export 'src/components/time_indicators.dart';
 export 'src/components/week_indicator.dart';
 export 'src/components/weekday_indicator.dart';
+export 'src/config.dart';
 export 'src/date/controller.dart';
 export 'src/date/date_page_view.dart';
 export 'src/date/month_page_view.dart';

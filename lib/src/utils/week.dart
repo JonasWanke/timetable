@@ -2,7 +2,6 @@ import 'dart:ui';
 
 import 'package:meta/meta.dart';
 
-import '../styling.dart';
 import '../utils.dart';
 
 extension DateTimeWeekInfoTimetable on DateTime {
@@ -54,13 +53,6 @@ class WeekInfo implements Comparable<WeekInfo> {
     final result = weekBasedYear.compareTo(other.weekBasedYear);
     if (result != 0) return result;
     return weekOfYear.compareTo(other.weekOfYear);
-  }
-
-  TemporalState get state {
-    final result = compareTo(DateTimeTimetable.today().weekInfo);
-    if (result < 0) return TemporalState.past;
-    if (result > 0) return TemporalState.future;
-    return TemporalState.present;
   }
 
   @override

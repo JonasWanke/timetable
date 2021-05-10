@@ -5,14 +5,9 @@ import '../components/multi_date_event_header.dart';
 import '../components/multi_date_header.dart';
 import '../components/time_indicators.dart';
 import '../components/week_indicator.dart';
-import '../date/controller.dart';
 import '../date/date_page_view.dart';
-import '../event/all_day.dart';
-import '../event/builder.dart';
 import '../event/event.dart';
 import '../event/provider.dart';
-import '../time/controller.dart';
-import '../time/overlay.dart';
 import '../time/zoom.dart';
 import '../utils.dart';
 
@@ -28,16 +23,9 @@ typedef MultiDateTimetableContentBuilder = Widget Function(
 class MultiDateTimetable<E extends Event> extends StatefulWidget {
   MultiDateTimetable({
     Key? key,
-    this.dateController,
-    this.timeController,
-    EventProvider<E>? eventProvider,
-    this.eventBuilder,
-    this.allDayEventBuilder,
-    this.timeOverlayProvider,
     MultiDateTimetableHeaderBuilder? headerBuilder,
     MultiDateTimetableContentBuilder? contentBuilder,
-  })  : eventProvider = eventProvider?.debugChecked,
-        headerBuilder = headerBuilder ??
+  })  : headerBuilder = headerBuilder ??
             ((context, leadingWidth) => MultiDateTimetableHeader<E>(
                   leading: SizedBox(
                     width: leadingWidth,
@@ -56,13 +44,6 @@ class MultiDateTimetable<E extends Event> extends StatefulWidget {
                 )),
         super(key: key);
 
-  final DateController? dateController;
-  final TimeController? timeController;
-  final EventProvider<E>? eventProvider;
-  final EventBuilder<E>? eventBuilder;
-  final AllDayEventBuilder<E>? allDayEventBuilder;
-  final TimeOverlayProvider? timeOverlayProvider;
-
   final MultiDateTimetableHeaderBuilder headerBuilder;
   final MultiDateTimetableContentBuilder contentBuilder;
 
@@ -76,30 +57,12 @@ class _MultiDateTimetableState<E extends Event>
 
   @override
   Widget build(BuildContext context) {
-    final _dateController = widget.dateController ??
-        DefaultDateController.of(context) ??
-        DateController();
-    final _timeController = widget.timeController ??
-        DefaultTimeController.of(context) ??
-        TimeController();
-    final _eventProvider = widget.eventProvider ??
-        DefaultEventProvider.of<E>(context) ??
-        (_) => [];
-    final _eventBuilder =
-        widget.eventBuilder ?? DefaultEventBuilder.of<E>(context)!;
-    final _allDayEventBuilder = widget.allDayEventBuilder ??
-        (widget.eventBuilder != null
-            ? (context, event, _) => widget.eventBuilder!(context, event)
-            : null) ??
-        DefaultAllDayEventBuilder.of<E>(context)!;
-    final _timeOverlayProvider = widget.timeOverlayProvider ??
-        DefaultTimeOverlayProvider.of(context) ??
-        emptyTimeOverlayProvider;
+    final eventProvider = DefaultEventProvider.of<E>(context)!;
 
-    final child = Column(children: [
+    return Column(children: [
       DefaultEventProvider<E>(
         eventProvider: (visibleDates) =>
-            _eventProvider(visibleDates).where((it) => it.isAllDay).toList(),
+            eventProvider(visibleDates).where((it) => it.isAllDay).toList(),
         child: Builder(
           builder: (context) => widget.headerBuilder(context, _leadingWidth),
         ),
@@ -107,7 +70,7 @@ class _MultiDateTimetableState<E extends Event>
       Expanded(
         child: DefaultEventProvider<E>(
           eventProvider: (visibleDates) =>
-              _eventProvider(visibleDates).where((it) => it.isPartDay).toList(),
+              eventProvider(visibleDates).where((it) => it.isPartDay).toList(),
           child: Builder(
             builder: (contxt) => widget.contentBuilder(
               context,
@@ -117,23 +80,6 @@ class _MultiDateTimetableState<E extends Event>
         ),
       ),
     ]);
-
-    return DefaultDateController(
-      controller: _dateController,
-      child: DefaultTimeController(
-        controller: _timeController,
-        child: DefaultEventBuilder(
-          builder: _eventBuilder,
-          child: DefaultAllDayEventBuilder(
-            builder: _allDayEventBuilder,
-            child: DefaultTimeOverlayProvider(
-              overlayProvider: _timeOverlayProvider,
-              child: child,
-            ),
-          ),
-        ),
-      ),
-    );
   }
 }
 

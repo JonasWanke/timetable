@@ -74,6 +74,15 @@ class _TimetableExampleState extends State<TimetableExample>
         onDateTimeBackgroundTap: (dateTime) =>
             _showSnackBar('Tapped on date-time background at $dateTime.'),
       ),
+      // Optional theming capabilites:
+      theme: TimetableThemeData(
+        context,
+        // dateDividersStyle: DateDividersStyle(
+        //   context,
+        //   color: Colors.blue.withOpacity(.3),
+        //   width: 2,
+        // ),
+      ),
       // contentStyle: MultiDateContentStyle(
       //   nowIndicatorStyle: MultiDateNowIndicatorStyle(color: Colors.green),
       //   dividerColor: Colors.orange.withOpacity(.3),

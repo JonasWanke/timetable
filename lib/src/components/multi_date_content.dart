@@ -13,7 +13,7 @@ import '../utils/stream_change_notifier.dart';
 import 'date_content.dart';
 import 'date_dividers.dart';
 import 'date_events.dart';
-import 'hour_dividers_painter.dart';
+import 'hour_dividers.dart';
 import 'now_indicator_painter.dart';
 
 typedef MultiDateContentBackgroundTapCallback = void Function(
@@ -53,21 +53,20 @@ class _MultiDateContentState<E extends Event>
 
     return DateDividers(
       child: TimeZoom(
-        child: CustomPaint(
-          painter: HourDividersPainter(
-            dividerColor: widget.style?.dividerColor ?? theme.dividerColor,
-          ),
-          foregroundPainter: NowIndicatorPainter(
-            controller: dateController,
-            style: widget.style?.nowIndicatorStyle ??
-                MultiDateNowIndicatorStyle(
-                  color: theme.highEmphasisOnBackground,
-                ),
-            repaint: _timeListenable,
-          ),
-          child: LayoutBuilder(
-            builder: (context, constraints) =>
-                _buildEvents(context, dateController, constraints.biggest),
+        child: HourDividers(
+          child: CustomPaint(
+            foregroundPainter: NowIndicatorPainter(
+              controller: dateController,
+              style: widget.style?.nowIndicatorStyle ??
+                  MultiDateNowIndicatorStyle(
+                    color: theme.highEmphasisOnBackground,
+                  ),
+              repaint: _timeListenable,
+            ),
+            child: LayoutBuilder(
+              builder: (context, constraints) =>
+                  _buildEvents(context, dateController, constraints.biggest),
+            ),
           ),
         ),
       ),

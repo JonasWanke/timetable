@@ -66,6 +66,8 @@ class WeekInfo implements Comparable<WeekInfo> {
   }
 
   @override
-  String toString() =>
-      'WeekInfo(weekBasedYear = $weekBasedYear, weekOfYear = $weekOfYear)';
+  String toString() {
+    final paddedWeek = weekOfYear < 10 ? '0$weekOfYear' : weekOfYear.toString();
+    return '$weekBasedYear-W$paddedWeek';
+  }
 }

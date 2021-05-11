@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'components/date_indicator.dart';
+import 'components/multi_date_event_header.dart';
 import 'components/week_indicator.dart';
 import 'localization.dart';
 import 'utils.dart';
@@ -15,6 +16,7 @@ class TimetableThemeData {
     required TextTheme textTheme,
     required TimetableLocalizations localizations,
     DateBasedStyleProvider<DateIndicatorStyle>? dateIndicatorStyleProvider,
+    MultiDateEventHeaderStyle? multiDateEventHeaderStyle,
     WeekBasedStyleProvider<WeekIndicatorStyle>? weekIndicatorStyleProvider,
   }) {
     return TimetableThemeData.raw(
@@ -24,6 +26,8 @@ class TimetableThemeData {
                 colorScheme: colorScheme,
                 textTheme: textTheme,
               ),
+      multiDateEventHeaderStyle:
+          multiDateEventHeaderStyle ?? MultiDateEventHeaderStyle(),
       weekIndicatorStyleProvider: weekIndicatorStyleProvider ??
           (week) => WeekIndicatorStyle(
                 week: week,
@@ -36,21 +40,25 @@ class TimetableThemeData {
 
   const TimetableThemeData.raw({
     required this.dateIndicatorStyleProvider,
+    required this.multiDateEventHeaderStyle,
     required this.weekIndicatorStyleProvider,
   });
 
   final DateBasedStyleProvider<DateIndicatorStyle> dateIndicatorStyleProvider;
+  final MultiDateEventHeaderStyle multiDateEventHeaderStyle;
   final WeekBasedStyleProvider<WeekIndicatorStyle> weekIndicatorStyleProvider;
 
   @override
   int get hashCode => hashValues(
         dateIndicatorStyleProvider,
+        multiDateEventHeaderStyle,
         weekIndicatorStyleProvider,
       );
   @override
   bool operator ==(Object other) {
     return other is TimetableThemeData &&
         dateIndicatorStyleProvider == other.dateIndicatorStyleProvider &&
+        multiDateEventHeaderStyle == other.multiDateEventHeaderStyle &&
         weekIndicatorStyleProvider == other.weekIndicatorStyleProvider;
   }
 }

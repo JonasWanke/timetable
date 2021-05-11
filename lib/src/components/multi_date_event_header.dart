@@ -4,84 +4,81 @@ import 'package:black_hole_flutter/black_hole_flutter.dart';
 import 'package:flutter/material.dart' hide Interval;
 import 'package:flutter/rendering.dart';
 
+import '../callbacks.dart';
 import '../date/controller.dart';
 import '../date/visible_date_range.dart';
 import '../event/all_day.dart';
 import '../event/builder.dart';
 import '../event/event.dart';
 import '../event/provider.dart';
+import '../styling.dart';
 import '../utils.dart';
-
-typedef MultiDateEventHeaderBackgroundTapCallback = void Function(
-  DateTime date,
-);
 
 class MultiDateEventHeader<E extends Event> extends StatelessWidget {
   const MultiDateEventHeader({
     Key? key,
     this.onBackgroundTap,
-    this.style = const MultiDateEventHeaderStyle(),
-    this.padding = EdgeInsets.zero,
+    this.style,
   }) : super(key: key);
 
-  final MultiDateEventHeaderBackgroundTapCallback? onBackgroundTap;
-  final MultiDateEventHeaderStyle style;
-  final EdgeInsetsGeometry padding;
+  final DateTapCallback? onBackgroundTap;
+  final MultiDateEventHeaderStyle? style;
 
   @override
   Widget build(BuildContext context) {
+    final style =
+        this.style ?? TimetableTheme.of(context)!.multiDateEventHeaderStyle;
+
     return ClipRect(
       child: Padding(
-        padding: padding,
+        padding: style.padding,
         child: LayoutBuilder(
           builder: (context, constraints) =>
-              _buildContent(context, constraints.maxWidth),
+              ValueListenableBuilder<DatePageValue>(
+            valueListenable: DefaultDateController.of(context)!,
+            builder: (context, pageValue, __) =>
+                _buildContent(context, style, pageValue, constraints.maxWidth),
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildContent(BuildContext context, double width) {
-    final controller = DefaultDateController.of(context)!;
-    return ValueListenableBuilder<Interval>(
-      valueListenable: controller.map((it) {
-        final interval = Interval(
-          DateTimeTimetable.dateFromPage(it.page.floor()),
-          DateTimeTimetable.dateFromPage(
-                (it.page + it.visibleDayCount).ceil(),
-              ) -
-              1.milliseconds,
-        );
-        assert(interval.isValidTimetableDateInterval);
-        return interval;
-      }),
-      builder: (_, visibleDates, __) => ValueListenableBuilder<DatePageValue>(
-        valueListenable: controller,
-        builder: (context, pageValue, __) => GestureDetector(
-          behavior: HitTestBehavior.translucent,
-          onTapUp: onBackgroundTap != null
-              ? (details) => _callOnBackgroundTap(details, pageValue, width)
-              : null,
-          child: _buildEventLayout(context, visibleDates, pageValue),
-        ),
-      ),
-    );
-  }
-
-  void _callOnBackgroundTap(
-    TapUpDetails details,
+  Widget _buildContent(
+    BuildContext context,
+    MultiDateEventHeaderStyle style,
     DatePageValue pageValue,
     double width,
   ) {
-    final tappedCell =
-        details.localPosition.dx / width * pageValue.visibleDayCount;
-    final date =
-        DateTimeTimetable.dateFromPage((pageValue.page + tappedCell).floor());
-    onBackgroundTap!(date);
+    final visibleDates = Interval(
+      DateTimeTimetable.dateFromPage(pageValue.page.floor()),
+      DateTimeTimetable.dateFromPage(
+            (pageValue.page + pageValue.visibleDayCount).ceil(),
+          ) -
+          1.milliseconds,
+    );
+    assert(visibleDates.isValidTimetableDateInterval);
+
+    final onBackgroundTap = this.onBackgroundTap ??
+        DefaultTimetableCallbacks.of(context)?.onDateBackgroundTap;
+
+    return GestureDetector(
+      behavior: HitTestBehavior.translucent,
+      onTapUp: onBackgroundTap != null
+          ? (details) {
+              final tappedCell =
+                  details.localPosition.dx / width * pageValue.visibleDayCount;
+              final page = (pageValue.page + tappedCell).floor();
+              onBackgroundTap(DateTimeTimetable.dateFromPage(page));
+            }
+          : null,
+      child: _buildEventLayout(context, style, visibleDates, pageValue),
+    );
   }
 
   Widget _buildEventLayout(
     BuildContext context,
+    MultiDateEventHeaderStyle style,
     Interval visibleDates,
     DatePageValue pageValue,
   ) {
@@ -91,7 +88,7 @@ class MultiDateEventHeader<E extends Event> extends StatelessWidget {
       visibleRange: pageValue.visibleRange,
       currentlyVisibleDates: visibleDates,
       page: pageValue.page,
-      style: style,
+      eventHeight: style.eventHeight,
       children: [
         for (final event in DefaultEventProvider.of<E>(context)!(visibleDates))
           _EventParentDataWidget<E>(
@@ -117,19 +114,35 @@ class MultiDateEventHeader<E extends Event> extends StatelessWidget {
   }
 }
 
-/// Defines visual properties for [MultiDateEventHeader] and related widgets.
+/// Defines visual properties for [MultiDateEventHeader].
 class MultiDateEventHeaderStyle {
-  const MultiDateEventHeaderStyle({this.eventHeight = 24});
+  factory MultiDateEventHeaderStyle({
+    double? eventHeight,
+    EdgeInsetsGeometry? padding,
+  }) {
+    return MultiDateEventHeaderStyle.raw(
+      eventHeight: eventHeight ?? 24,
+      padding: padding ?? EdgeInsets.zero,
+    );
+  }
+
+  const MultiDateEventHeaderStyle.raw({
+    this.eventHeight = 24,
+    this.padding = EdgeInsets.zero,
+  });
 
   /// Height of a single all-day event.
   final double eventHeight;
 
+  final EdgeInsetsGeometry padding;
+
   @override
-  int get hashCode => hashList([eventHeight]);
+  int get hashCode => hashValues(eventHeight, padding);
   @override
   bool operator ==(Object other) {
     return other is MultiDateEventHeaderStyle &&
-        other.eventHeight == eventHeight;
+        eventHeight == other.eventHeight &&
+        padding == other.padding;
   }
 }
 
@@ -164,14 +177,14 @@ class _EventsWidget<E extends Event> extends MultiChildRenderObjectWidget {
     required this.visibleRange,
     required this.currentlyVisibleDates,
     required this.page,
-    this.style = const MultiDateEventHeaderStyle(),
+    required this.eventHeight,
     required List<_EventParentDataWidget<E>> children,
   }) : super(children: children);
 
   final VisibleDateRange visibleRange;
   final Interval currentlyVisibleDates;
   final double page;
-  final MultiDateEventHeaderStyle style;
+  final double eventHeight;
 
   @override
   RenderObject createRenderObject(BuildContext context) {
@@ -179,7 +192,7 @@ class _EventsWidget<E extends Event> extends MultiChildRenderObjectWidget {
       visibleRange: visibleRange,
       currentlyVisibleDates: currentlyVisibleDates,
       page: page,
-      eventHeight: style.eventHeight,
+      eventHeight: eventHeight,
     );
   }
 
@@ -189,7 +202,7 @@ class _EventsWidget<E extends Event> extends MultiChildRenderObjectWidget {
       ..visibleRange = visibleRange
       ..currentlyVisibleDates = currentlyVisibleDates
       ..page = page
-      ..eventHeight = style.eventHeight;
+      ..eventHeight = eventHeight;
   }
 }
 
@@ -250,7 +263,7 @@ class _EventsLayout<E extends Event> extends RenderBox
     markNeedsLayout();
   }
 
-  Iterable<E> get events => children.map((child) => child.data<E>().event!);
+  Iterable<E> get _events => children.map((child) => child.data<E>().event!);
 
   @override
   void setupParentData(RenderObject child) {
@@ -312,7 +325,7 @@ class _EventsLayout<E extends Event> extends RenderBox
     });
 
     // Insert new events.
-    final sortedEvents = events
+    final sortedEvents = _events
         .where((it) => !_yPositions.containsKey(it))
         .sortedByStartLength();
 
@@ -345,18 +358,18 @@ class _EventsLayout<E extends Event> extends RenderBox
     final dateWidth = size.width / visibleRange.visibleDayCount;
     for (final child in children) {
       final data = child.data<E>();
-      final dateInterval = data.event!.interval.dateInterval;
+      final event = data.event!;
 
+      final dateInterval = event.interval.dateInterval;
       final startPage = dateInterval.start.page;
       final left = ((startPage - page) * dateWidth).coerceAtLeast(0);
       final endPage = dateInterval.end.page.ceilToDouble();
       final right = ((endPage - page) * dateWidth).coerceAtMost(size.width);
 
-      child.layout(BoxConstraints.tightFor(
-        width: right - left,
-        height: eventHeight,
-      ));
-      data.offset = Offset(left, _yPositions[data.event!]! * eventHeight);
+      child.layout(
+        BoxConstraints.tightFor(width: right - left, height: eventHeight),
+      );
+      data.offset = Offset(left, _yPositions[event]! * eventHeight);
     }
   }
 

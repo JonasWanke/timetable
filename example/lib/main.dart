@@ -69,8 +69,10 @@ class _TimetableExampleState extends State<TimetableExample>
       callbacks: TimetableCallbacks(
         onWeekTap: (week) => _showSnackBar('Tapped on week $week.'),
         onDateTap: (date) => _showSnackBar('Tapped on date $date.'),
-        onDateBackgroundTap: (dateTime) =>
-            _showSnackBar('Part-day background tapped at $dateTime.'),
+        onDateBackgroundTap: (date) =>
+            _showSnackBar('Tapped on date background at $date.'),
+        onDateTimeBackgroundTap: (dateTime) =>
+            _showSnackBar('Tapped on date-time background at $dateTime.'),
       ),
       // contentStyle: MultiDateContentStyle(
       //   nowIndicatorStyle: MultiDateNowIndicatorStyle(color: Colors.green),

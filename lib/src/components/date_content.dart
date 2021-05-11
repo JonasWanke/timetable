@@ -31,7 +31,7 @@ class DateContent<E extends Event> extends StatelessWidget {
   final List<E> events;
   final List<TimeOverlay> overlays;
 
-  final DateBackgroundTapCallback? onBackgroundTap;
+  final DateTapCallback? onBackgroundTap;
 
   @override
   Widget build(BuildContext context) {

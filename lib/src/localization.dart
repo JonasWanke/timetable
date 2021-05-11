@@ -96,13 +96,13 @@ class TimetableLocalizationDe extends TimetableLocalizations {
 
   @override
   List<String> weekLabels(WeekInfo weekInfo) {
-    final week = weekInfo.weekOfYear + 1;
+    final week = weekInfo.weekOfYear;
     return [weekOfYear(weekInfo), 'Woche $week', 'KW $week', '$week'];
   }
 
   @override
   String weekOfYear(WeekInfo weekInfo) =>
-      'Kalenderwoche ${weekInfo.weekOfYear + 1}, ${weekInfo.weekBasedYear}';
+      'Kalenderwoche ${weekInfo.weekOfYear}, ${weekInfo.weekBasedYear}';
 }
 
 class TimetableLocalizationEn extends TimetableLocalizations {
@@ -110,11 +110,11 @@ class TimetableLocalizationEn extends TimetableLocalizations {
 
   @override
   List<String> weekLabels(WeekInfo weekInfo) {
-    final week = weekInfo.weekOfYear + 1;
+    final week = weekInfo.weekOfYear;
     return [weekOfYear(weekInfo), 'Week $week', 'W $week', '$week'];
   }
 
   @override
   String weekOfYear(WeekInfo weekInfo) =>
-      'Week ${weekInfo.weekOfYear + 1}, ${weekInfo.weekBasedYear}';
+      'Week ${weekInfo.weekOfYear}, ${weekInfo.weekBasedYear}';
 }

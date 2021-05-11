@@ -4,7 +4,7 @@ import 'utils.dart';
 
 typedef WeekTapCallback = void Function(WeekInfo week);
 typedef DateTapCallback = void Function(DateTime date);
-typedef DateBackgroundTapCallback = void Function(DateTime dateTime);
+typedef DateTimeTapCallback = void Function(DateTime dateTime);
 
 @immutable
 class TimetableCallbacks {
@@ -12,20 +12,28 @@ class TimetableCallbacks {
     this.onWeekTap,
     this.onDateTap,
     this.onDateBackgroundTap,
+    this.onDateTimeBackgroundTap,
   });
 
   final WeekTapCallback? onWeekTap;
   final DateTapCallback? onDateTap;
-  final DateBackgroundTapCallback? onDateBackgroundTap;
+  final DateTapCallback? onDateBackgroundTap;
+  final DateTimeTapCallback? onDateTimeBackgroundTap;
 
   @override
-  int get hashCode => hashValues(onWeekTap, onDateTap, onDateBackgroundTap);
+  int get hashCode => hashValues(
+        onWeekTap,
+        onDateTap,
+        onDateBackgroundTap,
+        onDateTimeBackgroundTap,
+      );
   @override
   bool operator ==(Object other) {
     return other is TimetableCallbacks &&
         onWeekTap == other.onWeekTap &&
         onDateTap == other.onDateTap &&
-        onDateBackgroundTap == other.onDateBackgroundTap;
+        onDateBackgroundTap == other.onDateBackgroundTap &&
+        onDateTimeBackgroundTap == other.onDateTimeBackgroundTap;
   }
 }
 

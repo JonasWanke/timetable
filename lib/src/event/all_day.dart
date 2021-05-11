@@ -6,7 +6,6 @@ import 'package:flutter/widgets.dart';
 import 'package:meta/meta.dart';
 
 import '../utils.dart';
-import 'builder.dart';
 import 'event.dart';
 
 typedef AllDayEventBuilder<E extends Event> = Widget Function(
@@ -14,33 +13,6 @@ typedef AllDayEventBuilder<E extends Event> = Widget Function(
   E event,
   AllDayEventLayoutInfo info,
 );
-
-class DefaultAllDayEventBuilder<E extends Event> extends InheritedWidget {
-  const DefaultAllDayEventBuilder({
-    required this.builder,
-    required Widget child,
-  }) : super(child: child);
-
-  final AllDayEventBuilder<E> builder;
-
-  @override
-  bool updateShouldNotify(DefaultAllDayEventBuilder<E> oldWidget) =>
-      builder != oldWidget.builder;
-
-  static AllDayEventBuilder<E>? of<E extends Event>(BuildContext context) {
-    final allDayEventBuilder = context
-        .dependOnInheritedWidgetOfExactType<DefaultAllDayEventBuilder<E>>()
-        ?.builder;
-    if (allDayEventBuilder != null) return allDayEventBuilder;
-
-    final eventBuilder = DefaultEventBuilder.of<E>(context);
-    if (eventBuilder != null) {
-      return (context, event, info) => eventBuilder(context, event);
-    }
-
-    return null;
-  }
-}
 
 /// Information about how an all-day event was laid out.
 @immutable

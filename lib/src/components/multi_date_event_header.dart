@@ -7,6 +7,7 @@ import 'package:flutter/rendering.dart';
 import '../date/controller.dart';
 import '../date/visible_date_range.dart';
 import '../event/all_day.dart';
+import '../event/builder.dart';
 import '../event/event.dart';
 import '../event/provider.dart';
 import '../utils.dart';
@@ -103,7 +104,7 @@ class MultiDateEventHeader<E extends Event> extends StatelessWidget {
   }
 
   Widget _buildEvent(BuildContext context, E event, DatePageValue pageValue) {
-    return DefaultAllDayEventBuilder.of<E>(context)!(
+    return DefaultEventBuilder.allDayOf<E>(context)!(
       context,
       event,
       AllDayEventLayoutInfo(

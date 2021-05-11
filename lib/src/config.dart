@@ -67,14 +67,8 @@ class TimetableConfig<E extends Event> extends StatelessWidget {
           eventProvider ?? DefaultEventProvider.of<E>(context) ?? (_) => [],
       child: DefaultEventBuilder(
         builder: eventBuilder ?? DefaultEventBuilder.of<E>(context)!,
-        child: DefaultAllDayEventBuilder<E>(
-          builder: allDayEventBuilder ??
-              (eventBuilder != null
-                  ? (context, event, _) => eventBuilder!(context, event)
-                  : null) ??
-              DefaultAllDayEventBuilder.of<E>(context)!,
-          child: child,
-        ),
+        allDayBuilder: allDayEventBuilder,
+        child: child,
       ),
     );
 

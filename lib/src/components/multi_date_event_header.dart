@@ -116,7 +116,11 @@ class MultiDateEventHeader<E extends Event> extends StatelessWidget {
 
 /// Defines visual properties for [MultiDateEventHeader].
 class MultiDateEventHeaderStyle {
-  factory MultiDateEventHeaderStyle({
+  factory MultiDateEventHeaderStyle(
+    // To allow future updates to use the context and align the parameters to
+    // other style constructors.
+    // ignore: avoid_unused_constructor_parameters
+    BuildContext context, {
     double? eventHeight,
     EdgeInsetsGeometry? padding,
   }) {

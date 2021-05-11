@@ -34,16 +34,16 @@ class DateIndicator extends StatelessWidget {
 /// Style for [DateIndicator].
 @immutable
 class DateIndicatorStyle {
-  factory DateIndicatorStyle({
-    required DateTime date,
-    required ColorScheme colorScheme,
-    required TextTheme textTheme,
+  factory DateIndicatorStyle(
+    BuildContext context,
+    DateTime date, {
     Decoration? decoration,
     EdgeInsetsGeometry? padding,
     TextStyle? textStyle,
   }) {
     assert(date.isValidTimetableDate);
 
+    final colorScheme = context.theme.colorScheme;
     return DateIndicatorStyle.raw(
       decoration: decoration ??
           BoxDecoration(
@@ -52,7 +52,7 @@ class DateIndicatorStyle {
           ),
       padding: padding ?? EdgeInsets.all(8),
       textStyle: textStyle ??
-          textTheme.subtitle1!.copyWith(
+          context.textTheme.subtitle1!.copyWith(
             color: date.isToday
                 ? colorScheme.primary.highEmphasisOnColor
                 : colorScheme.background.highEmphasisOnColor,

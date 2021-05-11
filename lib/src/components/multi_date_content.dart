@@ -11,7 +11,7 @@ import '../time/zoom.dart';
 import '../utils.dart';
 import '../utils/stream_change_notifier.dart';
 import 'date_content.dart';
-import 'date_dividers_painter.dart';
+import 'date_dividers.dart';
 import 'date_events.dart';
 import 'hour_dividers_painter.dart';
 import 'now_indicator_painter.dart';
@@ -51,11 +51,7 @@ class _MultiDateContentState<E extends Event>
 
     final dateController = DefaultDateController.of(context)!;
 
-    return CustomPaint(
-      painter: DateDividersPainter(
-        controller: dateController,
-        dividerColor: widget.style?.dividerColor ?? theme.dividerColor,
-      ),
+    return DateDividers(
       child: TimeZoom(
         child: CustomPaint(
           painter: HourDividersPainter(

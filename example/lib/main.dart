@@ -157,14 +157,7 @@ class _TimetableExampleState extends State<TimetableExample>
       child,
       Padding(
         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        child: TimetableTheme(
-          data: TimetableThemeData(
-            colorScheme: colorScheme,
-            textTheme: context.textTheme,
-            localizations: TimetableLocalizations.of(context),
-          ),
-          child: CompactMonthTimetable(dateController: _dateController),
-        ),
+        child: CompactMonthTimetable(dateController: _dateController),
       ),
     ]);
 

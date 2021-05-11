@@ -1,4 +1,3 @@
-import 'package:black_hole_flutter/black_hole_flutter.dart';
 import 'package:flutter/material.dart';
 
 import 'callbacks.dart';
@@ -7,7 +6,6 @@ import 'event/all_day.dart';
 import 'event/builder.dart';
 import 'event/event.dart';
 import 'event/provider.dart';
-import 'localization.dart';
 import 'styling.dart';
 import 'time/controller.dart';
 import 'time/overlay.dart';
@@ -44,13 +42,8 @@ class TimetableConfig<E extends Event> extends StatelessWidget {
           DefaultTimetableCallbacks.of(context) ??
           TimetableCallbacks(),
       child: TimetableTheme(
-        data: theme ??
-            TimetableTheme.of(context) ??
-            TimetableThemeData(
-              colorScheme: context.theme.colorScheme,
-              textTheme: context.textTheme,
-              localizations: TimetableLocalizations.of(context),
-            ),
+        data:
+            theme ?? TimetableTheme.of(context) ?? TimetableThemeData(context),
         child: this.child,
       ),
     );

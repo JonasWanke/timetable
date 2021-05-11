@@ -116,15 +116,15 @@ class WeekIndicator extends StatelessWidget {
 /// Defines visual properties for [WeekIndicator].
 @immutable
 class WeekIndicatorStyle {
-  factory WeekIndicatorStyle({
-    required WeekInfo week,
-    required ColorScheme colorScheme,
-    required TextTheme textTheme,
-    required TimetableLocalizations localizations,
+  factory WeekIndicatorStyle(
+    BuildContext context,
+    WeekInfo week, {
     Decoration? decoration,
     EdgeInsetsGeometry? padding,
     TextStyle? textStyle,
   }) {
+    final colorScheme = context.theme.colorScheme;
+    final localizations = TimetableLocalizations.of(context);
     return WeekIndicatorStyle.raw(
       tooltip: localizations.weekOfYear(week),
       decoration: decoration ??
@@ -134,7 +134,7 @@ class WeekIndicatorStyle {
           ),
       padding: padding ?? EdgeInsets.symmetric(horizontal: 12, vertical: 2),
       textStyle: textStyle ??
-          textTheme.bodyText2!
+          context.textTheme.bodyText2!
               .copyWith(color: colorScheme.background.mediumEmphasisOnColor),
       labels: localizations.weekLabels(week),
     );
@@ -155,8 +155,13 @@ class WeekIndicatorStyle {
   final List<String> labels;
 
   @override
-  int get hashCode =>
-      hashValues(tooltip, decoration, padding, textStyle, labels);
+  int get hashCode => hashValues(
+        tooltip,
+        decoration,
+        padding,
+        textStyle,
+        DeepCollectionEquality().hash(labels),
+      );
   @override
   bool operator ==(Object other) {
     return other is WeekIndicatorStyle &&

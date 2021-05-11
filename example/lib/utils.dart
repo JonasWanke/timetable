@@ -57,6 +57,8 @@ class ExampleApp extends StatelessWidget {
       snackBarTheme: SnackBarThemeData(behavior: SnackBarBehavior.floating),
     );
     theme = theme.copyWith(
+      colorScheme: theme.colorScheme
+          .copyWith(onBackground: theme.colorScheme.background.contrastColor),
       textTheme: theme.textTheme.copyWith(
         headline6:
             theme.textTheme.headline6!.copyWith(fontWeight: FontWeight.normal),

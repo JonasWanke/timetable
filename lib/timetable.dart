@@ -1,7 +1,7 @@
 library timetable;
 
 export 'src/callbacks.dart';
-export 'src/components/date_dividers_painter.dart';
+export 'src/components/date_dividers.dart';
 export 'src/components/date_events.dart';
 export 'src/components/date_indicator.dart';
 export 'src/components/hour_dividers_painter.dart';

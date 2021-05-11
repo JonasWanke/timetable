@@ -55,7 +55,7 @@ class DateController extends ValueNotifier<DatePageValue> {
     Curve curve = Curves.easeInOut,
     Duration duration = const Duration(milliseconds: 200),
     required TickerProvider vsync,
-  }) async {
+  }) {
     return animateToPage(
       date.page,
       curve: curve,
@@ -72,7 +72,7 @@ class DateController extends ValueNotifier<DatePageValue> {
   }) async {
     _animationController?.dispose();
     final controller =
-        AnimationController(debugLabel: 'TimeController', vsync: vsync);
+        AnimationController(debugLabel: 'DateController', vsync: vsync);
     _animationController = controller;
 
     final previousPage = value.page;

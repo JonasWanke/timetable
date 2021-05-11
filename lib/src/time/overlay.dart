@@ -69,8 +69,7 @@ extension EventToTimeOverlay on Event {
   }) {
     assert(date.isValidTimetableDate);
 
-    if (start.atStartOfDay > date || endInclusive.atStartOfDay < date)
-      return null;
+    if (!interval.intersects(date.fullDayInterval)) return null;
 
     return TimeOverlay(
       start: start.difference(date).coerceAtLeast(Duration.zero),

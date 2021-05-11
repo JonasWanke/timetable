@@ -1,4 +1,3 @@
-import 'package:black_hole_flutter/black_hole_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart' hide Interval;
 
@@ -9,7 +8,6 @@ import '../event/provider.dart';
 import '../time/overlay.dart';
 import '../time/zoom.dart';
 import '../utils.dart';
-import '../utils/stream_change_notifier.dart';
 import 'date_content.dart';
 import 'date_dividers.dart';
 import 'date_events.dart';
@@ -20,7 +18,7 @@ typedef MultiDateContentBackgroundTapCallback = void Function(
   DateTime dateTime,
 );
 
-class MultiDateContent<E extends Event> extends StatefulWidget {
+class MultiDateContent<E extends Event> extends StatelessWidget {
   const MultiDateContent({
     Key? key,
     this.onBackgroundTap,
@@ -31,41 +29,14 @@ class MultiDateContent<E extends Event> extends StatefulWidget {
   final MultiDateContentStyle? style;
 
   @override
-  _MultiDateContentState<E> createState() => _MultiDateContentState<E>();
-}
-
-class _MultiDateContentState<E extends Event>
-    extends State<MultiDateContent<E>> {
-  final _timeListenable =
-      StreamChangeNotifier(Stream<void>.periodic(10.seconds));
-
-  @override
-  void dispose() {
-    _timeListenable.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final theme = context.theme;
-
-    final dateController = DefaultDateController.of(context)!;
-
     return DateDividers(
       child: TimeZoom(
         child: HourDividers(
-          child: CustomPaint(
-            foregroundPainter: NowIndicatorPainter(
-              controller: dateController,
-              style: widget.style?.nowIndicatorStyle ??
-                  MultiDateNowIndicatorStyle(
-                    color: theme.highEmphasisOnBackground,
-                  ),
-              repaint: _timeListenable,
-            ),
+          child: NowIndicator(
             child: LayoutBuilder(
               builder: (context, constraints) =>
-                  _buildEvents(context, dateController, constraints.biggest),
+                  _buildEvents(context, constraints.biggest),
             ),
           ),
         ),
@@ -73,11 +44,9 @@ class _MultiDateContentState<E extends Event>
     );
   }
 
-  Widget _buildEvents(
-    BuildContext context,
-    DateController dateController,
-    Size size,
-  ) {
+  Widget _buildEvents(BuildContext context, Size size) {
+    final dateController = DefaultDateController.of(context)!;
+
     return _DragInfos(
       context: context,
       dateController: dateController,
@@ -88,7 +57,7 @@ class _MultiDateContentState<E extends Event>
           date: date,
           events: DefaultEventProvider.of<E>(context)!(date.fullDayInterval),
           overlays: DefaultTimeOverlayProvider.of(context)!(context, date),
-          onBackgroundTap: widget.onBackgroundTap,
+          onBackgroundTap: onBackgroundTap,
         ),
       ),
     );
@@ -98,12 +67,9 @@ class _MultiDateContentState<E extends Event>
 /// Defines visual properties for [MultiDateContent].
 class MultiDateContentStyle {
   const MultiDateContentStyle({
-    this.nowIndicatorStyle,
     this.dividerColor,
     this.dateEventsStyle,
   });
-
-  final MultiDateNowIndicatorStyle? nowIndicatorStyle;
 
   /// [Color] for painting hour and day dividers in the part-day event area.
   final Color? dividerColor;
@@ -111,12 +77,10 @@ class MultiDateContentStyle {
   final DateEventsStyle? dateEventsStyle;
 
   @override
-  int get hashCode =>
-      hashList([nowIndicatorStyle, dividerColor, dateEventsStyle]);
+  int get hashCode => hashList([dividerColor, dateEventsStyle]);
   @override
   bool operator ==(Object other) {
     return other is MultiDateContentStyle &&
-        other.nowIndicatorStyle == nowIndicatorStyle &&
         other.dividerColor == dividerColor &&
         other.dateEventsStyle == dateEventsStyle;
   }

@@ -62,14 +62,14 @@ class _DateDividersPainter extends CustomPainter {
   _DateDividersPainter({
     required this.controller,
     required this.style,
-  })   : dividerPaint = Paint()
+  })   : _paint = Paint()
           ..color = style.color
           ..strokeWidth = style.width,
         super(repaint: controller);
 
   final DateController controller;
   final DateDividersStyle style;
-  final Paint dividerPaint;
+  final Paint _paint;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -78,7 +78,7 @@ class _DateDividersPainter extends CustomPainter {
     final initialOffset = 1 - pageValue.page % 1;
     for (var i = -1; i + initialOffset < pageValue.visibleDayCount + 1; i++) {
       final x = (initialOffset + i) * size.width / pageValue.visibleDayCount;
-      canvas.drawLine(Offset(x, 0), Offset(x, size.height), dividerPaint);
+      canvas.drawLine(Offset(x, 0), Offset(x, size.height), _paint);
     }
   }
 

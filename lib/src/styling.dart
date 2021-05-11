@@ -4,6 +4,7 @@ import 'components/date_dividers.dart';
 import 'components/date_indicator.dart';
 import 'components/hour_dividers.dart';
 import 'components/multi_date_event_header.dart';
+import 'components/now_indicator_painter.dart';
 import 'components/week_indicator.dart';
 import 'utils.dart';
 
@@ -19,6 +20,7 @@ class TimetableThemeData {
     HourDividersStyle? hourDividersStyle,
     MultiDateEventHeaderStyle? multiDateEventHeaderStyle,
     WeekBasedStyleProvider<WeekIndicatorStyle>? weekIndicatorStyleProvider,
+    NowIndicatorStyle? nowIndicatorStyle,
   }) {
     return TimetableThemeData.raw(
       dateDividersStyle: dateDividersStyle ?? DateDividersStyle(context),
@@ -29,6 +31,7 @@ class TimetableThemeData {
           multiDateEventHeaderStyle ?? MultiDateEventHeaderStyle(context),
       weekIndicatorStyleProvider: weekIndicatorStyleProvider ??
           (week) => WeekIndicatorStyle(context, week),
+      nowIndicatorStyle: nowIndicatorStyle ?? NowIndicatorStyle(context),
     );
   }
 
@@ -38,6 +41,7 @@ class TimetableThemeData {
     required this.hourDividersStyle,
     required this.multiDateEventHeaderStyle,
     required this.weekIndicatorStyleProvider,
+    required this.nowIndicatorStyle,
   });
 
   final DateDividersStyle dateDividersStyle;
@@ -45,6 +49,7 @@ class TimetableThemeData {
   final HourDividersStyle hourDividersStyle;
   final MultiDateEventHeaderStyle multiDateEventHeaderStyle;
   final WeekBasedStyleProvider<WeekIndicatorStyle> weekIndicatorStyleProvider;
+  final NowIndicatorStyle nowIndicatorStyle;
 
   @override
   int get hashCode => hashValues(
@@ -53,6 +58,7 @@ class TimetableThemeData {
         hourDividersStyle,
         multiDateEventHeaderStyle,
         weekIndicatorStyleProvider,
+        nowIndicatorStyle,
       );
   @override
   bool operator ==(Object other) {
@@ -61,7 +67,8 @@ class TimetableThemeData {
         dateIndicatorStyleProvider == other.dateIndicatorStyleProvider &&
         hourDividersStyle == other.hourDividersStyle &&
         multiDateEventHeaderStyle == other.multiDateEventHeaderStyle &&
-        weekIndicatorStyleProvider == other.weekIndicatorStyleProvider;
+        weekIndicatorStyleProvider == other.weekIndicatorStyleProvider &&
+        nowIndicatorStyle == other.nowIndicatorStyle;
   }
 }
 

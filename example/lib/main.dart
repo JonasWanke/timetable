@@ -82,6 +82,10 @@ class _TimetableExampleState extends State<TimetableExample>
         //   color: Colors.blue.withOpacity(.3),
         //   width: 2,
         // ),
+        // nowIndicatorStyle: NowIndicatorStyle(
+        //   context,
+        //   shape: TriangleNowIndicatorShape(color: Colors.green),
+        // ),
       ),
       // contentStyle: MultiDateContentStyle(
       //   nowIndicatorStyle: MultiDateNowIndicatorStyle(color: Colors.green),

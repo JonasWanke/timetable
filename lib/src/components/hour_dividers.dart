@@ -60,19 +60,19 @@ class HourDividersStyle {
 class _HourDividersPainter extends CustomPainter {
   _HourDividersPainter({
     required this.style,
-  }) : dividerPaint = Paint()
+  }) : _paint = Paint()
           ..color = style.color
           ..strokeWidth = style.width;
 
   final HourDividersStyle style;
-  final Paint dividerPaint;
+  final Paint _paint;
 
   @override
   void paint(Canvas canvas, Size size) {
     final heightPerHour = size.height / Duration.hoursPerDay;
     for (final h in DateTimeTimetable.innerDateHours) {
       final y = h * heightPerHour;
-      canvas.drawLine(Offset(-8, y), Offset(size.width, y), dividerPaint);
+      canvas.drawLine(Offset(-8, y), Offset(size.width, y), _paint);
     }
   }
 

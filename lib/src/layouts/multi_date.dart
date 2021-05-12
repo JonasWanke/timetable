@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../components/multi_date_content.dart';
 import '../components/multi_date_event_header.dart';
-import '../components/multi_date_header.dart';
+import '../components/date_header.dart';
 import '../components/time_indicators.dart';
 import '../components/week_indicator.dart';
 import '../date/date_page_view.dart';

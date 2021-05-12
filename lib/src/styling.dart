@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'components/date_dividers.dart';
 import 'components/date_events.dart';
+import 'components/date_header.dart';
 import 'components/date_indicator.dart';
 import 'components/hour_dividers.dart';
 import 'components/month_indicator.dart';
@@ -22,6 +23,7 @@ class TimetableThemeData {
     BuildContext context, {
     DateDividersStyle? dateDividersStyle,
     DateEventsStyle? dateEventsStyle,
+    DateBasedStyleProvider<DateHeaderStyle>? dateHeaderStyleProvider,
     DateBasedStyleProvider<DateIndicatorStyle>? dateIndicatorStyleProvider,
     HourDividersStyle? hourDividersStyle,
     MonthBasedStyleProvider<MonthIndicatorStyle>? monthIndicatorStyleProvider,
@@ -35,6 +37,8 @@ class TimetableThemeData {
     return TimetableThemeData.raw(
       dateDividersStyle: dateDividersStyle ?? DateDividersStyle(context),
       dateEventsStyle: dateEventsStyle ?? DateEventsStyle(context),
+      dateHeaderStyleProvider:
+          dateHeaderStyleProvider ?? (date) => DateHeaderStyle(context, date),
       dateIndicatorStyleProvider: dateIndicatorStyleProvider ??
           (date) => DateIndicatorStyle(context, date),
       hourDividersStyle: hourDividersStyle ?? HourDividersStyle(context),
@@ -55,6 +59,7 @@ class TimetableThemeData {
   const TimetableThemeData.raw({
     required this.dateDividersStyle,
     required this.dateEventsStyle,
+    required this.dateHeaderStyleProvider,
     required this.dateIndicatorStyleProvider,
     required this.hourDividersStyle,
     required this.monthIndicatorStyleProvider,
@@ -67,6 +72,7 @@ class TimetableThemeData {
 
   final DateDividersStyle dateDividersStyle;
   final DateEventsStyle dateEventsStyle;
+  final DateBasedStyleProvider<DateHeaderStyle> dateHeaderStyleProvider;
   final DateBasedStyleProvider<DateIndicatorStyle> dateIndicatorStyleProvider;
   final HourDividersStyle hourDividersStyle;
   final MonthBasedStyleProvider<MonthIndicatorStyle>
@@ -82,6 +88,7 @@ class TimetableThemeData {
   int get hashCode => hashValues(
         dateDividersStyle,
         dateEventsStyle,
+        dateHeaderStyleProvider,
         dateIndicatorStyleProvider,
         hourDividersStyle,
         monthIndicatorStyleProvider,
@@ -96,6 +103,7 @@ class TimetableThemeData {
     return other is TimetableThemeData &&
         dateDividersStyle == other.dateDividersStyle &&
         dateEventsStyle == other.dateEventsStyle &&
+        dateHeaderStyleProvider == other.dateHeaderStyleProvider &&
         dateIndicatorStyleProvider == other.dateIndicatorStyleProvider &&
         hourDividersStyle == other.hourDividersStyle &&
         monthIndicatorStyleProvider == other.monthIndicatorStyleProvider &&

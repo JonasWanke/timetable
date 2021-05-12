@@ -12,7 +12,7 @@ import 'date_content.dart';
 import 'date_dividers.dart';
 import 'date_events.dart';
 import 'hour_dividers.dart';
-import 'now_indicator_painter.dart';
+import 'now_indicator.dart';
 
 typedef MultiDateContentBackgroundTapCallback = void Function(
   DateTime dateTime,

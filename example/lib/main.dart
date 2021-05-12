@@ -51,6 +51,10 @@ class _TimetableExampleState extends State<TimetableExample>
       dateController: _dateController,
       timeController: _timeController,
       eventBuilder: (context, event) => _buildPartDayEvent(event),
+      child: Column(children: [
+        _buildAppBar(),
+        Expanded(child: MultiDateTimetable<BasicEvent>()),
+      ]),
       // Optional:
       eventProvider: eventProviderFromFixedList(positioningDemoEvents),
       allDayEventBuilder: (context, event, info) => BasicAllDayEventWidget(
@@ -74,7 +78,6 @@ class _TimetableExampleState extends State<TimetableExample>
         onDateTimeBackgroundTap: (dateTime) =>
             _showSnackBar('Tapped on date-time background at $dateTime.'),
       ),
-      // Optional theming capabilites:
       theme: TimetableThemeData(
         context,
         // dateDividersStyle: DateDividersStyle(
@@ -87,15 +90,6 @@ class _TimetableExampleState extends State<TimetableExample>
         //   shape: TriangleNowIndicatorShape(color: Colors.green),
         // ),
       ),
-      // contentStyle: MultiDateContentStyle(
-      //   nowIndicatorStyle: MultiDateNowIndicatorStyle(color: Colors.green),
-      //   dividerColor: Colors.orange.withOpacity(.3),
-      // ),
-      // Required:
-      child: Column(children: [
-        _buildAppBar(),
-        Expanded(child: MultiDateTimetable<BasicEvent>()),
-      ]),
     );
   }
 

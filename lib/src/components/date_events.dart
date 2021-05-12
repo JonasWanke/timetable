@@ -42,8 +42,7 @@ class DateEvents<E extends Event> extends StatelessWidget {
     return Padding(
       padding: style.padding,
       child: CustomMultiChildLayout(
-        delegate:
-            _DayEventsLayoutDelegate(date: date, events: events, style: style),
+        delegate: _DayEventsLayoutDelegate(date, events, style),
         children: [
           for (final event in events)
             LayoutId(
@@ -148,11 +147,8 @@ class DateEventsStyle {
 
 class _DayEventsLayoutDelegate<E extends Event>
     extends MultiChildLayoutDelegate {
-  _DayEventsLayoutDelegate({
-    required this.date,
-    required this.events,
-    required this.style,
-  }) : assert(date.isValidTimetableDate);
+  _DayEventsLayoutDelegate(this.date, this.events, this.style)
+      : assert(date.isValidTimetableDate);
 
   static const minWidth = 4.0;
 

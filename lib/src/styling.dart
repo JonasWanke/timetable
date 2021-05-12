@@ -29,10 +29,10 @@ class TimetableThemeData {
     MonthBasedStyleProvider<MonthIndicatorStyle>? monthIndicatorStyleProvider,
     MonthBasedStyleProvider<MonthWidgetStyle>? monthWidgetStyleProvider,
     MultiDateEventHeaderStyle? multiDateEventHeaderStyle,
+    NowIndicatorStyle? nowIndicatorStyle,
     DateBasedStyleProvider<WeekdayIndicatorStyle>?
         weekdayIndicatorStyleProvider,
     WeekBasedStyleProvider<WeekIndicatorStyle>? weekIndicatorStyleProvider,
-    NowIndicatorStyle? nowIndicatorStyle,
   }) {
     return TimetableThemeData.raw(
       dateDividersStyle: dateDividersStyle ?? DateDividersStyle(context),
@@ -49,11 +49,11 @@ class TimetableThemeData {
           (month) => MonthWidgetStyle(context, month),
       multiDateEventHeaderStyle:
           multiDateEventHeaderStyle ?? MultiDateEventHeaderStyle(context),
+      nowIndicatorStyle: nowIndicatorStyle ?? NowIndicatorStyle(context),
       weekdayIndicatorStyleProvider: weekdayIndicatorStyleProvider ??
           (date) => WeekdayIndicatorStyle(context, date),
       weekIndicatorStyleProvider: weekIndicatorStyleProvider ??
           (week) => WeekIndicatorStyle(context, week),
-      nowIndicatorStyle: nowIndicatorStyle ?? NowIndicatorStyle(context),
     );
   }
 
@@ -66,9 +66,9 @@ class TimetableThemeData {
     required this.monthIndicatorStyleProvider,
     required this.monthWidgetStyleProvider,
     required this.multiDateEventHeaderStyle,
+    required this.nowIndicatorStyle,
     required this.weekdayIndicatorStyleProvider,
     required this.weekIndicatorStyleProvider,
-    required this.nowIndicatorStyle,
   });
 
   final DateDividersStyle dateDividersStyle;
@@ -80,10 +80,10 @@ class TimetableThemeData {
       monthIndicatorStyleProvider;
   final MonthBasedStyleProvider<MonthWidgetStyle> monthWidgetStyleProvider;
   final MultiDateEventHeaderStyle multiDateEventHeaderStyle;
+  final NowIndicatorStyle nowIndicatorStyle;
   final DateBasedStyleProvider<WeekdayIndicatorStyle>
       weekdayIndicatorStyleProvider;
   final WeekBasedStyleProvider<WeekIndicatorStyle> weekIndicatorStyleProvider;
-  final NowIndicatorStyle nowIndicatorStyle;
 
   @override
   int get hashCode => hashValues(
@@ -95,9 +95,9 @@ class TimetableThemeData {
         monthIndicatorStyleProvider,
         monthWidgetStyleProvider,
         multiDateEventHeaderStyle,
+        nowIndicatorStyle,
         weekdayIndicatorStyleProvider,
         weekIndicatorStyleProvider,
-        nowIndicatorStyle,
       );
   @override
   bool operator ==(Object other) {
@@ -110,9 +110,9 @@ class TimetableThemeData {
         monthIndicatorStyleProvider == other.monthIndicatorStyleProvider &&
         monthWidgetStyleProvider == other.monthWidgetStyleProvider &&
         multiDateEventHeaderStyle == other.multiDateEventHeaderStyle &&
+        nowIndicatorStyle == other.nowIndicatorStyle &&
         weekdayIndicatorStyleProvider == other.weekdayIndicatorStyleProvider &&
-        weekIndicatorStyleProvider == other.weekIndicatorStyleProvider &&
-        nowIndicatorStyle == other.nowIndicatorStyle;
+        weekIndicatorStyleProvider == other.weekIndicatorStyleProvider;
   }
 }
 

@@ -10,23 +10,11 @@ import '../time/zoom.dart';
 import '../utils.dart';
 import 'date_content.dart';
 import 'date_dividers.dart';
-import 'date_events.dart';
 import 'hour_dividers.dart';
 import 'now_indicator.dart';
 
-typedef MultiDateContentBackgroundTapCallback = void Function(
-  DateTime dateTime,
-);
-
 class MultiDateContent<E extends Event> extends StatelessWidget {
-  const MultiDateContent({
-    Key? key,
-    this.onBackgroundTap,
-    this.style,
-  }) : super(key: key);
-
-  final MultiDateContentBackgroundTapCallback? onBackgroundTap;
-  final MultiDateContentStyle? style;
+  const MultiDateContent({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -57,32 +45,9 @@ class MultiDateContent<E extends Event> extends StatelessWidget {
           date: date,
           events: DefaultEventProvider.of<E>(context)!(date.fullDayInterval),
           overlays: DefaultTimeOverlayProvider.of(context)!(context, date),
-          onBackgroundTap: onBackgroundTap,
         ),
       ),
     );
-  }
-}
-
-/// Defines visual properties for [MultiDateContent].
-class MultiDateContentStyle {
-  const MultiDateContentStyle({
-    this.dividerColor,
-    this.dateEventsStyle,
-  });
-
-  /// [Color] for painting hour and day dividers in the part-day event area.
-  final Color? dividerColor;
-
-  final DateEventsStyle? dateEventsStyle;
-
-  @override
-  int get hashCode => hashList([dividerColor, dateEventsStyle]);
-  @override
-  bool operator ==(Object other) {
-    return other is MultiDateContentStyle &&
-        other.dividerColor == dividerColor &&
-        other.dateEventsStyle == dateEventsStyle;
   }
 }
 

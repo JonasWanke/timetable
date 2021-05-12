@@ -31,12 +31,12 @@ class DateContent<E extends Event> extends StatelessWidget {
   final List<E> events;
   final List<TimeOverlay> overlays;
 
-  final DateTapCallback? onBackgroundTap;
+  final DateTimeTapCallback? onBackgroundTap;
 
   @override
   Widget build(BuildContext context) {
     final onBackgroundTap = this.onBackgroundTap ??
-        DefaultTimetableCallbacks.of(context)?.onDateBackgroundTap;
+        DefaultTimetableCallbacks.of(context)?.onDateTimeBackgroundTap;
 
     return LayoutBuilder(builder: (context, constraints) {
       final height = constraints.maxHeight;

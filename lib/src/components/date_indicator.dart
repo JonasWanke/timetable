@@ -19,13 +19,13 @@ class DateIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final style = this.style ??
-        TimetableTheme.of(context)!.dateIndicatorStyleProvider(date);
+        TimetableTheme.orDefaultOf(context).dateIndicatorStyleProvider(date);
 
     return DecoratedBox(
       decoration: style.decoration,
       child: Padding(
         padding: style.padding,
-        child: Text(DateFormat('d').format(date), style: style.textStyle),
+        child: Text(style.label, style: style.textStyle),
       ),
     );
   }
@@ -40,23 +40,26 @@ class DateIndicatorStyle {
     Decoration? decoration,
     EdgeInsetsGeometry? padding,
     TextStyle? textStyle,
+    String? label,
   }) {
     assert(date.isValidTimetableDate);
 
-    final colorScheme = context.theme.colorScheme;
+    final theme = context.theme;
     return DateIndicatorStyle.raw(
       decoration: decoration ??
           BoxDecoration(
             shape: BoxShape.circle,
-            color: date.isToday ? colorScheme.primary : Colors.transparent,
+            color:
+                date.isToday ? theme.colorScheme.primary : Colors.transparent,
           ),
       padding: padding ?? EdgeInsets.all(8),
       textStyle: textStyle ??
           context.textTheme.subtitle1!.copyWith(
             color: date.isToday
-                ? colorScheme.primary.highEmphasisOnColor
-                : colorScheme.background.highEmphasisOnColor,
+                ? theme.colorScheme.primary.highEmphasisOnColor
+                : theme.colorScheme.background.highEmphasisOnColor,
           ),
+      label: label ?? DateFormat('d').format(date),
     );
   }
 
@@ -64,19 +67,22 @@ class DateIndicatorStyle {
     required this.decoration,
     required this.padding,
     required this.textStyle,
+    required this.label,
   });
 
   final Decoration decoration;
   final EdgeInsetsGeometry padding;
   final TextStyle textStyle;
+  final String label;
 
   @override
-  int get hashCode => hashValues(decoration, padding, textStyle);
+  int get hashCode => hashValues(decoration, padding, textStyle, label);
   @override
   bool operator ==(Object other) {
     return other is DateIndicatorStyle &&
         decoration == other.decoration &&
         padding == other.padding &&
-        textStyle == other.textStyle;
+        textStyle == other.textStyle &&
+        label == other.label;
   }
 }

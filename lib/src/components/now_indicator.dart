@@ -37,7 +37,8 @@ class _NowIndicatorState extends State<NowIndicator> {
     return CustomPaint(
       painter: _NowIndicatorPainter(
         controller: DefaultDateController.of(context)!,
-        style: widget.style ?? TimetableTheme.of(context)!.nowIndicatorStyle,
+        style: widget.style ??
+            TimetableTheme.orDefaultOf(context).nowIndicatorStyle,
         repaint: _timeListenable,
       ),
       child: widget.child,

@@ -7,6 +7,7 @@ import 'components/hour_dividers.dart';
 import 'components/multi_date_event_header.dart';
 import 'components/now_indicator.dart';
 import 'components/week_indicator.dart';
+import 'components/weekday_indicator.dart';
 import 'utils.dart';
 
 typedef DateBasedStyleProvider<T> = T Function(DateTime date);
@@ -21,6 +22,8 @@ class TimetableThemeData {
     DateBasedStyleProvider<DateIndicatorStyle>? dateIndicatorStyleProvider,
     HourDividersStyle? hourDividersStyle,
     MultiDateEventHeaderStyle? multiDateEventHeaderStyle,
+    DateBasedStyleProvider<WeekdayIndicatorStyle>?
+        weekdayIndicatorStyleProvider,
     WeekBasedStyleProvider<WeekIndicatorStyle>? weekIndicatorStyleProvider,
     NowIndicatorStyle? nowIndicatorStyle,
   }) {
@@ -32,6 +35,8 @@ class TimetableThemeData {
       hourDividersStyle: hourDividersStyle ?? HourDividersStyle(context),
       multiDateEventHeaderStyle:
           multiDateEventHeaderStyle ?? MultiDateEventHeaderStyle(context),
+      weekdayIndicatorStyleProvider: weekdayIndicatorStyleProvider ??
+          (date) => WeekdayIndicatorStyle(context, date),
       weekIndicatorStyleProvider: weekIndicatorStyleProvider ??
           (week) => WeekIndicatorStyle(context, week),
       nowIndicatorStyle: nowIndicatorStyle ?? NowIndicatorStyle(context),
@@ -44,6 +49,7 @@ class TimetableThemeData {
     required this.dateIndicatorStyleProvider,
     required this.hourDividersStyle,
     required this.multiDateEventHeaderStyle,
+    required this.weekdayIndicatorStyleProvider,
     required this.weekIndicatorStyleProvider,
     required this.nowIndicatorStyle,
   });
@@ -53,6 +59,8 @@ class TimetableThemeData {
   final DateBasedStyleProvider<DateIndicatorStyle> dateIndicatorStyleProvider;
   final HourDividersStyle hourDividersStyle;
   final MultiDateEventHeaderStyle multiDateEventHeaderStyle;
+  final DateBasedStyleProvider<WeekdayIndicatorStyle>
+      weekdayIndicatorStyleProvider;
   final WeekBasedStyleProvider<WeekIndicatorStyle> weekIndicatorStyleProvider;
   final NowIndicatorStyle nowIndicatorStyle;
 
@@ -63,6 +71,7 @@ class TimetableThemeData {
         dateIndicatorStyleProvider,
         hourDividersStyle,
         multiDateEventHeaderStyle,
+        weekdayIndicatorStyleProvider,
         weekIndicatorStyleProvider,
         nowIndicatorStyle,
       );
@@ -74,6 +83,7 @@ class TimetableThemeData {
         dateIndicatorStyleProvider == other.dateIndicatorStyleProvider &&
         hourDividersStyle == other.hourDividersStyle &&
         multiDateEventHeaderStyle == other.multiDateEventHeaderStyle &&
+        weekdayIndicatorStyleProvider == other.weekdayIndicatorStyleProvider &&
         weekIndicatorStyleProvider == other.weekIndicatorStyleProvider &&
         nowIndicatorStyle == other.nowIndicatorStyle;
   }
@@ -92,4 +102,6 @@ class TimetableTheme extends InheritedWidget {
 
   static TimetableThemeData? of(BuildContext context) =>
       context.dependOnInheritedWidgetOfExactType<TimetableTheme>()?.data;
+  static TimetableThemeData orDefaultOf(BuildContext context) =>
+      of(context) ?? TimetableThemeData(context);
 }

@@ -37,7 +37,8 @@ class DateEvents<E extends Event> extends StatelessWidget {
   Widget build(BuildContext context) {
     final eventBuilder =
         this.eventBuilder ?? DefaultEventBuilder.of<E>(context)!;
-    final style = this.style ?? TimetableTheme.of(context)!.dateEventsStyle;
+    final style =
+        this.style ?? TimetableTheme.orDefaultOf(context).dateEventsStyle;
     return Padding(
       padding: style.padding,
       child: CustomMultiChildLayout(

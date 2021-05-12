@@ -49,7 +49,7 @@ class WeekIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final style = this.style ??
-        TimetableTheme.of(context)!.weekIndicatorStyleProvider(week);
+        TimetableTheme.orDefaultOf(context).weekIndicatorStyleProvider(week);
     final defaultOnTap = DefaultTimetableCallbacks.of(context)?.onWeekTap;
 
     return InkResponse(
@@ -119,14 +119,16 @@ class WeekIndicatorStyle {
   factory WeekIndicatorStyle(
     BuildContext context,
     WeekInfo week, {
+    String? tooltip,
     Decoration? decoration,
     EdgeInsetsGeometry? padding,
     TextStyle? textStyle,
+    List<String>? labels,
   }) {
     final colorScheme = context.theme.colorScheme;
     final localizations = TimetableLocalizations.of(context);
     return WeekIndicatorStyle.raw(
-      tooltip: localizations.weekOfYear(week),
+      tooltip: tooltip ?? localizations.weekOfYear(week),
       decoration: decoration ??
           BoxDecoration(
             color: colorScheme.brightness.contrastColor.withOpacity(0.05),
@@ -136,7 +138,7 @@ class WeekIndicatorStyle {
       textStyle: textStyle ??
           context.textTheme.bodyText2!
               .copyWith(color: colorScheme.background.mediumEmphasisOnColor),
-      labels: localizations.weekLabels(week),
+      labels: labels ?? localizations.weekLabels(week),
     );
   }
 

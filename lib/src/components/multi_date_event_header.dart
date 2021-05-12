@@ -26,8 +26,8 @@ class MultiDateEventHeader<E extends Event> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final style =
-        this.style ?? TimetableTheme.of(context)!.multiDateEventHeaderStyle;
+    final style = this.style ??
+        TimetableTheme.orDefaultOf(context).multiDateEventHeaderStyle;
 
     return ClipRect(
       child: Padding(

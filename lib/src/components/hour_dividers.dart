@@ -17,7 +17,7 @@ class HourDividers extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomPaint(
       painter: _HourDividersPainter(
-        style: style ?? TimetableTheme.of(context)!.hourDividersStyle,
+        style: style ?? TimetableTheme.orDefaultOf(context).hourDividersStyle,
       ),
       child: child,
     );

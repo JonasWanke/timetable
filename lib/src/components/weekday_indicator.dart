@@ -2,6 +2,7 @@ import 'package:black_hole_flutter/black_hole_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../styling.dart';
 import '../utils.dart';
 
 class WeekdayIndicator extends StatelessWidget {
@@ -17,37 +18,66 @@ class WeekdayIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = context.theme;
+    final style = this.style ??
+        TimetableTheme.orDefaultOf(context).weekdayIndicatorStyleProvider(date);
 
-    final textStyle = theme.textTheme.caption!.copyWith(
-      color:
-          date.isToday ? theme.primaryColor : theme.mediumEmphasisOnBackground,
+    return DecoratedBox(
+      decoration: style.decoration,
+      child: Padding(
+        padding: style.padding,
+        child: Text(style.label, style: style.textStyle),
+      ),
     );
-
-    return Text(DateFormat('EEE').format(date), style: textStyle);
   }
 }
 
-/// Style for [WeekdayIndicator].
+/// Defines visual properties for [WeekdayIndicator].
 @immutable
 class WeekdayIndicatorStyle {
-  const WeekdayIndicatorStyle({
-    this.decoration,
-    this.padding,
-    this.textStyle,
+  factory WeekdayIndicatorStyle(
+    BuildContext context,
+    DateTime date, {
+    Decoration? decoration,
+    EdgeInsetsGeometry? padding,
+    TextStyle? textStyle,
+    String? label,
+  }) {
+    assert(date.isValidTimetableDate);
+
+    final theme = context.theme;
+    return WeekdayIndicatorStyle.raw(
+      decoration: decoration ?? BoxDecoration(),
+      padding: padding ?? EdgeInsets.zero,
+      textStyle: textStyle ??
+          theme.textTheme.caption!.copyWith(
+            color: date.isToday
+                ? theme.colorScheme.primary
+                : theme.colorScheme.background.mediumEmphasisOnColor,
+          ),
+      label: label ?? DateFormat('EEE').format(date),
+    );
+  }
+
+  const WeekdayIndicatorStyle.raw({
+    required this.decoration,
+    required this.padding,
+    required this.textStyle,
+    required this.label,
   });
 
-  final Decoration? decoration;
-  final EdgeInsetsGeometry? padding;
-  final TextStyle? textStyle;
+  final Decoration decoration;
+  final EdgeInsetsGeometry padding;
+  final TextStyle textStyle;
+  final String label;
 
   @override
-  int get hashCode => hashList([decoration, padding, textStyle]);
+  int get hashCode => hashValues(decoration, padding, textStyle, label);
   @override
   bool operator ==(Object other) {
     return other is WeekdayIndicatorStyle &&
         decoration == other.decoration &&
         padding == other.padding &&
-        textStyle == other.textStyle;
+        textStyle == other.textStyle &&
+        label == other.label;
   }
 }

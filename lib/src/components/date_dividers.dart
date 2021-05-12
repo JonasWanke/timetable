@@ -18,7 +18,7 @@ class DateDividers extends StatelessWidget {
     return CustomPaint(
       painter: _DateDividersPainter(
         controller: DefaultDateController.of(context)!,
-        style: style ?? TimetableTheme.of(context)!.dateDividersStyle,
+        style: style ?? TimetableTheme.orDefaultOf(context).dateDividersStyle,
       ),
       child: child,
     );

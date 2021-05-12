@@ -22,7 +22,7 @@ class TimetableThemeData {
   factory TimetableThemeData(
     BuildContext context, {
     DateDividersStyle? dateDividersStyle,
-    DateEventsStyle? dateEventsStyle,
+    DateBasedStyleProvider<DateEventsStyle>? dateEventsStyleProvider,
     DateBasedStyleProvider<DateHeaderStyle>? dateHeaderStyleProvider,
     DateBasedStyleProvider<DateIndicatorStyle>? dateIndicatorStyleProvider,
     HourDividersStyle? hourDividersStyle,
@@ -36,7 +36,8 @@ class TimetableThemeData {
   }) {
     return TimetableThemeData.raw(
       dateDividersStyle: dateDividersStyle ?? DateDividersStyle(context),
-      dateEventsStyle: dateEventsStyle ?? DateEventsStyle(context),
+      dateEventsStyleProvider:
+          dateEventsStyleProvider ?? (date) => DateEventsStyle(context, date),
       dateHeaderStyleProvider:
           dateHeaderStyleProvider ?? (date) => DateHeaderStyle(context, date),
       dateIndicatorStyleProvider: dateIndicatorStyleProvider ??
@@ -58,7 +59,7 @@ class TimetableThemeData {
 
   const TimetableThemeData.raw({
     required this.dateDividersStyle,
-    required this.dateEventsStyle,
+    required this.dateEventsStyleProvider,
     required this.dateHeaderStyleProvider,
     required this.dateIndicatorStyleProvider,
     required this.hourDividersStyle,
@@ -71,7 +72,7 @@ class TimetableThemeData {
   });
 
   final DateDividersStyle dateDividersStyle;
-  final DateEventsStyle dateEventsStyle;
+  final DateBasedStyleProvider<DateEventsStyle> dateEventsStyleProvider;
   final DateBasedStyleProvider<DateHeaderStyle> dateHeaderStyleProvider;
   final DateBasedStyleProvider<DateIndicatorStyle> dateIndicatorStyleProvider;
   final HourDividersStyle hourDividersStyle;
@@ -87,7 +88,7 @@ class TimetableThemeData {
   @override
   int get hashCode => hashValues(
         dateDividersStyle,
-        dateEventsStyle,
+        dateEventsStyleProvider,
         dateHeaderStyleProvider,
         dateIndicatorStyleProvider,
         hourDividersStyle,
@@ -102,7 +103,7 @@ class TimetableThemeData {
   bool operator ==(Object other) {
     return other is TimetableThemeData &&
         dateDividersStyle == other.dateDividersStyle &&
-        dateEventsStyle == other.dateEventsStyle &&
+        dateEventsStyleProvider == other.dateEventsStyleProvider &&
         dateHeaderStyleProvider == other.dateHeaderStyleProvider &&
         dateIndicatorStyleProvider == other.dateIndicatorStyleProvider &&
         hourDividersStyle == other.hourDividersStyle &&

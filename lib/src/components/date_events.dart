@@ -37,8 +37,8 @@ class DateEvents<E extends Event> extends StatelessWidget {
   Widget build(BuildContext context) {
     final eventBuilder =
         this.eventBuilder ?? DefaultEventBuilder.of<E>(context)!;
-    final style =
-        this.style ?? TimetableTheme.orDefaultOf(context).dateEventsStyle;
+    final style = this.style ??
+        TimetableTheme.orDefaultOf(context).dateEventsStyleProvider(date);
     return Padding(
       padding: style.padding,
       child: CustomMultiChildLayout(
@@ -63,7 +63,9 @@ class DateEventsStyle {
     // To allow future updates to use the context and align the parameters to
     // other style constructors.
     // ignore: avoid_unused_constructor_parameters
-    BuildContext context, {
+    BuildContext context,
+    // ignore: avoid_unused_constructor_parameters, See above.
+    DateTime date, {
     Duration? minEventDuration,
     double? minEventHeight,
     EdgeInsetsGeometry? padding,
@@ -72,12 +74,12 @@ class DateEventsStyle {
     double? stackedEventSpacing,
   }) {
     return DateEventsStyle.raw(
-      minEventDuration: minEventDuration ?? const Duration(minutes: 30),
+      minEventDuration: minEventDuration ?? Duration(minutes: 30),
       minEventHeight: minEventHeight ?? 16,
-      padding: padding ?? const EdgeInsets.only(right: 1),
+      padding: padding ?? EdgeInsets.only(right: 1),
       enableStacking: enableStacking ?? true,
       minEventDeltaForStacking:
-          minEventDeltaForStacking ?? const Duration(minutes: 15),
+          minEventDeltaForStacking ?? Duration(minutes: 15),
       stackedEventSpacing: stackedEventSpacing ?? 4,
     );
   }

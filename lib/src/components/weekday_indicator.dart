@@ -2,6 +2,7 @@ import 'package:black_hole_flutter/black_hole_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../localization.dart';
 import '../styling.dart';
 import '../utils.dart';
 
@@ -54,7 +55,11 @@ class WeekdayIndicatorStyle {
                 ? theme.colorScheme.primary
                 : theme.colorScheme.background.mediumEmphasisOnColor,
           ),
-      label: label ?? DateFormat('EEE').format(date),
+      label: label ??
+          () {
+            context.dependOnTimetableLocalizations();
+            return DateFormat('EEE').format(date);
+          }(),
     );
   }
 

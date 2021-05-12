@@ -2,6 +2,7 @@ import 'package:black_hole_flutter/black_hole_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../localization.dart';
 import '../styling.dart';
 import '../utils.dart';
 
@@ -31,7 +32,7 @@ class DateIndicator extends StatelessWidget {
   }
 }
 
-/// Style for [DateIndicator].
+/// Defines visual properties for [DateIndicator].
 @immutable
 class DateIndicatorStyle {
   factory DateIndicatorStyle(
@@ -59,7 +60,11 @@ class DateIndicatorStyle {
                 ? theme.colorScheme.primary.highEmphasisOnColor
                 : theme.colorScheme.background.highEmphasisOnColor,
           ),
-      label: label ?? DateFormat('d').format(date),
+      label: label ??
+          () {
+            context.dependOnTimetableLocalizations();
+            return DateFormat('d').format(date);
+          }(),
     );
   }
 

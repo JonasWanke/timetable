@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 
 import '../event/builder.dart';
 import '../event/event.dart';
+import '../styling.dart';
 import '../utils.dart';
 import 'multi_date_content.dart';
 
@@ -14,7 +15,7 @@ class DateEvents<E extends Event> extends StatelessWidget {
     required this.date,
     required List<E> events,
     this.eventBuilder,
-    this.style = const DateEventsStyle(),
+    this.style,
   })  : assert(date.isValidTimetableDate),
         assert(
           events.every((e) => e.interval.intersects(date.fullDayInterval)),
@@ -30,12 +31,13 @@ class DateEvents<E extends Event> extends StatelessWidget {
   final DateTime date;
   final List<E> events;
   final EventBuilder<E>? eventBuilder;
-  final DateEventsStyle style;
+  final DateEventsStyle? style;
 
   @override
   Widget build(BuildContext context) {
     final eventBuilder =
         this.eventBuilder ?? DefaultEventBuilder.of<E>(context)!;
+    final style = this.style ?? TimetableTheme.of(context)!.dateEventsStyle;
     return Padding(
       padding: style.padding,
       child: CustomMultiChildLayout(
@@ -56,13 +58,36 @@ class DateEvents<E extends Event> extends StatelessWidget {
 
 /// Defines visual properties for [MultiDateContent].
 class DateEventsStyle {
-  const DateEventsStyle({
-    this.minEventDuration = const Duration(minutes: 30),
-    this.minEventHeight = 16,
-    this.padding = const EdgeInsets.only(right: 1),
-    this.enableStacking = true,
-    this.minEventDeltaForStacking = const Duration(minutes: 15),
-    this.stackedEventSpacing = 4,
+  factory DateEventsStyle(
+    // To allow future updates to use the context and align the parameters to
+    // other style constructors.
+    // ignore: avoid_unused_constructor_parameters
+    BuildContext context, {
+    Duration? minEventDuration,
+    double? minEventHeight,
+    EdgeInsetsGeometry? padding,
+    bool? enableStacking,
+    Duration? minEventDeltaForStacking,
+    double? stackedEventSpacing,
+  }) {
+    return DateEventsStyle.raw(
+      minEventDuration: minEventDuration ?? const Duration(minutes: 30),
+      minEventHeight: minEventHeight ?? 16,
+      padding: padding ?? const EdgeInsets.only(right: 1),
+      enableStacking: enableStacking ?? true,
+      minEventDeltaForStacking:
+          minEventDeltaForStacking ?? const Duration(minutes: 15),
+      stackedEventSpacing: stackedEventSpacing ?? 4,
+    );
+  }
+
+  const DateEventsStyle.raw({
+    required this.minEventDuration,
+    required this.minEventHeight,
+    required this.padding,
+    required this.enableStacking,
+    required this.minEventDeltaForStacking,
+    required this.stackedEventSpacing,
   });
 
   /// Minimum [Duration] to size a part-day event.
@@ -98,17 +123,14 @@ class DateEventsStyle {
   final double stackedEventSpacing;
 
   @override
-  int get hashCode {
-    return hashList([
-      minEventDuration,
-      minEventHeight,
-      padding,
-      enableStacking,
-      minEventDeltaForStacking,
-      stackedEventSpacing,
-    ]);
-  }
-
+  int get hashCode => hashValues(
+        minEventDuration,
+        minEventHeight,
+        padding,
+        enableStacking,
+        minEventDeltaForStacking,
+        stackedEventSpacing,
+      );
   @override
   bool operator ==(Object other) {
     return other is DateEventsStyle &&

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 
 import 'components/date_dividers.dart';
+import 'components/date_events.dart';
 import 'components/date_indicator.dart';
 import 'components/hour_dividers.dart';
 import 'components/multi_date_event_header.dart';
-import 'components/now_indicator_painter.dart';
+import 'components/now_indicator.dart';
 import 'components/week_indicator.dart';
 import 'utils.dart';
 
@@ -16,6 +17,7 @@ class TimetableThemeData {
   factory TimetableThemeData(
     BuildContext context, {
     DateDividersStyle? dateDividersStyle,
+    DateEventsStyle? dateEventsStyle,
     DateBasedStyleProvider<DateIndicatorStyle>? dateIndicatorStyleProvider,
     HourDividersStyle? hourDividersStyle,
     MultiDateEventHeaderStyle? multiDateEventHeaderStyle,
@@ -24,6 +26,7 @@ class TimetableThemeData {
   }) {
     return TimetableThemeData.raw(
       dateDividersStyle: dateDividersStyle ?? DateDividersStyle(context),
+      dateEventsStyle: dateEventsStyle ?? DateEventsStyle(context),
       dateIndicatorStyleProvider: dateIndicatorStyleProvider ??
           (date) => DateIndicatorStyle(context, date),
       hourDividersStyle: hourDividersStyle ?? HourDividersStyle(context),
@@ -37,6 +40,7 @@ class TimetableThemeData {
 
   const TimetableThemeData.raw({
     required this.dateDividersStyle,
+    required this.dateEventsStyle,
     required this.dateIndicatorStyleProvider,
     required this.hourDividersStyle,
     required this.multiDateEventHeaderStyle,
@@ -45,6 +49,7 @@ class TimetableThemeData {
   });
 
   final DateDividersStyle dateDividersStyle;
+  final DateEventsStyle dateEventsStyle;
   final DateBasedStyleProvider<DateIndicatorStyle> dateIndicatorStyleProvider;
   final HourDividersStyle hourDividersStyle;
   final MultiDateEventHeaderStyle multiDateEventHeaderStyle;
@@ -54,6 +59,7 @@ class TimetableThemeData {
   @override
   int get hashCode => hashValues(
         dateDividersStyle,
+        dateEventsStyle,
         dateIndicatorStyleProvider,
         hourDividersStyle,
         multiDateEventHeaderStyle,
@@ -64,6 +70,7 @@ class TimetableThemeData {
   bool operator ==(Object other) {
     return other is TimetableThemeData &&
         dateDividersStyle == other.dateDividersStyle &&
+        dateEventsStyle == other.dateEventsStyle &&
         dateIndicatorStyleProvider == other.dateIndicatorStyleProvider &&
         hourDividersStyle == other.hourDividersStyle &&
         multiDateEventHeaderStyle == other.multiDateEventHeaderStyle &&

@@ -6,9 +6,13 @@ import '../date/month_page_view.dart';
 import '../utils.dart';
 
 class CompactMonthTimetable extends StatefulWidget {
-  const CompactMonthTimetable({this.dateController});
+  CompactMonthTimetable({
+    this.dateController,
+    MonthWidgetBuilder? monthBuilder,
+  }) : monthBuilder = monthBuilder ?? ((context, month) => MonthWidget(month));
 
   final DateController? dateController;
+  final MonthWidgetBuilder monthBuilder;
 
   @override
   _CompactMonthTimetableState createState() => _CompactMonthTimetableState();
@@ -16,16 +20,18 @@ class CompactMonthTimetable extends StatefulWidget {
 
 class _CompactMonthTimetableState extends State<CompactMonthTimetable>
     with TickerProviderStateMixin {
+  late final DateController? dateController;
   late final MonthPageController _monthPageController;
 
   @override
   void initState() {
     super.initState();
 
-    widget.dateController?.date.addListener(_onDateControllerChanged);
+    dateController = widget.dateController ?? DefaultDateController.of(context);
+    dateController?.date.addListener(_onDateControllerChanged);
 
     _monthPageController = MonthPageController(
-      initialMonth: widget.dateController?.date.value.firstDayOfMonth ??
+      initialMonth: dateController?.date.value.firstDayOfMonth ??
           DateTimeTimetable.currentMonth(),
     );
     _monthPageController.addListener(_onMonthPageControllerChanged);
@@ -33,7 +39,7 @@ class _CompactMonthTimetableState extends State<CompactMonthTimetable>
 
   @override
   void dispose() {
-    widget.dateController?.date.removeListener(_onDateControllerChanged);
+    dateController?.date.removeListener(_onDateControllerChanged);
     _monthPageController.removeListener(_onMonthPageControllerChanged);
     _monthPageController.dispose();
     super.dispose();
@@ -43,8 +49,7 @@ class _CompactMonthTimetableState extends State<CompactMonthTimetable>
   int _monthPageControllerDriverCount = 0;
   Future<void> _onDateControllerChanged() async {
     if (_dateControllerDriverCount > 0) return;
-    final dateControllerMonth =
-        widget.dateController!.date.value.firstDayOfMonth;
+    final dateControllerMonth = dateController!.date.value.firstDayOfMonth;
     if (dateControllerMonth == _monthPageController.value) return;
 
     _monthPageControllerDriverCount++;
@@ -56,8 +61,7 @@ class _CompactMonthTimetableState extends State<CompactMonthTimetable>
     if (_monthPageControllerDriverCount > 0) return;
 
     _dateControllerDriverCount++;
-    await widget.dateController
-        ?.animateTo(_monthPageController.value, vsync: this);
+    await dateController?.animateTo(_monthPageController.value, vsync: this);
     _dateControllerDriverCount--;
   }
 
@@ -66,7 +70,7 @@ class _CompactMonthTimetableState extends State<CompactMonthTimetable>
     return MonthPageView(
       monthPageController: _monthPageController,
       shrinkWrapInCrossAxis: true,
-      builder: (context, month) => MonthWidget(month),
+      builder: widget.monthBuilder,
     );
   }
 }

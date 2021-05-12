@@ -11,11 +11,6 @@ import 'scroll_physics.dart';
 /// 100,000,000 days from epoch […]".
 const _minPage = -100000000;
 
-typedef DateWidgetBuilder = Widget Function(
-  BuildContext context,
-  DateTime date,
-);
-
 class DatePageView extends StatefulWidget {
   const DatePageView({
     Key? key,

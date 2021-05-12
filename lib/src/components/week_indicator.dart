@@ -156,6 +156,22 @@ class WeekIndicatorStyle {
   final TextStyle textStyle;
   final List<String> labels;
 
+  WeekIndicatorStyle copyWith({
+    String? tooltip,
+    Decoration? decoration,
+    EdgeInsetsGeometry? padding,
+    TextStyle? textStyle,
+    List<String>? labels,
+  }) {
+    return WeekIndicatorStyle.raw(
+      tooltip: tooltip ?? this.tooltip,
+      decoration: decoration ?? this.decoration,
+      padding: padding ?? this.padding,
+      textStyle: textStyle ?? this.textStyle,
+      labels: labels ?? this.labels,
+    );
+  }
+
   @override
   int get hashCode => hashValues(
         tooltip,

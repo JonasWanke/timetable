@@ -5,6 +5,7 @@ import 'components/date_events.dart';
 import 'components/date_indicator.dart';
 import 'components/hour_dividers.dart';
 import 'components/month_indicator.dart';
+import 'components/month_widget.dart';
 import 'components/multi_date_event_header.dart';
 import 'components/now_indicator.dart';
 import 'components/week_indicator.dart';
@@ -24,6 +25,7 @@ class TimetableThemeData {
     DateBasedStyleProvider<DateIndicatorStyle>? dateIndicatorStyleProvider,
     HourDividersStyle? hourDividersStyle,
     MonthBasedStyleProvider<MonthIndicatorStyle>? monthIndicatorStyleProvider,
+    MonthBasedStyleProvider<MonthWidgetStyle>? monthWidgetStyleProvider,
     MultiDateEventHeaderStyle? multiDateEventHeaderStyle,
     DateBasedStyleProvider<WeekdayIndicatorStyle>?
         weekdayIndicatorStyleProvider,
@@ -38,6 +40,8 @@ class TimetableThemeData {
       hourDividersStyle: hourDividersStyle ?? HourDividersStyle(context),
       monthIndicatorStyleProvider: monthIndicatorStyleProvider ??
           (month) => MonthIndicatorStyle(context, month),
+      monthWidgetStyleProvider: monthWidgetStyleProvider ??
+          (month) => MonthWidgetStyle(context, month),
       multiDateEventHeaderStyle:
           multiDateEventHeaderStyle ?? MultiDateEventHeaderStyle(context),
       weekdayIndicatorStyleProvider: weekdayIndicatorStyleProvider ??
@@ -54,6 +58,7 @@ class TimetableThemeData {
     required this.dateIndicatorStyleProvider,
     required this.hourDividersStyle,
     required this.monthIndicatorStyleProvider,
+    required this.monthWidgetStyleProvider,
     required this.multiDateEventHeaderStyle,
     required this.weekdayIndicatorStyleProvider,
     required this.weekIndicatorStyleProvider,
@@ -66,6 +71,7 @@ class TimetableThemeData {
   final HourDividersStyle hourDividersStyle;
   final MonthBasedStyleProvider<MonthIndicatorStyle>
       monthIndicatorStyleProvider;
+  final MonthBasedStyleProvider<MonthWidgetStyle> monthWidgetStyleProvider;
   final MultiDateEventHeaderStyle multiDateEventHeaderStyle;
   final DateBasedStyleProvider<WeekdayIndicatorStyle>
       weekdayIndicatorStyleProvider;
@@ -79,6 +85,7 @@ class TimetableThemeData {
         dateIndicatorStyleProvider,
         hourDividersStyle,
         monthIndicatorStyleProvider,
+        monthWidgetStyleProvider,
         multiDateEventHeaderStyle,
         weekdayIndicatorStyleProvider,
         weekIndicatorStyleProvider,
@@ -92,6 +99,7 @@ class TimetableThemeData {
         dateIndicatorStyleProvider == other.dateIndicatorStyleProvider &&
         hourDividersStyle == other.hourDividersStyle &&
         monthIndicatorStyleProvider == other.monthIndicatorStyleProvider &&
+        monthWidgetStyleProvider == other.monthWidgetStyleProvider &&
         multiDateEventHeaderStyle == other.multiDateEventHeaderStyle &&
         weekdayIndicatorStyleProvider == other.weekdayIndicatorStyleProvider &&
         weekIndicatorStyleProvider == other.weekIndicatorStyleProvider &&

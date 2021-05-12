@@ -1,4 +1,5 @@
 import 'package:dart_date/dart_date.dart' show Interval;
+import 'package:flutter/widgets.dart' hide Interval;
 import 'package:supercharged/supercharged.dart';
 
 import 'utils/week.dart';
@@ -28,6 +29,19 @@ extension ComparableTimetable<T extends Comparable<T>> on T {
   T coerceAtMost(T max) => this > max ? max : this;
   T coerceIn(T min, T max) => coerceAtLeast(min).coerceAtMost(max);
 }
+
+typedef MonthWidgetBuilder = Widget Function(
+  BuildContext context,
+  DateTime month,
+);
+typedef WeekWidgetBuilder = Widget Function(
+  BuildContext context,
+  WeekInfo week,
+);
+typedef DateWidgetBuilder = Widget Function(
+  BuildContext context,
+  DateTime date,
+);
 
 extension DateTimeTimetable on DateTime {
   static DateTime create({

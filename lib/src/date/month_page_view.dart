@@ -5,11 +5,6 @@ import 'package:flutter/material.dart';
 
 import '../utils.dart';
 
-typedef MonthWidgetBuilder = Widget Function(
-  BuildContext context,
-  DateTime month,
-);
-
 class MonthPageView extends StatefulWidget {
   const MonthPageView({
     this.monthPageController,

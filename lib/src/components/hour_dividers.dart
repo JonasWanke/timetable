@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../styling.dart';
+import '../theme.dart';
 import '../utils.dart';
 
 class HourDividers extends StatelessWidget {

@@ -3,7 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:black_hole_flutter/black_hole_flutter.dart';
 
 import '../localization.dart';
-import '../styling.dart';
+import '../theme.dart';
 import '../utils.dart';
 
 class TimeIndicator extends StatelessWidget {

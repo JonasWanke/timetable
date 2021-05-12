@@ -3,7 +3,7 @@ import 'package:intl/intl.dart';
 
 import '../callbacks.dart';
 import '../localization.dart';
-import '../styling.dart';
+import '../theme.dart';
 import '../utils.dart';
 import 'date_indicator.dart';
 import 'weekday_indicator.dart';

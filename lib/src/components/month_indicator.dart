@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 
 import '../date/controller.dart';
 import '../localization.dart';
-import '../styling.dart';
+import '../theme.dart';
 import '../utils.dart';
 
 class MonthIndicator extends StatelessWidget {

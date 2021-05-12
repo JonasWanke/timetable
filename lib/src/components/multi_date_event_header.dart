@@ -11,7 +11,7 @@ import '../event/all_day.dart';
 import '../event/builder.dart';
 import '../event/event.dart';
 import '../event/provider.dart';
-import '../styling.dart';
+import '../theme.dart';
 import '../utils.dart';
 
 class MultiDateEventHeader<E extends Event> extends StatelessWidget {

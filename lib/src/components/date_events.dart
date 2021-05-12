@@ -5,7 +5,7 @@ import 'package:flutter/widgets.dart';
 
 import '../event/builder.dart';
 import '../event/event.dart';
-import '../styling.dart';
+import '../theme.dart';
 import '../utils.dart';
 import 'multi_date_content.dart';
 

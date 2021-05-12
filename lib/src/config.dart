@@ -6,7 +6,7 @@ import 'event/all_day.dart';
 import 'event/builder.dart';
 import 'event/event.dart';
 import 'event/provider.dart';
-import 'styling.dart';
+import 'theme.dart';
 import 'time/controller.dart';
 import 'time/overlay.dart';
 

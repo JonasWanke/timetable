@@ -6,7 +6,7 @@ import 'package:tuple/tuple.dart';
 import '../callbacks.dart';
 import '../date/controller.dart';
 import '../localization.dart';
-import '../styling.dart';
+import '../theme.dart';
 import '../utils.dart';
 
 class WeekIndicator extends StatelessWidget {

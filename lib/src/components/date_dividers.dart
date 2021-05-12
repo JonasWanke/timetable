@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../date/controller.dart';
-import '../styling.dart';
+import '../theme.dart';
 
 class DateDividers extends StatelessWidget {
   const DateDividers({

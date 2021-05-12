@@ -8,7 +8,7 @@ import '../components/week_indicator.dart';
 import '../date/date_page_view.dart';
 import '../event/event.dart';
 import '../event/provider.dart';
-import '../styling.dart';
+import '../theme.dart';
 import '../time/zoom.dart';
 import '../utils.dart';
 

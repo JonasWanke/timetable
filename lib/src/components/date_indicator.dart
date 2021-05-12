@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../localization.dart';
-import '../styling.dart';
+import '../theme.dart';
 import '../utils.dart';
 
 class DateIndicator extends StatelessWidget {

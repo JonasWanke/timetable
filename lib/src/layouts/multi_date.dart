@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 
+import '../components/date_header.dart';
 import '../components/multi_date_content.dart';
 import '../components/multi_date_event_header.dart';
-import '../components/date_header.dart';
 import '../components/time_indicators.dart';
 import '../components/week_indicator.dart';
 import '../date/date_page_view.dart';
 import '../event/event.dart';
 import '../event/provider.dart';
+import '../styling.dart';
 import '../time/zoom.dart';
 import '../utils.dart';
 
@@ -36,10 +37,7 @@ class MultiDateTimetable<E extends Event> extends StatefulWidget {
             ((context, onLeadingWidthChanged) => MultiDateTimetableContent<E>(
                   leading: SizeReportingWidget(
                     onSizeChanged: (size) => onLeadingWidthChanged(size.width),
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 8),
-                      child: TimeZoom(child: TimeIndicators.hours()),
-                    ),
+                    child: _defaultContentLeading,
                   ),
                 )),
         super(key: key);
@@ -119,11 +117,7 @@ class MultiDateTimetableContent<E extends Event> extends StatelessWidget {
     Widget? leading,
     Widget? divider,
     Widget? content,
-  })  : leading = leading ??
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 8),
-              child: TimeZoom(child: TimeIndicators.hours()),
-            ),
+  })  : leading = leading ?? _defaultContentLeading,
         divider = divider ?? VerticalDivider(width: 0),
         content = content ?? MultiDateContent<E>(),
         super(key: key);
@@ -141,3 +135,17 @@ class MultiDateTimetableContent<E extends Event> extends StatelessWidget {
     ]);
   }
 }
+
+Widget _defaultContentLeading = Padding(
+  padding: EdgeInsets.symmetric(horizontal: 8),
+  child: TimeZoom(
+    child: Builder(
+      builder: (context) => TimeIndicators.hours(
+        // `TimeIndicators.hours` overwrites the style provider's labels by
+        // default, but here we want the user's style provider from the ambient
+        // theme to take precedence.
+        styleProvider: TimetableTheme.of(context)?.timeIndicatorStyleProvider,
+      ),
+    ),
+  ),
+);

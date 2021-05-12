@@ -3,56 +3,94 @@ import 'package:intl/intl.dart';
 import 'package:black_hole_flutter/black_hole_flutter.dart';
 
 import '../localization.dart';
+import '../styling.dart';
 import '../utils.dart';
 
 class TimeIndicator extends StatelessWidget {
   TimeIndicator({
     Key? key,
     required this.time,
-    ValueGetter<DateFormat>? format,
-    this.textStyle,
+    this.style,
   })  : assert(time.isValidTimetableTimeOfDay),
-        formatter = _formatterFromDateFormat(format ?? formatHour),
         super(key: key);
 
-  const TimeIndicator.custom({
-    Key? key,
-    required this.time,
-    required this.formatter,
-    this.textStyle,
-  }) : super(key: key);
+  static String formatHour(Duration time) => _format(DateFormat.j(), time);
+  static String formatHourMinute(Duration time) =>
+      _format(DateFormat.jm(), time);
+  static String formatHourMinuteSecond(Duration time) =>
+      _format(DateFormat.jms(), time);
 
-  // We use getters instead of final fields because `DateFormat`'s constructor
-  // captures the locale, hence changing the app's locale doesn't affect already
-  // created `DateFormat`s.
-  static DateFormat formatHour() => DateFormat.j();
-  static DateFormat formatHourMinute() => DateFormat.jm();
-  static DateFormat formatHourMinuteSecond() => DateFormat.jms();
+  static String formatHour24(Duration time) => _format(DateFormat.H(), time);
+  static String formatHour24Minute(Duration time) =>
+      _format(DateFormat.Hm(), time);
+  static String formatHour24MinuteSecond(Duration time) =>
+      _format(DateFormat.Hms(), time);
 
-  static DateFormat formatHour24() => DateFormat.H();
-  static DateFormat formatHour24Minute() => DateFormat.Hm();
-  static DateFormat formatHour24MinuteSecond() => DateFormat.Hms();
-
-  static TimeFormatter _formatterFromDateFormat(
-    ValueGetter<DateFormat> format,
-  ) {
-    return (time) => format().format(DateTime(0) + time);
+  static String _format(DateFormat format, Duration time) {
+    assert(time.isValidTimetableTimeOfDay);
+    return format.format(DateTime(0) + time);
   }
 
   final Duration time;
-  final TimeFormatter formatter;
-  final TextStyle? textStyle;
+  final TimeIndicatorStyle? style;
 
   @override
   Widget build(BuildContext context) {
-    context.dependOnTimetableLocalizations();
-    return Text(
-      formatter(time),
-      style: textStyle ??
-          context.textTheme.caption!
-              .copyWith(color: context.theme.backgroundColor.disabledOnColor),
-    );
+    final style = this.style ??
+        TimetableTheme.orDefaultOf(context).timeIndicatorStyleProvider(time);
+
+    return Text(style.label, style: style.textStyle);
   }
 }
 
-typedef TimeFormatter = String Function(Duration time);
+/// Defines visual properties for [TimeIndicator].
+@immutable
+class TimeIndicatorStyle {
+  factory TimeIndicatorStyle(
+    BuildContext context,
+    Duration time, {
+    TextStyle? textStyle,
+    String? label,
+  }) {
+    assert(time.isValidTimetableTimeOfDay);
+
+    final theme = context.theme;
+    return TimeIndicatorStyle.raw(
+      textStyle: textStyle ??
+          theme.textTheme.caption!
+              .copyWith(color: theme.colorScheme.background.disabledOnColor),
+      label: label ??
+          () {
+            context.dependOnTimetableLocalizations();
+            return TimeIndicator.formatHour(time);
+          }(),
+    );
+  }
+
+  const TimeIndicatorStyle.raw({
+    required this.textStyle,
+    required this.label,
+  });
+
+  final TextStyle textStyle;
+  final String label;
+
+  TimeIndicatorStyle copyWith({
+    TextStyle? textStyle,
+    String? label,
+  }) {
+    return TimeIndicatorStyle.raw(
+      textStyle: textStyle ?? this.textStyle,
+      label: label ?? this.label,
+    );
+  }
+
+  @override
+  int get hashCode => hashValues(textStyle, label);
+  @override
+  bool operator ==(Object other) {
+    return other is TimeIndicatorStyle &&
+        textStyle == other.textStyle &&
+        label == other.label;
+  }
+}

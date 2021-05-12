@@ -3,8 +3,8 @@ import 'dart:math' as math;
 import 'package:black_hole_flutter/black_hole_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:intl/intl.dart' hide TextDirection;
 
+import '../styling.dart';
 import '../utils.dart';
 import 'time_indicator.dart';
 
@@ -13,8 +13,7 @@ class TimeIndicators extends StatelessWidget {
 
   factory TimeIndicators.hours({
     Key? key,
-    ValueGetter<DateFormat>? format,
-    TextStyle? textStyle,
+    TimeBasedStyleProvider<TimeIndicatorStyle>? styleProvider,
     AlignmentGeometry alignment = Alignment.centerRight,
   }) =>
       TimeIndicators(
@@ -24,16 +23,15 @@ class TimeIndicators extends StatelessWidget {
             _buildChild(
               hour.hours,
               alignment,
-              format ?? TimeIndicator.formatHour,
-              textStyle,
+              styleProvider,
+              TimeIndicator.formatHour,
             ),
         ],
       );
 
   factory TimeIndicators.halfHours({
     Key? key,
-    ValueGetter<DateFormat>? format,
-    TextStyle? textStyle,
+    TimeBasedStyleProvider<TimeIndicatorStyle>? styleProvider,
     AlignmentGeometry alignment = Alignment.centerRight,
   }) =>
       TimeIndicators(
@@ -43,8 +41,8 @@ class TimeIndicators extends StatelessWidget {
             _buildChild(
               30.minutes * halfHour,
               alignment,
-              format ?? TimeIndicator.formatHourMinute,
-              textStyle,
+              styleProvider,
+              TimeIndicator.formatHourMinute,
             ),
         ],
       );
@@ -52,15 +50,24 @@ class TimeIndicators extends StatelessWidget {
   static TimeIndicatorsChild _buildChild(
     Duration time,
     AlignmentGeometry alignment,
-    ValueGetter<DateFormat> format,
-    TextStyle? textStyle,
+    TimeBasedStyleProvider<TimeIndicatorStyle>? styleProvider,
+    String Function(Duration time) defaultFormatter,
   ) {
     assert(time.isValidTimetableTimeOfDay);
 
     return TimeIndicatorsChild(
       time: time,
       alignment: alignment,
-      child: TimeIndicator(time: time, format: format, textStyle: textStyle),
+      child: styleProvider != null
+          ? TimeIndicator(time: time, style: styleProvider(time))
+          : Builder(
+              builder: (context) => TimeIndicator(
+                time: time,
+                style: TimetableTheme.orDefaultOf(context)
+                    .timeIndicatorStyleProvider(time)
+                    .copyWith(label: defaultFormatter(time)),
+              ),
+            ),
     );
   }
 

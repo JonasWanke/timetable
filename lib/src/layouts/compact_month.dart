@@ -7,11 +7,9 @@ import '../utils.dart';
 
 class CompactMonthTimetable extends StatefulWidget {
   CompactMonthTimetable({
-    this.dateController,
     MonthWidgetBuilder? monthBuilder,
   }) : monthBuilder = monthBuilder ?? ((context, month) => MonthWidget(month));
 
-  final DateController? dateController;
   final MonthWidgetBuilder monthBuilder;
 
   @override
@@ -20,21 +18,26 @@ class CompactMonthTimetable extends StatefulWidget {
 
 class _CompactMonthTimetableState extends State<CompactMonthTimetable>
     with TickerProviderStateMixin {
-  late final DateController? dateController;
+  DateController? dateController;
   late final MonthPageController _monthPageController;
 
   @override
   void initState() {
     super.initState();
 
-    dateController = widget.dateController ?? DefaultDateController.of(context);
-    dateController?.date.addListener(_onDateControllerChanged);
-
     _monthPageController = MonthPageController(
       initialMonth: dateController?.date.value.firstDayOfMonth ??
           DateTimeTimetable.currentMonth(),
     );
     _monthPageController.addListener(_onMonthPageControllerChanged);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    dateController?.date.removeListener(_onDateControllerChanged);
+    dateController = DefaultDateController.of(context);
+    dateController?.date.addListener(_onDateControllerChanged);
   }
 
   @override

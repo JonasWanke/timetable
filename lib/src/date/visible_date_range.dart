@@ -8,7 +8,7 @@ abstract class VisibleDateRange {
       : assert(visibleDayCount > 0);
 
   factory VisibleDateRange.days(
-    int count, {
+    int visibleDayCount, {
     int swipeRange,
     DateTime? alignmentDate,
     DateTime? minDate,
@@ -27,13 +27,13 @@ abstract class VisibleDateRange {
     );
   }
   factory VisibleDateRange.weekAligned(
-    int count, {
+    int visibleDayCount, {
     int firstDay = DateTime.monday,
     DateTime? minDate,
     DateTime? maxDate,
   }) {
     return VisibleDateRange.days(
-      count,
+      visibleDayCount,
       swipeRange: DateTime.daysPerWeek,
       // This just has to be any date fitting `firstDay`. The addition results
       // in a correct value because 2021-01-03 was a Sunday and
@@ -59,7 +59,7 @@ abstract class VisibleDateRange {
 
 class DaysVisibleDateRange extends VisibleDateRange {
   DaysVisibleDateRange(
-    int count, {
+    int visibleDayCount, {
     this.swipeRange = 1,
     DateTime? alignmentDate,
     this.minDate,
@@ -68,7 +68,7 @@ class DaysVisibleDateRange extends VisibleDateRange {
         assert(minDate.isValidTimetableDate),
         assert(maxDate.isValidTimetableDate),
         assert(minDate == null || maxDate == null || minDate <= maxDate),
-        super(visibleDayCount: count);
+        super(visibleDayCount: visibleDayCount);
 
   final int swipeRange;
   final DateTime alignmentDate;
@@ -77,8 +77,9 @@ class DaysVisibleDateRange extends VisibleDateRange {
   double? get minPage =>
       minDate == null ? null : getTargetPageForFocus(minDate!.page);
   final DateTime? maxDate;
-  double? get maxPage =>
-      maxDate == null ? null : getTargetPageForFocus(maxDate!.page);
+  double? get maxPage => maxDate == null
+      ? null
+      : getTargetPageForFocus(maxDate!.page - visibleDayCount);
 
   @override
   double getTargetPageForFocus(

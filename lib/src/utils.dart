@@ -2,7 +2,7 @@ import 'package:dart_date/dart_date.dart' show Interval;
 import 'package:flutter/widgets.dart' hide Interval;
 import 'package:supercharged/supercharged.dart';
 
-import 'utils/week.dart';
+import 'week.dart';
 
 export 'package:dart_date/dart_date.dart' show Interval;
 export 'package:supercharged/supercharged.dart';
@@ -10,7 +10,6 @@ export 'package:supercharged/supercharged.dart';
 export 'utils/listenable.dart';
 export 'utils/size_reporting_widget.dart';
 export 'utils/stream_change_notifier.dart';
-export 'utils/week.dart';
 
 extension DoubleTimetable on double {
   double coerceAtLeast(double min) => this < min ? min : this;
@@ -44,22 +43,6 @@ typedef DateWidgetBuilder = Widget Function(
 );
 
 extension DateTimeTimetable on DateTime {
-  static DateTime create({
-    required int year,
-    int month = 1,
-    int day = 1,
-    int hour = 0,
-    int minute = 0,
-    int second = 0,
-    int millisecond = 0,
-    bool isUtc = true,
-  }) {
-    if (isUtc) {
-      return DateTime.utc(year, month, day, hour, minute, second, millisecond);
-    }
-    return DateTime(year, month, day, hour, minute, second, millisecond);
-  }
-
   static DateTime date(int year, [int month = 1, int day = 1]) {
     final date = DateTime.utc(year, month, day);
     assert(date.isValidTimetableDate);
@@ -82,7 +65,7 @@ extension DateTimeTimetable on DateTime {
     int? millisecond,
     bool? isUtc,
   }) {
-    return DateTimeTimetable.create(
+    return InternalDateTimeTimetable.create(
       year: year ?? this.year,
       month: month ?? this.month,
       day: day ?? this.day,
@@ -93,12 +76,6 @@ extension DateTimeTimetable on DateTime {
       isUtc: isUtc ?? this.isUtc,
     );
   }
-
-  bool operator <(DateTime other) => isBefore(other);
-  bool operator <=(DateTime other) =>
-      isBefore(other) || isAtSameMomentAs(other);
-  bool operator >(DateTime other) => isAfter(other);
-  bool operator >=(DateTime other) => isAfter(other) || isAtSameMomentAs(other);
 
   Duration get timeOfDay => difference(atStartOfDay);
 
@@ -177,6 +154,30 @@ extension DateTimeTimetable on DateTime {
       isUtc: true,
     );
   }
+}
+
+extension InternalDateTimeTimetable on DateTime {
+  static DateTime create({
+    required int year,
+    int month = 1,
+    int day = 1,
+    int hour = 0,
+    int minute = 0,
+    int second = 0,
+    int millisecond = 0,
+    bool isUtc = true,
+  }) {
+    if (isUtc) {
+      return DateTime.utc(year, month, day, hour, minute, second, millisecond);
+    }
+    return DateTime(year, month, day, hour, minute, second, millisecond);
+  }
+
+  bool operator <(DateTime other) => isBefore(other);
+  bool operator <=(DateTime other) =>
+      isBefore(other) || isAtSameMomentAs(other);
+  bool operator >(DateTime other) => isAfter(other);
+  bool operator >=(DateTime other) => isAfter(other) || isAtSameMomentAs(other);
 
   static final List<int> innerDateHours =
       List.generate(Duration.hoursPerDay - 1, (i) => i + 1);

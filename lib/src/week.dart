@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:meta/meta.dart';
 
-import '../utils.dart';
+import 'utils.dart';
 
 extension DateTimeWeekInfoTimetable on DateTime {
   WeekInfo get weekInfo => WeekInfo.forDate(this);

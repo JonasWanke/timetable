@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 
-import 'utils.dart';
+import 'week.dart';
 
 typedef WeekTapCallback = void Function(WeekInfo week);
 typedef DateTapCallback = void Function(DateTime date);

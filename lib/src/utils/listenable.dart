@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 
-typedef Mapper<T, R> = R Function(T data);
+typedef Mapper<T, R> = R Function(T);
 
 extension MapValueListenable<T> on ValueListenable<T> {
   ValueListenable<R> map<R>(Mapper<T, R> mapper) =>

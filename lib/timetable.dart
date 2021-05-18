@@ -20,7 +20,7 @@ export 'src/date/controller.dart';
 export 'src/date/date_page_view.dart';
 export 'src/date/month_page_view.dart';
 export 'src/date/visible_date_range.dart';
-export 'src/event/all_day.dart' show AllDayEventLayoutInfo;
+export 'src/event/all_day.dart';
 export 'src/event/basic.dart';
 export 'src/event/event.dart';
 export 'src/event/provider.dart';
@@ -32,4 +32,14 @@ export 'src/time/controller.dart';
 export 'src/time/overlay.dart';
 export 'src/time/time_range.dart';
 export 'src/time/zoom.dart';
-export 'src/utils.dart';
+export 'src/utils.dart'
+    show
+        MonthWidgetBuilder,
+        WeekWidgetBuilder,
+        DateWidgetBuilder,
+        DateTimeTimetable,
+        NullableDateTimeTimetable,
+        NullableDurationTimetable,
+        NullableIntTimetable,
+        IntervalTimetable,
+        NullableIntervalTimetable;

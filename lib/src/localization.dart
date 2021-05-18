@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
-import 'utils.dart';
+import 'week.dart';
 
 class TimetableLocalizationsDelegate
     extends LocalizationsDelegate<TimetableLocalizations> {

@@ -13,6 +13,7 @@ import 'components/time_indicator.dart';
 import 'components/week_indicator.dart';
 import 'components/weekday_indicator.dart';
 import 'utils.dart';
+import 'week.dart';
 
 typedef MonthBasedStyleProvider<T> = T Function(DateTime month);
 typedef WeekBasedStyleProvider<T> = T Function(WeekInfo week);

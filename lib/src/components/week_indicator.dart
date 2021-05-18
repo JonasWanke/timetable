@@ -8,6 +8,7 @@ import '../date/controller.dart';
 import '../localization.dart';
 import '../theme.dart';
 import '../utils.dart';
+import '../week.dart';
 
 class WeekIndicator extends StatelessWidget {
   const WeekIndicator(

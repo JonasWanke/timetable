@@ -4,6 +4,7 @@ import 'package:flutter_layout_grid/flutter_layout_grid.dart';
 
 import '../theme.dart';
 import '../utils.dart';
+import '../week.dart';
 import 'date_indicator.dart';
 import 'week_indicator.dart';
 import 'weekday_indicator.dart';

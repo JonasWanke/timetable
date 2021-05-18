@@ -11,13 +11,11 @@ import 'weekday_indicator.dart';
 class MonthWidget extends StatelessWidget {
   MonthWidget(
     this.month, {
-    this.startOfWeek = DateTime.monday,
     DateWidgetBuilder? weekDayBuilder,
     WeekWidgetBuilder? weekBuilder,
     DateWidgetBuilder? dateBuilder,
     this.style,
   })  : assert(month.isValidTimetableMonth),
-        assert(startOfWeek.isValidTimetableDayOfWeek),
         weekDayBuilder =
             weekDayBuilder ?? ((context, date) => WeekdayIndicator(date)),
         weekBuilder = weekBuilder ??
@@ -55,7 +53,6 @@ class MonthWidget extends StatelessWidget {
             });
 
   final DateTime month;
-  final int startOfWeek;
 
   final DateWidgetBuilder weekDayBuilder;
   final WeekWidgetBuilder weekBuilder;
@@ -68,7 +65,7 @@ class MonthWidget extends StatelessWidget {
     final style = this.style ??
         TimetableTheme.orDefaultOf(context).monthWidgetStyleProvider(month);
 
-    final firstDay = month.previousOrSame(startOfWeek);
+    final firstDay = month.previousOrSame(style.startOfWeek);
     final weekCount = (month.lastDayOfMonth.difference(firstDay).inDays /
             DateTime.daysPerWeek)
         .ceil();
@@ -160,6 +157,7 @@ class MonthWidgetStyle {
   factory MonthWidgetStyle(
     BuildContext context,
     DateTime month, {
+    int? startOfWeek,
     Decoration? weeksDecoration,
     EdgeInsetsGeometry? weeksPadding,
     bool? removeIndividualWeekDecorations,
@@ -167,11 +165,13 @@ class MonthWidgetStyle {
     bool? showDatesFromOtherMonths,
     bool? showDatesFromOtherMonthsAsDisabled,
   }) {
+    assert(startOfWeek.isValidTimetableDayOfWeek);
     assert(month.isValidTimetableMonth);
 
     final theme = context.theme;
     removeIndividualWeekDecorations ??= true;
     return MonthWidgetStyle.raw(
+      startOfWeek: startOfWeek ?? DateTime.monday,
       weeksDecoration: weeksDecoration ??
           (removeIndividualWeekDecorations
               ? BoxDecoration(
@@ -190,6 +190,7 @@ class MonthWidgetStyle {
   }
 
   const MonthWidgetStyle.raw({
+    required this.startOfWeek,
     required this.weeksDecoration,
     required this.weeksPadding,
     required this.removeIndividualWeekDecorations,
@@ -198,6 +199,7 @@ class MonthWidgetStyle {
     required this.showDatesFromOtherMonthsAsDisabled,
   });
 
+  final int startOfWeek;
   final Decoration weeksDecoration;
   final EdgeInsetsGeometry weeksPadding;
   final bool removeIndividualWeekDecorations;
@@ -206,6 +208,7 @@ class MonthWidgetStyle {
   final bool showDatesFromOtherMonthsAsDisabled;
 
   MonthWidgetStyle copyWith({
+    int? startOfWeek,
     Decoration? weeksDecoration,
     EdgeInsetsGeometry? weeksPadding,
     bool? removeIndividualWeekDecorations,
@@ -214,6 +217,7 @@ class MonthWidgetStyle {
     bool? showDatesFromOtherMonthsAsDisabled,
   }) {
     return MonthWidgetStyle.raw(
+      startOfWeek: startOfWeek ?? this.startOfWeek,
       weeksDecoration: weeksDecoration ?? this.weeksDecoration,
       weeksPadding: weeksPadding ?? this.weeksPadding,
       removeIndividualWeekDecorations: removeIndividualWeekDecorations ??
@@ -228,6 +232,7 @@ class MonthWidgetStyle {
 
   @override
   int get hashCode => hashValues(
+        startOfWeek,
         weeksDecoration,
         weeksPadding,
         removeIndividualWeekDecorations,
@@ -238,6 +243,7 @@ class MonthWidgetStyle {
   @override
   bool operator ==(Object other) {
     return other is MonthWidgetStyle &&
+        startOfWeek == other.startOfWeek &&
         weeksDecoration == other.weeksDecoration &&
         weeksPadding == other.weeksPadding &&
         removeIndividualWeekDecorations ==

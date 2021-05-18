@@ -29,14 +29,14 @@ void main() {
   group('VisibleDateRange.week', () {
     Glados(any.tuple2(any.dayOfWeek, any.int)).test('getTargetPageForFocus',
         (it) {
-      final firstDayOfWeek = it.item1;
+      final startOfWeek = it.item1;
       final page = it.item2;
 
       final daysFromWeekStart =
-          (DateTimeTimetable.dateFromPage(page).weekday - firstDayOfWeek) %
+          (DateTimeTimetable.dateFromPage(page).weekday - startOfWeek) %
               DateTime.daysPerWeek;
       expect(
-        VisibleDateRange.week(firstDayOfWeek: firstDayOfWeek)
+        VisibleDateRange.week(startOfWeek: startOfWeek)
             .getTargetPageForFocus(page.toDouble()),
         page - daysFromWeekStart,
       );
@@ -44,13 +44,13 @@ void main() {
 
     Glados(any.tuple2(any.dayOfWeek, any.double))
         .test('getTargetPageForCurrent', (it) {
-      final firstDayOfWeek = it.item1;
+      final startOfWeek = it.item1;
       final page = it.item2;
 
       final daysFromWeekStart =
           (DateTimeTimetable.dateFromPage(page.floor()).weekday +
                   page % 1 -
-                  firstDayOfWeek) %
+                  startOfWeek) %
               DateTime.daysPerWeek;
       var targetPage = page - daysFromWeekStart;
       if (daysFromWeekStart > DateTime.daysPerWeek / 2) {
@@ -58,7 +58,7 @@ void main() {
       }
 
       expect(
-        VisibleDateRange.week(firstDayOfWeek: firstDayOfWeek)
+        VisibleDateRange.week(startOfWeek: startOfWeek)
             .getTargetPageForCurrent(page.toDouble()),
         targetPage,
       );

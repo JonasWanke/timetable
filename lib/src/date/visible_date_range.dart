@@ -15,13 +15,13 @@ abstract class VisibleDateRange {
     DateTime? maxDate,
   }) = DaysVisibleDateRange;
   factory VisibleDateRange.week({
-    int firstDayOfWeek = DateTime.monday,
+    int startOfWeek = DateTime.monday,
     DateTime? minDate,
     DateTime? maxDate,
   }) {
     return VisibleDateRange.weekAligned(
       DateTime.daysPerWeek,
-      firstDay: firstDayOfWeek,
+      firstDay: startOfWeek,
       minDate: minDate,
       maxDate: maxDate,
     );

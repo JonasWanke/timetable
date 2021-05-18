@@ -23,6 +23,7 @@ typedef TimeBasedStyleProvider<T> = T Function(Duration time);
 class TimetableThemeData {
   factory TimetableThemeData(
     BuildContext context, {
+    int? startOfWeek,
     DateDividersStyle? dateDividersStyle,
     DateBasedStyleProvider<DateEventsStyle>? dateEventsStyleProvider,
     DateBasedStyleProvider<DateHeaderStyle>? dateHeaderStyleProvider,
@@ -38,6 +39,7 @@ class TimetableThemeData {
     WeekBasedStyleProvider<WeekIndicatorStyle>? weekIndicatorStyleProvider,
   }) {
     return TimetableThemeData.raw(
+      startOfWeek: startOfWeek ?? DateTime.monday,
       dateDividersStyle: dateDividersStyle ?? DateDividersStyle(context),
       dateEventsStyleProvider:
           dateEventsStyleProvider ?? (date) => DateEventsStyle(context, date),
@@ -49,7 +51,7 @@ class TimetableThemeData {
       monthIndicatorStyleProvider: monthIndicatorStyleProvider ??
           (month) => MonthIndicatorStyle(context, month),
       monthWidgetStyleProvider: monthWidgetStyleProvider ??
-          (month) => MonthWidgetStyle(context, month),
+          (month) => MonthWidgetStyle(context, month, startOfWeek: startOfWeek),
       multiDateEventHeaderStyle:
           multiDateEventHeaderStyle ?? MultiDateEventHeaderStyle(context),
       nowIndicatorStyle: nowIndicatorStyle ?? NowIndicatorStyle(context),
@@ -62,7 +64,8 @@ class TimetableThemeData {
     );
   }
 
-  const TimetableThemeData.raw({
+  TimetableThemeData.raw({
+    required this.startOfWeek,
     required this.dateDividersStyle,
     required this.dateEventsStyleProvider,
     required this.dateHeaderStyleProvider,
@@ -75,8 +78,9 @@ class TimetableThemeData {
     required this.timeIndicatorStyleProvider,
     required this.weekdayIndicatorStyleProvider,
     required this.weekIndicatorStyleProvider,
-  });
+  }) : assert(startOfWeek.isValidTimetableDayOfWeek);
 
+  final int startOfWeek;
   final DateDividersStyle dateDividersStyle;
   final DateBasedStyleProvider<DateEventsStyle> dateEventsStyleProvider;
   final DateBasedStyleProvider<DateHeaderStyle> dateHeaderStyleProvider;
@@ -93,6 +97,7 @@ class TimetableThemeData {
   final WeekBasedStyleProvider<WeekIndicatorStyle> weekIndicatorStyleProvider;
 
   TimetableThemeData copyWith({
+    int? startOfWeek,
     DateDividersStyle? dateDividersStyle,
     DateBasedStyleProvider<DateEventsStyle>? dateEventsStyleProvider,
     DateBasedStyleProvider<DateHeaderStyle>? dateHeaderStyleProvider,
@@ -108,6 +113,7 @@ class TimetableThemeData {
     WeekBasedStyleProvider<WeekIndicatorStyle>? weekIndicatorStyleProvider,
   }) {
     return TimetableThemeData.raw(
+      startOfWeek: startOfWeek ?? this.startOfWeek,
       dateDividersStyle: dateDividersStyle ?? this.dateDividersStyle,
       dateEventsStyleProvider:
           dateEventsStyleProvider ?? this.dateEventsStyleProvider,
@@ -134,6 +140,7 @@ class TimetableThemeData {
 
   @override
   int get hashCode => hashValues(
+        startOfWeek,
         dateDividersStyle,
         dateEventsStyleProvider,
         dateHeaderStyleProvider,
@@ -150,6 +157,7 @@ class TimetableThemeData {
   @override
   bool operator ==(Object other) {
     return other is TimetableThemeData &&
+        startOfWeek == other.startOfWeek &&
         dateDividersStyle == other.dateDividersStyle &&
         dateEventsStyleProvider == other.dateEventsStyleProvider &&
         dateHeaderStyleProvider == other.dateHeaderStyleProvider &&

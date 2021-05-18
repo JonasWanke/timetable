@@ -26,7 +26,7 @@ class _TimetableExampleState extends State<TimetableExample>
     // All parameters are optional.
     // initialDate: DateTimeTimetable.today(),
     visibleRange: _visibleDateRange.visibleDateRange,
-    firstDayOfWeek: DateTime.monday,
+    startOfWeek: DateTime.monday,
   );
 
   final _timeController = TimeController(
@@ -80,6 +80,7 @@ class _TimetableExampleState extends State<TimetableExample>
       ),
       theme: TimetableThemeData(
         context,
+        // startOfWeek: DateTime.monday,
         // dateDividersStyle: DateDividersStyle(
         //   context,
         //   color: Colors.blue.withOpacity(.3),

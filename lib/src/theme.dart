@@ -92,6 +92,46 @@ class TimetableThemeData {
       weekdayIndicatorStyleProvider;
   final WeekBasedStyleProvider<WeekIndicatorStyle> weekIndicatorStyleProvider;
 
+  TimetableThemeData copyWith({
+    DateDividersStyle? dateDividersStyle,
+    DateBasedStyleProvider<DateEventsStyle>? dateEventsStyleProvider,
+    DateBasedStyleProvider<DateHeaderStyle>? dateHeaderStyleProvider,
+    DateBasedStyleProvider<DateIndicatorStyle>? dateIndicatorStyleProvider,
+    HourDividersStyle? hourDividersStyle,
+    MonthBasedStyleProvider<MonthIndicatorStyle>? monthIndicatorStyleProvider,
+    MonthBasedStyleProvider<MonthWidgetStyle>? monthWidgetStyleProvider,
+    MultiDateEventHeaderStyle? multiDateEventHeaderStyle,
+    NowIndicatorStyle? nowIndicatorStyle,
+    TimeBasedStyleProvider<TimeIndicatorStyle>? timeIndicatorStyleProvider,
+    DateBasedStyleProvider<WeekdayIndicatorStyle>?
+        weekdayIndicatorStyleProvider,
+    WeekBasedStyleProvider<WeekIndicatorStyle>? weekIndicatorStyleProvider,
+  }) {
+    return TimetableThemeData.raw(
+      dateDividersStyle: dateDividersStyle ?? this.dateDividersStyle,
+      dateEventsStyleProvider:
+          dateEventsStyleProvider ?? this.dateEventsStyleProvider,
+      dateHeaderStyleProvider:
+          dateHeaderStyleProvider ?? this.dateHeaderStyleProvider,
+      dateIndicatorStyleProvider:
+          dateIndicatorStyleProvider ?? this.dateIndicatorStyleProvider,
+      hourDividersStyle: hourDividersStyle ?? this.hourDividersStyle,
+      monthIndicatorStyleProvider:
+          monthIndicatorStyleProvider ?? this.monthIndicatorStyleProvider,
+      monthWidgetStyleProvider:
+          monthWidgetStyleProvider ?? this.monthWidgetStyleProvider,
+      multiDateEventHeaderStyle:
+          multiDateEventHeaderStyle ?? this.multiDateEventHeaderStyle,
+      nowIndicatorStyle: nowIndicatorStyle ?? this.nowIndicatorStyle,
+      timeIndicatorStyleProvider:
+          timeIndicatorStyleProvider ?? this.timeIndicatorStyleProvider,
+      weekdayIndicatorStyleProvider:
+          weekdayIndicatorStyleProvider ?? this.weekdayIndicatorStyleProvider,
+      weekIndicatorStyleProvider:
+          weekIndicatorStyleProvider ?? this.weekIndicatorStyleProvider,
+    );
+  }
+
   @override
   int get hashCode => hashValues(
         dateDividersStyle,

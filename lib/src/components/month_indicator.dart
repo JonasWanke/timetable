@@ -59,6 +59,13 @@ class MonthIndicatorStyle {
   final TextStyle textStyle;
   final String label;
 
+  MonthIndicatorStyle copyWith({TextStyle? textStyle, String? label}) {
+    return MonthIndicatorStyle.raw(
+      textStyle: textStyle ?? this.textStyle,
+      label: label ?? this.label,
+    );
+  }
+
   @override
   int get hashCode => hashValues(textStyle, label);
   @override

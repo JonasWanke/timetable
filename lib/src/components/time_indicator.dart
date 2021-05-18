@@ -75,10 +75,7 @@ class TimeIndicatorStyle {
   final TextStyle textStyle;
   final String label;
 
-  TimeIndicatorStyle copyWith({
-    TextStyle? textStyle,
-    String? label,
-  }) {
+  TimeIndicatorStyle copyWith({TextStyle? textStyle, String? label}) {
     return TimeIndicatorStyle.raw(
       textStyle: textStyle ?? this.textStyle,
       label: label ?? this.label,

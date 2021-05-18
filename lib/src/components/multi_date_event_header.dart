@@ -140,6 +140,16 @@ class MultiDateEventHeaderStyle {
 
   final EdgeInsetsGeometry padding;
 
+  MultiDateEventHeaderStyle copyWith({
+    double? eventHeight,
+    EdgeInsetsGeometry? padding,
+  }) {
+    return MultiDateEventHeaderStyle.raw(
+      eventHeight: eventHeight ?? this.eventHeight,
+      padding: padding ?? this.padding,
+    );
+  }
+
   @override
   int get hashCode => hashValues(eventHeight, padding);
   @override

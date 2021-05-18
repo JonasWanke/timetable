@@ -90,6 +90,22 @@ class DateHeaderStyle {
   final double indicatorSpacing;
   final bool showDateIndicator;
 
+  DateHeaderStyle copyWith({
+    String? tooltip,
+    EdgeInsetsGeometry? padding,
+    bool? showWeekdayIndicator,
+    double? indicatorSpacing,
+    bool? showDateIndicator,
+  }) {
+    return DateHeaderStyle.raw(
+      tooltip: tooltip ?? this.tooltip,
+      padding: padding ?? this.padding,
+      showWeekdayIndicator: showWeekdayIndicator ?? this.showWeekdayIndicator,
+      indicatorSpacing: indicatorSpacing ?? this.indicatorSpacing,
+      showDateIndicator: showDateIndicator ?? this.showDateIndicator,
+    );
+  }
+
   @override
   int get hashCode => hashValues(
         tooltip,

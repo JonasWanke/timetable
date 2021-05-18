@@ -73,6 +73,18 @@ class NowIndicatorStyle {
   final Color lineColor;
   final double lineWidth;
 
+  NowIndicatorStyle copyWith({
+    NowIndicatorShape? shape,
+    Color? lineColor,
+    double? lineWidth,
+  }) {
+    return NowIndicatorStyle.raw(
+      shape: shape ?? this.shape,
+      lineColor: lineColor ?? this.lineColor,
+      lineWidth: lineWidth ?? this.lineWidth,
+    );
+  }
+
   @override
   int get hashCode => hashValues(shape, lineColor, lineWidth);
   @override
@@ -114,6 +126,8 @@ abstract class NowIndicatorShape {
     }
   }
 
+  NowIndicatorShape copyWith();
+
   @override
   int get hashCode;
   @override
@@ -145,6 +159,14 @@ class CircleNowIndicatorShape extends NowIndicatorShape {
         dateEndOffset,
       ),
       _paint,
+    );
+  }
+
+  @override
+  CircleNowIndicatorShape copyWith({Color? color, double? radius}) {
+    return CircleNowIndicatorShape(
+      color: color ?? this.color,
+      radius: radius ?? this.radius,
     );
   }
 
@@ -188,6 +210,14 @@ class TriangleNowIndicatorShape extends NowIndicatorShape {
         ..lineTo(left, timeOffset + actualSize / 2)
         ..close(),
       _paint,
+    );
+  }
+
+  @override
+  TriangleNowIndicatorShape copyWith({Color? color, double? size}) {
+    return TriangleNowIndicatorShape(
+      color: color ?? this.color,
+      size: size ?? this.size,
     );
   }
 

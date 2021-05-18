@@ -124,6 +124,25 @@ class DateEventsStyle {
   /// Horizontal space between two parallel events stacked on top of each other.
   final double stackedEventSpacing;
 
+  DateEventsStyle copyWith({
+    Duration? minEventDuration,
+    double? minEventHeight,
+    EdgeInsetsGeometry? padding,
+    bool? enableStacking,
+    Duration? minEventDeltaForStacking,
+    double? stackedEventSpacing,
+  }) {
+    return DateEventsStyle.raw(
+      minEventDuration: minEventDuration ?? this.minEventDuration,
+      minEventHeight: minEventHeight ?? this.minEventHeight,
+      padding: padding ?? this.padding,
+      enableStacking: enableStacking ?? this.enableStacking,
+      minEventDeltaForStacking:
+          minEventDeltaForStacking ?? this.minEventDeltaForStacking,
+      stackedEventSpacing: stackedEventSpacing ?? this.stackedEventSpacing,
+    );
+  }
+
   @override
   int get hashCode => hashValues(
         minEventDuration,

@@ -25,6 +25,7 @@ class TimetableConfig<E extends Event> extends StatelessWidget {
   })   : eventProvider = eventProvider?.debugChecked,
         super(key: key);
 
+  // TODO(JonasWanke): firstDayOfWeek
   final DateController? dateController;
   final TimeController? timeController;
   final EventProvider<E>? eventProvider;

@@ -75,6 +75,20 @@ class WeekdayIndicatorStyle {
   final TextStyle textStyle;
   final String label;
 
+  WeekdayIndicatorStyle copyWith({
+    Decoration? decoration,
+    EdgeInsetsGeometry? padding,
+    TextStyle? textStyle,
+    String? label,
+  }) {
+    return WeekdayIndicatorStyle.raw(
+      decoration: decoration ?? this.decoration,
+      padding: padding ?? this.padding,
+      textStyle: textStyle ?? this.textStyle,
+      label: label ?? this.label,
+    );
+  }
+
   @override
   int get hashCode => hashValues(decoration, padding, textStyle, label);
   @override

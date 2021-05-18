@@ -47,6 +47,13 @@ class HourDividersStyle {
   final Color color;
   final double width;
 
+  HourDividersStyle copyWith({Color? color, double? width}) {
+    return HourDividersStyle.raw(
+      color: color ?? this.color,
+      width: width ?? this.width,
+    );
+  }
+
   @override
   int get hashCode => hashValues(color, width);
   @override

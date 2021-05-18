@@ -48,6 +48,13 @@ class DateDividersStyle {
   final Color color;
   final double width;
 
+  DateDividersStyle copyWith({Color? color, double? width}) {
+    return DateDividersStyle.raw(
+      color: color ?? this.color,
+      width: width ?? this.width,
+    );
+  }
+
   @override
   int get hashCode => hashValues(color, width);
   @override

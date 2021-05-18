@@ -205,6 +205,27 @@ class MonthWidgetStyle {
   final bool showDatesFromOtherMonths;
   final bool showDatesFromOtherMonthsAsDisabled;
 
+  MonthWidgetStyle copyWith({
+    Decoration? weeksDecoration,
+    EdgeInsetsGeometry? weeksPadding,
+    bool? removeIndividualWeekDecorations,
+    EdgeInsetsGeometry? datePadding,
+    bool? showDatesFromOtherMonths,
+    bool? showDatesFromOtherMonthsAsDisabled,
+  }) {
+    return MonthWidgetStyle.raw(
+      weeksDecoration: weeksDecoration ?? this.weeksDecoration,
+      weeksPadding: weeksPadding ?? this.weeksPadding,
+      removeIndividualWeekDecorations: removeIndividualWeekDecorations ??
+          this.removeIndividualWeekDecorations,
+      datePadding: datePadding ?? this.datePadding,
+      showDatesFromOtherMonths:
+          showDatesFromOtherMonths ?? this.showDatesFromOtherMonths,
+      showDatesFromOtherMonthsAsDisabled: showDatesFromOtherMonthsAsDisabled ??
+          this.showDatesFromOtherMonthsAsDisabled,
+    );
+  }
+
   @override
   int get hashCode => hashValues(
         weeksDecoration,

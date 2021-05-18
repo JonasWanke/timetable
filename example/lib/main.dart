@@ -95,17 +95,14 @@ class _TimetableExampleState extends State<TimetableExample>
   }
 
   Widget _buildPartDayEvent(BasicEvent event) {
-    DateTime roundTo15mins(DateTime dateTime) {
-      final intervalCount = (dateTime.timeOfDay / 15.minutes).floor();
-      return dateTime.atStartOfDay + 15.minutes * intervalCount;
-    }
+    final roundedTo = 15.minutes;
 
     return PartDayDraggableEvent(
       onDragStart: () => setState(() {
         _draggedEvents.add(event.copyWith(showOnTop: true));
       }),
       onDragUpdate: (dateTime) => setState(() {
-        dateTime = roundTo15mins(dateTime);
+        dateTime = dateTime.roundTimeToMultipleOf(roundedTo);
         final index = _draggedEvents.indexWhere((it) => it.id == event.id);
         final oldEvent = _draggedEvents[index];
         _draggedEvents[index] = oldEvent.copyWith(
@@ -114,8 +111,9 @@ class _TimetableExampleState extends State<TimetableExample>
         );
       }),
       onDragEnd: (dateTime) {
+        dateTime = (dateTime ?? event.start).roundTimeToMultipleOf(roundedTo);
         setState(() => _draggedEvents.removeWhere((it) => it.id == event.id));
-        _showSnackBar('Dragged to: ${roundTo15mins(dateTime ?? event.start)}');
+        _showSnackBar('Dragged event to $dateTime.');
       },
       child: BasicEventWidget(
         event,

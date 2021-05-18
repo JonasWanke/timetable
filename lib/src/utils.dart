@@ -129,6 +129,11 @@ extension DateTimeTimetable on DateTime {
   DateTime get firstDayOfMonth => atStartOfDay.copyWith(day: 1);
   DateTime get lastDayOfMonth => copyWith(day: daysInMonth);
 
+  DateTime roundTimeToMultipleOf(Duration duration) {
+    assert(duration.isValidTimetableTimeOfDay);
+    return atStartOfDay + duration * (timeOfDay / duration).floor();
+  }
+
   double get page {
     assert(isValidTimetableDateTime);
     return millisecondsSinceEpoch / Duration.millisecondsPerDay;

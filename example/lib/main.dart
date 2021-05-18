@@ -27,7 +27,6 @@ class _TimetableExampleState extends State<TimetableExample>
     // All parameters are optional.
     // initialDate: DateTimeTimetable.today(),
     visibleRange: _visibleDateRange.visibleDateRange,
-    startOfWeek: DateTime.monday,
   );
 
   final _timeController = TimeController(

@@ -12,11 +12,10 @@ class DateController extends ValueNotifier<DatePageValue> {
   DateController({
     DateTime? initialDate,
     VisibleDateRange? visibleRange,
-    this.startOfWeek = DateTime.monday,
   })  : assert(initialDate.isValidTimetableDate),
         // We set the correct value in the body below.
         super(DatePageValue(
-          visibleRange ?? VisibleDateRange.week(startOfWeek: startOfWeek),
+          visibleRange ?? VisibleDateRange.week(),
           0,
         )) {
     // The correct value is set via the listener when we assign to our value.
@@ -28,8 +27,6 @@ class DateController extends ValueNotifier<DatePageValue> {
       page: value.visibleRange.getTargetPageForFocus(rawStartPage),
     );
   }
-
-  final int startOfWeek;
 
   late final ValueNotifier<DateTime> _date;
   ValueListenable<DateTime> get date => _date;

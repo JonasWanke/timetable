@@ -10,7 +10,7 @@ import 'theme.dart';
 import 'time/controller.dart';
 import 'time/overlay.dart';
 
-class TimetableConfig<E extends Event> extends StatelessWidget {
+class TimetableConfig<E extends Event> extends StatefulWidget {
   TimetableConfig({
     Key? key,
     this.dateController,
@@ -36,43 +36,60 @@ class TimetableConfig<E extends Event> extends StatelessWidget {
   final Widget child;
 
   @override
+  _TimetableConfigState<E> createState() => _TimetableConfigState<E>();
+}
+
+class _TimetableConfigState<E extends Event> extends State<TimetableConfig<E>> {
+  late final _dateController = DateController();
+  late final _timeController = TimeController();
+
+  @override
+  void dispose() {
+    _dateController.dispose();
+    _timeController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     Widget child = DefaultTimetableCallbacks(
-      callbacks: callbacks ??
+      callbacks: widget.callbacks ??
           DefaultTimetableCallbacks.of(context) ??
           TimetableCallbacks(),
       child: TimetableTheme(
-        data:
-            theme ?? TimetableTheme.of(context) ?? TimetableThemeData(context),
-        child: this.child,
+        data: widget.theme ??
+            TimetableTheme.of(context) ??
+            TimetableThemeData(context),
+        child: widget.child,
       ),
     );
 
     child = DefaultTimeOverlayProvider(
-      overlayProvider: timeOverlayProvider ??
+      overlayProvider: widget.timeOverlayProvider ??
           DefaultTimeOverlayProvider.of(context) ??
           emptyTimeOverlayProvider,
       child: child,
     );
 
     child = DefaultEventProvider<E>(
-      eventProvider:
-          eventProvider ?? DefaultEventProvider.of<E>(context) ?? (_) => [],
+      eventProvider: widget.eventProvider ??
+          DefaultEventProvider.of<E>(context) ??
+          (_) => [],
       child: DefaultEventBuilder(
-        builder: eventBuilder ?? DefaultEventBuilder.of<E>(context)!,
-        allDayBuilder: allDayEventBuilder,
+        builder: widget.eventBuilder ?? DefaultEventBuilder.of<E>(context)!,
+        allDayBuilder: widget.allDayEventBuilder,
         child: child,
       ),
     );
 
     return DefaultDateController(
-      controller: dateController ??
+      controller: widget.dateController ??
           DefaultDateController.of(context) ??
-          DateController(),
+          _dateController,
       child: DefaultTimeController(
-        controller: timeController ??
+        controller: widget.timeController ??
             DefaultTimeController.of(context) ??
-            TimeController(),
+            _timeController,
         child: child,
       ),
     );

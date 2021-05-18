@@ -6,6 +6,7 @@ import 'package:flutter/rendering.dart';
 
 import '../callbacks.dart';
 import '../date/controller.dart';
+import '../date/date_page_view.dart';
 import '../date/visible_date_range.dart';
 import '../event/all_day.dart';
 import '../event/builder.dart';
@@ -29,19 +30,24 @@ class MultiDateEventHeader<E extends Event> extends StatelessWidget {
     final style = this.style ??
         TimetableTheme.orDefaultOf(context).multiDateEventHeaderStyle;
 
-    return ClipRect(
-      child: Padding(
-        padding: style.padding,
-        child: LayoutBuilder(
-          builder: (context, constraints) =>
-              ValueListenableBuilder<DatePageValue>(
-            valueListenable: DefaultDateController.of(context)!,
-            builder: (context, pageValue, __) =>
-                _buildContent(context, style, pageValue, constraints.maxWidth),
+    return Stack(children: [
+      Positioned.fill(
+        child: DatePageView(builder: (context, date) => SizedBox()),
+      ),
+      ClipRect(
+        child: Padding(
+          padding: style.padding,
+          child: LayoutBuilder(
+            builder: (context, constraints) =>
+                ValueListenableBuilder<DatePageValue>(
+              valueListenable: DefaultDateController.of(context)!,
+              builder: (context, pageValue, __) => _buildContent(
+                  context, style, pageValue, constraints.maxWidth),
+            ),
           ),
         ),
       ),
-    );
+    ]);
   }
 
   Widget _buildContent(

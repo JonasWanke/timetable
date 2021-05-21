@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 
 import '../utils.dart';
 
@@ -53,9 +54,13 @@ class _MonthPageViewState extends State<MonthPageView> {
 
         var child = widget.builder(context, month);
         if (widget.shrinkWrapInCrossAxis) {
-          child = SizeReportingOverflowPage(
-            onSizeChanged: (size) =>
-                setState(() => _heights[page] = size.height),
+          child = ImmediateSizeReportingOverflowPage(
+            onSizeChanged: (size) {
+              if (_heights[page] == size.height) return;
+              _heights[page] = size.height;
+              WidgetsBinding.instance!
+                  .addPostFrameCallback((_) => setState(() {}));
+            },
             child: child,
           );
         }
@@ -67,7 +72,7 @@ class _MonthPageViewState extends State<MonthPageView> {
       child = AnimatedBuilder(
         animation: _controller._pageController,
         builder: (context, child) =>
-            SizedBox(height: _getHeight(), child: child),
+            ImmediateSizedBox(heightGetter: _getHeight, child: child!),
         child: child,
       );
     }
@@ -78,7 +83,8 @@ class _MonthPageViewState extends State<MonthPageView> {
     final pageController = _controller._pageController;
     if (!pageController.hasClients) return 0;
 
-    final page = pageController.page!;
+    final page = pageController.page;
+    if (page == null) return 0;
     final oldMaxHeight = _heights[page.floor()];
     final newMaxHeight = _heights[page.ceil()];
 

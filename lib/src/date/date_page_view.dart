@@ -70,8 +70,10 @@ class _DatePageViewState extends State<DatePageView> {
     if (widget.shrinkWrapInCrossAxis) {
       child = ValueListenableBuilder<DatePageValue>(
         valueListenable: _controller!,
-        builder: (context, pageValue, child) =>
-            SizedBox(height: _getHeight(pageValue), child: child),
+        builder: (context, pageValue, child) => ImmediateSizedBox(
+          heightGetter: () => _getHeight(pageValue),
+          child: child!,
+        ),
         child: child,
       );
     }
@@ -138,8 +140,12 @@ class _DatePageViewState extends State<DatePageView> {
   Widget _buildPage(BuildContext context, int page) {
     var child = widget.builder(context, DateTimeTimetable.dateFromPage(page));
     if (widget.shrinkWrapInCrossAxis) {
-      child = SizeReportingOverflowPage(
-        onSizeChanged: (size) => setState(() => _heights[page] = size.height),
+      child = ImmediateSizeReportingOverflowPage(
+        onSizeChanged: (size) {
+          if (_heights[page] == size.height) return;
+          _heights[page] = size.height;
+          WidgetsBinding.instance!.addPostFrameCallback((_) => setState(() {}));
+        },
         child: child,
       );
     }

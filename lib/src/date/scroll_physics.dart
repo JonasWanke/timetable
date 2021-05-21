@@ -1,17 +1,17 @@
 import 'package:flutter/widgets.dart';
 
-import 'controller.dart';
 import 'date_page_view.dart';
+import 'visible_date_range.dart';
 
 class DateScrollPhysics extends ScrollPhysics {
-  const DateScrollPhysics(this.controller, {ScrollPhysics? parent})
+  const DateScrollPhysics(this.visibleRange, {ScrollPhysics? parent})
       : super(parent: parent);
 
-  final DateController controller;
+  final VisibleDateRange visibleRange;
 
   @override
   DateScrollPhysics applyTo(ScrollPhysics? ancestor) {
-    return DateScrollPhysics(controller, parent: buildParent(ancestor));
+    return DateScrollPhysics(visibleRange, parent: buildParent(ancestor));
   }
 
   @override
@@ -23,8 +23,7 @@ class DateScrollPhysics extends ScrollPhysics {
     }
 
     final page = position.pixelsToPage(value);
-    final overscrollPages =
-        controller.value.visibleRange.applyBoundaryConditions(controller, page);
+    final overscrollPages = visibleRange.applyBoundaryConditions(page);
     final overscroll = position.pageDeltaToPixelDelta(overscrollPages);
 
     // Flutter doesn't allow boundary conditions to apply greater differences
@@ -53,7 +52,7 @@ class DateScrollPhysics extends ScrollPhysics {
       return super.createBallisticSimulation(position, velocity);
     }
 
-    final targetPage = controller.value.visibleRange.getTargetPageForCurrent(
+    final targetPage = visibleRange.getTargetPageForCurrent(
       position.page,
       velocity: position.pixelDeltaToPageDelta(velocity),
       tolerance: Tolerance(

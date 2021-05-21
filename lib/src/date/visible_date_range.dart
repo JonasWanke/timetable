@@ -1,7 +1,6 @@
 import 'package:flutter/physics.dart';
 
 import '../utils.dart';
-import 'controller.dart';
 
 abstract class VisibleDateRange {
   const VisibleDateRange({required this.visibleDayCount})
@@ -54,7 +53,7 @@ abstract class VisibleDateRange {
     Tolerance tolerance = Tolerance.defaultTolerance,
   });
 
-  double applyBoundaryConditions(DateController controller, double page);
+  double applyBoundaryConditions(double page);
 }
 
 class DaysVisibleDateRange extends VisibleDateRange {
@@ -128,7 +127,7 @@ class DaysVisibleDateRange extends VisibleDateRange {
   }
 
   @override
-  double applyBoundaryConditions(DateController controller, double page) {
+  double applyBoundaryConditions(double page) {
     final targetPage = page.coerceIn(
       minPage ?? double.negativeInfinity,
       maxPage ?? double.infinity,

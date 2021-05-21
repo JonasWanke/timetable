@@ -6,6 +6,7 @@ import 'package:flutter/rendering.dart';
 import '../utils.dart';
 import 'controller.dart';
 import 'scroll_physics.dart';
+import 'visible_date_range.dart';
 
 /// "DateTimes can represent time values that are at a distance of at most
 /// 100,000,000 days from epoch […]".
@@ -63,26 +64,31 @@ class _DatePageViewState extends State<DatePageView> {
 
   @override
   Widget build(BuildContext context) {
-    Widget child = Scrollable(
-      axisDirection: AxisDirection.right,
-      physics: DateScrollPhysics(_controller!),
-      controller: _scrollController!,
-      viewportBuilder: (context, position) {
-        return Viewport(
+    Widget child = ValueListenableBuilder<VisibleDateRange>(
+      valueListenable: _controller!.map((it) => it.visibleRange),
+      builder: (context, visibleRange, _) {
+        return Scrollable(
           axisDirection: AxisDirection.right,
-          offset: position,
-          slivers: <Widget>[
-            ValueListenableBuilder<int>(
-              valueListenable: _controller!.map((it) => it.visibleDayCount),
-              builder: (context, visibleDayCount, _) => SliverFillViewport(
-                padEnds: false,
-                viewportFraction: 1 / visibleDayCount,
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) => _buildPage(context, _minPage + index),
+          physics: DateScrollPhysics(visibleRange),
+          controller: _scrollController!,
+          viewportBuilder: (context, position) {
+            return Viewport(
+              axisDirection: AxisDirection.right,
+              offset: position,
+              slivers: <Widget>[
+                ValueListenableBuilder<int>(
+                  valueListenable: _controller!.map((it) => it.visibleDayCount),
+                  builder: (context, visibleDayCount, _) => SliverFillViewport(
+                    padEnds: false,
+                    viewportFraction: 1 / visibleDayCount,
+                    delegate: SliverChildBuilderDelegate(
+                      (context, index) => _buildPage(context, _minPage + index),
+                    ),
+                  ),
                 ),
-              ),
-            ),
-          ],
+              ],
+            );
+          },
         );
       },
     );

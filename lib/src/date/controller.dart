@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
 
+import '../layouts/recurring_multi_date.dart';
 import '../utils.dart';
 import 'visible_date_range.dart';
 
@@ -107,10 +108,13 @@ class DateController extends ValueNotifier<DatePageValue> {
     );
   }
 
+  bool _isDisposed = false;
+  bool get isDisposed => _isDisposed;
   @override
   void dispose() {
     _date.dispose();
     super.dispose();
+    _isDisposed = true;
   }
 }
 

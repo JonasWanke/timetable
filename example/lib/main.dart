@@ -22,6 +22,8 @@ class TimetableExample extends StatefulWidget {
 class _TimetableExampleState extends State<TimetableExample>
     with TickerProviderStateMixin {
   var _visibleDateRange = PredefinedVisibleDateRange.week;
+  bool get _isRecurringLayout =>
+      _visibleDateRange == PredefinedVisibleDateRange.fixed;
 
   late final _dateController = DateController(
     // All parameters are optional.
@@ -53,7 +55,11 @@ class _TimetableExampleState extends State<TimetableExample>
       eventBuilder: (context, event) => _buildPartDayEvent(event),
       child: Column(children: [
         _buildAppBar(),
-        Expanded(child: MultiDateTimetable<BasicEvent>()),
+        Expanded(
+          child: _isRecurringLayout
+              ? RecurringMultiDateTimetable<BasicEvent>()
+              : MultiDateTimetable<BasicEvent>(),
+        ),
       ]),
       // Optional:
       eventProvider: eventProviderFromFixedList(positioningDemoEvents),
@@ -131,7 +137,9 @@ class _TimetableExampleState extends State<TimetableExample>
       iconTheme: IconThemeData(color: colorScheme.onSurface),
       systemOverlayStyle: SystemUiOverlayStyle.light,
       backgroundColor: Colors.transparent,
-      title: MonthIndicator.forController(_dateController),
+      title: _isRecurringLayout
+          ? null
+          : MonthIndicator.forController(_dateController),
       actions: <Widget>[
         IconButton(
           icon: Icon(Icons.today),
@@ -160,13 +168,15 @@ class _TimetableExampleState extends State<TimetableExample>
       ],
     );
 
-    child = Column(children: [
-      child,
-      Padding(
-        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        child: CompactMonthTimetable(),
-      ),
-    ]);
+    if (!_isRecurringLayout) {
+      child = Column(children: [
+        child,
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          child: CompactMonthTimetable(),
+        ),
+      ]);
+    }
 
     return Material(color: colorScheme.surface, elevation: 4, child: child);
   }
@@ -175,7 +185,7 @@ class _TimetableExampleState extends State<TimetableExample>
       context.scaffoldMessenger.showSnackBar(SnackBar(content: Text(content)));
 }
 
-enum PredefinedVisibleDateRange { day, threeDays, workWeek, week }
+enum PredefinedVisibleDateRange { day, threeDays, workWeek, week, fixed }
 
 extension on PredefinedVisibleDateRange {
   VisibleDateRange get visibleDateRange {
@@ -188,6 +198,11 @@ extension on PredefinedVisibleDateRange {
         return VisibleDateRange.weekAligned(5);
       case PredefinedVisibleDateRange.week:
         return VisibleDateRange.week();
+      case PredefinedVisibleDateRange.fixed:
+        return VisibleDateRange.fixed(
+          DateTimeTimetable.today(),
+          DateTime.daysPerWeek,
+        );
     }
   }
 
@@ -201,6 +216,8 @@ extension on PredefinedVisibleDateRange {
         return 'Work Week';
       case PredefinedVisibleDateRange.week:
         return 'Week';
+      case PredefinedVisibleDateRange.fixed:
+        return '7 Days (fixed)';
     }
   }
 }

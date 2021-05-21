@@ -1,10 +1,13 @@
 import 'package:flutter/physics.dart';
 
+import '../layouts/recurring_multi_date.dart';
 import '../utils.dart';
 
 abstract class VisibleDateRange {
-  const VisibleDateRange({required this.visibleDayCount})
-      : assert(visibleDayCount > 0);
+  const VisibleDateRange({
+    required this.visibleDayCount,
+    required this.canScroll,
+  }) : assert(visibleDayCount > 0);
 
   factory VisibleDateRange.days(
     int visibleDayCount, {
@@ -43,7 +46,14 @@ abstract class VisibleDateRange {
     );
   }
 
+  /// Creates a non-scrollable [VisibleDateRange].
+  ///
+  /// This is useful for, e.g., [RecurringMultiDateTimetable].
+  factory VisibleDateRange.fixed(DateTime startDate, int visibleDayCount) =>
+      FixedDaysVisibleDateRange(startDate, visibleDayCount);
+
   final int visibleDayCount;
+  final bool canScroll;
 
   double getTargetPageForFocus(double focusPage);
 
@@ -53,7 +63,14 @@ abstract class VisibleDateRange {
     Tolerance tolerance = Tolerance.defaultTolerance,
   });
 
-  double applyBoundaryConditions(double page);
+  double applyBoundaryConditions(double page) {
+    if (!canScroll) {
+      throw StateError(
+        'A non-scrollable `$runtimeType` was used in a scrollable view.',
+      );
+    }
+    return 0;
+  }
 }
 
 class DaysVisibleDateRange extends VisibleDateRange {
@@ -67,7 +84,7 @@ class DaysVisibleDateRange extends VisibleDateRange {
         assert(minDate.isValidTimetableDate),
         assert(maxDate.isValidTimetableDate),
         assert(minDate == null || maxDate == null || minDate <= maxDate),
-        super(visibleDayCount: visibleDayCount) {
+        super(visibleDayCount: visibleDayCount, canScroll: true) {
     minPage = minDate == null ? null : getTargetPageForFocus(minDate!.page);
     maxPage = maxDate == null
         ? null
@@ -134,4 +151,34 @@ class DaysVisibleDateRange extends VisibleDateRange {
     );
     return page - targetPage;
   }
+}
+
+/// A non-scrollable [VisibleDateRange].
+///
+/// This is useful for, e.g., [RecurringMultiDateTimetable].
+class FixedDaysVisibleDateRange extends VisibleDateRange {
+  FixedDaysVisibleDateRange(
+    this.startDate,
+    int visibleDayCount,
+  )   : assert(startDate.isValidTimetableDate),
+        super(visibleDayCount: visibleDayCount, canScroll: false);
+
+  final DateTime startDate;
+  double get page => startDate.page;
+
+  @override
+  double getTargetPageForFocus(
+    double focusPage, {
+    double velocity = 0,
+    Tolerance tolerance = Tolerance.defaultTolerance,
+  }) =>
+      page;
+
+  @override
+  double getTargetPageForCurrent(
+    double currentPage, {
+    double velocity = 0,
+    Tolerance tolerance = Tolerance.defaultTolerance,
+  }) =>
+      page;
 }

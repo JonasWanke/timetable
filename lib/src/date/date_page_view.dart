@@ -34,16 +34,13 @@ class _DatePageViewState extends State<DatePageView> {
   final _heights = <int, double>{};
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _controller?.date.removeListener(_onDateChanged);
+    if (_controller != null && !_controller!.isDisposed) {
+      _controller!.date.removeListener(_onDateChanged);
+      _scrollController!.dispose();
+    }
     _controller = widget.controller ?? DefaultDateController.of(context)!;
-    _scrollController?.dispose();
     _scrollController = _MultiDateScrollController(_controller!);
     _controller!.date.addListener(_onDateChanged);
   }
@@ -64,7 +61,25 @@ class _DatePageViewState extends State<DatePageView> {
 
   @override
   Widget build(BuildContext context) {
-    Widget child = ValueListenableBuilder<VisibleDateRange>(
+    Widget child = ValueListenableBuilder<bool>(
+      valueListenable: _controller!.map((it) => it.visibleRange.canScroll),
+      builder: (context, canScroll, _) =>
+          canScroll ? _buildScrollingChild() : _buildNonScrollingChild(),
+    );
+
+    if (widget.shrinkWrapInCrossAxis) {
+      child = ValueListenableBuilder<DatePageValue>(
+        valueListenable: _controller!,
+        builder: (context, pageValue, child) =>
+            SizedBox(height: _getHeight(pageValue), child: child),
+        child: child,
+      );
+    }
+    return child;
+  }
+
+  Widget _buildScrollingChild() {
+    return ValueListenableBuilder<VisibleDateRange>(
       valueListenable: _controller!.map((it) => it.visibleRange),
       builder: (context, visibleRange, _) {
         return Scrollable(
@@ -92,16 +107,18 @@ class _DatePageViewState extends State<DatePageView> {
         );
       },
     );
+  }
 
-    if (widget.shrinkWrapInCrossAxis) {
-      child = ValueListenableBuilder<DatePageValue>(
-        valueListenable: _controller!,
-        builder: (context, pageValue, child) =>
-            SizedBox(height: _getHeight(pageValue), child: child),
-        child: child,
-      );
-    }
-    return child;
+  Widget _buildNonScrollingChild() {
+    return ValueListenableBuilder<DatePageValue>(
+      valueListenable: _controller!,
+      builder: (context, value, _) => Row(
+        children: [
+          for (var i = 0; i < value.visibleDayCount; i++)
+            Expanded(child: _buildPage(context, value.page.toInt() + i)),
+        ],
+      ),
+    );
   }
 
   double _getHeight(DatePageValue pageValue) {
@@ -141,7 +158,9 @@ class _MultiDateScrollController extends ScrollController {
 
   double get page => position.page;
 
-  void _listenToController() => position.forcePage(controller.value.page);
+  void _listenToController() {
+    if (hasClients) position.forcePage(controller.value.page);
+  }
 
   @override
   void dispose() {

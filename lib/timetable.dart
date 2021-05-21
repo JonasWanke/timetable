@@ -26,6 +26,7 @@ export 'src/event/event.dart';
 export 'src/event/provider.dart';
 export 'src/layouts/compact_month.dart';
 export 'src/layouts/multi_date.dart';
+export 'src/layouts/recurring_multi_date.dart';
 export 'src/localization.dart';
 export 'src/theme.dart';
 export 'src/time/controller.dart';

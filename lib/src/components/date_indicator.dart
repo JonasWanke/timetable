@@ -45,20 +45,25 @@ class DateIndicatorStyle {
   }) {
     assert(date.isValidTimetableDate);
 
+    final today = DateTimeTimetable.today();
+    final isInFuture = date > today;
+    final isToday = date == today;
+
     final theme = context.theme;
     return DateIndicatorStyle.raw(
       decoration: decoration ??
           BoxDecoration(
             shape: BoxShape.circle,
-            color:
-                date.isToday ? theme.colorScheme.primary : Colors.transparent,
+            color: isToday ? theme.colorScheme.primary : Colors.transparent,
           ),
       padding: padding ?? EdgeInsets.all(8),
       textStyle: textStyle ??
           context.textTheme.subtitle1!.copyWith(
-            color: date.isToday
+            color: isToday
                 ? theme.colorScheme.primary.highEmphasisOnColor
-                : theme.colorScheme.background.highEmphasisOnColor,
+                : isInFuture
+                    ? theme.colorScheme.background.contrastColor
+                    : theme.colorScheme.background.mediumEmphasisOnColor,
           ),
       label: label ??
           () {

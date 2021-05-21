@@ -35,7 +35,7 @@ class _NowIndicatorState extends State<NowIndicator> {
   @override
   Widget build(BuildContext context) {
     return CustomPaint(
-      painter: _NowIndicatorPainter(
+      foregroundPainter: _NowIndicatorPainter(
         controller: DefaultDateController.of(context)!,
         style: widget.style ??
             TimetableTheme.orDefaultOf(context).nowIndicatorStyle,

@@ -88,6 +88,7 @@ class _TimetableExampleState extends State<TimetableExample>
         // ),
         // nowIndicatorStyle: NowIndicatorStyle(
         //   context,
+        //   lineColor: Colors.green,
         //   shape: TriangleNowIndicatorShape(color: Colors.green),
         // ),
       ),

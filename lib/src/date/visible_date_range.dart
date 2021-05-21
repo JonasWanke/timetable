@@ -68,18 +68,21 @@ class DaysVisibleDateRange extends VisibleDateRange {
         assert(minDate.isValidTimetableDate),
         assert(maxDate.isValidTimetableDate),
         assert(minDate == null || maxDate == null || minDate <= maxDate),
-        super(visibleDayCount: visibleDayCount);
+        super(visibleDayCount: visibleDayCount) {
+    minPage = minDate == null ? null : getTargetPageForFocus(minDate!.page);
+    maxPage = maxDate == null
+        ? null
+        : _getMinimumPageForFocus(maxDate!.page)
+            .coerceAtLeast(minPage ?? double.negativeInfinity);
+  }
 
   final int swipeRange;
   final DateTime alignmentDate;
 
   final DateTime? minDate;
-  double? get minPage =>
-      minDate == null ? null : getTargetPageForFocus(minDate!.page);
+  late final double? minPage;
   final DateTime? maxDate;
-  double? get maxPage => maxDate == null
-      ? null
-      : getTargetPageForFocus(maxDate!.page - visibleDayCount);
+  late final double? maxPage;
 
   @override
   double getTargetPageForFocus(
@@ -99,8 +102,16 @@ class DaysVisibleDateRange extends VisibleDateRange {
     final alignmentCorrectedTargetPage = targetFocusPage - alignmentDifference;
     final swipeAlignedTargetPage =
         (alignmentCorrectedTargetPage / swipeRange).floor() * swipeRange;
-    final targetPage = alignmentOffset + swipeAlignedTargetPage;
-    return targetPage.toDouble();
+    return (alignmentOffset + swipeAlignedTargetPage).toDouble();
+  }
+
+  double _getMinimumPageForFocus(double focusPage) {
+    var page = focusPage;
+    while (true) {
+      final target = getTargetPageForFocus(page);
+      if (target + visibleDayCount > page) return target;
+      page -= swipeRange;
+    }
   }
 
   @override

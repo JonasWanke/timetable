@@ -24,7 +24,7 @@ class NowIndicator extends StatefulWidget {
 class _NowIndicatorState extends State<NowIndicator> {
   // TODO(JonasWanke): Vary this depending on the widget size.
   final _timeListenable =
-      StreamChangeNotifier(Stream<void>.periodic(10.seconds));
+      StreamChangeNotifier(Stream<void>.periodic(1.seconds * (1 / 60)));
 
   @override
   void dispose() {

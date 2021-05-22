@@ -20,6 +20,7 @@ linter:
     avoid_function_literals_in_foreach_calls: true
     avoid_positional_boolean_parameters: true
     avoid_print: true
+    avoid_returning_null: false
     avoid_setters_without_getters: true
     avoid_types_on_closure_parameters: true
     camel_case_extensions: true

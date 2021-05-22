@@ -44,7 +44,8 @@ class DateContent<E extends Event> extends StatelessWidget {
       return GestureDetector(
         behavior: HitTestBehavior.translucent,
         onTapUp: onBackgroundTap != null
-            ? (details) => _onBackgroundTap(height, details.localPosition.dy)
+            ? (details) =>
+                onBackgroundTap(date + (details.localPosition.dy / height).days)
             : null,
         child: Stack(children: [
           _buildOverlaysForPosition(DecorationPosition.background),
@@ -62,7 +63,4 @@ class DateContent<E extends Event> extends StatelessWidget {
       ),
     );
   }
-
-  void _onBackgroundTap(double height, double yOffset) =>
-      onBackgroundTap!(date + (yOffset / height).days);
 }

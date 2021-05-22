@@ -1,22 +1,17 @@
 import 'dart:math' as math;
 
 import 'package:flutter/gestures.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/physics.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
 
 import '../utils.dart';
 import 'controller.dart';
 import 'time_range.dart';
 
 class TimeZoom extends StatefulWidget {
-  const TimeZoom({
-    Key? key,
-    this.controller,
-    required this.child,
-  }) : super(key: key);
+  const TimeZoom({Key? key, required this.child}) : super(key: key);
 
-  final TimeController? controller;
   final Widget child;
 
   @override
@@ -30,13 +25,23 @@ class _TimeZoomState extends State<TimeZoom>
   late AnimationController _animationController;
   Animation<double>? _animation;
 
-  TimeController get _controller =>
-      widget.controller ?? DefaultTimeController.of(context)!;
+  TimeController get _controller => DefaultTimeController.of(context)!;
+  ScrollController? _scrollController;
+  bool _scrollControllerIsInitialized = false;
 
   late double _parentHeight;
-  double get _offset => -_controller.value.startTime / 1.days * _childHeight;
-  double get _childHeight =>
-      _parentHeight / (_controller.value.duration / 1.days);
+
+  // Layouts the child so only [_controller.value] out of [_controller.maxRange]
+  // is visible.
+  double get _outerChildHeight =>
+      _parentHeight *
+      (_controller.maxRange.duration / _controller.value.duration);
+  double get _outerOffset {
+    final timeRange = _controller.value;
+    return (timeRange.startTime - _controller.maxRange.startTime) /
+        _controller.maxRange.duration *
+        _outerChildHeight;
+  }
 
   late TimeRange? _initialRange;
   late Duration? _lastFocus;
@@ -48,8 +53,29 @@ class _TimeZoomState extends State<TimeZoom>
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _scrollController?.dispose();
+    _scrollControllerIsInitialized = false;
+  }
+
+  void _onControllerChanged() {
+    _scrollController!.jumpTo(_outerOffset);
+  }
+
+  void _onScrollControllerChanged() {
+    _controller.value = TimeRange.fromStartAndDuration(
+      _controller.maxRange.startTime +
+          _controller.maxRange.duration *
+              (_scrollController!.offset / _outerChildHeight),
+      _controller.value.duration,
+    );
+  }
+
+  @override
   void dispose() {
     _animationController.dispose();
+    _scrollController?.dispose();
     super.dispose();
   }
 
@@ -59,21 +85,41 @@ class _TimeZoomState extends State<TimeZoom>
       builder: (context, constraints) {
         _parentHeight = constraints.maxHeight;
 
+        if (!_scrollControllerIsInitialized) {
+          _scrollController =
+              ScrollController(initialScrollOffset: _outerOffset)
+                ..addListener(_onScrollControllerChanged);
+          _controller.addListener(_onControllerChanged);
+          _scrollControllerIsInitialized = true;
+        }
+
         return GestureDetector(
           onScaleStart: _onScaleStart,
           onScaleUpdate: _onScaleUpdate,
           onScaleEnd: _onScaleEnd,
           child: ClipRect(
-            child: ValueListenableBuilder<TimeRange>(
-              valueListenable: _controller,
-              builder: (context, _, child) {
-                return _VerticalOverflowBox(
-                  height: _childHeight,
-                  offset: _offset,
-                  child: child,
-                );
-              },
-              child: widget.child,
+            child: _NoDragSingleChildScrollView(
+              controller: _scrollController!,
+              child: ValueListenableBuilder<TimeRange>(
+                valueListenable: _controller,
+                builder: (context, _, child) {
+                  // Layouts the child so only [_controller.maxRange] is
+                  // visible.
+                  final innerChildHeight = _outerChildHeight *
+                      (1.days / _controller.maxRange.duration);
+                  final innerOffset = -innerChildHeight *
+                      (_controller.maxRange.startTime / 1.days);
+
+                  return SizedBox(
+                    height: _outerChildHeight,
+                    child: _VerticalOverflowBox(
+                      offset: innerOffset,
+                      height: innerChildHeight,
+                      child: widget.child,
+                    ),
+                  );
+                },
+              ),
             ),
           ),
         );
@@ -106,14 +152,16 @@ class _TimeZoomState extends State<TimeZoom>
     final velocity = details.velocity.pixelsPerSecond.dy;
     if (velocity.abs() < kMinFlingVelocity) return;
 
-    final frictionSimulation = FrictionSimulation(_kDrag, _offset, velocity);
+    final frictionSimulation =
+        FrictionSimulation(_kDrag, _outerOffset, -velocity);
 
     const effectivelyMotionless = 10.0;
     final finalTime = math.log(effectivelyMotionless / velocity.abs()) /
         math.log(_kDrag / 100);
 
-    _animation = Tween<double>(begin: _offset, end: frictionSimulation.finalX)
-        .animate(CurvedAnimation(
+    _animation =
+        Tween<double>(begin: _outerOffset, end: frictionSimulation.finalX)
+            .animate(CurvedAnimation(
       parent: _animationController,
       curve: Curves.decelerate,
     ));
@@ -122,7 +170,6 @@ class _TimeZoomState extends State<TimeZoom>
     _animationController.forward();
   }
 
-  // Inspired by [_InteractiveViewerState._onAnimate].
   void _onAnimate() {
     if (!_animationController.isAnimating) {
       _animation?.removeListener(_onAnimate);
@@ -132,7 +179,7 @@ class _TimeZoomState extends State<TimeZoom>
     }
 
     _setNewTimeRange(
-      1.days * (-_animation!.value / _childHeight),
+      _controller.maxRange.duration * (_animation!.value / _outerChildHeight),
       _controller.value.duration,
     );
   }
@@ -155,6 +202,87 @@ class _TimeZoomState extends State<TimeZoom>
     _controller.value =
         TimeRange.fromStartAndDuration(actualStartTime, duration);
   }
+}
+
+/// A modified [SingleChildScrollView] that doesn't allow drags from a pointer.
+///
+/// Necessary because we handle drags ourselves to also detect zoom gestures.
+class _NoDragSingleChildScrollView extends SingleChildScrollView {
+  /// Creates a box in which a single widget can be scrolled.
+  const _NoDragSingleChildScrollView({
+    Key? key,
+    Axis scrollDirection = Axis.vertical,
+    bool reverse = false,
+    EdgeInsetsGeometry? padding,
+    ScrollPhysics? physics,
+    ScrollController? controller,
+    Widget? child,
+    DragStartBehavior dragStartBehavior = DragStartBehavior.start,
+    Clip clipBehavior = Clip.hardEdge,
+    String? restorationId,
+  }) : super(
+          key: key,
+          scrollDirection: scrollDirection,
+          reverse: reverse,
+          padding: padding,
+          controller: controller,
+          primary: false,
+          physics: physics,
+          child: child,
+          dragStartBehavior: dragStartBehavior,
+          clipBehavior: clipBehavior,
+          restorationId: restorationId,
+        );
+
+  @override
+  Widget build(BuildContext context) {
+    // This is really ugly and relies on the implementation of
+    // [SingleChildScrollView.build].
+    final result = super.build(context) as Scrollable;
+    return _Scrollable(
+      dragStartBehavior: result.dragStartBehavior,
+      axisDirection: result.axisDirection,
+      controller: result.controller,
+      physics: result.physics,
+      restorationId: result.restorationId,
+      viewportBuilder: result.viewportBuilder,
+    );
+  }
+}
+
+class _Scrollable extends Scrollable {
+  const _Scrollable({
+    Key? key,
+    AxisDirection axisDirection = AxisDirection.down,
+    ScrollController? controller,
+    ScrollPhysics? physics,
+    required ViewportBuilder viewportBuilder,
+    ScrollIncrementCalculator? incrementCalculator,
+    bool excludeFromSemantics = false,
+    int? semanticChildCount,
+    DragStartBehavior dragStartBehavior = DragStartBehavior.start,
+    String? restorationId,
+  }) : super(
+          key: key,
+          axisDirection: axisDirection,
+          controller: controller,
+          physics: physics,
+          viewportBuilder: viewportBuilder,
+          incrementCalculator: incrementCalculator,
+          excludeFromSemantics: excludeFromSemantics,
+          semanticChildCount: semanticChildCount,
+          dragStartBehavior: dragStartBehavior,
+          restorationId: restorationId,
+        );
+
+  @override
+  _ScrollableState createState() => _ScrollableState();
+}
+
+class _ScrollableState extends ScrollableState {
+  @override
+  @protected
+  void setCanDrag(bool canDrag) {}
 }
 
 // Copied and modified from [OverflowBox].
@@ -200,7 +328,7 @@ class _RenderVerticalOverflowBox extends RenderShiftedBox {
     RenderBox? child,
     required double height,
     required double offset,
-  })   : _height = height,
+  })  : _height = height,
         _offset = offset,
         super(child);
 

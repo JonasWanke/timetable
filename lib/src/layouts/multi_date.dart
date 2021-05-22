@@ -136,6 +136,13 @@ class MultiDateTimetableContent<E extends Event> extends StatelessWidget {
   }
 }
 
+// TODO(JonasWanke): Explicitly disable the scrollbar when they're shown by
+// default on desktop: https://flutter.dev/docs/release/breaking-changes/default-desktop-scrollbars
+// Builder(
+//   builder:(context) => ScrollConfiguration(
+//   behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
+// )
+
 Widget _defaultContentLeading = Padding(
   padding: EdgeInsets.symmetric(horizontal: 8),
   child: TimeZoom(

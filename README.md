@@ -1,4 +1,4 @@
-📅 Customizable, animated calendar widget including day & week views.
+📅 Customizable, animated calendar widget including day, week, and month views.
 
 TODO: update the graphics  
 TODO: deploy to GitHub pages

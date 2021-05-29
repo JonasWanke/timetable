@@ -387,9 +387,18 @@ class _EventsLayout<E extends Event> extends RenderBox
       final right = ((endPage - page) * dateWidth).coerceAtMost(size.width);
 
       child.layout(
-        BoxConstraints.tightFor(width: right - left, height: eventHeight),
+        BoxConstraints(
+          minWidth: right - left,
+          maxWidth: (right - left).coerceAtLeast(dateWidth),
+          minHeight: eventHeight,
+          maxHeight: eventHeight,
+        ),
+        parentUsesSize: true,
       );
-      data.offset = Offset(left, _yPositions[event]! * eventHeight);
+      final actualLeft = startPage >= page
+          ? left
+          : left.coerceAtMost(right - child.size.width);
+      data.offset = Offset(actualLeft, _yPositions[event]! * eventHeight);
     }
   }
 

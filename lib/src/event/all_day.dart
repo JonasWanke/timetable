@@ -41,29 +41,26 @@ class AllDayEventLayoutInfo {
 }
 
 class AllDayEventBackgroundPainter extends CustomPainter {
-  const AllDayEventBackgroundPainter({
+  AllDayEventBackgroundPainter({
     required this.info,
     required this.color,
-    this.borderRadius = 0,
-  });
+    required this.radii,
+  }) : _paint = Paint()..color = color;
 
   final AllDayEventLayoutInfo info;
   final Color color;
-  final double borderRadius;
+  final AllDayEventBorderRadii radii;
+  final Paint _paint;
 
   @override
-  void paint(Canvas canvas, Size size) {
-    canvas.drawPath(
-      _getPath(size, info, borderRadius),
-      Paint()..color = color,
-    );
-  }
+  void paint(Canvas canvas, Size size) =>
+      canvas.drawPath(radii.getPath(size, info), _paint);
 
   @override
   bool shouldRepaint(covariant AllDayEventBackgroundPainter oldDelegate) {
     return info != oldDelegate.info ||
         color != oldDelegate.color ||
-        borderRadius != oldDelegate.borderRadius;
+        radii != oldDelegate.radii;
   }
 }
 
@@ -73,12 +70,12 @@ class AllDayEventBorder extends ShapeBorder {
   const AllDayEventBorder({
     required this.info,
     this.side = BorderSide.none,
-    this.borderRadius = 0,
+    required this.radii,
   });
 
   final AllDayEventLayoutInfo info;
   final BorderSide side;
-  final double borderRadius;
+  final AllDayEventBorderRadii radii;
 
   @override
   EdgeInsetsGeometry get dimensions => EdgeInsets.all(side.width);
@@ -88,22 +85,24 @@ class AllDayEventBorder extends ShapeBorder {
     return AllDayEventBorder(
       info: info,
       side: side.scale(t),
-      borderRadius: borderRadius * t,
+      radii: AllDayEventBorderRadii(
+        cornerRadius: radii.cornerRadius * t,
+        leftTipRadius: radii.leftTipRadius * t,
+        rightTipRadius: radii.rightTipRadius * t,
+      ),
     );
   }
 
   @override
   Path getInnerPath(Rect rect, {TextDirection? textDirection}) {
-    return _getPath(
-      Size(rect.width - side.width * 2, rect.height - side.width * 2),
-      info,
-      borderRadius,
-    ).shift(Offset(side.width, side.width));
+    return radii
+        .getPath(rect.deflate(side.width).size, info)
+        .shift(Offset(side.width, side.width));
   }
 
   @override
   Path getOuterPath(Rect rect, {TextDirection? textDirection}) =>
-      _getPath(rect.size, info, borderRadius);
+      radii.getPath(rect.size, info);
 
   @override
   void paint(Canvas canvas, Rect rect, {TextDirection? textDirection}) {
@@ -113,86 +112,157 @@ class AllDayEventBorder extends ShapeBorder {
   }
 
   @override
+  int get hashCode => hashValues(info, side, radii);
+  @override
   bool operator ==(Object other) {
     if (other.runtimeType != runtimeType) return false;
     return other is AllDayEventBorder &&
         other.info == info &&
         other.side == side &&
-        other.borderRadius == borderRadius;
+        other.radii == radii;
   }
 
   @override
-  int get hashCode => hashValues(info, side, borderRadius);
-
-  @override
   String toString() =>
-      '${objectRuntimeType(this, 'RoundedRectangleBorder')}($side, $borderRadius)';
+      '${objectRuntimeType(this, 'RoundedRectangleBorder')}($side, $radii)';
 }
 
-Path _getPath(Size size, AllDayEventLayoutInfo info, double radius) {
-  final maxTipWidth = size.height / 4;
-  final leftTipWidth = info.hiddenStartDays.coerceAtMost(1) * maxTipWidth;
-  final rightTipWidth = info.hiddenEndDays.coerceAtMost(1) * maxTipWidth;
+@immutable
+class AllDayEventBorderRadii {
+  const AllDayEventBorderRadii({
+    required this.cornerRadius,
+    required this.leftTipRadius,
+    required this.rightTipRadius,
+  });
 
-  final leftTipBase = info.hiddenStartDays > 0
-      ? math.min(leftTipWidth + radius, size.width - radius)
-      : leftTipWidth + radius;
-  final rightTipBase = info.hiddenEndDays > 0
-      ? math.max(size.width - rightTipWidth - radius, radius)
-      : size.width - rightTipWidth - radius;
+  final BorderRadius cornerRadius;
+  final double leftTipRadius;
+  final double rightTipRadius;
 
-  final tipSize = Size.square(radius * 2);
+  Path getPath(Size size, AllDayEventLayoutInfo info) {
+    final maxTipWidth = size.height / 4;
+    final leftTipWidth = info.hiddenStartDays.coerceAtMost(1) * maxTipWidth;
+    final rightTipWidth = info.hiddenEndDays.coerceAtMost(1) * maxTipWidth;
 
-  // no tip:   0      ≈  0°
-  // full tip: PI / 4 ≈ 45°
-  final leftTipAngle = math.pi / 2 - math.atan2(size.height / 2, leftTipWidth);
-  final rightTipAngle =
-      math.pi / 2 - math.atan2(size.height / 2, rightTipWidth);
-
-  return Path()
-    ..moveTo(leftTipBase, 0)
-    // Right top
-    ..arcTo(
-      Offset(rightTipBase - radius, 0) & tipSize,
-      math.pi * 3 / 2,
-      math.pi / 2 - rightTipAngle,
-      false,
-    )
-    // Right tip
-    ..arcTo(
-      Offset(rightTipBase + rightTipWidth - radius, size.height / 2 - radius) &
-          tipSize,
-      -rightTipAngle,
-      2 * rightTipAngle,
-      false,
-    )
-    // Right bottom
-    ..arcTo(
-      Offset(rightTipBase - radius, size.height - radius * 2) & tipSize,
-      rightTipAngle,
-      math.pi / 2 - rightTipAngle,
-      false,
-    )
-    // Left bottom
-    ..arcTo(
-      Offset(leftTipBase - radius, size.height - radius * 2) & tipSize,
-      math.pi / 2,
-      math.pi / 2 - leftTipAngle,
-      false,
-    )
-    // Left tip
-    ..arcTo(
-      Offset(leftTipBase - leftTipWidth - radius, size.height / 2 - radius) &
-          tipSize,
-      math.pi - leftTipAngle,
-      2 * leftTipAngle,
-      false,
-    )
-    // Left top
-    ..arcTo(
-      Offset(leftTipBase - radius, 0) & tipSize,
-      math.pi + leftTipAngle,
-      math.pi / 2 - leftTipAngle,
-      false,
+    final maximumRadius = size.height / 2;
+    final radii = AllDayEventBorderRadii(
+      cornerRadius: BorderRadius.only(
+        topLeft: Radius.elliptical(
+          cornerRadius.topLeft.x,
+          cornerRadius.topLeft.y.coerceAtMost(maximumRadius),
+        ),
+        bottomLeft: Radius.elliptical(
+          cornerRadius.bottomLeft.x,
+          cornerRadius.bottomLeft.y.coerceAtMost(maximumRadius),
+        ),
+        topRight: Radius.elliptical(
+          cornerRadius.topRight.x,
+          cornerRadius.topRight.y.coerceAtMost(maximumRadius),
+        ),
+        bottomRight: Radius.elliptical(
+          cornerRadius.bottomRight.x,
+          cornerRadius.bottomRight.y.coerceAtMost(maximumRadius),
+        ),
+      ),
+      leftTipRadius: leftTipRadius.coerceAtMost(maximumRadius),
+      rightTipRadius: rightTipRadius.coerceAtMost(maximumRadius),
     );
+
+    final minWidth = radii.leftTipRadius +
+        leftTipWidth +
+        radii.rightTipRadius +
+        rightTipWidth +
+        math.min(
+          radii.cornerRadius.topLeft.x + radii.cornerRadius.topRight.x,
+          radii.cornerRadius.bottomLeft.x + radii.cornerRadius.bottomRight.x,
+        );
+
+    // ignore: omit_local_variable_types
+    final double left =
+        info.hiddenStartDays == 0 ? 0 : math.min(0, size.width - minWidth);
+    // ignore: omit_local_variable_types
+    final double right =
+        info.hiddenEndDays == 0 ? size.width : math.max(size.width, minWidth);
+
+    // no tip:   0      ≈  0°
+    // full tip: PI / 4 ≈ 45°
+    final leftTipAngle =
+        math.pi / 2 - math.atan2(size.height / 2, leftTipWidth);
+    final rightTipAngle =
+        math.pi / 2 - math.atan2(size.height / 2, rightTipWidth);
+
+    Size toSize(Radius radius) => Size(radius.x, radius.y) * 2;
+
+    final topLeftTipBase = left + leftTipWidth + radii.cornerRadius.topLeft.x;
+
+    return Path()
+      ..moveTo(topLeftTipBase, 0)
+      // Right top
+      ..arcTo(
+        Offset(right - rightTipWidth - radii.cornerRadius.topRight.x * 2, 0) &
+            toSize(radii.cornerRadius.topRight),
+        math.pi * 3 / 2,
+        math.pi / 2 - rightTipAngle,
+        false,
+      )
+      // Right tip
+      ..arcTo(
+        Offset(
+              right - radii.rightTipRadius * 2,
+              size.height / 2 - radii.rightTipRadius,
+            ) &
+            Size.square(radii.rightTipRadius * 2),
+        -rightTipAngle,
+        2 * rightTipAngle,
+        false,
+      )
+      // Right bottom
+      ..arcTo(
+        Offset(
+              right - rightTipWidth - radii.cornerRadius.bottomRight.x * 2,
+              size.height - radii.cornerRadius.bottomRight.y * 2,
+            ) &
+            toSize(radii.cornerRadius.bottomRight),
+        rightTipAngle,
+        math.pi / 2 - rightTipAngle,
+        false,
+      )
+      // Left bottom
+      ..arcTo(
+        Offset(
+              left + leftTipWidth,
+              size.height - radii.cornerRadius.bottomLeft.y * 2,
+            ) &
+            toSize(radii.cornerRadius.bottomLeft),
+        math.pi / 2,
+        math.pi / 2 - leftTipAngle,
+        false,
+      )
+      // Left tip
+      ..arcTo(
+        Offset(left, size.height / 2 - radii.leftTipRadius) &
+            Size.square(radii.leftTipRadius * 2),
+        math.pi - leftTipAngle,
+        2 * leftTipAngle,
+        false,
+      )
+      // Left top
+      ..arcTo(
+        Offset(topLeftTipBase - radii.cornerRadius.topLeft.x, 0) &
+            toSize(radii.cornerRadius.topLeft),
+        math.pi + leftTipAngle,
+        math.pi / 2 - leftTipAngle,
+        false,
+      );
+  }
+
+  @override
+  int get hashCode => hashValues(cornerRadius, leftTipRadius, rightTipRadius);
+  @override
+  bool operator ==(Object other) {
+    return other is AllDayEventBorderRadii &&
+        cornerRadius == other.cornerRadius &&
+        leftTipRadius == other.leftTipRadius &&
+        rightTipRadius == other.rightTipRadius;
+  }
 }

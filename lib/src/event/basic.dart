@@ -115,58 +115,119 @@ class BasicAllDayEventWidget extends StatelessWidget {
     this.event, {
     Key? key,
     required this.info,
-    this.borderRadius = 4,
     this.onTap,
+    this.style,
   }) : super(key: key);
 
   /// The event to be displayed.
   final BasicEvent event;
   final AllDayEventLayoutInfo info;
-  final double borderRadius;
 
   /// An optional callback that will be invoked when the user taps this widget.
   final VoidCallback? onTap;
+  final BasicAllDayEventWidgetStyle? style;
 
   @override
   Widget build(BuildContext context) {
+    final style = this.style ?? BasicAllDayEventWidgetStyle(context, event);
+
     return Padding(
-      padding: EdgeInsets.all(2),
+      padding: style.margin,
       child: CustomPaint(
         painter: AllDayEventBackgroundPainter(
           info: info,
-          borderRadius: borderRadius,
           color: event.backgroundColor,
+          radii: style.radii,
         ),
         child: Material(
           shape: AllDayEventBorder(
             info: info,
             side: BorderSide.none,
-            borderRadius: borderRadius,
+            radii: style.radii,
           ),
           clipBehavior: Clip.antiAlias,
           color: Colors.transparent,
           child: InkWell(
             onTap: onTap,
-            child: _buildContent(context),
+            child: Padding(
+              padding: style.padding,
+              child: Text(
+                event.title,
+                style: style.textStyle,
+                maxLines: 1,
+                overflow: TextOverflow.visible,
+                softWrap: false,
+              ),
+            ),
           ),
         ),
       ),
     );
   }
+}
 
-  Widget _buildContent(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.fromLTRB(4, 2, 0, 2),
-      child: Align(
-        alignment: AlignmentDirectional.centerStart,
-        child: DefaultTextStyle(
-          style: context.textTheme.bodyText2!.copyWith(
+/// Defines visual properties for [BasicAllDayEventWidget].
+@immutable
+class BasicAllDayEventWidgetStyle {
+  factory BasicAllDayEventWidgetStyle(
+    BuildContext context,
+    BasicEvent event, {
+    EdgeInsetsGeometry? margin,
+    AllDayEventBorderRadii? radii,
+    EdgeInsetsGeometry? padding,
+    TextStyle? textStyle,
+  }) {
+    return BasicAllDayEventWidgetStyle.raw(
+      margin: margin ?? EdgeInsets.all(2),
+      radii: radii ??
+          AllDayEventBorderRadii(
+            cornerRadius: BorderRadius.circular(4),
+            leftTipRadius: 4,
+            rightTipRadius: 4,
+          ),
+      padding: padding ?? EdgeInsets.fromLTRB(4, 2, 0, 2),
+      textStyle: textStyle ??
+          context.theme.textTheme.bodyText2!.copyWith(
             fontSize: 14,
             color: event.backgroundColor.highEmphasisOnColor,
           ),
-          child: Text(event.title, maxLines: 1),
-        ),
-      ),
     );
+  }
+
+  const BasicAllDayEventWidgetStyle.raw({
+    required this.margin,
+    required this.radii,
+    required this.padding,
+    required this.textStyle,
+  });
+
+  final EdgeInsetsGeometry margin;
+  final AllDayEventBorderRadii radii;
+  final EdgeInsetsGeometry padding;
+  final TextStyle textStyle;
+
+  BasicAllDayEventWidgetStyle copyWith({
+    EdgeInsetsGeometry? margin,
+    AllDayEventBorderRadii? radii,
+    EdgeInsetsGeometry? padding,
+    TextStyle? textStyle,
+  }) {
+    return BasicAllDayEventWidgetStyle.raw(
+      margin: margin ?? this.margin,
+      radii: radii ?? this.radii,
+      padding: padding ?? this.padding,
+      textStyle: textStyle ?? this.textStyle,
+    );
+  }
+
+  @override
+  int get hashCode => hashValues(margin, radii, padding, textStyle);
+  @override
+  bool operator ==(Object other) {
+    return other is BasicAllDayEventWidgetStyle &&
+        margin == other.margin &&
+        radii == other.radii &&
+        padding == other.padding &&
+        textStyle == other.textStyle;
   }
 }

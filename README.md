@@ -5,7 +5,7 @@ TODO: deploy to GitHub pages
 
 |                                  Event positioning demo (outdated)                                   |                                                              Dark mode & custom range (outdated)                                                               |
 | :--------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------: |
-| ![Screenshot of timetable](https://github.com/JonasWanke/timetable/raw/master/doc/demo.gif?raw=true) | ![Screenshot of timetable in dark mode with only three visible days](https://github.com/JonasWanke/timetable/raw/master/doc/screenshot-3day-dark.jpg?raw=true) |
+| ![Screenshot of Timetable](https://github.com/JonasWanke/timetable/raw/master/doc/demo.gif?raw=true) | ![Screenshot of Timetable in dark mode with only three visible days](https://github.com/JonasWanke/timetable/raw/master/doc/screenshot-3day-dark.jpg?raw=true) |
 
 * [Getting started](#getting-started)
   * [0. General Information](#0-general-information)
@@ -37,7 +37,7 @@ Some date/time-related parameters also have special suffixes:
 * `dayOfWeek`: An `int` between one and seven ([`DateTime.monday`](https://api.dart.dev/stable/2.12.4/dart-core/DateTime/monday-constant.html) through [`DateTime.sunday`](https://api.dart.dev/stable/2.12.4/dart-core/DateTime/sunday-constant.html)).
 
 Timetable currently offers localizations for English and German.
-For those to be applied, you have to add Timetable's localization delegate to your `MaterialApp`/`CupertinoApp`/`WidgetsApp`:
+Even if you're just supporting English in your app, you have to add Timetable's localization delegate to your `MaterialApp`/`CupertinoApp`/`WidgetsApp`:
 
 ```dart
 MaterialApp(
@@ -51,15 +51,19 @@ MaterialApp(
 
 ### 1. Define your [`Event`]s
 
-Events are provided as instances of [`Event`]. To get you started, there's the subclass [`BasicEvent`], which you can instantiate directly. If you want to be more specific, you can also implement your own class extending [`Event`].
+Events are provided as instances of [`Event`].
+To get you started, there's the subclass [`BasicEvent`], which you can instantiate directly.
+If you want to be more specific, you can also implement your own class extending [`Event`].
 
-> **Note:** Most classes of <kbd>timetable</kbd> accept a type-parameter `E extends Event`. Please set it to your chosen [`Event`]-subclass (e.g. [`BasicEvent`]) to avoid runtime exceptions.
+> **Note:** Most of Timetable's classes accept a type-parameter `E extends Event`.
+> Please set it to your chosen [`Event`]-subclass (e.g. [`BasicEvent`]) to avoid runtime exceptions.
 
-In addition, you also need a [`Widget`] to display your events. When using [`BasicEvent`], this can simply be [`BasicEventWidget`].
+In addition, you also need a [`Widget`] to display your events.
+When using [`BasicEvent`], this can simply be [`BasicEventWidget`].
 
 ### 2. Create a [`DateController`] (optional)
 
-Similar to a [`ScrollController`] or a [`TabController`], a [`DateController`] is responsible for interacting with timetable's widgets and managing their state.
+Similar to a [`ScrollController`] or a [`TabController`], a [`DateController`] is responsible for interacting with Timetable's widgets and managing their state.
 As the name suggests, you can use a [`DateController`] to access the currently visible dates, and also animate or jump to different days.
 And by supplying a [`VisibleDateRange`], you can also customize how many days are visible at once and whether they, e.g., snap to weeks.
 
@@ -77,11 +81,11 @@ Here are some of the available [`VisibleDateRange`]s:
 
 * [`VisibleDateRange.days`]: displays `visibleDayCount` consecutive days, snapping to every `swipeRange` days (aligned to `alignmentDate`) in the range from `minDate` to `maxDate`
 * [`VisibleDateRange.week`]: displays and snaps to whole weeks with a customizable `startOfWeek` in the range from `minDate` to `maxDate`
-* [`VisibleDateRange.weekAligned`]: displays `visibleDayCount` consecutive days while snapping to whole weeks with a customizable `firstDay` in the range from `minDate` to `maxDate` – one use-case is displaying a five-day workweek
+* [`VisibleDateRange.weekAligned`]: displays `visibleDayCount` consecutive days while snapping to whole weeks with a customizable `firstDay` in the range from `minDate` to `maxDate` – can be used, e.g., to display a five-day workweek
 
 ### 3. Create a [`TimeController`] (optional)
 
-Similar to the [`DateController`] above, a [`TimeController`] is also responsible for interacting with timetable's widgets and managing their state.
+Similar to the [`DateController`] above, a [`TimeController`] is also responsible for interacting with Timetable's widgets and managing their state.
 More specifically, it controls the visible time range and zoom factor in a [`MultiDateTimetable`] (or [`RecurringMultiDateTimetable`]).
 You can also programmatically change those and, e.g., animate out to reveal the full day.
 
@@ -99,15 +103,9 @@ final myTimeController = TimeController(
 
 > Don't forget to [`dispose`][`TimeController.dispose`] your controller, e.g., in [`State.dispose`]!
 
-Here are some of the available [`VisibleDateRange`]s:
+### 4. Create your timetable widget
 
-* [`VisibleDateRange.days`]: displays `visibleDayCount` consecutive days, snapping to every `swipeRange` days (aligned to `alignmentDate`) in the range from `minDate` to `maxDate`
-* [`VisibleDateRange.week`]: displays and snaps to whole weeks with a customizable `startOfWeek` in the range from `minDate` to `maxDate`
-* [`VisibleDateRange.weekAligned`]: displays `visibleDayCount` consecutive days while snapping to whole weeks with a customizable `firstDay` in the range from `minDate` to `maxDate` – one use-case is displaying a five-day workweek
-
-### 4. Create your Timetable
-
-The configuration for timetable layouts is provided via inherited widgets.
+The configuration for Timetable's widgets is provided via inherited widgets.
 You can use a `TimetableConfig<E>` to provide all at once:
 
 ```dart
@@ -130,12 +128,6 @@ TimetableConfig<BasicEvent>(
     // See the "Theming" section below for more options.
   ),
 );
-Timetable<BasicEvent>(
-  controller: myController,
-  eventBuilder: (event) => BasicEventWidget(event),
-  allDayEventBuilder: (context, event, info) =>
-      BasicAllDayEventWidget(event, info: info),
-)
 ```
 
 And you're done 🎉

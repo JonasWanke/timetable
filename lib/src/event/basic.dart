@@ -13,7 +13,7 @@ class BasicEvent extends Event {
   const BasicEvent({
     required this.id,
     required this.title,
-    required this.color,
+    required this.backgroundColor,
     required DateTime start,
     required DateTime end,
   }) : super(start: start, end: end);
@@ -22,7 +22,7 @@ class BasicEvent extends Event {
   ///
   /// This is not used by Timetable itself, but can be handy, e.g., when
   /// implementing drag & drop.
-  final String id;
+  final Object id;
 
   /// A title displayed to the user.
   ///
@@ -31,13 +31,13 @@ class BasicEvent extends Event {
 
   /// The background color used for displaying this event.
   ///
-  final Color color;
   /// This is currently used by [BasicEventWidget] and [BasicAllDayEventWidget].
+  final Color backgroundColor;
 
   BasicEvent copyWith({
-    String? id,
+    Object? id,
     String? title,
-    Color? color,
+    Color? backgroundColor,
     bool? showOnTop,
     DateTime? start,
     DateTime? end,
@@ -45,17 +45,19 @@ class BasicEvent extends Event {
     return BasicEvent(
       id: id ?? this.id,
       title: title ?? this.title,
-      color: color ?? this.color,
+      backgroundColor: backgroundColor ?? this.backgroundColor,
       start: start ?? this.start,
       end: end ?? this.end,
     );
   }
 
   @override
-  int get hashCode => hashValues(super.hashCode, title, color);
+  int get hashCode => hashValues(super.hashCode, title, backgroundColor);
   @override
   bool operator ==(dynamic other) =>
-      super == other && title == other.title && color == other.color;
+      super == other &&
+      title == other.title &&
+      backgroundColor == other.backgroundColor;
 }
 
 /// A simple [Widget] for displaying a [BasicEvent].
@@ -88,7 +90,7 @@ class BasicEventWidget extends StatelessWidget {
           borderRadius: BorderRadius.circular(4),
         ),
         clipBehavior: Clip.hardEdge,
-        color: event.color,
+        color: event.backgroundColor,
         child: InkWell(
           onTap: onTap,
           child: Padding(
@@ -96,7 +98,7 @@ class BasicEventWidget extends StatelessWidget {
             child: DefaultTextStyle(
               style: context.textTheme.bodyText2!.copyWith(
                 fontSize: 12,
-                color: event.color.highEmphasisOnColor,
+                color: event.backgroundColor.highEmphasisOnColor,
               ),
               child: Text(event.title),
             ),
@@ -132,8 +134,8 @@ class BasicAllDayEventWidget extends StatelessWidget {
       child: CustomPaint(
         painter: AllDayEventBackgroundPainter(
           info: info,
-          color: event.color,
           borderRadius: borderRadius,
+          color: event.backgroundColor,
         ),
         child: Material(
           shape: AllDayEventBorder(
@@ -160,7 +162,7 @@ class BasicAllDayEventWidget extends StatelessWidget {
         child: DefaultTextStyle(
           style: context.textTheme.bodyText2!.copyWith(
             fontSize: 14,
-            color: event.color.highEmphasisOnColor,
+            color: event.backgroundColor.highEmphasisOnColor,
           ),
           child: Text(event.title, maxLines: 1),
         ),

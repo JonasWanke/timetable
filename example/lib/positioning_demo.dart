@@ -180,7 +180,7 @@ class _DemoEvent extends BasicEvent {
   }) : super(
           id: '$demoId-$eventId',
           title: '$demoId-$eventId',
-          color: _getColor('$demoId-$eventId'),
+          backgroundColor: _getColor('$demoId-$eventId'),
           start: DateTime.now().toUtc().atStartOfDay + demoId.days + start,
           end: DateTime.now().toUtc().atStartOfDay +
               (demoId + endDateOffset).days +
@@ -191,7 +191,7 @@ class _DemoEvent extends BasicEvent {
       : super(
           id: 'a-$id',
           title: 'a-$id',
-          color: _getColor('a-$id'),
+          backgroundColor: _getColor('a-$id'),
           start: DateTime.now().toUtc().atStartOfDay + startOffset.days,
           end:
               DateTime.now().toUtc().atStartOfDay + (startOffset + length).days,

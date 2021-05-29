@@ -20,17 +20,19 @@ class BasicEvent extends Event {
 
   /// An ID for this event.
   ///
-  /// This is not used by timetable itself, but can be handy, e.g., when
+  /// This is not used by Timetable itself, but can be handy, e.g., when
   /// implementing drag & drop.
   final String id;
 
-  /// A title for the user, used e.g. by [BasicEventWidget].
+  /// A title displayed to the user.
+  ///
+  /// This is currently used by [BasicEventWidget] and [BasicAllDayEventWidget].
   final String title;
 
-  /// [Color] used for displaying this event.
+  /// The background color used for displaying this event.
   ///
-  /// This is used e.g. by [BasicEventWidget] as the background color.
   final Color color;
+  /// This is currently used by [BasicEventWidget] and [BasicAllDayEventWidget].
 
   BasicEvent copyWith({
     String? id,
@@ -65,11 +67,10 @@ class BasicEventWidget extends StatelessWidget {
     this.margin = const EdgeInsets.only(right: 1),
   }) : super(key: key);
 
-  /// The [BasicEvent] to be displayed.
+  /// The event to be displayed.
   final BasicEvent event;
 
-  /// An optional [VoidCallback] that will be invoked when the user taps this
-  /// widget.
+  /// An optional callback that will be invoked when the user taps this widget.
   final VoidCallback? onTap;
 
   final EdgeInsetsGeometry margin;
@@ -116,13 +117,12 @@ class BasicAllDayEventWidget extends StatelessWidget {
     this.onTap,
   }) : super(key: key);
 
-  /// The [BasicEvent] to be displayed.
+  /// The event to be displayed.
   final BasicEvent event;
   final AllDayEventLayoutInfo info;
   final double borderRadius;
 
-  /// An optional [VoidCallback] that will be invoked when the user taps this
-  /// widget.
+  /// An optional callback that will be invoked when the user taps this widget.
   final VoidCallback? onTap;
 
   @override

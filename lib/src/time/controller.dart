@@ -36,7 +36,7 @@ class TimeController extends ValueNotifier<TimeRange> {
   /// The minimum visible duration when zooming in.
   final Duration minDuration;
 
-  /// The maximum [TimeRange] that can be revealed when zooming out.
+  /// The maximum range that can be revealed when zooming out.
   final TimeRange maxRange;
 
   @override

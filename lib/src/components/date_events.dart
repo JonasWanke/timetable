@@ -7,7 +7,6 @@ import '../event/builder.dart';
 import '../event/event.dart';
 import '../theme.dart';
 import '../utils.dart';
-import 'multi_date_content.dart';
 
 class DateEvents<E extends Event> extends StatelessWidget {
   DateEvents({
@@ -56,7 +55,7 @@ class DateEvents<E extends Event> extends StatelessWidget {
   }
 }
 
-/// Defines visual properties for [MultiDateContent].
+/// Defines visual properties for [DateEvents].
 class DateEventsStyle {
   factory DateEventsStyle(
     // To allow future updates to use the context and align the parameters to

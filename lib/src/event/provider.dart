@@ -4,11 +4,17 @@ import 'package:flutter/widgets.dart' hide Interval;
 import '../utils.dart';
 import 'event.dart';
 
-/// Provides [Event]s to timetable widgets.
+/// Provides [Event]s to Timetable widgets.
 ///
 /// [EventProvider]s may only return events that intersect the given
-/// [visibleRange]. If you only have a fixed list of events, use
-/// [eventProviderFromFixedList].
+/// [visibleRange].
+///
+/// See also:
+/// * [eventProviderFromFixedList], which creates an [EventProvider] from a
+///   fixed list of events.
+/// * [mergeEventProviders], which merges multiple [EventProvider]s.
+/// * [DefaultEventProvider], which provides [EventProvider]s to Timetable
+///   widgets below it.
 typedef EventProvider<E extends Event> = List<E> Function(
   Interval visibleRange,
 );
@@ -72,7 +78,7 @@ class DefaultEventProvider<E extends Event> extends InheritedWidget {
   DefaultEventProvider({
     required EventProvider<E> eventProvider,
     required Widget child,
-  })   : eventProvider = eventProvider.debugChecked,
+  })  : eventProvider = eventProvider.debugChecked,
         super(child: child);
 
   final EventProvider<E> eventProvider;

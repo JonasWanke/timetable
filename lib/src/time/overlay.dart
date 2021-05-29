@@ -21,7 +21,7 @@ class TimeOverlay {
   final DecorationPosition position;
 }
 
-/// Provides [TimeOverlay]s to timetable widgets.
+/// Provides [TimeOverlay]s to Timetable widgets.
 typedef TimeOverlayProvider = List<TimeOverlay> Function(
   BuildContext context,
   DateTime date,

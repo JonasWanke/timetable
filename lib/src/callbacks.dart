@@ -1,5 +1,9 @@
 import 'package:flutter/widgets.dart';
 
+import 'components/date_content.dart';
+import 'components/date_header.dart';
+import 'components/multi_date_event_header.dart';
+import 'components/week_indicator.dart';
 import 'week.dart';
 
 typedef WeekTapCallback = void Function(WeekInfo week);
@@ -15,18 +19,44 @@ class TimetableCallbacks {
     this.onDateTimeBackgroundTap,
   });
 
+  /// Called when the user taps on a week.
+  ///
+  /// Used internally by [WeekIndicator].
   final WeekTapCallback? onWeekTap;
+
+  /// Called when the user taps on a date.
+  ///
+  /// You can react to this, e.g., by changing your view to just show this
+  /// single date.
+  ///
+  /// Used internally by [DateHeader].
   final DateTapCallback? onDateTap;
+
+  /// Called when the user taps on the background of a date.
+  ///
+  /// You can react to this, e.g., by creating an event for that specific date.
+  ///
+  /// Used internally by [MultiDateEventHeader].
   final DateTapCallback? onDateBackgroundTap;
+
+  /// Called when the user taps on the background of a date at a specific time.
+  ///
+  /// You can react to this, e.g., by creating an event for that specific date
+  /// and time.
+  ///
+  /// Used internally by [DateContent].
   final DateTimeTapCallback? onDateTimeBackgroundTap;
 
   @override
-  int get hashCode => hashValues(
-        onWeekTap,
-        onDateTap,
-        onDateBackgroundTap,
-        onDateTimeBackgroundTap,
-      );
+  int get hashCode {
+    return hashValues(
+      onWeekTap,
+      onDateTap,
+      onDateBackgroundTap,
+      onDateTimeBackgroundTap,
+    );
+  }
+
   @override
   bool operator ==(Object other) {
     return other is TimetableCallbacks &&
@@ -37,6 +67,9 @@ class TimetableCallbacks {
   }
 }
 
+/// Provides the default callbacks for Timetable widgets below it.
+///
+/// [DefaultTimetableCallbacks] widgets above this on are overridden.
 class DefaultTimetableCallbacks extends InheritedWidget {
   const DefaultTimetableCallbacks({
     required this.callbacks,

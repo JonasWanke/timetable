@@ -99,8 +99,10 @@ class PartDayDraggableEvent extends StatefulWidget {
   final void Function()? onDragStart;
   final void Function(DateTime)? onDragUpdate;
 
-  /// The target [DateTime] is null when the user long tapps but then doesn't
-  /// move their finger at all.
+  /// Called when a drag gesture is ended.
+  ///
+  /// The [DateTime] is `null` when the user long tapps but then doesn't move
+  /// their finger at all.
   final void Function(DateTime?)? onDragEnd;
 
   final Widget child;

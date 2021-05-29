@@ -20,10 +20,13 @@ class AllDayEventLayoutInfo {
   const AllDayEventLayoutInfo({
     required this.hiddenStartDays,
     required this.hiddenEndDays,
-  })   : assert(hiddenStartDays >= 0),
+  })  : assert(hiddenStartDays >= 0),
         assert(hiddenEndDays >= 0);
 
+  /// How many days of this event are hidden before the viewport starts.
   final double hiddenStartDays;
+
+  /// How many days of this event are hidden after the viewport ends.
   final double hiddenEndDays;
 
   @override

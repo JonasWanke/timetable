@@ -247,9 +247,7 @@ class _DayEventsLayoutDelegate<E extends Event>
     List<E> currentGroup,
     double height,
   ) {
-    if (currentGroup.isEmpty) {
-      return;
-    }
+    if (currentGroup.isEmpty) return;
     if (currentGroup.length == 1) {
       positions.eventPositions[currentGroup.first] =
           _SingleEventPosition(positions.groupColumnCounts.length, 0, 0);
@@ -310,9 +308,7 @@ class _DayEventsLayoutDelegate<E extends Event>
     // Expand events to multiple columns if possible.
     for (final event in currentGroup) {
       final position = positions.eventPositions[event]!;
-      if (position.column == columns.length - 1) {
-        continue;
-      }
+      if (position.column == columns.length - 1) continue;
 
       var columnSpan = 1;
       for (var i = position.column + 1; i < columns.length; i++) {
@@ -322,15 +318,12 @@ class _DayEventsLayoutDelegate<E extends Event>
                 event.start < _actualEnd(e, height) &&
                 e.start < _actualEnd(event, height))
             .isNotEmpty;
-        if (hasOverlapInColumn) {
-          break;
-        }
+        if (hasOverlapInColumn) break;
 
         columnSpan++;
       }
-      positions.eventPositions[event] = position.copyWith(
-        columnSpan: columnSpan,
-      );
+      positions.eventPositions[event] =
+          position.copyWith(columnSpan: columnSpan);
     }
 
     positions.groupColumnCounts.add(columns.length);

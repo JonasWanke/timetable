@@ -42,7 +42,11 @@ class MultiDateEventHeader<E extends Event> extends StatelessWidget {
                 ValueListenableBuilder<DatePageValue>(
               valueListenable: DefaultDateController.of(context)!,
               builder: (context, pageValue, __) => _buildContent(
-                  context, style, pageValue, constraints.maxWidth),
+                context,
+                style,
+                pageValue,
+                constraints.maxWidth,
+              ),
             ),
           ),
         ),
@@ -240,7 +244,7 @@ class _EventsLayout<E extends Event> extends RenderBox
     required Interval currentlyVisibleDates,
     required double page,
     required double eventHeight,
-  })   : _visibleRange = visibleRange,
+  })  : _visibleRange = visibleRange,
         assert(currentlyVisibleDates.isValidTimetableDateInterval),
         _currentlyVisibleDates = currentlyVisibleDates,
         _page = page,
@@ -333,7 +337,7 @@ class _EventsLayout<E extends Event> extends RenderBox
     }
 
     _updateEventPositions();
-    _setSize();
+    size = Size(constraints.maxWidth, _parallelEventCount() * eventHeight);
     _positionEvents();
   }
 
@@ -368,10 +372,6 @@ class _EventsLayout<E extends Event> extends RenderBox
         y++;
       }
     }
-  }
-
-  void _setSize() {
-    size = Size(constraints.maxWidth, _parallelEventCount() * eventHeight);
   }
 
   void _positionEvents() {

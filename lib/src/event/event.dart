@@ -53,12 +53,10 @@ extension EventExtension on Event {
 
 extension TimetableEventIterable<E extends Event> on Iterable<E> {
   List<E> sortedByStartLength() {
-    int comparator(E a, E b) {
+    return sorted((a, b) {
       final result = a.start.compareTo(b.start);
       if (result != 0) return result;
       return a.end.compareTo(b.end);
-    }
-
-    return sorted(comparator);
+    });
   }
 }

@@ -25,7 +25,7 @@ class WeekInfo implements Comparable<WeekInfo> {
   factory WeekInfo.forDate(DateTime date) {
     assert(date.isValidTimetableDate);
 
-    // Algorithm from https://en.wikipedia.org/wiki/ISO_week_date#Algorithms
+    // Algorithm from https://en.wikipedia.org/wiki/ISO_week_date#Calculating_the_week_number_from_a_month_and_day_of_the_month_or_ordinal_date
     final year = date.year;
     final weekOfYear = (10 + date.dayOfYear - date.weekday) ~/ 7;
 
@@ -47,6 +47,17 @@ class WeekInfo implements Comparable<WeekInfo> {
 
   final int weekBasedYear;
   final int weekOfYear;
+
+  DateTime getDayOfWeek(int dayOfWeek) {
+    assert(dayOfWeek.isValidTimetableDayOfWeek);
+
+    // Algorithm from https://en.wikipedia.org/wiki/ISO_week_date#`Calculating_an_ordinal_or_month_date_from_a_week_date`
+    final base = weekOfYear * DateTime.daysPerWeek + dayOfWeek;
+    final yearCorrection =
+        DateTimeTimetable.date(weekBasedYear, 1, 4).weekday + 3;
+    return DateTimeTimetable.date(weekBasedYear, 1, 1) +
+        (base - yearCorrection - 1).days;
+  }
 
   @override
   int compareTo(WeekInfo other) {

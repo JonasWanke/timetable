@@ -16,7 +16,7 @@ import 'utils.dart';
 import 'week.dart';
 
 typedef MonthBasedStyleProvider<T> = T Function(DateTime month);
-typedef WeekBasedStyleProvider<T> = T Function(WeekInfo week);
+typedef WeekBasedStyleProvider<T> = T Function(Week week);
 typedef DateBasedStyleProvider<T> = T Function(DateTime date);
 typedef TimeBasedStyleProvider<T> = T Function(Duration time);
 

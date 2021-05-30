@@ -6,7 +6,7 @@ import 'components/multi_date_event_header.dart';
 import 'components/week_indicator.dart';
 import 'week.dart';
 
-typedef WeekTapCallback = void Function(WeekInfo week);
+typedef WeekTapCallback = void Function(Week week);
 typedef DateTapCallback = void Function(DateTime date);
 typedef DateTimeTapCallback = void Function(DateTime dateTime);
 

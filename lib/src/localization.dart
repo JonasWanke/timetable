@@ -96,8 +96,8 @@ abstract class TimetableLocalizations {
     )!;
   }
 
-  List<String> weekLabels(WeekInfo weekInfo);
-  String weekOfYear(WeekInfo weekInfo);
+  List<String> weekLabels(Week week);
+  String weekOfYear(Week week);
 }
 
 extension BuildContextTimetableLocalizations on BuildContext {
@@ -114,26 +114,34 @@ class TimetableLocalizationDe extends TimetableLocalizations {
   const TimetableLocalizationDe();
 
   @override
-  List<String> weekLabels(WeekInfo weekInfo) {
-    final week = weekInfo.weekOfYear;
-    return [weekOfYear(weekInfo), 'Woche $week', 'KW $week', '$week'];
+  List<String> weekLabels(Week week) {
+    return [
+      weekOfYear(week),
+      'Woche ${week.weekOfYear}',
+      'KW ${week.weekOfYear}',
+      '${week.weekOfYear}',
+    ];
   }
 
   @override
-  String weekOfYear(WeekInfo weekInfo) =>
-      'Kalenderwoche ${weekInfo.weekOfYear}, ${weekInfo.weekBasedYear}';
+  String weekOfYear(Week week) =>
+      'Kalenderwoche ${week.weekOfYear}, ${week.weekBasedYear}';
 }
 
 class TimetableLocalizationEn extends TimetableLocalizations {
   const TimetableLocalizationEn();
 
   @override
-  List<String> weekLabels(WeekInfo weekInfo) {
-    final week = weekInfo.weekOfYear;
-    return [weekOfYear(weekInfo), 'Week $week', 'W $week', '$week'];
+  List<String> weekLabels(Week week) {
+    return [
+      weekOfYear(week),
+      'Week ${week.weekOfYear}',
+      'W ${week.weekOfYear}',
+      '${week.weekOfYear}',
+    ];
   }
 
   @override
-  String weekOfYear(WeekInfo weekInfo) =>
-      'Week ${weekInfo.weekOfYear}, ${weekInfo.weekBasedYear}';
+  String weekOfYear(Week week) =>
+      'Week ${week.weekOfYear}, ${week.weekBasedYear}';
 }

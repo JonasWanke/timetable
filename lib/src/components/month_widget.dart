@@ -152,7 +152,7 @@ class MonthWidget extends StatelessWidget {
             for (final index in 0.until(weekCount))
               weekBuilder(
                 context,
-                (firstDay + (index * DateTime.daysPerWeek).days).weekInfo,
+                (firstDay + (index * DateTime.daysPerWeek).days).week,
               ),
           ],
         ),

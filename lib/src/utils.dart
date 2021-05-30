@@ -33,10 +33,7 @@ typedef MonthWidgetBuilder = Widget Function(
   BuildContext context,
   DateTime month,
 );
-typedef WeekWidgetBuilder = Widget Function(
-  BuildContext context,
-  WeekInfo week,
-);
+typedef WeekWidgetBuilder = Widget Function(BuildContext context, Week week);
 typedef DateWidgetBuilder = Widget Function(
   BuildContext context,
   DateTime date,

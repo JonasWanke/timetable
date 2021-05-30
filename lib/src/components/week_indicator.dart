@@ -42,7 +42,7 @@ class WeekIndicator extends StatelessWidget {
     this.onTap,
     this.style,
   })  : assert(date.isValidTimetableDate),
-        week = date.weekInfo,
+        week = date.week,
         super(key: key);
   static Widget forController(
     DateController? controller, {
@@ -59,7 +59,7 @@ class WeekIndicator extends StatelessWidget {
         style: style,
       );
 
-  final WeekInfo week;
+  final Week week;
   final bool alwaysUseNarrowestVariant;
   final VoidCallback? onTap;
   final WeekIndicatorStyle? style;
@@ -140,7 +140,7 @@ class WeekIndicator extends StatelessWidget {
 class WeekIndicatorStyle {
   factory WeekIndicatorStyle(
     BuildContext context,
-    WeekInfo week, {
+    Week week, {
     String? tooltip,
     Decoration? decoration,
     EdgeInsetsGeometry? padding,
@@ -229,10 +229,10 @@ class _WeekIndicatorForController extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder<WeekInfo>(
+    return ValueListenableBuilder<Week>(
       valueListenable: (controller ?? DefaultDateController.of(context)!)
           .date
-          .map((it) => it.weekInfo),
+          .map((it) => it.week),
       builder: (context, week, _) => WeekIndicator(
         week,
         alwaysUseNarrowestVariant: alwaysUseNarrowestVariant,

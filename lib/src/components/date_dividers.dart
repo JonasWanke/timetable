@@ -1,8 +1,18 @@
 import 'package:flutter/material.dart';
 
+import '../config.dart';
 import '../date/controller.dart';
 import '../theme.dart';
 
+/// A widget that displays vertical dividers betweeen dates.
+///
+/// A [DefaultDateController] must be above in the widget tree.
+///
+/// See also:
+///
+/// * [DateDividersStyle], which defines visual properties for this widget.
+/// * [TimetableTheme] (and [TimetableConfig]), which provide styles to
+///   descendant Timetable widgets.
 class DateDividers extends StatelessWidget {
   const DateDividers({
     Key? key,
@@ -26,6 +36,10 @@ class DateDividers extends StatelessWidget {
 }
 
 /// Defines visual properties for [DateDividers].
+///
+/// See also:
+///
+/// * [TimetableThemeData], which bundles the styles for all Timetable widgets.
 @immutable
 class DateDividersStyle {
   factory DateDividersStyle(
@@ -69,7 +83,7 @@ class _DateDividersPainter extends CustomPainter {
   _DateDividersPainter({
     required this.controller,
     required this.style,
-  })   : _paint = Paint()
+  })  : _paint = Paint()
           ..color = style.color
           ..strokeWidth = style.width,
         super(repaint: controller);

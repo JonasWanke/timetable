@@ -2,10 +2,18 @@ import 'package:black_hole_flutter/black_hole_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../config.dart';
 import '../localization.dart';
 import '../theme.dart';
 import '../utils.dart';
 
+/// A widget that displays the date of month for the given date.
+///
+/// See also:
+///
+/// * [DateIndicatorStyle], which defines visual properties for this widget.
+/// * [TimetableTheme] (and [TimetableConfig]), which provide styles to
+///   descendant Timetable widgets.
 class DateIndicator extends StatelessWidget {
   DateIndicator(
     this.date, {
@@ -33,6 +41,10 @@ class DateIndicator extends StatelessWidget {
 }
 
 /// Defines visual properties for [DateIndicator].
+///
+/// See also:
+///
+/// * [TimetableThemeData], which bundles the styles for all Timetable widgets.
 @immutable
 class DateIndicatorStyle {
   factory DateIndicatorStyle(

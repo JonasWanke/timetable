@@ -2,11 +2,19 @@ import 'package:black_hole_flutter/black_hole_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../config.dart';
 import '../date/controller.dart';
 import '../localization.dart';
 import '../theme.dart';
 import '../utils.dart';
 
+/// A widget that displays the name of the given month.
+///
+/// See also:
+///
+/// * [MonthIndicatorStyle], which defines visual properties for this widget.
+/// * [TimetableTheme] (and [TimetableConfig]), which provide styles to
+///   descendant Timetable widgets.
 class MonthIndicator extends StatelessWidget {
   MonthIndicator(
     this.month, {
@@ -30,6 +38,10 @@ class MonthIndicator extends StatelessWidget {
 }
 
 /// Defines visual properties for [MonthIndicator].
+///
+/// See also:
+///
+/// * [TimetableThemeData], which bundles the styles for all Timetable widgets.
 @immutable
 class MonthIndicatorStyle {
   factory MonthIndicatorStyle(

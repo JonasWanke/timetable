@@ -9,6 +9,10 @@ import '../utils.dart';
 import 'controller.dart';
 import 'time_range.dart';
 
+/// A widget that allows the user to scroll and zoom into a single day.
+///
+/// This uses a [TimeController] to maintain its state, which has to be supplied
+/// by a [DefaultTimeController] above in the widget tree.
 class TimeZoom extends StatefulWidget {
   const TimeZoom({Key? key, required this.child}) : super(key: key);
 

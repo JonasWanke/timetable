@@ -10,7 +10,8 @@ import 'basic.dart';
 /// The base class of all events.
 ///
 /// See also:
-/// - [BasicEvent], which provides a basic implementation to get you started.
+///
+/// * [BasicEvent], which provides a basic implementation to get you started.
 abstract class Event with Diagnosticable {
   const Event({
     required this.start,

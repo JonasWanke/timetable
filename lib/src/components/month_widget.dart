@@ -2,6 +2,7 @@ import 'package:black_hole_flutter/black_hole_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_layout_grid/flutter_layout_grid.dart';
 
+import '../config.dart';
 import '../theme.dart';
 import '../utils.dart';
 import '../week.dart';
@@ -9,6 +10,14 @@ import 'date_indicator.dart';
 import 'week_indicator.dart';
 import 'weekday_indicator.dart';
 
+/// A widget that displays the days of the given month in a grid, with weekdays
+/// at the top and week numbers at the left.
+///
+/// See also:
+///
+/// * [MonthWidgetStyle], which defines visual properties for this widget.
+/// * [TimetableTheme] (and [TimetableConfig]), which provide styles to
+///   descendant Timetable widgets.
 class MonthWidget extends StatelessWidget {
   MonthWidget(
     this.month, {
@@ -153,6 +162,10 @@ class MonthWidget extends StatelessWidget {
 }
 
 /// Defines visual properties for [MonthWidget].
+///
+/// See also:
+///
+/// * [TimetableThemeData], which bundles the styles for all Timetable widgets.
 @immutable
 class MonthWidgetStyle {
   factory MonthWidgetStyle(
@@ -205,7 +218,11 @@ class MonthWidgetStyle {
   final EdgeInsetsGeometry weeksPadding;
   final bool removeIndividualWeekDecorations;
   final EdgeInsetsGeometry datePadding;
+
+  /// Whether dates from adjacent months are displayed to fill the grid.
   final bool showDatesFromOtherMonths;
+
+  /// Whether dates from adjacent months are displayed with lower text opacity.
   final bool showDatesFromOtherMonthsAsDisabled;
 
   MonthWidgetStyle copyWith({

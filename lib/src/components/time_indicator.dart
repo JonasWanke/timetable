@@ -1,11 +1,24 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:black_hole_flutter/black_hole_flutter.dart';
 
+import '../config.dart';
 import '../localization.dart';
 import '../theme.dart';
 import '../utils.dart';
+import 'time_indicators.dart';
 
+/// A widget that displays a label at the given time.
+///
+/// See also:
+///
+/// * [TimeIndicators], which positions [TimeIndicator] widgets.
+/// * [TimeIndicatorStyle], which defines visual properties (including the
+///   label) for this widget.
+/// * [TimetableTheme] (and [TimetableConfig]), which provide styles to
+///   descendant Timetable widgets.
 class TimeIndicator extends StatelessWidget {
   TimeIndicator({
     Key? key,
@@ -44,6 +57,10 @@ class TimeIndicator extends StatelessWidget {
 }
 
 /// Defines visual properties for [TimeIndicator].
+///
+/// See also:
+///
+/// * [TimetableThemeData], which bundles the styles for all Timetable widgets.
 @immutable
 class TimeIndicatorStyle {
   factory TimeIndicatorStyle(
@@ -55,10 +72,18 @@ class TimeIndicatorStyle {
     assert(time.isValidTimetableTimeOfDay);
 
     final theme = context.theme;
+    final caption = theme.textTheme.caption!;
+    final proportionalFiguresFeature = FontFeature.proportionalFigures().value;
     return TimeIndicatorStyle.raw(
       textStyle: textStyle ??
-          theme.textTheme.caption!
-              .copyWith(color: theme.colorScheme.background.disabledOnColor),
+          caption.copyWith(
+            color: theme.colorScheme.background.disabledOnColor,
+            fontFeatures: [
+              ...?caption.fontFeatures
+                  ?.where((it) => it.value != proportionalFiguresFeature),
+              FontFeature.tabularFigures(),
+            ],
+          ),
       label: label ??
           () {
             context.dependOnTimetableLocalizations();

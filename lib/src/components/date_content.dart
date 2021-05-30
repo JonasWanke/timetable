@@ -5,8 +5,19 @@ import '../event/event.dart';
 import '../time/overlay.dart';
 import '../utils.dart';
 import 'date_events.dart';
-import 'overlays.dart';
+import 'time_overlays.dart';
 
+/// A widget that displays [Event]s and [TimeOverlay]s.
+///
+/// If [onBackgroundTap] is not supplied, [DefaultTimetableCallbacks]'s
+/// `onDateTimeBackgroundTap` is used if it's provided above in the widget tree.
+///
+/// See also:
+///
+/// * [DateEvents] and [TimeOverlays], which are used to actually layout
+///   [Event]s and [TimeOverlay]s. [DateEvents] can be styled.
+/// * [DefaultTimetableCallbacks], which provides callbacks to descendant
+///   Timetable widgets.
 class DateContent<E extends Event> extends StatelessWidget {
   DateContent({
     Key? key,

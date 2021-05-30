@@ -17,11 +17,22 @@ class TimeOverlay {
 
   final Duration start;
   final Duration end;
+
+  /// The widget that will be shown as an overlay.
   final Widget widget;
+
+  /// Whether to paint this overlay behind or in front of events.
   final DecorationPosition position;
 }
 
 /// Provides [TimeOverlay]s to Timetable widgets.
+///
+/// [TimeOverlayProvider]s may only return overlays for the given [date].
+///
+/// See also:
+///
+/// * [emptyTimeOverlayProvider], which returns an empty list for all dates.
+/// * [mergeTimeOverlayProviders], which merges multiple [TimeOverlayProvider]s.
 typedef TimeOverlayProvider = List<TimeOverlay> Function(
   BuildContext context,
   DateTime date,

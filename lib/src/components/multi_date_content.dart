@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart' hide Interval;
 
+import '../config.dart';
 import '../date/controller.dart';
 import '../date/date_page_view.dart';
 import '../event/event.dart';
@@ -13,6 +14,22 @@ import 'date_dividers.dart';
 import 'hour_dividers.dart';
 import 'now_indicator.dart';
 
+/// A widget that displays the content of multiple consecutive dates, zoomable
+/// and with decoration like date and hour dividers.
+///
+/// A [DefaultDateController] must be above in the widget tree.
+///
+/// See also:
+///
+/// * [PartDayDraggableEvent], which can be wrapped around an event widget to
+///   make it draggable to a different time or date.
+/// * [DefaultEventProvider] (and [TimetableConfig]), which provide the [Event]s
+///   to be displayed.
+/// * [DefaultTimeOverlayProvider] (and [TimetableConfig]), which provide the
+///   [TimeOverlay]s to be displayed.
+/// * [DateDividers], [TimeZoom], [HourDividers], [NowIndicator],
+///   [DatePageView], and [DateContent], which are used internally by this
+///   widget and can be styled.
 class MultiDateContent<E extends Event> extends StatelessWidget {
   const MultiDateContent({Key? key}) : super(key: key);
 
@@ -41,10 +58,13 @@ class MultiDateContent<E extends Event> extends StatelessWidget {
       size: size,
       child: DatePageView(
         controller: dateController,
-        builder: (context, date) => DateContent(
+        builder: (context, date) => DateContent<E>(
           date: date,
-          events: DefaultEventProvider.of<E>(context)!(date.fullDayInterval),
-          overlays: DefaultTimeOverlayProvider.of(context)!(context, date),
+          events:
+              DefaultEventProvider.of<E>(context)?.call(date.fullDayInterval) ??
+                  [],
+          overlays:
+              DefaultTimeOverlayProvider.of(context)?.call(context, date) ?? [],
         ),
       ),
     );
@@ -86,6 +106,9 @@ class _DragInfos extends InheritedWidget {
   }
 }
 
+/// A widget that makes its child draggable starting from long press.
+///
+/// It must be used inside a [MultiDateContent].
 class PartDayDraggableEvent extends StatefulWidget {
   PartDayDraggableEvent({
     this.onDragStart,

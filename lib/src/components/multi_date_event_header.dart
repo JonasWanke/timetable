@@ -5,6 +5,7 @@ import 'package:flutter/material.dart' hide Interval;
 import 'package:flutter/rendering.dart';
 
 import '../callbacks.dart';
+import '../config.dart';
 import '../date/controller.dart';
 import '../date/date_page_view.dart';
 import '../date/visible_date_range.dart';
@@ -15,6 +16,24 @@ import '../event/provider.dart';
 import '../theme.dart';
 import '../utils.dart';
 
+/// A widget that displays all-day [Event]s.
+///
+/// A [DefaultDateController] and [DefaultEventBuilder] must be above in the
+/// widget tree.
+///
+/// If [onBackgroundTap] is not supplied, [DefaultTimetableCallbacks]'s
+/// `onDateBackgroundTap` is used if it's provided above in the widget tree.
+///
+/// See also:
+///
+/// * [DefaultEventProvider] (and [TimetableConfig]), which provide the [Event]s
+///   to be displayed.
+/// * [MultiDateEventHeaderStyle], which defines visual properties for this
+///   widget.
+/// * [TimetableTheme] (and [TimetableConfig]), which provide styles to
+///   descendant Timetable widgets.
+/// * [DefaultTimetableCallbacks], which provides callbacks to descendant
+///   Timetable widgets.
 class MultiDateEventHeader<E extends Event> extends StatelessWidget {
   const MultiDateEventHeader({
     Key? key,
@@ -94,13 +113,16 @@ class MultiDateEventHeader<E extends Event> extends StatelessWidget {
   ) {
     assert(visibleDates.isValidTimetableDateInterval);
 
+    final events =
+        DefaultEventProvider.of<E>(context)?.call(visibleDates) ?? [];
+
     return _EventsWidget<E>(
       visibleRange: pageValue.visibleRange,
       currentlyVisibleDates: visibleDates,
       page: pageValue.page,
       eventHeight: style.eventHeight,
       children: [
-        for (final event in DefaultEventProvider.of<E>(context)!(visibleDates))
+        for (final event in events)
           _EventParentDataWidget<E>(
             key: ValueKey(event),
             event: event,

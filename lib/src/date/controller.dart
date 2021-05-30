@@ -5,9 +5,20 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
 
+import '../config.dart';
 import '../utils.dart';
 import 'visible_date_range.dart';
 
+/// Controls the visible dates in Timetable widgets.
+///
+/// You can read (and listen to) the currently visible dates via [date].
+///
+/// To programmatically change the visible dates, use any of the following
+/// functions:
+/// * [animateToToday], [animateTo], or [animateToPage] if you want an animation
+/// * [jumpToToday], [jumpTo], or [jumpToPage] if you don't want an animation
+///
+/// You can also get and update the [VisibleDateRange] via [visibleRange].
 class DateController extends ValueNotifier<DatePageValue> {
   DateController({
     DateTime? initialDate,
@@ -30,6 +41,14 @@ class DateController extends ValueNotifier<DatePageValue> {
 
   late final ValueNotifier<DateTime> _date;
   ValueListenable<DateTime> get date => _date;
+
+  VisibleDateRange get visibleRange => value.visibleRange;
+  set visibleRange(VisibleDateRange visibleRange) {
+    value = value.copyWith(
+      page: visibleRange.getTargetPageForFocus(value.page),
+      visibleRange: visibleRange,
+    );
+  }
 
   // Animation
   AnimationController? _animationController;
@@ -100,13 +119,6 @@ class DateController extends ValueNotifier<DatePageValue> {
         value.copyWith(page: value.visibleRange.getTargetPageForFocus(page));
   }
 
-  void setVisibleRange(VisibleDateRange visibleRange) {
-    value = value.copyWith(
-      page: visibleRange.getTargetPageForFocus(value.page),
-      visibleRange: visibleRange,
-    );
-  }
-
   bool _isDisposed = false;
   bool get isDisposed => _isDisposed;
   @override
@@ -123,6 +135,7 @@ class _DateValueNotifier extends ValueNotifier<DateTime> {
         super(date);
 }
 
+/// The value held by [DateController].
 @immutable
 class DatePageValue {
   const DatePageValue(this.visibleRange, this.page);
@@ -151,6 +164,12 @@ class DatePageValue {
       'DatePageValue(visibleRange = $visibleRange, page = $page)';
 }
 
+/// Provides the [DateController] for Timetable widgets below it.
+///
+/// See also:
+///
+/// * [TimetableConfig], which bundles multiple configuration widgets for
+///   Timetable.
 class DefaultDateController extends InheritedWidget {
   const DefaultDateController({
     required this.controller,

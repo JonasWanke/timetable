@@ -2,12 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../callbacks.dart';
+import '../config.dart';
 import '../localization.dart';
 import '../theme.dart';
 import '../utils.dart';
 import 'date_indicator.dart';
 import 'weekday_indicator.dart';
 
+/// A widget that displays the weekday and date of month for the given date.
+///
+/// If [onTap] is not supplied, [DefaultTimetableCallbacks]'s `onDateTap` is
+/// used if it's provided above in the widget tree.
+///
+/// See also:
+///
+/// * [DateHeaderStyle], which defines visual properties for this widget.
+/// * [TimetableTheme] (and [TimetableConfig]), which provide styles to
+///   descendant Timetable widgets.
+/// * [DefaultTimetableCallbacks], which provides callbacks to descendant
+///   Timetable widgets.
 class DateHeader extends StatelessWidget {
   DateHeader(
     this.date, {
@@ -50,6 +63,10 @@ class DateHeader extends StatelessWidget {
 }
 
 /// Defines visual properties for [DateHeader].
+///
+/// See also:
+///
+/// * [TimetableThemeData], which bundles the styles for all Timetable widgets.
 @immutable
 class DateHeaderStyle {
   factory DateHeaderStyle(

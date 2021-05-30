@@ -12,6 +12,11 @@ import 'visible_date_range.dart';
 /// 100,000,000 days from epoch […]".
 const _minPage = -100000000;
 
+/// A page view for displaying dates that supports shrink-wrapping in the cross
+/// axis.
+///
+/// A controller has to be provided, either directly via the constructor, or via
+/// a [DefaultDateController] above in the widget tree.
 class DatePageView extends StatefulWidget {
   const DatePageView({
     Key? key,

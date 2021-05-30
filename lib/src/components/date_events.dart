@@ -3,11 +3,22 @@ import 'dart:ui';
 import 'package:collection/collection.dart';
 import 'package:flutter/widgets.dart';
 
+import '../config.dart';
 import '../event/builder.dart';
 import '../event/event.dart';
 import '../theme.dart';
 import '../utils.dart';
 
+/// A widget that displays the given [Event]s.
+///
+/// If [eventBuilder] is not provided, a [DefaultEventBuilder] must be above in
+/// the widget tree.
+///
+/// See also:
+///
+/// * [DateEventsStyle], which defines visual properties for this widget.
+/// * [TimetableTheme] (and [TimetableConfig]), which provide styles to
+///   descendant Timetable widgets.
 class DateEvents<E extends Event> extends StatelessWidget {
   DateEvents({
     Key? key,
@@ -56,6 +67,10 @@ class DateEvents<E extends Event> extends StatelessWidget {
 }
 
 /// Defines visual properties for [DateEvents].
+///
+/// See also:
+///
+/// * [TimetableThemeData], which bundles the styles for all Timetable widgets.
 class DateEventsStyle {
   factory DateEventsStyle(
     // To allow future updates to use the context and align the parameters to
@@ -117,7 +132,8 @@ class DateEventsStyle {
   /// If the difference is less, they will be shown next to each other.
   ///
   /// See also:
-  /// - [enableStacking], which can disable the stacking behavior completely.
+  ///
+  /// * [enableStacking], which can disable the stacking behavior completely.
   final Duration minEventDeltaForStacking;
 
   /// Horizontal space between two parallel events stacked on top of each other.

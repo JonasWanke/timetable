@@ -5,6 +5,11 @@ import '../date/controller.dart';
 import '../date/month_page_view.dart';
 import '../utils.dart';
 
+/// A Timetable widget that displays [MonthWidget]s in a page view.
+///
+/// When a [DefaultDateController] is placed above in the widget tree, the
+/// visible month is synced to it and swiping between months also updates that
+/// [DateController].
 class CompactMonthTimetable extends StatefulWidget {
   CompactMonthTimetable({
     MonthWidgetBuilder? monthBuilder,

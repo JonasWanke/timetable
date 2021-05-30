@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 
 import '../utils.dart';
 
+/// A page view for displaying months that supports shrink-wrapping in the cross
+/// axis.
 class MonthPageView extends StatefulWidget {
   const MonthPageView({
     this.monthPageController,
@@ -95,6 +97,7 @@ class _MonthPageViewState extends State<MonthPageView> {
   }
 }
 
+/// Controls a [MonthPageView].
 class MonthPageController extends ChangeNotifier
     implements ValueListenable<DateTime> {
   MonthPageController({required DateTime initialMonth})

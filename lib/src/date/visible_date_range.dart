@@ -3,12 +3,21 @@ import 'package:flutter/physics.dart';
 import '../layouts/recurring_multi_date.dart';
 import '../utils.dart';
 
+/// Defines how many days are visible at once and whether they, e.g., snap to
+/// weeks.
 abstract class VisibleDateRange {
   const VisibleDateRange({
     required this.visibleDayCount,
     required this.canScroll,
   }) : assert(visibleDayCount > 0);
 
+  /// A visible range that shows [visibleDayCount] consecutive days.
+  ///
+  /// This range snapps to every `swipeRange` days (defaults to every day) that
+  /// are aligned to `alignmentDate` (defaults to today).
+  ///
+  /// When set, swiping is limited from `minDate` to `maxDate` so that both can
+  /// still be seen.
   factory VisibleDateRange.days(
     int visibleDayCount, {
     int swipeRange,
@@ -16,6 +25,12 @@ abstract class VisibleDateRange {
     DateTime? minDate,
     DateTime? maxDate,
   }) = DaysVisibleDateRange;
+
+  /// A visible range that shows seven consecutive days, aligned to
+  /// [startOfWeek].
+  ///
+  /// When set, swiping is limited from `minDate` to `maxDate` so that both can
+  /// still be seen.
   factory VisibleDateRange.week({
     int startOfWeek = DateTime.monday,
     DateTime? minDate,
@@ -28,6 +43,12 @@ abstract class VisibleDateRange {
       maxDate: maxDate,
     );
   }
+
+  /// A visible range that shows [visibleDayCount] consecutive days, aligned to
+  /// [firstDay].
+  ///
+  /// When set, swiping is limited from `minDate` to `maxDate` so that both can
+  /// still be seen.
   factory VisibleDateRange.weekAligned(
     int visibleDayCount, {
     int firstDay = DateTime.monday,
@@ -46,7 +67,7 @@ abstract class VisibleDateRange {
     );
   }
 
-  /// Creates a non-scrollable [VisibleDateRange].
+  /// A non-scrollable visible range.
   ///
   /// This is useful for, e.g., [RecurringMultiDateTimetable].
   factory VisibleDateRange.fixed(DateTime startDate, int visibleDayCount) =>
@@ -73,6 +94,8 @@ abstract class VisibleDateRange {
   }
 }
 
+/// The implementation for [VisibleDateRange.days], [VisibleDateRange.week], and
+/// [VisibleDateRange.weekAligned].
 class DaysVisibleDateRange extends VisibleDateRange {
   DaysVisibleDateRange(
     int visibleDayCount, {
@@ -153,7 +176,7 @@ class DaysVisibleDateRange extends VisibleDateRange {
   }
 }
 
-/// A non-scrollable [VisibleDateRange].
+/// A non-scrollable [VisibleDateRange], used by [VisibleDateRange.fixed].
 ///
 /// This is useful for, e.g., [RecurringMultiDateTimetable].
 class FixedDaysVisibleDateRange extends VisibleDateRange {

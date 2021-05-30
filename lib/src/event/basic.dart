@@ -8,6 +8,7 @@ import 'event.dart';
 /// A basic implementation of [Event] to get you started.
 ///
 /// See also:
+///
 /// * [BasicEventWidget], which can display instances of [BasicEvent].
 class BasicEvent extends Event {
   const BasicEvent({

@@ -8,6 +8,16 @@ import '../theme.dart';
 import '../utils.dart';
 import 'time_indicator.dart';
 
+/// A widget that positions [TimeIndicator] widgets.
+///
+/// See also:
+///
+/// * [TimeIndicators.hours], which displays an indicator at every full hour.
+/// * [TimeIndicators.halfHours], which displays an indicator at every half
+///   hour.
+/// * [TimeIndicatorsChild], which wraps children of this layout.
+/// * [TimeIndicator], which is usually used inside a [TimeIndicatorsChild] to
+///   display a label.
 class TimeIndicators extends StatelessWidget {
   const TimeIndicators({Key? key, required this.children}) : super(key: key);
 
@@ -91,15 +101,23 @@ class _TimeIndicators extends MultiChildRenderObjectWidget {
       _TimeIndicatorsLayout(textDirection: context.directionality);
 }
 
+/// Wraps children of [TimeIndicators] and determines their position.
 class TimeIndicatorsChild extends ParentDataWidget<_TimeIndicatorParentData> {
   TimeIndicatorsChild({
     required this.time,
-    this.alignment = Alignment.center,
+    this.alignment = Alignment.centerRight,
     required Widget child,
-  })   : assert(time.isValidTimetableTimeOfDay),
+  })  : assert(time.isValidTimetableTimeOfDay),
         super(key: ValueKey(time), child: child);
 
+  /// The time of day that this widget positioned next to.
   final Duration time;
+
+  /// How to align the widget to the [time].
+  ///
+  /// The horizontal alignment works as expected. A vertical alignment of top
+  /// places the widget so it sits on top of where the corresponding time is,
+  /// and a vertical alignment of bottom places it directly below that time.
   final AlignmentGeometry alignment;
 
   @override

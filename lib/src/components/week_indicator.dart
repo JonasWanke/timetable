@@ -4,12 +4,29 @@ import 'package:flutter/material.dart';
 import 'package:tuple/tuple.dart';
 
 import '../callbacks.dart';
+import '../config.dart';
 import '../date/controller.dart';
 import '../localization.dart';
 import '../theme.dart';
 import '../utils.dart';
 import '../week.dart';
 
+/// A widget that displays the week number and possibly year for the given week.
+///
+/// If the [WeekIndicatorStyle] contains multiple labels, the longest one that
+/// fits the available width is chosen. This behavior can be changed via
+/// [alwaysUseNarrowestVariant].
+///
+/// If [onTap] is not supplied, [DefaultTimetableCallbacks]'s `onWeekTap` is
+/// used if it's provided above in the widget tree.
+///
+/// See also:
+///
+/// * [WeekIndicatorStyle], which defines visual properties for this widget.
+/// * [TimetableTheme] (and [TimetableConfig]), which provide styles to
+///   descendant Timetable widgets.
+/// * [DefaultTimetableCallbacks], which provides callbacks to descendant
+///   Timetable widgets.
 class WeekIndicator extends StatelessWidget {
   const WeekIndicator(
     this.week, {
@@ -115,6 +132,10 @@ class WeekIndicator extends StatelessWidget {
 }
 
 /// Defines visual properties for [WeekIndicator].
+///
+/// See also:
+///
+/// * [TimetableThemeData], which bundles the styles for all Timetable widgets.
 @immutable
 class WeekIndicatorStyle {
   factory WeekIndicatorStyle(

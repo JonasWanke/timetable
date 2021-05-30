@@ -3,9 +3,15 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
+import '../config.dart';
 import '../utils.dart';
 import 'time_range.dart';
 
+/// Controls the visible time range and zoom factor in a [`MultiDateTimetable`]
+/// (or [`RecurringMultiDateTimetable`]).
+///
+/// You can programmatically change those via [animateToShowFullDay],
+/// [animateTo], [jumpToShowFullDay], or by directly setting the [value].
 class TimeController extends ValueNotifier<TimeRange> {
   TimeController({
     this.minDuration = const Duration(minutes: 1),
@@ -87,6 +93,12 @@ class TimeController extends ValueNotifier<TimeRange> {
   void jumpToShowFullDay() => value = TimeRange.fullDay;
 }
 
+/// Provides the [TimeController] for Timetable widgets below it.
+///
+/// See also:
+///
+/// * [TimetableConfig], which bundles multiple configuration widgets for
+///   Timetable.
 class DefaultTimeController extends InheritedWidget {
   const DefaultTimeController({
     required this.controller,

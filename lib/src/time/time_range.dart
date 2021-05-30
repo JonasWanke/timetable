@@ -4,7 +4,9 @@ import 'package:flutter/foundation.dart';
 import 'package:meta/meta.dart';
 
 import '../utils.dart';
+import 'controller.dart';
 
+/// The value held by [TimeController].
 @immutable
 class TimeRange {
   TimeRange(this.startTime, this.endTime)

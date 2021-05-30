@@ -5,12 +5,17 @@ import '../components/multi_date_content.dart';
 import '../components/multi_date_event_header.dart';
 import '../components/time_indicators.dart';
 import '../components/week_indicator.dart';
+import '../config.dart';
+import '../date/controller.dart';
 import '../date/date_page_view.dart';
+import '../event/builder.dart';
 import '../event/event.dart';
 import '../event/provider.dart';
 import '../theme.dart';
+import '../time/controller.dart';
 import '../time/zoom.dart';
 import '../utils.dart';
+import 'recurring_multi_date.dart';
 
 typedef MultiDateTimetableHeaderBuilder = Widget Function(
   BuildContext context,
@@ -21,6 +26,18 @@ typedef MultiDateTimetableContentBuilder = Widget Function(
   ValueChanged<double> onLeadingWidthChanged,
 );
 
+/// A Timetable widget that displays multiple consecutive days.
+///
+/// To configure it, provide a [DateController], [TimeController],
+/// [EventProvider], and [EventBuilder] via a [TimetableConfig] widget above in
+/// the widget tree. (You can also provide these via `DefaultFoo` widgets
+/// directly, like [DefaultDateController].)
+///
+/// See also:
+///
+/// * [RecurringMultiDateTimetable], which is a customized variation without
+///   scrolling and specific dates – e.g., to show a generic week from Monday to
+///   Sunday without dates.
 class MultiDateTimetable<E extends Event> extends StatefulWidget {
   MultiDateTimetable({
     Key? key,
@@ -55,7 +72,7 @@ class _MultiDateTimetableState<E extends Event>
 
   @override
   Widget build(BuildContext context) {
-    final eventProvider = DefaultEventProvider.of<E>(context)!;
+    final eventProvider = DefaultEventProvider.of<E>(context) ?? (_) => [];
 
     return Column(children: [
       DefaultEventProvider<E>(

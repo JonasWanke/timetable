@@ -10,9 +10,8 @@ class DateScrollPhysics extends ScrollPhysics {
   final VisibleDateRange visibleRange;
 
   @override
-  DateScrollPhysics applyTo(ScrollPhysics? ancestor) {
-    return DateScrollPhysics(visibleRange, parent: buildParent(ancestor));
-  }
+  DateScrollPhysics applyTo(ScrollPhysics? ancestor) =>
+      DateScrollPhysics(visibleRange, parent: buildParent(ancestor));
 
   @override
   double applyBoundaryConditions(ScrollMetrics position, double value) {

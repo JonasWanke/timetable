@@ -10,6 +10,7 @@ import 'event.dart';
 /// [visibleRange].
 ///
 /// See also:
+///
 /// * [eventProviderFromFixedList], which creates an [EventProvider] from a
 ///   fixed list of events.
 /// * [mergeEventProviders], which merges multiple [EventProvider]s.

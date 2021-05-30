@@ -2,10 +2,18 @@ import 'package:black_hole_flutter/black_hole_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../config.dart';
 import '../localization.dart';
 import '../theme.dart';
 import '../utils.dart';
 
+/// A widget that displays the weekday for the given date.
+///
+/// See also:
+///
+/// * [WeekdayIndicatorStyle], which defines visual properties for this widget.
+/// * [TimetableTheme] (and [TimetableConfig]), which provide styles to
+///   descendant Timetable widgets.
 class WeekdayIndicator extends StatelessWidget {
   WeekdayIndicator(
     this.date, {
@@ -33,6 +41,10 @@ class WeekdayIndicator extends StatelessWidget {
 }
 
 /// Defines visual properties for [WeekdayIndicator].
+///
+/// See also:
+///
+/// * [TimetableThemeData], which bundles the styles for all Timetable widgets.
 @immutable
 class WeekdayIndicatorStyle {
   factory WeekdayIndicatorStyle(

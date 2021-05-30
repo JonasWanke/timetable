@@ -3,10 +3,23 @@ import 'dart:ui';
 import 'package:black_hole_flutter/black_hole_flutter.dart';
 import 'package:flutter/material.dart';
 
+import '../config.dart';
 import '../date/controller.dart';
 import '../theme.dart';
 import '../utils.dart';
 
+/// A widget that displays an indicator at the current date and time.
+///
+/// The indicator consists of two parts:
+///
+/// * a small [NowIndicatorShape] at the left side
+/// * a horizontal line spanning the whole day
+///
+/// See also:
+///
+/// * [NowIndicatorStyle], which defines visual properties for this widget.
+/// * [TimetableTheme] (and [TimetableConfig]), which provide styles to
+///   descendant Timetable widgets.
 class NowIndicator extends StatefulWidget {
   const NowIndicator({
     Key? key,
@@ -47,6 +60,10 @@ class _NowIndicatorState extends State<NowIndicator> {
 }
 
 /// Defines visual properties for [NowIndicator].
+///
+/// See also:
+///
+/// * [TimetableThemeData], which bundles the styles for all Timetable widgets.
 @immutable
 class NowIndicatorStyle {
   factory NowIndicatorStyle(
@@ -98,6 +115,14 @@ class NowIndicatorStyle {
 
 // Shapes
 
+/// A shape that is drawn at the left side of the [NowIndicator].
+///
+/// See also:
+///
+/// * [CircleNowIndicatorShape], which draws a small circle.
+/// * [TriangleNowIndicatorShape], which draws a small triangle.
+/// * [EmptyNowIndicatorShape], which draws nothing.
+/// * [NowIndicatorStyle], which uses this class.
 @immutable
 abstract class NowIndicatorShape {
   const NowIndicatorShape();
@@ -134,6 +159,41 @@ abstract class NowIndicatorShape {
   bool operator ==(Object other);
 }
 
+/// A [NowIndicatorShape] that draws nothing.
+///
+/// See also:
+///
+/// * [CircleNowIndicatorShape], which draws a small circle.
+/// * [TriangleNowIndicatorShape], which draws a small triangle.
+class EmptyNowIndicatorShape extends NowIndicatorShape {
+  const EmptyNowIndicatorShape();
+
+  @override
+  void paint(
+    Canvas canvas,
+    Size size,
+    double dateStartOffset,
+    double dateEndOffset,
+    double timeOffset,
+  ) {}
+
+  @override
+  EmptyNowIndicatorShape copyWith() => EmptyNowIndicatorShape();
+
+  @override
+  int get hashCode => 0;
+  @override
+  bool operator ==(Object other) {
+    return other is EmptyNowIndicatorShape;
+  }
+}
+
+/// A [NowIndicatorShape] that draws a small circle.
+///
+/// See also:
+///
+/// * [TriangleNowIndicatorShape], which draws a small triangle.
+/// * [EmptyNowIndicatorShape], which draws nothing.
 class CircleNowIndicatorShape extends NowIndicatorShape {
   CircleNowIndicatorShape({required this.color, this.radius = 4})
       : _paint = Paint()..color = color;
@@ -180,6 +240,12 @@ class CircleNowIndicatorShape extends NowIndicatorShape {
   }
 }
 
+/// A [NowIndicatorShape] that draws a small triangle.
+///
+/// See also:
+///
+/// * [TriangleNowIndicatorShape], which draws a small triangle.
+/// * [EmptyNowIndicatorShape], which draws nothing.
 class TriangleNowIndicatorShape extends NowIndicatorShape {
   TriangleNowIndicatorShape({required this.color, this.size = 8})
       : _paint = Paint()..color = color;
@@ -238,7 +304,7 @@ class _NowIndicatorPainter extends CustomPainter {
     required this.controller,
     required this.style,
     required Listenable repaint,
-  })   : _paint = Paint()
+  })  : _paint = Paint()
           ..color = style.lineColor
           ..strokeWidth = style.lineWidth,
         super(repaint: Listenable.merge([controller, repaint]));

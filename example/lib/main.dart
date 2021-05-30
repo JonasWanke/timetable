@@ -153,7 +153,7 @@ class _TimetableExampleState extends State<TimetableExample>
         DropdownButton<PredefinedVisibleDateRange>(
           onChanged: (visibleRange) => setState(() {
             _visibleDateRange = visibleRange!;
-            _dateController.setVisibleRange(visibleRange.visibleDateRange);
+            _dateController.visibleRange = visibleRange.visibleDateRange;
           }),
           value: _visibleDateRange,
           items: [

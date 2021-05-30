@@ -43,24 +43,31 @@ class MultiDateTimetable<E extends Event> extends StatefulWidget {
     Key? key,
     MultiDateTimetableHeaderBuilder? headerBuilder,
     MultiDateTimetableContentBuilder? contentBuilder,
-  })  : headerBuilder = headerBuilder ??
-            ((context, leadingWidth) => MultiDateTimetableHeader<E>(
-                  leading: SizedBox(
-                    width: leadingWidth,
-                    child: Center(child: WeekIndicator.forController(null)),
-                  ),
-                )),
-        contentBuilder = contentBuilder ??
-            ((context, onLeadingWidthChanged) => MultiDateTimetableContent<E>(
-                  leading: SizeReportingWidget(
-                    onSizeChanged: (size) => onLeadingWidthChanged(size.width),
-                    child: _defaultContentLeading,
-                  ),
-                )),
+  })  : headerBuilder = headerBuilder ?? _defaultHeaderBuilder<E>(),
+        contentBuilder = contentBuilder ?? _defaultContentBuilder<E>(),
         super(key: key);
 
   final MultiDateTimetableHeaderBuilder headerBuilder;
+  static MultiDateTimetableHeaderBuilder
+      _defaultHeaderBuilder<E extends Event>() {
+    return (context, leadingWidth) => MultiDateTimetableHeader<E>(
+          leading: SizedBox(
+            width: leadingWidth,
+            child: Center(child: WeekIndicator.forController(null)),
+          ),
+        );
+  }
+
   final MultiDateTimetableContentBuilder contentBuilder;
+  static MultiDateTimetableContentBuilder
+      _defaultContentBuilder<E extends Event>() {
+    return (context, onLeadingWidthChanged) => MultiDateTimetableContent<E>(
+          leading: SizeReportingWidget(
+            onSizeChanged: (size) => onLeadingWidthChanged(size.width),
+            child: _defaultContentLeading,
+          ),
+        );
+  }
 
   @override
   _MultiDateTimetableState<E> createState() => _MultiDateTimetableState();

@@ -27,11 +27,16 @@ class RecurringMultiDateTimetable<E extends Event> extends StatelessWidget {
   RecurringMultiDateTimetable({
     Key? key,
     WidgetBuilder? timetableBuilder,
-  })  : timetableBuilder =
-            timetableBuilder ?? ((context) => MultiDateTimetable<E>()),
+  })  : timetableBuilder = timetableBuilder ?? _defaultTimetableBuilder<E>(),
         super(key: key);
 
   final WidgetBuilder timetableBuilder;
+  static WidgetBuilder _defaultTimetableBuilder<E extends Event>() {
+    return (context) => MultiDateTimetable<E>(
+          headerBuilder: (header, leadingWidth) => MultiDateTimetableHeader<E>(
+              leading: SizedBox(width: leadingWidth)),
+        );
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -22,6 +22,13 @@ class TimetableExample extends StatefulWidget {
 class _TimetableExampleState extends State<TimetableExample>
     with TickerProviderStateMixin {
   var _visibleDateRange = PredefinedVisibleDateRange.week;
+  void _updateVisibleDateRange(PredefinedVisibleDateRange newValue) {
+    setState(() {
+      _visibleDateRange = newValue;
+      _dateController.visibleRange = newValue.visibleDateRange;
+    });
+  }
+
   bool get _isRecurringLayout =>
       _visibleDateRange == PredefinedVisibleDateRange.fixed;
 
@@ -77,8 +84,18 @@ class _TimetableExampleState extends State<TimetableExample>
             .toList(),
       ]),
       callbacks: TimetableCallbacks(
-        onWeekTap: (week) => _showSnackBar('Tapped on week $week.'),
-        onDateTap: (date) => _showSnackBar('Tapped on date $date.'),
+        onWeekTap: (week) {
+          _showSnackBar('Tapped on week $week.');
+          _updateVisibleDateRange(PredefinedVisibleDateRange.week);
+          _dateController.animateTo(
+            week.getDayOfWeek(DateTime.monday),
+            vsync: this,
+          );
+        },
+        onDateTap: (date) {
+          _showSnackBar('Tapped on date $date.');
+          _dateController.animateTo(date, vsync: this);
+        },
         onDateBackgroundTap: (date) =>
             _showSnackBar('Tapped on date background at $date.'),
         onDateTimeBackgroundTap: (dateTime) =>
@@ -151,10 +168,7 @@ class _TimetableExampleState extends State<TimetableExample>
         ),
         SizedBox(width: 8),
         DropdownButton<PredefinedVisibleDateRange>(
-          onChanged: (visibleRange) => setState(() {
-            _visibleDateRange = visibleRange!;
-            _dateController.visibleRange = visibleRange.visibleDateRange;
-          }),
+          onChanged: (visibleRange) => _updateVisibleDateRange(visibleRange!),
           value: _visibleDateRange,
           items: [
             for (final visibleRange in PredefinedVisibleDateRange.values)
@@ -173,7 +187,18 @@ class _TimetableExampleState extends State<TimetableExample>
         child,
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: CompactMonthTimetable(),
+          child: Builder(builder: (context) {
+            return DefaultTimetableCallbacks(
+              callbacks: DefaultTimetableCallbacks.of(context)!.copyWith(
+                onDateTap: (date) {
+                  _showSnackBar('Tapped on date $date.');
+                  _updateVisibleDateRange(PredefinedVisibleDateRange.day);
+                  _dateController.animateTo(date, vsync: this);
+                },
+              ),
+              child: CompactMonthTimetable(),
+            );
+          }),
         ),
       ]);
     }

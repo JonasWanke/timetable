@@ -47,6 +47,33 @@ class TimetableCallbacks {
   /// Used internally by [DateContent].
   final DateTimeTapCallback? onDateTimeBackgroundTap;
 
+  TimetableCallbacks copyWith({
+    WeekTapCallback? onWeekTap,
+    bool clearOnWeekTap = false,
+    DateTapCallback? onDateTap,
+    bool clearOnDateTap = false,
+    DateTapCallback? onDateBackgroundTap,
+    bool clearOnDateBackgroundTap = false,
+    DateTimeTapCallback? onDateTimeBackgroundTap,
+    bool clearOnDateTimeBackgroundTap = false,
+  }) {
+    assert(!(clearOnWeekTap && onWeekTap != null));
+    assert(!(clearOnDateTap && onDateTap != null));
+    assert(!(clearOnDateBackgroundTap && onDateBackgroundTap != null));
+    assert(!(clearOnDateTimeBackgroundTap && onDateTimeBackgroundTap != null));
+
+    return TimetableCallbacks(
+      onWeekTap: clearOnWeekTap ? null : onWeekTap ?? this.onWeekTap,
+      onDateTap: clearOnDateTap ? null : onDateTap ?? this.onDateTap,
+      onDateBackgroundTap: clearOnDateBackgroundTap
+          ? null
+          : onDateBackgroundTap ?? this.onDateBackgroundTap,
+      onDateTimeBackgroundTap: clearOnDateTimeBackgroundTap
+          ? null
+          : onDateTimeBackgroundTap ?? this.onDateTimeBackgroundTap,
+    );
+  }
+
   @override
   int get hashCode {
     return hashValues(

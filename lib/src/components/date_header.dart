@@ -38,7 +38,8 @@ class DateHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final style = this.style ??
         TimetableTheme.orDefaultOf(context).dateHeaderStyleProvider(date);
-    final defaultOnTap = DefaultTimetableCallbacks.of(context)?.onDateTap;
+    final callbacks = DefaultTimetableCallbacks.of(context);
+    final defaultOnTap = callbacks?.onDateTap;
 
     return InkWell(
       onTap: onTap ?? (defaultOnTap != null ? () => defaultOnTap(date) : null),
@@ -46,15 +47,19 @@ class DateHeader extends StatelessWidget {
         message: style.tooltip,
         child: Padding(
           padding: style.padding,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              if (style.showWeekdayIndicator) WeekdayIndicator(date),
-              if (style.showWeekdayIndicator && style.showDateIndicator)
-                SizedBox(height: style.indicatorSpacing),
-              if (style.showDateIndicator) DateIndicator(date),
-            ],
+          child: DefaultTimetableCallbacks(
+            callbacks: (callbacks ?? TimetableCallbacks())
+                .copyWith(clearOnDateTap: true),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                if (style.showWeekdayIndicator) WeekdayIndicator(date),
+                if (style.showWeekdayIndicator && style.showDateIndicator)
+                  SizedBox(height: style.indicatorSpacing),
+                if (style.showDateIndicator) DateIndicator(date),
+              ],
+            ),
           ),
         ),
       ),

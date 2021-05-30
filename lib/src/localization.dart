@@ -3,6 +3,19 @@ import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'week.dart';
 
+/// Provides localized strings for Timetable widgets.
+///
+/// Supported [Locale.languageCode]s:
+///
+/// * `de` –German
+/// * `en` – English
+///
+/// By default, this delegate also configures [Intl] whenever Flutter's locale
+/// changes. This behavior can be disabled via [setIntlLocale].
+///
+/// See also:
+///
+/// * [TimetableLocalizations], which contains all strings for one locale.
 class TimetableLocalizationsDelegate
     extends LocalizationsDelegate<TimetableLocalizations> {
   const TimetableLocalizationsDelegate({this.setIntlLocale = true});
@@ -65,6 +78,12 @@ bool debugCheckHasTimetableLocalizations(BuildContext context) {
   return true;
 }
 
+/// Contains localized strings for Timetable widgets in one locale.
+///
+/// See also:
+///
+/// * [TimetableLocalizationsDelegate], which makes localization info available
+///   to Timetable widgets.
 @immutable
 abstract class TimetableLocalizations {
   const TimetableLocalizations();

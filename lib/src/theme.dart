@@ -20,6 +20,11 @@ typedef WeekBasedStyleProvider<T> = T Function(WeekInfo week);
 typedef DateBasedStyleProvider<T> = T Function(DateTime date);
 typedef TimeBasedStyleProvider<T> = T Function(Duration time);
 
+/// Bundles styles for all Timetable widgets.
+///
+/// See also:
+///
+/// * [TimetableTheme], which makes the theme data available to nested widgets.
 @immutable
 class TimetableThemeData {
   factory TimetableThemeData(
@@ -174,6 +179,11 @@ class TimetableThemeData {
   }
 }
 
+/// Provides styles for nested Timetable widgets.
+///
+/// See also:
+///
+/// * [TimetableThemeData], which bundles the actual styles.
 class TimetableTheme extends InheritedWidget {
   const TimetableTheme({
     required this.data,

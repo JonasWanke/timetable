@@ -7,6 +7,7 @@ TODO: deploy to GitHub pages
 | :--------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------: |
 | ![Screenshot of Timetable](https://github.com/JonasWanke/timetable/raw/master/doc/demo.gif?raw=true) | ![Screenshot of Timetable in dark mode with only three visible days](https://github.com/JonasWanke/timetable/raw/master/doc/screenshot-3day-dark.jpg?raw=true) |
 
+* [Available Layouts](#available-layouts)
 * [Getting started](#getting-started)
   * [0. General Information](#0-general-information)
   * [1. Define your `Event`s](#1-define-your-events)
@@ -14,13 +15,15 @@ TODO: deploy to GitHub pages
   * [3. Create a `TimeController` (optional)](#3-create-a-timecontroller-optional)
   * [4. Create your Timetable](#4-create-your-timetable)
 * [Theming](#theming)
-* [Layouts](#layouts)
-  * [MultiDateTimetable](#multidatetimetable)
-  * [RecurringMultiDateTimetable](#recurringmultidatetimetable)
-  * [CompactMonthTimetable](#compactmonthtimetable)
 * [Advanced Features](#advanced-features)
   * [Drag and Drop](#drag-and-drop)
   * [Time Overlays](#time-overlays)
+
+## Available Layouts
+
+| MultiDateTimetable | RecurringMultiDateTimetable | CompactMonthTimetable |
+| :----------------: | :-------------------------: | :-------------------: |
+|        TODO        |            TODO             |         TODO          |
 
 ## Getting started
 
@@ -175,20 +178,6 @@ Timetable<BasicEvent>(
 > * The default constructor takes a `BuildContext` and sometimes a day or month, using information from the ambient theme and locale to generate default values.
 >   You can still override all options via optional, named parameters.
 > * The named `raw` constructor is usually `const` and has required parameters for all options.
-
-## Layouts
-
-### MultiDateTimetable
-
-TODO
-
-### RecurringMultiDateTimetable
-
-TODO
-
-### CompactMonthTimetable
-
-TODO
 
 ## Advanced Features
 

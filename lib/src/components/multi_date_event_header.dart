@@ -364,11 +364,14 @@ class _EventsLayout<E extends Event> extends RenderBox
   }
 
   void _updateEventPositions() {
-    // Remove old events.
+    // Remove events outside the current viewport (with some buffer).
     _yPositions.removeWhere((e, _) {
       return e.start.page.floor() >= currentlyVisibleDates.end.page.ceil() ||
           e.end.page.ceil() <= currentlyVisibleDates.start.page;
     });
+
+    // Remove old events.
+    _yPositions.removeWhere((e, _) => !_events.contains(e));
 
     // Insert new events.
     final sortedEvents = _events

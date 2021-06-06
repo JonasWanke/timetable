@@ -59,15 +59,15 @@ class DateContent<E extends Event> extends StatelessWidget {
                 onBackgroundTap(date + (details.localPosition.dy / height).days)
             : null,
         child: Stack(children: [
-          _buildOverlaysForPosition(DecorationPosition.background),
+          _buildOverlaysForPosition(TimeOverlayPosition.behindEvents),
           DateEvents<E>(date: date, events: events),
-          _buildOverlaysForPosition(DecorationPosition.foreground),
+          _buildOverlaysForPosition(TimeOverlayPosition.inFrontOfEvents),
         ]),
       );
     });
   }
 
-  Widget _buildOverlaysForPosition(DecorationPosition position) {
+  Widget _buildOverlaysForPosition(TimeOverlayPosition position) {
     return Positioned.fill(
       child: TimeOverlays(
         overlays: overlays.where((it) => it.position == position).toList(),

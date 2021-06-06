@@ -10,7 +10,7 @@ class TimeOverlay {
     required this.start,
     required this.end,
     required this.widget,
-    this.position = DecorationPosition.background,
+    this.position = TimeOverlayPosition.behindEvents,
   })  : assert(start.isValidTimetableTimeOfDay),
         assert(end.isValidTimetableTimeOfDay),
         assert(start < end);
@@ -22,8 +22,10 @@ class TimeOverlay {
   final Widget widget;
 
   /// Whether to paint this overlay behind or in front of events.
-  final DecorationPosition position;
+  final TimeOverlayPosition position;
 }
+
+enum TimeOverlayPosition { behindEvents, inFrontOfEvents }
 
 /// Provides [TimeOverlay]s to Timetable widgets.
 ///
@@ -76,7 +78,7 @@ extension EventToTimeOverlay on Event {
   TimeOverlay? toTimeOverlay({
     required DateTime date,
     required Widget widget,
-    DecorationPosition position = DecorationPosition.foreground,
+    TimeOverlayPosition position = TimeOverlayPosition.inFrontOfEvents,
   }) {
     assert(date.isValidTimetableDate);
 

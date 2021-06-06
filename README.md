@@ -1,11 +1,12 @@
 📅 Customizable, animated calendar widget including day, week, and month views.
 
-TODO: update the graphics  
-TODO: deploy to GitHub pages
+|                                        Navigation                                         |                                        Animation                                         |
+| :---------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------: |
+| ![](https://github.com/JonasWanke/timetable/raw/master/doc/demo-navigation.webp?raw=true) | ![](https://github.com/JonasWanke/timetable/raw/master/doc/demo-animation.webp?raw=true) |
 
-|                                  Event positioning demo (outdated)                                   |                                                              Dark mode & custom range (outdated)                                                               |
-| :--------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------: |
-| ![Screenshot of Timetable](https://github.com/JonasWanke/timetable/raw/master/doc/demo.gif?raw=true) | ![Screenshot of Timetable in dark mode with only three visible days](https://github.com/JonasWanke/timetable/raw/master/doc/screenshot-3day-dark.jpg?raw=true) |
+|                                        Callbacks                                         |                                Changing the [`VisibleDateRange`]                                |
+| :--------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------: |
+| ![](https://github.com/JonasWanke/timetable/raw/master/doc/demo-callbacks.webp?raw=true) | ![](https://github.com/JonasWanke/timetable/raw/master/doc/demo-visibleDateRange.webp?raw=true) |
 
 * [Available Layouts](#available-layouts)
 * [Getting started](#getting-started)
@@ -21,9 +22,15 @@ TODO: deploy to GitHub pages
 
 ## Available Layouts
 
-| MultiDateTimetable | RecurringMultiDateTimetable | CompactMonthTimetable |
-| :----------------: | :-------------------------: | :-------------------: |
-|        TODO        |            TODO             |         TODO          |
+|                                            [`MultiDateTimetable`]                                             |                           [`RecurringMultiDateTimetable`]<br/>(doesn't scroll horizontally)                            |                                            [`CompactMonthTimetable`]                                             |
+| :-----------------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------------------: |
+| ![](https://github.com/JonasWanke/timetable/raw/master/doc/screenshot-MultiDateTimetable-light.webp?raw=true) | ![](https://github.com/JonasWanke/timetable/raw/master/doc/screenshot-RecurringMultiDateTimetable-light.webp?raw=true) | ![](https://github.com/JonasWanke/timetable/raw/master/doc/screenshot-CompactMonthTimetable-light.webp?raw=true) |
+
+Of course, dark mode is supported out of the box:
+
+|                                            [`MultiDateTimetable`]                                            |                                            [`RecurringMultiDateTimetable`]                                            |                                            [`CompactMonthTimetable`]                                            |
+| :----------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------: |
+| ![](https://github.com/JonasWanke/timetable/raw/master/doc/screenshot-MultiDateTimetable-dark.webp?raw=true) | ![](https://github.com/JonasWanke/timetable/raw/master/doc/screenshot-RecurringMultiDateTimetable-dark.webp?raw=true) | ![](https://github.com/JonasWanke/timetable/raw/master/doc/screenshot-CompactMonthTimetable-dark.webp?raw=true) |
 
 ## Getting started
 
@@ -183,6 +190,8 @@ Timetable<BasicEvent>(
 
 ### Drag and Drop
 
+<img src="https://github.com/JonasWanke/timetable/raw/main/doc/demo-dragAndDrop.webp?raw=true" width="400px" alt="Drag and Drop demo" />
+
 You can easily make events inside the content area of [`MultiDateTimetable`] or [`RecurringMultiDateTimetable`] draggable by wrapping them in a [`PartDayDraggableEvent`]:
 
 ```dart
@@ -207,6 +216,8 @@ Have a look at the included example where we implemented exactly that by display
 ### Time Overlays
 
 TODO: `TimetableConfig.timeOverlayProvider` (similar to `eventProvider`)
+<img src="https://github.com/JonasWanke/timetable/raw/main/doc/screenshot.webp?raw=true" width="400px" alt="Drag and Drop demo" />
+
 
 [example/main.dart]: https://github.com/JonasWanke/timetable/blob/master/example/lib/main.dart
 <!-- Flutter -->

@@ -86,31 +86,26 @@ class _DatePageViewState extends State<DatePageView> {
   }
 
   Widget _buildScrollingChild() {
-    return ValueListenableBuilder<VisibleDateRange>(
-      valueListenable: _controller!.map((it) => it.visibleRange),
-      builder: (context, visibleRange, _) {
-        return Scrollable(
+    return Scrollable(
+      axisDirection: AxisDirection.right,
+      physics: DateScrollPhysics(_controller!.map((it) => it.visibleRange)),
+      controller: _scrollController!,
+      viewportBuilder: (context, position) {
+        return Viewport(
           axisDirection: AxisDirection.right,
-          physics: DateScrollPhysics(visibleRange),
-          controller: _scrollController!,
-          viewportBuilder: (context, position) {
-            return Viewport(
-              axisDirection: AxisDirection.right,
-              offset: position,
-              slivers: <Widget>[
-                ValueListenableBuilder<int>(
-                  valueListenable: _controller!.map((it) => it.visibleDayCount),
-                  builder: (context, visibleDayCount, _) => SliverFillViewport(
-                    padEnds: false,
-                    viewportFraction: 1 / visibleDayCount,
-                    delegate: SliverChildBuilderDelegate(
-                      (context, index) => _buildPage(context, _minPage + index),
-                    ),
-                  ),
+          offset: position,
+          slivers: <Widget>[
+            ValueListenableBuilder<int>(
+              valueListenable: _controller!.map((it) => it.visibleDayCount),
+              builder: (context, visibleDayCount, _) => SliverFillViewport(
+                padEnds: false,
+                viewportFraction: 1 / visibleDayCount,
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) => _buildPage(context, _minPage + index),
                 ),
-              ],
-            );
-          },
+              ),
+            ),
+          ],
         );
       },
     );

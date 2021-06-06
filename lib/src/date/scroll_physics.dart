@@ -1,17 +1,19 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
 import 'date_page_view.dart';
 import 'visible_date_range.dart';
 
 class DateScrollPhysics extends ScrollPhysics {
-  const DateScrollPhysics(this.visibleRange, {ScrollPhysics? parent})
+  const DateScrollPhysics(this.visibleRangeListenable, {ScrollPhysics? parent})
       : super(parent: parent);
 
-  final VisibleDateRange visibleRange;
+  final ValueListenable<VisibleDateRange> visibleRangeListenable;
+  VisibleDateRange get visibleRange => visibleRangeListenable.value;
 
   @override
   DateScrollPhysics applyTo(ScrollPhysics? ancestor) =>
-      DateScrollPhysics(visibleRange, parent: buildParent(ancestor));
+      DateScrollPhysics(visibleRangeListenable, parent: buildParent(ancestor));
 
   @override
   double applyBoundaryConditions(ScrollMetrics position, double value) {

@@ -1,12 +1,12 @@
 📅 Customizable, animated calendar widget including day, week, and month views.
 
-|                                        Navigation                                         |                                        Animation                                         |
-| :---------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------: |
-| ![](https://github.com/JonasWanke/timetable/raw/master/doc/demo-navigation.webp?raw=true) | ![](https://github.com/JonasWanke/timetable/raw/master/doc/demo-animation.webp?raw=true) |
+|                                       Navigation                                        |                                       Animation                                        |
+| :-------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------: |
+| ![](https://github.com/JonasWanke/timetable/raw/main/doc/demo-navigation.webp?raw=true) | ![](https://github.com/JonasWanke/timetable/raw/main/doc/demo-animation.webp?raw=true) |
 
-|                                        Callbacks                                         |                                Changing the [`VisibleDateRange`]                                |
-| :--------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------: |
-| ![](https://github.com/JonasWanke/timetable/raw/master/doc/demo-callbacks.webp?raw=true) | ![](https://github.com/JonasWanke/timetable/raw/master/doc/demo-visibleDateRange.webp?raw=true) |
+|                                       Callbacks                                        |                               Changing the [`VisibleDateRange`]                               |
+| :------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------: |
+| ![](https://github.com/JonasWanke/timetable/raw/main/doc/demo-callbacks.webp?raw=true) | ![](https://github.com/JonasWanke/timetable/raw/main/doc/demo-visibleDateRange.webp?raw=true) |
 
 * [Available Layouts](#available-layouts)
 * [Getting started](#getting-started)
@@ -22,15 +22,15 @@
 
 ## Available Layouts
 
-|                                            [`MultiDateTimetable`]                                             |                           [`RecurringMultiDateTimetable`]<br/>(doesn't scroll horizontally)                            |                                            [`CompactMonthTimetable`]                                             |
-| :-----------------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------------------: |
-| ![](https://github.com/JonasWanke/timetable/raw/master/doc/screenshot-MultiDateTimetable-light.webp?raw=true) | ![](https://github.com/JonasWanke/timetable/raw/master/doc/screenshot-RecurringMultiDateTimetable-light.webp?raw=true) | ![](https://github.com/JonasWanke/timetable/raw/master/doc/screenshot-CompactMonthTimetable-light.webp?raw=true) |
+|                                           [`MultiDateTimetable`]                                            |                          [`RecurringMultiDateTimetable`]<br/>(doesn't scroll horizontally)                           |                                           [`CompactMonthTimetable`]                                            |
+| :---------------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------------: |
+| ![](https://github.com/JonasWanke/timetable/raw/main/doc/screenshot-MultiDateTimetable-light.webp?raw=true) | ![](https://github.com/JonasWanke/timetable/raw/main/doc/screenshot-RecurringMultiDateTimetable-light.webp?raw=true) | ![](https://github.com/JonasWanke/timetable/raw/main/doc/screenshot-CompactMonthTimetable-light.webp?raw=true) |
 
 Of course, dark mode is supported out of the box:
 
-|                                            [`MultiDateTimetable`]                                            |                                            [`RecurringMultiDateTimetable`]                                            |                                            [`CompactMonthTimetable`]                                            |
-| :----------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------: |
-| ![](https://github.com/JonasWanke/timetable/raw/master/doc/screenshot-MultiDateTimetable-dark.webp?raw=true) | ![](https://github.com/JonasWanke/timetable/raw/master/doc/screenshot-RecurringMultiDateTimetable-dark.webp?raw=true) | ![](https://github.com/JonasWanke/timetable/raw/master/doc/screenshot-CompactMonthTimetable-dark.webp?raw=true) |
+|                                           [`MultiDateTimetable`]                                           |                                           [`RecurringMultiDateTimetable`]                                           |                                           [`CompactMonthTimetable`]                                           |
+| :--------------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------------: |
+| ![](https://github.com/JonasWanke/timetable/raw/main/doc/screenshot-MultiDateTimetable-dark.webp?raw=true) | ![](https://github.com/JonasWanke/timetable/raw/main/doc/screenshot-RecurringMultiDateTimetable-dark.webp?raw=true) | ![](https://github.com/JonasWanke/timetable/raw/main/doc/screenshot-CompactMonthTimetable-dark.webp?raw=true) |
 
 ## Getting started
 
@@ -235,7 +235,7 @@ TimetableConfig<MyEvent>(
 The provider is just a function that receives a date and returns a list of [`TimeOverlay`] for that date.
 The example above therefore draws a light gray background before 8 a.m. and after 8 p.m. on every day.
 
-[example/main.dart]: https://github.com/JonasWanke/timetable/blob/master/example/lib/main.dart
+[example/main.dart]: https://github.com/JonasWanke/timetable/blob/main/example/lib/main.dart
 <!-- Flutter -->
 [`Duration`]: https://api.flutter.dev/flutter/dart-core/Duration-class.html
 [`ScrollController`]: https://api.flutter.dev/flutter/widgets/ScrollController-class.html

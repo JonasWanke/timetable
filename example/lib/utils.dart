@@ -1,5 +1,6 @@
 import 'package:black_hole_flutter/black_hole_flutter.dart';
 import 'package:debug_overlay/debug_overlay.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -41,7 +42,7 @@ class ExampleApp extends StatelessWidget {
             GlobalCupertinoLocalizations.delegate,
           ],
           supportedLocales: _supportedLocales,
-          builder: DebugOverlay.builder(),
+          builder: kIsWeb ? null : DebugOverlay.builder(),
           home: SafeArea(child: Scaffold(body: child)),
         );
       },

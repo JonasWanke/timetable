@@ -22,7 +22,7 @@ class TimetableConfig<E extends Event> extends StatefulWidget {
     this.callbacks,
     this.theme,
     required this.child,
-  })   : eventProvider = eventProvider?.debugChecked,
+  })  : eventProvider = eventProvider?.debugChecked,
         super(key: key);
 
   final DateController? dateController;

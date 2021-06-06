@@ -16,6 +16,11 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### 📦 Build & CI
 -->
 
+## 1.0.0-alpha.0 · 2021-06-06
+
+### ⚠ BREAKING CHANGES
+- Almost a rewrite of this package to create a modular architecture with support for different layouts ([#69](https://github.com/JonasWanke/timetable/pull/69)), closing [#17](https://github.com/JonasWanke/timetable/issues/17), [#21](https://github.com/JonasWanke/timetable/issues/21), [#23](https://github.com/JonasWanke/timetable/issues/23), [#25](https://github.com/JonasWanke/timetable/issues/25), [#26](https://github.com/JonasWanke/timetable/issues/26), [#33](https://github.com/JonasWanke/timetable/issues/33), [#36](https://github.com/JonasWanke/timetable/issues/36), [#38](https://github.com/JonasWanke/timetable/issues/38), [#41](https://github.com/JonasWanke/timetable/issues/41), [#46](https://github.com/JonasWanke/timetable/issues/46), [#51](https://github.com/JonasWanke/timetable/issues/51), [#52](https://github.com/JonasWanke/timetable/issues/52), [#56](https://github.com/JonasWanke/timetable/issues/56), [#58](https://github.com/JonasWanke/timetable/issues/58), [#60](https://github.com/JonasWanke/timetable/issues/60), [#61](https://github.com/JonasWanke/timetable/issues/61), and [#64](https://github.com/JonasWanke/timetable/issues/64). Please have a look at the new README as the API was changed significantly.
+
 ## 0.2.9 · 2020-10-26
 
 ### 🐛 Bug Fixes

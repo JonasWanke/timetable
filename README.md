@@ -37,7 +37,7 @@ Some date/time-related parameters also have special suffixes:
 * `date`: A `DateTime` with a time of zero.
 * `month`: A `DateTime` with a time of zero and a day of one.
 * `timeOfDay`: A `Duration` between zero and 24 hours.
-* `dayOfWeek`: An `int` between one and seven ([`DateTime.monday`](https://api.dart.dev/stable/2.12.4/dart-core/DateTime/monday-constant.html) through [`DateTime.sunday`](https://api.dart.dev/stable/2.12.4/dart-core/DateTime/sunday-constant.html)).
+* `dayOfWeek`: An `int` between one and seven ([`DateTime.monday`](https://api.flutter.dev/flutter/dart-core/DateTime/monday-constant.html) through [`DateTime.sunday`](https://api.flutter.dev/flutter/dart-core/DateTime/sunday-constant.html)).
 
 Timetable currently offers localizations for English and German.
 Even if you're just supporting English in your app, you have to add Timetable's localization delegate to your `MaterialApp`/`CupertinoApp`/`WidgetsApp`:
@@ -61,7 +61,7 @@ If you want to be more specific, you can also implement your own class extending
 > **Note:** Most of Timetable's classes accept a type-parameter `E extends Event`.
 > Please set it to your chosen [`Event`]-subclass (e.g. [`BasicEvent`]) to avoid runtime exceptions.
 
-In addition, you also need a [`Widget`] to display your events.
+In addition, you also need a `Widget` to display your events.
 When using [`BasicEvent`], this can simply be [`BasicEventWidget`].
 
 ### 2. Create a [`DateController`] (optional)
@@ -89,7 +89,7 @@ Here are some of the available [`VisibleDateRange`]s:
 ### 3. Create a [`TimeController`] (optional)
 
 Similar to the [`DateController`] above, a [`TimeController`] is also responsible for interacting with Timetable's widgets and managing their state.
-More specifically, it controls the visible time range and zoom factor in a [`MultiDateTimetable`] (or [`RecurringMultiDateTimetable`]).
+More specifically, it controls the visible time range and zoom factor in a [`MultiDateTimetable`] or [`RecurringMultiDateTimetable`].
 You can also programmatically change those and, e.g., animate out to reveal the full day.
 
 ```dart
@@ -109,7 +109,7 @@ final myTimeController = TimeController(
 ### 4. Create your timetable widget
 
 The configuration for Timetable's widgets is provided via inherited widgets.
-You can use a `TimetableConfig<E>` to provide all at once:
+You can use a [`TimetableConfig<E>`] to provide all at once:
 
 ```dart
 TimetableConfig<BasicEvent>(
@@ -140,7 +140,7 @@ And you're done 🎉
 Timetable already supports light and dark themes out of the box, adapting to the ambient `ThemeData`.
 You can, however, customize the styles of almost all components by providing a custom [`TimetableThemeData`].
 
-To apply your own theme, specify it in the `TimetableConfig<E>` (or directly in a `TimetableTheme`):
+To apply your own theme, specify it in the [`TimetableConfig<E>`] (or directly in a [`TimetableTheme`]):
 
 ```dart
 TimetableConfig<BasicEvent>(
@@ -173,7 +173,7 @@ Timetable<BasicEvent>(
 ),
 ```
 
-> `TimetableThemeData` and all component styles provide two constructors each:
+> [`TimetableThemeData`] and all component styles provide two constructors each:
 >
 > * The default constructor takes a `BuildContext` and sometimes a day or month, using information from the ambient theme and locale to generate default values.
 >   You can still override all options via optional, named parameters.
@@ -183,7 +183,7 @@ Timetable<BasicEvent>(
 
 ### Drag and Drop
 
-You can easily make events inside the content area of [`MultiDateTimetable`] (or [`RecurringMultiDateTimetable`]) draggable by wrapping them in a [`PartDayDraggableEvent`]:
+You can easily make events inside the content area of [`MultiDateTimetable`] or [`RecurringMultiDateTimetable`] draggable by wrapping them in a [`PartDayDraggableEvent`]:
 
 ```dart
 PartDayDraggableEvent(
@@ -210,23 +210,27 @@ TODO: `TimetableConfig.timeOverlayProvider` (similar to `eventProvider`)
 
 [example/main.dart]: https://github.com/JonasWanke/timetable/blob/master/example/lib/main.dart
 <!-- Flutter -->
-[`TabController`]: https://api.flutter.dev/flutter/material/TabController-class.html
+[`Duration]: https://api.flutter.dev/flutter/dart-core/Duration-class.html
 [`ScrollController`]: https://api.flutter.dev/flutter/widgets/ScrollController-class.html
 [`State.dispose`]: https://api.flutter.dev/flutter/widgets/State/dispose.html
-[`Widget`]: https://api.flutter.dev/flutter/widgets/Widget-class.html
+[`TabController`]: https://api.flutter.dev/flutter/material/TabController-class.html
 <!-- timetable -->
 [`BasicEvent`]: https://pub.dev/documentation/timetable/latest/timetable/BasicEvent-class.html
 [`BasicEventWidget`]: https://pub.dev/documentation/timetable/latest/timetable/BasicEventWidget-class.html
+[`CompactMonthTimetable`]: https://pub.dev/documentation/timetable/latest/timetable/CompactMonthTimetable-class.html
+[`DateController`]: https://pub.dev/documentation/timetable/latest/timetable/DateController-class.html
+[`DateController.dispose`]: https://pub.dev/documentation/timetable/latest/timetable/DateController/dispose.html
 [`Event`]: https://pub.dev/documentation/timetable/latest/timetable/Event-class.html
-[`EventBuilder`]: https://pub.dev/documentation/timetable/latest/timetable/EventBuilder-class.html
-[`EventProvider`]: https://pub.dev/documentation/timetable/latest/timetable/EventProvider-class.html
-[`EventProvider.list`]: https://pub.dev/documentation/timetable/latest/timetable/EventProvider/EventProvider.list.html
-[`EventProvider.simpleStream`]: https://pub.dev/documentation/timetable/latest/timetable/EventProvider/EventProvider.simpleStream.html
-[`EventProvider.stream`]: https://pub.dev/documentation/timetable/latest/timetable/EventProvider/EventProvider.stream.html
-[`Timetable`]: https://pub.dev/documentation/timetable/latest/timetable/Timetable-class.html
-[`TimetableController`]: https://pub.dev/documentation/timetable/latest/timetable/TimetableController-class.html
-[`TimetableController.dispose`]: https://pub.dev/documentation/timetable/latest/timetable/TimetableController/dispose.html
+[`MultiDateTimetable`]: https://pub.dev/documentation/timetable/latest/timetable/MultiDateTimetable-class.html
+[`PartDayDraggableEvent`]: https://pub.dev/documentation/timetable/latest/timetable/PartDayDraggableEvent-class.html
+[`RecurringMultiDateTimetable`]: https://pub.dev/documentation/timetable/latest/timetable/RecurringMultiDateTimetable-class.html
+[`TimeController`]: https://pub.dev/documentation/timetable/latest/timetable/TimeController-class.html
+[`TimeController.dispose`]: https://pub.dev/documentation/timetable/latest/timetable/TimeController/dispose.html
+[`TimetableConfig<E>`]: https://pub.dev/documentation/timetable/latest/timetable/TimetableConfig-class.html
+[`TimetableTheme`]: https://pub.dev/documentation/timetable/latest/timetable/TimetableTheme-class.html
 [`TimetableThemeData`]: https://pub.dev/documentation/timetable/latest/timetable/TimetableThemeData-class.html
-[`VisibleRange`]: https://pub.dev/documentation/timetable/latest/timetable/VisibleRange-class.html
+[`VisibleDateRange.days`]: https://pub.dev/documentation/timetable/latest/timetable/VisibleDateRange/days.html
+[`VisibleDateRange.week`]: https://pub.dev/documentation/timetable/latest/timetable/VisibleDateRange/week.html
+[`VisibleDateRange.weekAligned`]: https://pub.dev/documentation/timetable/latest/timetable/VisibleDateRange/foo.html
 <!-- supercharged -->
 [<kbd>supercharged</kbd>]: https://pub.dev/packages/supercharged

@@ -79,7 +79,7 @@ And by supplying a [`VisibleDateRange`], you can also customize how many days ar
 
 ```dart
 final myDateController = DateController(
-  // All parameters are optional and displayed wit their default value.
+  // All parameters are optional and displayed with their default value.
   initialDate: DateTimeTimetable.today(),
   visibleRange: VisibleDateRange.week(startOfWeek: DateTime.monday),
 );
@@ -113,7 +113,7 @@ final myTimeController = TimeController(
 
 > Don't forget to [`dispose`][`TimeController.dispose`] your controller, e.g., in [`State.dispose`]!
 
-### 4. Create your timetable widget
+### 4. Create your Timetable widget
 
 The configuration for Timetable's widgets is provided via inherited widgets.
 You can use a [`TimetableConfig<E>`] to provide all at once:
@@ -137,7 +137,7 @@ TimetableConfig<BasicEvent>(
     // startOfWeek: DateTime.monday,
     // See the "Theming" section below for more options.
   ),
-);
+)
 ```
 
 And you're done 🎉
@@ -169,15 +169,7 @@ TimetableConfig<BasicEvent>(
     // See the "Theming" section below for more.
   ),
   // Other properties...
-);
-Timetable<BasicEvent>(
-  controller: /* ... */,
-  theme: TimetableThemeData(
-    primaryColor: Colors.teal,
-    partDayEventMinimumDuration: Period(minutes: 30),
-    // ...and many more!
-  ),
-),
+)
 ```
 
 > [`TimetableThemeData`] and all component styles provide two constructors each:
@@ -206,12 +198,12 @@ PartDayDraggableEvent(
   // By default, the child is displayed with a reduced opacity when it's
   // dragged. But, of course, you can customize this:
   childWhileDragging: OptionalChildWhileDragging(),
-);
+)
 ```
 
 Timetable doesn't automatically show a moving feedback widget at the current pointer position.
 Instead, you can customize this and, e.g., snap to multiples of 15 minutes.
-Have a look at the included example where we implemented exactly that by displaying the drag feedback as a time overlay.
+Have a look at the included example app where we implemented exactly that by displaying the drag feedback as a time overlay.
 
 ### Time Overlays
 
@@ -221,7 +213,7 @@ TODO: `TimetableConfig.timeOverlayProvider` (similar to `eventProvider`)
 
 [example/main.dart]: https://github.com/JonasWanke/timetable/blob/master/example/lib/main.dart
 <!-- Flutter -->
-[`Duration]: https://api.flutter.dev/flutter/dart-core/Duration-class.html
+[`Duration`]: https://api.flutter.dev/flutter/dart-core/Duration-class.html
 [`ScrollController`]: https://api.flutter.dev/flutter/widgets/ScrollController-class.html
 [`State.dispose`]: https://api.flutter.dev/flutter/widgets/State/dispose.html
 [`TabController`]: https://api.flutter.dev/flutter/material/TabController-class.html
@@ -240,6 +232,7 @@ TODO: `TimetableConfig.timeOverlayProvider` (similar to `eventProvider`)
 [`TimetableConfig<E>`]: https://pub.dev/documentation/timetable/latest/timetable/TimetableConfig-class.html
 [`TimetableTheme`]: https://pub.dev/documentation/timetable/latest/timetable/TimetableTheme-class.html
 [`TimetableThemeData`]: https://pub.dev/documentation/timetable/latest/timetable/TimetableThemeData-class.html
+[`VisibleDateRange`]: https://pub.dev/documentation/timetable/latest/timetable/VisibleDateRange-class.html
 [`VisibleDateRange.days`]: https://pub.dev/documentation/timetable/latest/timetable/VisibleDateRange/days.html
 [`VisibleDateRange.week`]: https://pub.dev/documentation/timetable/latest/timetable/VisibleDateRange/week.html
 [`VisibleDateRange.weekAligned`]: https://pub.dev/documentation/timetable/latest/timetable/VisibleDateRange/foo.html

@@ -22,15 +22,30 @@
 
 ## Available Layouts
 
-|                                           [`MultiDateTimetable`]                                            |                          [`RecurringMultiDateTimetable`]<br/>(doesn't scroll horizontally)                           |                                           [`CompactMonthTimetable`]                                            |
-| :---------------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------------: |
-| ![](https://github.com/JonasWanke/timetable/raw/main/doc/screenshot-MultiDateTimetable-light.webp?raw=true) | ![](https://github.com/JonasWanke/timetable/raw/main/doc/screenshot-RecurringMultiDateTimetable-light.webp?raw=true) | ![](https://github.com/JonasWanke/timetable/raw/main/doc/screenshot-CompactMonthTimetable-light.webp?raw=true) |
+### [`MultiDateTimetable`]
 
-Of course, dark mode is supported out of the box:
+A Timetable widget that displays multiple consecutive days.
 
-|                                           [`MultiDateTimetable`]                                           |                                           [`RecurringMultiDateTimetable`]                                           |                                           [`CompactMonthTimetable`]                                           |
-| :--------------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------------: |
-| ![](https://github.com/JonasWanke/timetable/raw/main/doc/screenshot-MultiDateTimetable-dark.webp?raw=true) | ![](https://github.com/JonasWanke/timetable/raw/main/doc/screenshot-RecurringMultiDateTimetable-dark.webp?raw=true) | ![](https://github.com/JonasWanke/timetable/raw/main/doc/screenshot-CompactMonthTimetable-dark.webp?raw=true) |
+|                                                 Light Mode                                                  |                                                 Dark Mode                                                  |
+| :---------------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------------: |
+| ![](https://github.com/JonasWanke/timetable/raw/main/doc/screenshot-MultiDateTimetable-light.webp?raw=true) | ![](https://github.com/JonasWanke/timetable/raw/main/doc/screenshot-MultiDateTimetable-dark.webp?raw=true) |
+
+### [`RecurringMultiDateTimetable`]
+
+A Timetable widget that displays multiple consecutive days without their dates and without a week indicator.
+
+|                                                      Light Mode                                                      |                                                      Dark Mode                                                      |
+| :------------------------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------------------: |
+| ![](https://github.com/JonasWanke/timetable/raw/main/doc/screenshot-RecurringMultiDateTimetable-light.webp?raw=true) | ![](https://github.com/JonasWanke/timetable/raw/main/doc/screenshot-RecurringMultiDateTimetable-dark.webp?raw=true) |
+
+### [`CompactMonthTimetable`]
+
+A Timetable widget that displays [`MonthWidget`]s in a page view.
+
+|                                                   Light Mode                                                   |                                                   Dark Mode                                                   |
+| :------------------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------------: |
+| ![](https://github.com/JonasWanke/timetable/raw/main/doc/screenshot-CompactMonthTimetable-light.webp?raw=true) | ![](https://github.com/JonasWanke/timetable/raw/main/doc/screenshot-CompactMonthTimetable-dark.webp?raw=true) |
+
 
 ## Getting started
 
@@ -207,7 +222,7 @@ Have a look at the included example app where we implemented exactly that by dis
 
 ### Time Overlays
 
-<img src="https://github.com/JonasWanke/timetable/raw/main/doc/screenshot.webp?raw=true" width="400px" alt="Drag and Drop demo" />
+<img src="https://github.com/JonasWanke/timetable/raw/main/doc/screenshot-timeOverlays.webp?raw=true" width="400px" alt="Drag and Drop demo" />
 
 In addition to displaying events, [`MultiDateTimetable`] and [`RecurringMultiDateTimetable`] can display overlays for time ranges on every day.
 In the screenshot above, a light gray overlay is displayed on weekdays before 8 a.m. and after 8 p.m., and over the full day for weekends.
@@ -249,6 +264,7 @@ The example above therefore draws a light gray background before 8 a.m. and af
 [`DateController.dispose`]: https://pub.dev/documentation/timetable/latest/timetable/DateController/dispose.html
 [`DefaultTimeOverlayProvider`]: https://pub.dev/documentation/timetable/latest/timetable/DefaultTimeOverlayProvider-class.html
 [`Event`]: https://pub.dev/documentation/timetable/latest/timetable/Event-class.html
+[`MonthWidget`]: https://pub.dev/documentation/timetable/latest/timetable/MonthWidget-class.html
 [`MultiDateTimetable`]: https://pub.dev/documentation/timetable/latest/timetable/MultiDateTimetable-class.html
 [`PartDayDraggableEvent`]: https://pub.dev/documentation/timetable/latest/timetable/PartDayDraggableEvent-class.html
 [`RecurringMultiDateTimetable`]: https://pub.dev/documentation/timetable/latest/timetable/RecurringMultiDateTimetable-class.html

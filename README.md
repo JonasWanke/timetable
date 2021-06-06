@@ -207,9 +207,33 @@ Have a look at the included example app where we implemented exactly that by dis
 
 ### Time Overlays
 
-TODO: `TimetableConfig.timeOverlayProvider` (similar to `eventProvider`)
 <img src="https://github.com/JonasWanke/timetable/raw/main/doc/screenshot.webp?raw=true" width="400px" alt="Drag and Drop demo" />
 
+In addition to displaying events, [`MultiDateTimetable`] and [`RecurringMultiDateTimetable`] can display overlays for time ranges on every day.
+In the screenshot above, a light gray overlay is displayed on weekdays before 8 a.m. and after 8 p.m., and over the full day for weekends.
+Time overlays are provided similarly to events: Just add a timeOverlayProvider to your [`TimetableConfig<E>`] (or use a [`DefaultTimeOverlayProvider`] directly).
+
+```dart
+TimetableConfig<MyEvent>(
+  timeOverlayProvider: (context, date) => <TimeOverlay>[
+    TimeOverlay(
+      start: 0.hours,
+      end: 8.hours,
+      widget: ColoredBox(color: Colors.black12),
+      position: TimeOverlayPosition.behindEvents, // the default, alternatively `inFrontOfEvents`
+    ),
+    TimeOverlay(
+      start: 20.hours,
+      end: 24.hours,
+      widget: ColoredBox(color: Colors.black12),
+    ),
+  ],
+  // Other properties...
+)
+```
+
+The provider is just a function that receives a date and returns a list of [`TimeOverlay`] for that date.
+The example above therefore draws a light gray background before 8 a.m. and after 8 p.m. on every day.
 
 [example/main.dart]: https://github.com/JonasWanke/timetable/blob/master/example/lib/main.dart
 <!-- Flutter -->
@@ -223,12 +247,14 @@ TODO: `TimetableConfig.timeOverlayProvider` (similar to `eventProvider`)
 [`CompactMonthTimetable`]: https://pub.dev/documentation/timetable/latest/timetable/CompactMonthTimetable-class.html
 [`DateController`]: https://pub.dev/documentation/timetable/latest/timetable/DateController-class.html
 [`DateController.dispose`]: https://pub.dev/documentation/timetable/latest/timetable/DateController/dispose.html
+[`DefaultTimeOverlayProvider`]: https://pub.dev/documentation/timetable/latest/timetable/DefaultTimeOverlayProvider-class.html
 [`Event`]: https://pub.dev/documentation/timetable/latest/timetable/Event-class.html
 [`MultiDateTimetable`]: https://pub.dev/documentation/timetable/latest/timetable/MultiDateTimetable-class.html
 [`PartDayDraggableEvent`]: https://pub.dev/documentation/timetable/latest/timetable/PartDayDraggableEvent-class.html
 [`RecurringMultiDateTimetable`]: https://pub.dev/documentation/timetable/latest/timetable/RecurringMultiDateTimetable-class.html
 [`TimeController`]: https://pub.dev/documentation/timetable/latest/timetable/TimeController-class.html
 [`TimeController.dispose`]: https://pub.dev/documentation/timetable/latest/timetable/TimeController/dispose.html
+[`TimeOverlay`]: https://pub.dev/documentation/timetable/latest/timetable/TimeOverlay-class.html
 [`TimetableConfig<E>`]: https://pub.dev/documentation/timetable/latest/timetable/TimetableConfig-class.html
 [`TimetableTheme`]: https://pub.dev/documentation/timetable/latest/timetable/TimetableTheme-class.html
 [`TimetableThemeData`]: https://pub.dev/documentation/timetable/latest/timetable/TimetableThemeData-class.html

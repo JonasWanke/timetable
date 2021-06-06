@@ -16,10 +16,21 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### 📦 Build & CI
 -->
 
+## 0.2.9 · 2020-10-26
+
+### 🐛 Bug Fixes
+- Compatibility with Flutter v1.23 ([#57](https://github.com/JonasWanke/timetable/pull/57)), closes: [#55](https://github.com/JonasWanke/timetable/issues/55) (for Flutter `^1.23.0-13.0.pre`)
+
+
+## 0.2.8 · 2020-09-18
+
+### 🐛 Bug Fixes
+- Allow full-height `leadingHeaderBuilder`s ([#50](https://github.com/JonasWanke/timetable/pull/50)), closes: [#49](https://github.com/JonasWanke/timetable/issues/49)
+
 ## 0.2.7 · 2020-09-02
 
 ### 🎉 New Features
-- add `TimetableThemeData.minimumHourZoom` & `.maximumHourZoom`, closes: [#40](https://github.com/JonasWanke/timetable/issues/40) & [#45](https://github.com/JonasWanke/timetable/issues/45)
+- add `TimetableThemeData.minimumHourZoom` & `.maximumHourZoom`, closes: [#40](https://github.com/JonasWanke/timetable/issues/40) and [#45](https://github.com/JonasWanke/timetable/issues/45)
 
 ### 🐛 Bug Fixes
 - support null values in `InitialTimeRange.range`

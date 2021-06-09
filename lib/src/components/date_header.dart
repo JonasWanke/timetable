@@ -53,7 +53,7 @@ class DateHeader extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
+              children: [
                 if (style.showWeekdayIndicator) WeekdayIndicator(date),
                 if (style.showWeekdayIndicator && style.showDateIndicator)
                   SizedBox(height: style.indicatorSpacing),

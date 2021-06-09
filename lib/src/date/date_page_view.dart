@@ -93,7 +93,7 @@ class _DatePageViewState extends State<DatePageView> {
         return Viewport(
           axisDirection: AxisDirection.right,
           offset: position,
-          slivers: <Widget>[
+          slivers: [
             ValueListenableBuilder<int>(
               valueListenable: _controller!.map((it) => it.visibleDayCount),
               builder: (context, visibleDayCount, _) => SliverFillViewport(

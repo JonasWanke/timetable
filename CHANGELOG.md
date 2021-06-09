@@ -16,6 +16,15 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### 📦 Build & CI
 -->
 
+## 1.0.0-alpha.1 · 2021-06-09
+
+### 🐛 Bug Fixes
+* repaint `NowIndicator` only when its position changes noticeably, ([`c5291d1`](https://github.com/JonasWanke/timetable/commit/1bbac5c9384036a90d77f123daf955b107ac6602)), closes: [#72](https://github.com/JonasWanke/timetable/issues/72)
+
+### 📦 Build & CI
+* remove unused <kbd>rxdart</kbd> dependency, ([`c5291d1`](https://github.com/JonasWanke/timetable/commit/33d0118a64405a116f1e8a3c7ccb41c804166cc2)), closes: [#71](https://github.com/JonasWanke/timetable/issues/71)
+* upgrade dependencies
+
 ## 1.0.0-alpha.0 · 2021-06-06
 
 ### ⚠ BREAKING CHANGES

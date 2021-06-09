@@ -9,7 +9,6 @@ export 'package:supercharged/supercharged.dart';
 
 export 'utils/listenable.dart';
 export 'utils/size_reporting_widget.dart';
-export 'utils/stream_change_notifier.dart';
 
 extension DoubleTimetable on double {
   double coerceAtLeast(double min) => this < min ? min : this;

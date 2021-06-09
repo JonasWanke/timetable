@@ -8,6 +8,7 @@ environment:
   flutter: '>=2.0.0'
 
 dependencies:
+  async: ^2.6.0
   black_hole_flutter: ^0.3.0
   collection: ^1.15.0
   dart_date: ^1.1.0

@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:async/async.dart';
 import 'package:black_hole_flutter/black_hole_flutter.dart';
 import 'package:flutter/material.dart';
 
@@ -20,7 +21,7 @@ import '../utils.dart';
 /// * [NowIndicatorStyle], which defines visual properties for this widget.
 /// * [TimetableTheme] (and [TimetableConfig]), which provide styles to
 ///   descendant Timetable widgets.
-class NowIndicator extends StatefulWidget {
+class NowIndicator extends StatelessWidget {
   const NowIndicator({
     Key? key,
     this.style,
@@ -31,30 +32,14 @@ class NowIndicator extends StatefulWidget {
   final Widget? child;
 
   @override
-  _NowIndicatorState createState() => _NowIndicatorState();
-}
-
-class _NowIndicatorState extends State<NowIndicator> {
-  // TODO(JonasWanke): Vary this depending on the widget size.
-  final _timeListenable =
-      StreamChangeNotifier(Stream<void>.periodic(1.seconds * (1 / 60)));
-
-  @override
-  void dispose() {
-    _timeListenable.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return CustomPaint(
       foregroundPainter: _NowIndicatorPainter(
         controller: DefaultDateController.of(context)!,
-        style: widget.style ??
-            TimetableTheme.orDefaultOf(context).nowIndicatorStyle,
-        repaint: _timeListenable,
+        style: style ?? TimetableTheme.orDefaultOf(context).nowIndicatorStyle,
+        devicePixelRatio: context.mediaQuery.devicePixelRatio,
       ),
-      child: widget.child,
+      child: child,
     );
   }
 }
@@ -300,25 +285,43 @@ class TriangleNowIndicatorShape extends NowIndicatorShape {
 // Painter
 
 class _NowIndicatorPainter extends CustomPainter {
-  _NowIndicatorPainter({
+  factory _NowIndicatorPainter({
+    required DateController controller,
+    required NowIndicatorStyle style,
+    required double devicePixelRatio,
+  }) =>
+      _NowIndicatorPainter._(
+        controller: controller,
+        style: style,
+        devicePixelRatio: devicePixelRatio,
+        repaintNotifier: ValueNotifier<DateTime>(DateTime.now()),
+      );
+  _NowIndicatorPainter._({
     required this.controller,
     required this.style,
-    required Listenable repaint,
+    required this.devicePixelRatio,
+    required ValueNotifier<DateTime> repaintNotifier,
   })  : _paint = Paint()
           ..color = style.lineColor
           ..strokeWidth = style.lineWidth,
-        super(repaint: Listenable.merge([controller, repaint]));
+        _repaintNotifier = repaintNotifier,
+        super(repaint: Listenable.merge([controller, repaintNotifier]));
 
   final DateController controller;
   final Paint _paint;
   final NowIndicatorStyle style;
+  final double devicePixelRatio;
 
   @override
   void paint(Canvas canvas, Size size) {
+    _repaint?.cancel();
+    _repaint = null;
+
     final pageValue = controller.value;
     final dateWidth = size.width / pageValue.visibleDayCount;
     final now = DateTime.now();
-    final temporalXOffset = now.toUtc().atStartOfDay.page - pageValue.page;
+    final temporalXOffset =
+        now.copyWith(isUtc: true).atStartOfDay.page - pageValue.page;
     final left = temporalXOffset * dateWidth;
     final right = left + dateWidth;
 
@@ -331,9 +334,42 @@ class _NowIndicatorPainter extends CustomPainter {
     final y = now.timeOfDay / 1.days * size.height;
     canvas.drawLine(Offset(actualLeft, y), Offset(actualRight, y), _paint);
     style.shape.paint(canvas, size, left, right, y);
+
+    // Schedule the repaint so that our position has moved at most half a device
+    // pixel.
+    final maxDistance = 0.5 / devicePixelRatio;
+    final delay = 1.days * (maxDistance / size.height);
+    _repaint = CancelableOperation.fromFuture(
+      Future<void>.delayed(delay).then((_) {
+        // [ChangeNotifier.notifyListeners] is protected, so we use a
+        // [ValueNotifier] and always set a different time.
+        _repaintNotifier.value = DateTime.now();
+      }),
+    );
+  }
+
+  int _activeListenerCount = 0;
+  final ValueNotifier<DateTime> _repaintNotifier;
+  CancelableOperation<void>? _repaint;
+
+  @override
+  void addListener(VoidCallback listener) {
+    super.addListener(listener);
+    _activeListenerCount++;
+  }
+
+  @override
+  void removeListener(VoidCallback listener) {
+    _activeListenerCount--;
+    if (_activeListenerCount == 0) {
+      _repaint?.cancel();
+      _repaint = null;
+    }
+    super.removeListener(listener);
   }
 
   @override
   bool shouldRepaint(_NowIndicatorPainter oldDelegate) =>
-      style != oldDelegate.style;
+      style != oldDelegate.style ||
+      devicePixelRatio != oldDelegate.devicePixelRatio;
 }

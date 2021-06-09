@@ -6,7 +6,6 @@ import 'package:flutter/rendering.dart';
 import '../utils.dart';
 import 'controller.dart';
 import 'scroll_physics.dart';
-import 'visible_date_range.dart';
 
 /// "DateTimes can represent time values that are at a distance of at most
 /// 100,000,000 days from epoch […]".

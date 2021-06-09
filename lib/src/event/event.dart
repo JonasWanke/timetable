@@ -28,7 +28,8 @@ abstract class Event with Diagnosticable {
 
   @override
   bool operator ==(dynamic other) {
-    return runtimeType == other.runtimeType &&
+    return other is Event &&
+        runtimeType == other.runtimeType &&
         start == other.start &&
         end == other.end;
   }

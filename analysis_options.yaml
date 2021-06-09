@@ -35,6 +35,7 @@ linter:
     one_member_abstracts: true
     overridden_fields: true
     parameter_assignments: false
+    prefer_asserts_with_message: false
     prefer_const_constructors: false
     prefer_constructors_over_static_methods: true
     prefer_function_declarations_over_variables: true

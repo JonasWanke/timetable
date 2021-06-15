@@ -9,6 +9,9 @@ import 'week.dart';
 ///
 /// * `de` –German
 /// * `en` – English
+/// * `ja` – Japanese
+/// * `zh_CN` – Chinese(Simplified)
+/// * `zh_TW` – Chinese(Traditional)
 ///
 /// By default, this delegate also configures [Intl] whenever Flutter's locale
 /// changes. This behavior can be disabled via [setIntlLocale].
@@ -41,6 +44,13 @@ class TimetableLocalizationsDelegate
         return const TimetableLocalizationDe();
       case 'en':
         return const TimetableLocalizationEn();
+      case 'ja':
+        return const TimetableLocalizationJa();
+      case 'zh':
+        if (locale.countryCode?.toLowerCase() == 'tw') {
+          return const TimetableLocalizationZhTw();
+        }
+        return const TimetableLocalizationZhCn();
       default:
         return null;
     }
@@ -137,6 +147,60 @@ class TimetableLocalizationEn extends TimetableLocalizations {
       weekOfYear(week),
       'Week ${week.weekOfYear}',
       'W ${week.weekOfYear}',
+      '${week.weekOfYear}',
+    ];
+  }
+
+  @override
+  String weekOfYear(Week week) =>
+      'Week ${week.weekOfYear}, ${week.weekBasedYear}';
+}
+
+class TimetableLocalizationJa extends TimetableLocalizations {
+  const TimetableLocalizationJa();
+
+  @override
+  List<String> weekLabels(Week week) {
+    return [
+      weekOfYear(week),
+      '第${week.weekOfYear}週',
+      '${week.weekOfYear}週',
+      '${week.weekOfYear}',
+    ];
+  }
+
+  @override
+  String weekOfYear(Week week) =>
+      'Week ${week.weekOfYear}, ${week.weekBasedYear}';
+}
+
+class TimetableLocalizationZhCn extends TimetableLocalizations {
+  const TimetableLocalizationZhCn();
+
+  @override
+  List<String> weekLabels(Week week) {
+    return [
+      weekOfYear(week),
+      '第${week.weekOfYear}周',
+      '${week.weekOfYear}周',
+      '${week.weekOfYear}',
+    ];
+  }
+
+  @override
+  String weekOfYear(Week week) =>
+      'Week ${week.weekOfYear}, ${week.weekBasedYear}';
+}
+
+class TimetableLocalizationZhTw extends TimetableLocalizations {
+  const TimetableLocalizationZhTw();
+
+  @override
+  List<String> weekLabels(Week week) {
+    return [
+      weekOfYear(week),
+      '第${week.weekOfYear}週',
+      '${week.weekOfYear}週',
       '${week.weekOfYear}',
     ];
   }

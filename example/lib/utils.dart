@@ -7,7 +7,13 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:timetable/timetable.dart';
 
 final _mediaOverrideState = ValueNotifier(MediaOverrideState());
-final _supportedLocales = [const Locale('de'), const Locale('en')];
+final _supportedLocales = [
+  const Locale('de'),
+  const Locale('en'),
+  const Locale('ja'),
+  const Locale('zh', 'CN'),
+  const Locale('zh', 'TW'),
+];
 
 void initDebugOverlay() {
   // https://pub.dev/packages/debug_overlay

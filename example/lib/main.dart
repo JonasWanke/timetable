@@ -114,6 +114,11 @@ class _TimetableExampleState extends State<TimetableExample>
         //   lineColor: Colors.green,
         //   shape: TriangleNowIndicatorShape(color: Colors.green),
         // ),
+        // timeIndicatorStyleProvider: (time) => TimeIndicatorStyle(
+        //   context,
+        //   time,
+        //   use24hour: true,
+        // ),
       ),
     );
   }

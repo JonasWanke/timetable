@@ -144,6 +144,7 @@ class _TimetableExampleState extends State<TimetableExample>
         setState(() => _draggedEvents.removeWhere((it) => it.id == event.id));
         _showSnackBar('Dragged event to $dateTime.');
       },
+      onDragCanceled: print,
       child: BasicEventWidget(
         event,
         onTap: () => _showSnackBar('Part-day event $event tapped'),

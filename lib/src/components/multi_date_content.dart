@@ -114,6 +114,7 @@ class PartDayDraggableEvent extends StatefulWidget {
     this.onDragStart,
     this.onDragUpdate,
     this.onDragEnd,
+    this.onDragCanceled,
     required this.child,
     Widget? childWhileDragging,
   }) : childWhileDragging =
@@ -128,6 +129,11 @@ class PartDayDraggableEvent extends StatefulWidget {
   /// their finger at all.
   final void Function(DateTime?)? onDragEnd;
 
+  /// Called when a drag gesture is canceled.
+  ///
+  /// The [bool] indicates whether the user moved their finger or not.
+  final void Function(bool isMoved)? onDragCanceled;
+
   final Widget child;
   final Widget childWhileDragging;
 
@@ -137,6 +143,7 @@ class PartDayDraggableEvent extends StatefulWidget {
 
 class _PartDayDraggableEventState extends State<PartDayDraggableEvent> {
   DateTime? _lastDragDateTime;
+  var _isMoved = false;
 
   @override
   Widget build(BuildContext context) {
@@ -149,13 +156,17 @@ class _PartDayDraggableEventState extends State<PartDayDraggableEvent> {
               _lastDragDateTime =
                   _DragInfos.resolveOffset(context, details.globalPosition);
               widget.onDragUpdate!(_lastDragDateTime!);
+              _isMoved = true;
             }
           : null,
-      onDragEnd: widget.onDragEnd != null && _lastDragDateTime != null
+      onDragEnd: widget.onDragEnd != null
           ? (details) {
-              widget.onDragEnd!(_lastDragDateTime!);
+              widget.onDragEnd!(_lastDragDateTime);
               _lastDragDateTime = null;
             }
+          : null,
+      onDraggableCanceled: widget.onDragCanceled != null
+          ? (_, __) => widget.onDragCanceled!(_isMoved)
           : null,
       child: widget.child,
       childWhenDragging: widget.childWhileDragging,

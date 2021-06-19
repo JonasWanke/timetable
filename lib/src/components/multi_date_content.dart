@@ -151,21 +151,21 @@ class _PartDayDraggableEventState extends State<PartDayDraggableEvent> {
       data: _DragData(),
       maxSimultaneousDrags: 1,
       onDragStarted: widget.onDragStart,
-      onDragUpdate: widget.onDragUpdate != null
-          ? (details) {
-              _lastDragDateTime =
-                  _DragInfos.resolveOffset(context, details.globalPosition);
-              widget.onDragUpdate!(_lastDragDateTime!);
-              _isMoved = true;
-            }
-          : (_) => _isMoved = true,
-      onDragEnd: widget.onDragEnd != null
-          ? (details) {
-              widget.onDragEnd!(_lastDragDateTime);
-              _lastDragDateTime = null;
-              _isMoved = false;
-            }
-          : (_) => _isMoved = false,
+      onDragUpdate: (details) {
+        if (widget.onDragUpdate != null) {
+          _lastDragDateTime =
+              _DragInfos.resolveOffset(context, details.globalPosition);
+          widget.onDragUpdate!(_lastDragDateTime!);
+        }
+        _isMoved = true;
+      },
+      onDragEnd: (details) {
+        if (widget.onDragEnd != null) {
+          widget.onDragEnd!(_lastDragDateTime);
+          _lastDragDateTime = null;
+        }
+        _isMoved = false;
+      },
       onDraggableCanceled: widget.onDragCanceled != null
           ? (_, __) => widget.onDragCanceled!(_isMoved)
           : null,

@@ -68,6 +68,7 @@ class TimeIndicatorStyle {
     Duration time, {
     TextStyle? textStyle,
     String? label,
+    bool alwaysUse24HourFormat = true,
   }) {
     assert(time.isValidTimetableTimeOfDay);
 
@@ -87,7 +88,9 @@ class TimeIndicatorStyle {
       label: label ??
           () {
             context.dependOnTimetableLocalizations();
-            return TimeIndicator.formatHour(time);
+            return alwaysUse24HourFormat
+                ? TimeIndicator.formatHour24(time)
+                : TimeIndicator.formatHour(time);
           }(),
     );
   }

@@ -114,6 +114,11 @@ class _TimetableExampleState extends State<TimetableExample>
         //   lineColor: Colors.green,
         //   shape: TriangleNowIndicatorShape(color: Colors.green),
         // ),
+        // timeIndicatorStyleProvider: (time) => TimeIndicatorStyle(
+        //   context,
+        //   time,
+        //   alwaysUse24HourFormat: false,
+        // ),
       ),
     );
   }
@@ -139,6 +144,7 @@ class _TimetableExampleState extends State<TimetableExample>
         setState(() => _draggedEvents.removeWhere((it) => it.id == event.id));
         _showSnackBar('Dragged event to $dateTime.');
       },
+      onDragCanceled: (isMoved) => _showSnackBar('Your finger moved: $isMoved'),
       child: BasicEventWidget(
         event,
         onTap: () => _showSnackBar('Part-day event $event tapped'),

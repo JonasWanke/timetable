@@ -163,8 +163,9 @@ class _PartDayDraggableEventState extends State<PartDayDraggableEvent> {
           ? (details) {
               widget.onDragEnd!(_lastDragDateTime);
               _lastDragDateTime = null;
+              _isMoved = false;
             }
-          : null,
+          : (_) => _isMoved = false,
       onDraggableCanceled: widget.onDragCanceled != null
           ? (_, __) => widget.onDragCanceled!(_isMoved)
           : null,

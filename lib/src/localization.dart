@@ -10,6 +10,7 @@ import 'week.dart';
 /// * `de` –German
 /// * `en` – English
 /// * `ja` – Japanese
+/// * `es` – Spanish
 /// * `zh_CN` – Chinese(Simplified)
 /// * `zh_TW` – Chinese(Traditional)
 ///
@@ -46,6 +47,8 @@ class TimetableLocalizationsDelegate
         return const TimetableLocalizationEn();
       case 'ja':
         return const TimetableLocalizationJa();
+      case 'es':
+        return const TimetableLocalizationEn();
       case 'zh':
         if (locale.countryCode?.toLowerCase() == 'tw') {
           return const TimetableLocalizationZhTw();
@@ -172,6 +175,24 @@ class TimetableLocalizationJa extends TimetableLocalizations {
   @override
   String weekOfYear(Week week) =>
       'Week ${week.weekOfYear}, ${week.weekBasedYear}';
+}
+
+class TimetableLocalizationEs extends TimetableLocalizations {
+  const TimetableLocalizationEs();
+
+  @override
+  List<String> weekLabels(Week week) {
+    return [
+      weekOfYear(week),
+      'Semana ${week.weekOfYear}',
+      'S ${week.weekOfYear}',
+      '${week.weekOfYear}',
+    ];
+  }
+
+  @override
+  String weekOfYear(Week week) =>
+      'Semana ${week.weekOfYear}, ${week.weekBasedYear}';
 }
 
 class TimetableLocalizationZhCn extends TimetableLocalizations {

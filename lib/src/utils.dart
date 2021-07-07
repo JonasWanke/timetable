@@ -83,7 +83,7 @@ extension DateTimeTimetable on DateTime {
   bool get isAtEndOfDay => this == atEndOfDay;
 
   static DateTime today() {
-    final date = DateTime.now().toUtc().atStartOfDay;
+    final date = DateTime.now().copyWith(isUtc: true).atStartOfDay;
     assert(date.isValidTimetableDate);
     return date;
   }

@@ -12,6 +12,7 @@ import 'week.dart';
 /// * `ja` – Japanese
 /// * `zh_CN` – Chinese(Simplified)
 /// * `zh_TW` – Chinese(Traditional)
+/// * `it` – Italian
 ///
 /// By default, this delegate also configures [Intl] whenever Flutter's locale
 /// changes. This behavior can be disabled via [setIntlLocale].
@@ -51,6 +52,8 @@ class TimetableLocalizationsDelegate
           return const TimetableLocalizationZhTw();
         }
         return const TimetableLocalizationZhCn();
+      case 'it':
+        return const TimetableLocalizationIt();
       default:
         return null;
     }
@@ -208,4 +211,22 @@ class TimetableLocalizationZhTw extends TimetableLocalizations {
   @override
   String weekOfYear(Week week) =>
       'Week ${week.weekOfYear}, ${week.weekBasedYear}';
+}
+
+class TimetableLocalizationIt extends TimetableLocalizations {
+  const TimetableLocalizationIt();
+
+  @override
+  List<String> weekLabels(Week week) {
+    return [
+      weekOfYear(week),
+      'Settimana ${week.weekOfYear}',
+      'S ${week.weekOfYear}',
+      '${week.weekOfYear}',
+    ];
+  }
+
+  @override
+  String weekOfYear(Week week) =>
+      'Settimana ${week.weekOfYear}, ${week.weekBasedYear}';
 }

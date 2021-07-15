@@ -10,6 +10,7 @@ final _mediaOverrideState = ValueNotifier(MediaOverrideState());
 final _supportedLocales = [
   const Locale('de'),
   const Locale('en'),
+  const Locale('es'),
   const Locale('ja'),
   const Locale('zh', 'CN'),
   const Locale('zh', 'TW'),

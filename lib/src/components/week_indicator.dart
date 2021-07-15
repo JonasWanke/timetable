@@ -156,7 +156,7 @@ class WeekIndicatorStyle {
             color: colorScheme.brightness.contrastColor.withOpacity(0.05),
             borderRadius: BorderRadius.circular(4),
           ),
-      padding: padding ?? EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+      padding: padding ?? EdgeInsets.symmetric(horizontal: 8, vertical: 2),
       textStyle: textStyle ??
           context.textTheme.bodyText2!
               .copyWith(color: colorScheme.background.mediumEmphasisOnColor),

@@ -82,8 +82,14 @@ extension DateTimeTimetable on DateTime {
       copyWith(hour: 23, minute: 59, second: 59, millisecond: 999);
   bool get isAtEndOfDay => this == atEndOfDay;
 
+  static DateTime now() {
+    final date = DateTime.now().copyWith(isUtc: true);
+    assert(date.isValidTimetableDateTime);
+    return date;
+  }
+
   static DateTime today() {
-    final date = DateTime.now().copyWith(isUtc: true).atStartOfDay;
+    final date = DateTimeTimetable.now().atStartOfDay;
     assert(date.isValidTimetableDate);
     return date;
   }

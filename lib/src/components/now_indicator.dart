@@ -294,7 +294,7 @@ class _NowIndicatorPainter extends CustomPainter {
         controller: controller,
         style: style,
         devicePixelRatio: devicePixelRatio,
-        repaintNotifier: ValueNotifier<DateTime>(DateTime.now()),
+        repaintNotifier: ValueNotifier<DateTime>(DateTimeTimetable.now()),
       );
   _NowIndicatorPainter._({
     required this.controller,
@@ -319,7 +319,7 @@ class _NowIndicatorPainter extends CustomPainter {
 
     final pageValue = controller.value;
     final dateWidth = size.width / pageValue.visibleDayCount;
-    final now = DateTime.now();
+    final now = DateTimeTimetable.now();
     final temporalXOffset =
         now.copyWith(isUtc: true).atStartOfDay.page - pageValue.page;
     final left = temporalXOffset * dateWidth;
@@ -343,7 +343,7 @@ class _NowIndicatorPainter extends CustomPainter {
       Future<void>.delayed(delay).then((_) {
         // [ChangeNotifier.notifyListeners] is protected, so we use a
         // [ValueNotifier] and always set a different time.
-        _repaintNotifier.value = DateTime.now();
+        _repaintNotifier.value = DateTimeTimetable.now();
       }),
     );
   }

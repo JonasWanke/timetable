@@ -16,6 +16,23 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### 📦 Build & CI
 -->
 
+## 1.0.0-alpha.2 · 2021-07-15
+
+### ⚠ BREAKING CHANGES
+* `TimeIndicators`' factories no longer accept an `AlignmentGeometry`, but only an `Alignment` ([`8d8985d`](https://github.com/JonasWanke/timetable/commit/8d8985dba4571215cb0b30221b7e3c289eaecd0c))
+
+### 🎉 New Features
+* add Japanese and Chinese localizations ([#82](https://github.com/JonasWanke/timetable/pull/82)). Thanks to [@MasterHiei](https://github.com/MasterHiei)!
+* add Italian localization ([#88](https://github.com/JonasWanke/timetable/pull/88)). Thanks to [@mircoboschi](https://github.com/mircoboschi)!
+* add `alwaysUse24HourFormat` to `TimeIndicatorStyle`'s constructor ([#82](https://github.com/JonasWanke/timetable/pull/82)). Thanks to [@MasterHiei](https://github.com/MasterHiei)!
+* add `partDayDraggableEvent.onDragCanceled` ([#82](https://github.com/JonasWanke/timetable/pull/82)). Thanks to [@MasterHiei](https://github.com/MasterHiei)!
+* `TimeIndicators`' factories now accept additional parameters for the first and last hour / half hour and whether to align the outer labels inside ([`8d8985d`](https://github.com/JonasWanke/timetable/commit/8d8985dba4571215cb0b30221b7e3c289eaecd0c)), closes: [#77](https://github.com/JonasWanke/timetable/issues/77)
+* `MultiDateTimetable`'s constructor now allows you to override only the `contentLeading` widget ([`8e65964`](https://github.com/JonasWanke/timetable/commit/8e6596480b4ffa194c920c8a2652230d3012e680))
+
+### 🐛 Bug Fixes
+* use the correct date for `DateTimeTimetable.today()` ([#87](https://github.com/JonasWanke/timetable/pull/87)), closes: [#81](https://github.com/JonasWanke/timetable/issues/81). Thanks to [@paolovalerdi](https://github.com/paolovalerdi)!
+* avoid `double` precision errors ([`998926f`](https://github.com/JonasWanke/timetable/commit/998926f27b31039b66c4bac77ed17e9659fa1b9e)), closes: [#79](https://github.com/JonasWanke/timetable/issues/79), [#86](https://github.com/JonasWanke/timetable/issues/86)
+
 ## 1.0.0-alpha.1 · 2021-06-09
 
 ### 🐛 Bug Fixes

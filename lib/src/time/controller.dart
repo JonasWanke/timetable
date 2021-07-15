@@ -4,11 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
 import '../config.dart';
+import '../layouts/multi_date.dart';
+import '../layouts/recurring_multi_date.dart';
 import '../utils.dart';
 import 'time_range.dart';
 
-/// Controls the visible time range and zoom factor in a [`MultiDateTimetable`]
-/// (or [`RecurringMultiDateTimetable`]).
+/// Controls the visible time range and zoom factor in a [MultiDateTimetable]
+/// (or [RecurringMultiDateTimetable]).
 ///
 /// You can programmatically change those via [animateToShowFullDay],
 /// [animateTo], [jumpToShowFullDay], or by directly setting the [value].

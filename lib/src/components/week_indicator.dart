@@ -99,7 +99,13 @@ class WeekIndicator extends StatelessWidget {
 
     final narrowestText =
         measuredLabels.minBy((a, b) => a.item2.compareTo(b.item2))!.item1;
-    Widget build(String text) => Text(text, style: textStyle, maxLines: 1);
+    Widget build(String text) => Text(
+          text,
+          style: textStyle,
+          maxLines: 1,
+          overflow: TextOverflow.visible,
+          softWrap: false,
+        );
 
     if (alwaysUseNarrowestVariant) return build(narrowestText);
 

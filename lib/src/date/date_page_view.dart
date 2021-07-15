@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
@@ -10,6 +11,7 @@ import 'scroll_physics.dart';
 /// "DateTimes can represent time values that are at a distance of at most
 /// 100,000,000 days from epoch […]".
 const _minPage = -100000000;
+const _precisionErrorTolerance = 1e-5;
 
 /// A page view for displaying dates that supports shrink-wrapping in the cross
 /// axis.
@@ -290,8 +292,15 @@ class MultiDateScrollPosition extends ScrollPositionWithSingleContext {
       _minPage + pixelDeltaToPageDelta(pixels);
   double pageToPixels(double page) => pageDeltaToPixelDelta(page - _minPage);
 
-  double pixelDeltaToPageDelta(double pixels) =>
-      pixels * owner.visibleDayCount / viewportDimension;
+  double pixelDeltaToPageDelta(double pixels) {
+    final result = pixels * owner.visibleDayCount / viewportDimension;
+    final closestWholeNumber = result.roundToDouble();
+    if ((result - closestWholeNumber).abs() <= _precisionErrorTolerance) {
+      return closestWholeNumber;
+    }
+    return result;
+  }
+
   double pageDeltaToPixelDelta(double page) =>
       page / owner.visibleDayCount * viewportDimension;
 

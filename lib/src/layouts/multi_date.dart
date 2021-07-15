@@ -43,8 +43,14 @@ class MultiDateTimetable<E extends Event> extends StatefulWidget {
     Key? key,
     MultiDateTimetableHeaderBuilder? headerBuilder,
     MultiDateTimetableContentBuilder? contentBuilder,
+    Widget? contentLeading,
   })  : headerBuilder = headerBuilder ?? _defaultHeaderBuilder<E>(),
-        contentBuilder = contentBuilder ?? _defaultContentBuilder<E>(),
+        assert(
+          contentBuilder == null || contentLeading == null,
+          "`contentLeading` can't be used when `contentBuilder` is specified.",
+        ),
+        contentBuilder =
+            contentBuilder ?? _defaultContentBuilder<E>(contentLeading),
         super(key: key);
 
   final MultiDateTimetableHeaderBuilder headerBuilder;
@@ -60,11 +66,11 @@ class MultiDateTimetable<E extends Event> extends StatefulWidget {
 
   final MultiDateTimetableContentBuilder contentBuilder;
   static MultiDateTimetableContentBuilder
-      _defaultContentBuilder<E extends Event>() {
+      _defaultContentBuilder<E extends Event>(Widget? contentLeading) {
     return (context, onLeadingWidthChanged) => MultiDateTimetableContent<E>(
           leading: SizeReportingWidget(
             onSizeChanged: (size) => onLeadingWidthChanged(size.width),
-            child: _defaultContentLeading,
+            child: contentLeading ?? _defaultContentLeading,
           ),
         );
   }
@@ -167,9 +173,9 @@ class MultiDateTimetableContent<E extends Event> extends StatelessWidget {
 //   behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
 // )
 
-Widget _defaultContentLeading = Padding(
-  padding: EdgeInsets.symmetric(horizontal: 8),
-  child: TimeZoom(
+Widget _defaultContentLeading = TimeZoom(
+  child: Padding(
+    padding: EdgeInsets.symmetric(horizontal: 8),
     child: Builder(
       builder: (context) => TimeIndicators.hours(
         // `TimeIndicators.hours` overwrites the style provider's labels by

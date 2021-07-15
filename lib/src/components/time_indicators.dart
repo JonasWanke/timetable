@@ -24,44 +24,80 @@ class TimeIndicators extends StatelessWidget {
   factory TimeIndicators.hours({
     Key? key,
     TimeBasedStyleProvider<TimeIndicatorStyle>? styleProvider,
-    AlignmentGeometry alignment = Alignment.centerRight,
-  }) =>
-      TimeIndicators(
-        key: key,
-        children: [
-          for (final hour in 1.until(Duration.hoursPerDay))
-            _buildChild(
-              hour.hours,
-              alignment,
-              styleProvider,
-              TimeIndicator.formatHour,
-            ),
-        ],
-      );
+    Alignment alignment = Alignment.centerRight,
+    int firstHour = 1,
+    int lastHour = Duration.hoursPerDay - 1,
+    bool alignFirstAndLastLabelsInside = false,
+  }) {
+    return TimeIndicators._build(
+      key: key,
+      styleProvider: styleProvider,
+      alignment: alignment,
+      firstIndex: firstHour,
+      lastIndex: lastHour,
+      alignFirstAndLastLabelsInside: alignFirstAndLastLabelsInside,
+      indexToTime: (it) => it.hours,
+      formatter: TimeIndicator.formatHour,
+    );
+  }
 
   factory TimeIndicators.halfHours({
     Key? key,
     TimeBasedStyleProvider<TimeIndicatorStyle>? styleProvider,
-    AlignmentGeometry alignment = Alignment.centerRight,
-  }) =>
-      TimeIndicators(
-        key: key,
-        children: [
-          for (final halfHour in 1.until(Duration.hoursPerDay * 2))
-            _buildChild(
-              30.minutes * halfHour,
-              alignment,
-              styleProvider,
-              TimeIndicator.formatHourMinute,
-            ),
-        ],
-      );
+    Alignment alignment = Alignment.centerRight,
+    int firstHalfHour = 1,
+    int lastHalfHour = Duration.hoursPerDay * 2 - 1,
+    bool alignFirstAndLastLabelsInside = false,
+  }) {
+    return TimeIndicators._build(
+      key: key,
+      styleProvider: styleProvider,
+      alignment: alignment,
+      firstIndex: firstHalfHour,
+      lastIndex: lastHalfHour,
+      alignFirstAndLastLabelsInside: alignFirstAndLastLabelsInside,
+      indexToTime: (it) => 30.minutes * it,
+      formatter: TimeIndicator.formatHourMinute,
+    );
+  }
+
+  factory TimeIndicators._build({
+    required Key? key,
+    required TimeBasedStyleProvider<TimeIndicatorStyle>? styleProvider,
+    required Alignment alignment,
+    required int firstIndex,
+    required int lastIndex,
+    required bool alignFirstAndLastLabelsInside,
+    required Duration Function(int) indexToTime,
+    required String Function(Duration time) formatter,
+  }) {
+    Alignment getAlignmentFor(int index) {
+      if (alignFirstAndLastLabelsInside) {
+        if (index == firstIndex) return Alignment(alignment.x, 1);
+        if (index == lastIndex) return Alignment(alignment.x, -1);
+      }
+      return alignment;
+    }
+
+    return TimeIndicators(
+      key: key,
+      children: [
+        for (final i in firstIndex.rangeTo(lastIndex))
+          _buildChild(
+            indexToTime(i),
+            getAlignmentFor(i),
+            styleProvider,
+            formatter,
+          ),
+      ],
+    );
+  }
 
   static TimeIndicatorsChild _buildChild(
     Duration time,
-    AlignmentGeometry alignment,
+    Alignment alignment,
     TimeBasedStyleProvider<TimeIndicatorStyle>? styleProvider,
-    String Function(Duration time) defaultFormatter,
+    String Function(Duration time) formatter,
   ) {
     assert(time.isValidTimetableTimeOfDay);
 
@@ -75,7 +111,7 @@ class TimeIndicators extends StatelessWidget {
                 time: time,
                 style: TimetableTheme.orDefaultOf(context)
                     .timeIndicatorStyleProvider(time)
-                    .copyWith(label: defaultFormatter(time)),
+                    .copyWith(label: formatter(time)),
               ),
             ),
     );

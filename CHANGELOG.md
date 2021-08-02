@@ -7,18 +7,31 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 <!-- Template:
 ## NEW · 2021-xx-xx
-### ⚠ BREAKING CHANGES
+### ⚠️ BREAKING CHANGES
 ### 🎉 New Features
 ### ⚡ Changes
 ### 🐛 Bug Fixes
 ### 📜 Documentation updates
-### 🏗 Refactoring
+### 🏗️ Refactoring
 ### 📦 Build & CI
 -->
 
+## 1.0.0-alpha.3 · 2021-08-02
+
+### 🎉 New Features
+* add Spanish localization ([#84](https://github.com/JonasWanke/timetable/pull/84)). Thanks to [@paolovalerdi](https://github.com/paolovalerdi)!
+* add missing exports for `DateContent`, `TimeOverlays`, `EventBuilder<E>`, and `DefaultEventBuilder<E>` ([`3877220`](https://github.com/JonasWanke/timetable/commit/3877220782bc0534a3186916502be3c4380c5dbe))
+
+### 🐛 Bug Fixes
+* support scrolling when inside a `ScrollView` ([`b4ffeee`](https://github.com/JonasWanke/timetable/commit/b4ffeeeafa854578b825c80b93ba0a546bda807b)), closes: [#80](https://github.com/JonasWanke/timetable/issues/80)
+* avoid unsafe calls to `DefaultTimeController.of(…)` in `TimeZoom` ([`7bd6447`](https://github.com/JonasWanke/timetable/commit/7bd64472769829e99da3a9539bc21dd3023c4671)), closes: [#90](https://github.com/JonasWanke/timetable/issues/90). Thanks to [@paolovalerdi](https://github.com/paolovalerdi) for investigating the cause!
+
+### 📜 Documentation updates
+* document how to support a new locale ([`d2f369c`](https://github.com/JonasWanke/timetable/commit/d2f369cfba913023c8ecee6d21d462811f15a739))
+
 ## 1.0.0-alpha.2 · 2021-07-15
 
-### ⚠ BREAKING CHANGES
+### ⚠️ BREAKING CHANGES
 * `TimeIndicators`' factories no longer accept an `AlignmentGeometry`, but only an `Alignment` ([`8d8985d`](https://github.com/JonasWanke/timetable/commit/8d8985dba4571215cb0b30221b7e3c289eaecd0c))
 
 ### 🎉 New Features
@@ -44,7 +57,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## 1.0.0-alpha.0 · 2021-06-06
 
-### ⚠ BREAKING CHANGES
+### ⚠️ BREAKING CHANGES
 - Almost a rewrite of this package to create a modular architecture with support for different layouts ([#69](https://github.com/JonasWanke/timetable/pull/69)), closing [#17](https://github.com/JonasWanke/timetable/issues/17), [#21](https://github.com/JonasWanke/timetable/issues/21), [#23](https://github.com/JonasWanke/timetable/issues/23), [#25](https://github.com/JonasWanke/timetable/issues/25), [#26](https://github.com/JonasWanke/timetable/issues/26), [#33](https://github.com/JonasWanke/timetable/issues/33), [#36](https://github.com/JonasWanke/timetable/issues/36), [#38](https://github.com/JonasWanke/timetable/issues/38), [#41](https://github.com/JonasWanke/timetable/issues/41), [#46](https://github.com/JonasWanke/timetable/issues/46), [#51](https://github.com/JonasWanke/timetable/issues/51), [#52](https://github.com/JonasWanke/timetable/issues/52), [#56](https://github.com/JonasWanke/timetable/issues/56), [#58](https://github.com/JonasWanke/timetable/issues/58), [#60](https://github.com/JonasWanke/timetable/issues/60), [#61](https://github.com/JonasWanke/timetable/issues/61), and [#64](https://github.com/JonasWanke/timetable/issues/64). Please have a look at the new README as the API was changed significantly.
 
 ## 0.2.9 · 2020-10-26
@@ -127,7 +140,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## 0.2.0 · 2020-05-08
 
-### ⚠ BREAKING CHANGES
+### ⚠️ BREAKING CHANGES
 - fix week scroll alignment ([#6](https://github.com/JonasWanke/timetable/pull/6))
   - To provide a simpler API the exposed methods of `VisibleRange` were changed slightly. This doesn't affect you if you just instantiate one of the given implementations, but only if you extend it yourself or call one of its methods directly.
 

@@ -61,7 +61,7 @@ Some date/time-related parameters also have special suffixes:
 * `timeOfDay`: A `Duration` between zero and 24 hours.
 * `dayOfWeek`: An `int` between one and seven ([`DateTime.monday`](https://api.flutter.dev/flutter/dart-core/DateTime/monday-constant.html) through [`DateTime.sunday`](https://api.flutter.dev/flutter/dart-core/DateTime/sunday-constant.html)).
 
-Timetable currently offers localizations for English, German, Japanese, Chinese and Italian.
+Timetable currently offers localizations for Chinese, English, German, Italian, Japanese, and Spanish.
 Even if you're just supporting English in your app, you have to add Timetable's localization delegate to your `MaterialApp`/`CupertinoApp`/`WidgetsApp`:
 
 ```dart
@@ -74,13 +74,17 @@ MaterialApp(
 );
 ```
 
+> You want to contribute a new localization?
+> Great!
+> Please follow the steps listed in the doc comment of [`TimetableLocalizationsDelegate`].
+
 ### 1. Define your [`Event`]s
 
 Events are provided as instances of [`Event`].
 To get you started, there's the subclass [`BasicEvent`], which you can instantiate directly.
 If you want to be more specific, you can also implement your own class extending [`Event`].
 
-> **Note:** Most of Timetable's classes accept a type-parameter `E extends Event`.
+> ⚠️ Most of Timetable's classes accept a type-parameter `E extends Event`.
 > Please set it to your chosen [`Event`]-subclass (e.g. [`BasicEvent`]) to avoid runtime exceptions.
 
 In addition, you also need a `Widget` to display your events.
@@ -272,6 +276,7 @@ The example above therefore draws a light gray background before 8 a.m. and af
 [`TimeController.dispose`]: https://pub.dev/documentation/timetable/latest/timetable/TimeController/dispose.html
 [`TimeOverlay`]: https://pub.dev/documentation/timetable/latest/timetable/TimeOverlay-class.html
 [`TimetableConfig<E>`]: https://pub.dev/documentation/timetable/latest/timetable/TimetableConfig-class.html
+[`TimetableLocalizationsDelegate`]: https://pub.dev/documentation/timetable/latest/timetable/TimetableLocalizationsDelegate-class.html
 [`TimetableTheme`]: https://pub.dev/documentation/timetable/latest/timetable/TimetableTheme-class.html
 [`TimetableThemeData`]: https://pub.dev/documentation/timetable/latest/timetable/TimetableThemeData-class.html
 [`VisibleDateRange`]: https://pub.dev/documentation/timetable/latest/timetable/VisibleDateRange-class.html

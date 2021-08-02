@@ -7,13 +7,13 @@ import 'week.dart';
 ///
 /// Supported [Locale.languageCode]s:
 ///
-/// * `de` –German
+/// * `de` – German
 /// * `en` – English
-/// * `ja` – Japanese
 /// * `es` – Spanish
-/// * `zh_CN` – Chinese(Simplified)
-/// * `zh_TW` – Chinese(Traditional)
 /// * `it` – Italian
+/// * `ja` – Japanese
+/// * `zh_CN` – Chinese (Simplified)
+/// * `zh_TW` – Chinese (Traditional)
 ///
 /// By default, this delegate also configures [Intl] whenever Flutter's locale
 /// changes. This behavior can be disabled via [setIntlLocale].
@@ -21,6 +21,18 @@ import 'week.dart';
 /// See also:
 ///
 /// * [TimetableLocalizations], which contains all strings for one locale.
+///
+/// ## Supporting a new locale
+///
+/// 1. Copy `TimetableLocalizationsEn` from below, rename it (using the
+///    UpperCamelCase variant of its
+///    [BCP 47 language tag](https://en.wikipedia.org/wiki/IETF_language_tag)),
+///    and update it to the new locale. The classes should be ordered
+///    alphabetically.
+/// 2. Add your class to the `_getLocalization` method below (again, ordered
+///    alphabetically).
+/// 3. List the new locale in the README.
+/// 4. Open a pull request and you're done 🎉
 class TimetableLocalizationsDelegate
     extends LocalizationsDelegate<TimetableLocalizations> {
   const TimetableLocalizationsDelegate({this.setIntlLocale = true});
@@ -46,17 +58,17 @@ class TimetableLocalizationsDelegate
         return const TimetableLocalizationDe();
       case 'en':
         return const TimetableLocalizationEn();
-      case 'ja':
-        return const TimetableLocalizationJa();
       case 'es':
         return const TimetableLocalizationEs();
+      case 'it':
+        return const TimetableLocalizationIt();
+      case 'ja':
+        return const TimetableLocalizationJa();
       case 'zh':
         if (locale.countryCode?.toLowerCase() == 'tw') {
           return const TimetableLocalizationZhTw();
         }
         return const TimetableLocalizationZhCn();
-      case 'it':
-        return const TimetableLocalizationIt();
       default:
         return null;
     }
@@ -126,6 +138,9 @@ extension BuildContextTimetableLocalizations on BuildContext {
   }
 }
 
+// You want to contribute a new localization? Great! Please follow the steps
+// listed in the doc comment of [TimetableLocalizationsDelegate] above.
+
 class TimetableLocalizationDe extends TimetableLocalizations {
   const TimetableLocalizationDe();
 
@@ -162,24 +177,6 @@ class TimetableLocalizationEn extends TimetableLocalizations {
       'Week ${week.weekOfYear}, ${week.weekBasedYear}';
 }
 
-class TimetableLocalizationJa extends TimetableLocalizations {
-  const TimetableLocalizationJa();
-
-  @override
-  List<String> weekLabels(Week week) {
-    return [
-      weekOfYear(week),
-      '第${week.weekOfYear}週',
-      '${week.weekOfYear}週',
-      '${week.weekOfYear}',
-    ];
-  }
-
-  @override
-  String weekOfYear(Week week) =>
-      'Week ${week.weekOfYear}, ${week.weekBasedYear}';
-}
-
 class TimetableLocalizationEs extends TimetableLocalizations {
   const TimetableLocalizationEs();
 
@@ -196,6 +193,42 @@ class TimetableLocalizationEs extends TimetableLocalizations {
   @override
   String weekOfYear(Week week) =>
       'Semana ${week.weekOfYear}, ${week.weekBasedYear}';
+}
+
+class TimetableLocalizationIt extends TimetableLocalizations {
+  const TimetableLocalizationIt();
+
+  @override
+  List<String> weekLabels(Week week) {
+    return [
+      weekOfYear(week),
+      'Settimana ${week.weekOfYear}',
+      'S ${week.weekOfYear}',
+      '${week.weekOfYear}',
+    ];
+  }
+
+  @override
+  String weekOfYear(Week week) =>
+      'Settimana ${week.weekOfYear}, ${week.weekBasedYear}';
+}
+
+class TimetableLocalizationJa extends TimetableLocalizations {
+  const TimetableLocalizationJa();
+
+  @override
+  List<String> weekLabels(Week week) {
+    return [
+      weekOfYear(week),
+      '第${week.weekOfYear}週',
+      '${week.weekOfYear}週',
+      '${week.weekOfYear}',
+    ];
+  }
+
+  @override
+  String weekOfYear(Week week) =>
+      'Week ${week.weekOfYear}, ${week.weekBasedYear}';
 }
 
 class TimetableLocalizationZhCn extends TimetableLocalizations {
@@ -232,22 +265,4 @@ class TimetableLocalizationZhTw extends TimetableLocalizations {
   @override
   String weekOfYear(Week week) =>
       'Week ${week.weekOfYear}, ${week.weekBasedYear}';
-}
-
-class TimetableLocalizationIt extends TimetableLocalizations {
-  const TimetableLocalizationIt();
-
-  @override
-  List<String> weekLabels(Week week) {
-    return [
-      weekOfYear(week),
-      'Settimana ${week.weekOfYear}',
-      'S ${week.weekOfYear}',
-      '${week.weekOfYear}',
-    ];
-  }
-
-  @override
-  String weekOfYear(Week week) =>
-      'Settimana ${week.weekOfYear}, ${week.weekBasedYear}';
 }

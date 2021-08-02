@@ -34,7 +34,8 @@ class RecurringMultiDateTimetable<E extends Event> extends StatelessWidget {
   static WidgetBuilder _defaultTimetableBuilder<E extends Event>() {
     return (context) => MultiDateTimetable<E>(
           headerBuilder: (header, leadingWidth) => MultiDateTimetableHeader<E>(
-              leading: SizedBox(width: leadingWidth)),
+            leading: SizedBox(width: leadingWidth),
+          ),
         );
   }
 

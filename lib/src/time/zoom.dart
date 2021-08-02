@@ -29,9 +29,8 @@ class _TimeZoomState extends State<TimeZoom>
   late AnimationController _animationController;
   Animation<double>? _animation;
 
-  TimeController get _controller => DefaultTimeController.of(context)!;
+  TimeController? _controller;
   ScrollController? _scrollController;
-  bool _scrollControllerIsInitialized = false;
 
   late double _parentHeight;
 
@@ -39,11 +38,11 @@ class _TimeZoomState extends State<TimeZoom>
   // is visible.
   double get _outerChildHeight =>
       _parentHeight *
-      (_controller.maxRange.duration / _controller.value.duration);
+      (_controller!.maxRange.duration / _controller!.value.duration);
   double get _outerOffset {
-    final timeRange = _controller.value;
-    return (timeRange.startTime - _controller.maxRange.startTime) /
-        _controller.maxRange.duration *
+    final timeRange = _controller!.value;
+    return (timeRange.startTime - _controller!.maxRange.startTime) /
+        _controller!.maxRange.duration *
         _outerChildHeight;
   }
 
@@ -59,26 +58,32 @@ class _TimeZoomState extends State<TimeZoom>
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    _controller?.removeListener(_onControllerChanged);
+    _controller = DefaultTimeController.of(context)!
+      ..addListener(_onControllerChanged);
     _scrollController?.dispose();
-    _scrollControllerIsInitialized = false;
+    _scrollController = null;
   }
 
   void _onControllerChanged() {
-    _scrollController!.jumpTo(_outerOffset);
+    final scrollController = _scrollController;
+    if (scrollController == null || !scrollController.hasClients) return;
+    scrollController.jumpTo(_outerOffset);
   }
 
   void _onScrollControllerChanged() {
-    _controller.value = TimeRange.fromStartAndDuration(
-      _controller.maxRange.startTime +
-          _controller.maxRange.duration *
+    _controller!.value = TimeRange.fromStartAndDuration(
+      _controller!.maxRange.startTime +
+          _controller!.maxRange.duration *
               (_scrollController!.offset / _outerChildHeight),
-      _controller.value.duration,
+      _controller!.value.duration,
     );
   }
 
   @override
   void dispose() {
     _animationController.dispose();
+    _controller?.removeListener(_onControllerChanged);
     _scrollController?.dispose();
     super.dispose();
   }
@@ -89,13 +94,9 @@ class _TimeZoomState extends State<TimeZoom>
       builder: (context, constraints) {
         _parentHeight = constraints.maxHeight;
 
-        if (!_scrollControllerIsInitialized) {
-          _scrollController =
-              ScrollController(initialScrollOffset: _outerOffset)
-                ..addListener(_onScrollControllerChanged);
-          _controller.addListener(_onControllerChanged);
-          _scrollControllerIsInitialized = true;
-        }
+        _scrollController ??=
+            ScrollController(initialScrollOffset: _outerOffset)
+              ..addListener(_onScrollControllerChanged);
 
         return RawGestureDetector(
           gestures: {
@@ -121,14 +122,14 @@ class _TimeZoomState extends State<TimeZoom>
             child: _NoDragSingleChildScrollView(
               controller: _scrollController!,
               child: ValueListenableBuilder<TimeRange>(
-                valueListenable: _controller,
+                valueListenable: _controller!,
                 builder: (context, _, child) {
                   // Layouts the child so only [_controller.maxRange] is
                   // visible.
                   final innerChildHeight = _outerChildHeight *
-                      (1.days / _controller.maxRange.duration);
+                      (1.days / _controller!.maxRange.duration);
                   final innerOffset = -innerChildHeight *
-                      (_controller.maxRange.startTime / 1.days);
+                      (_controller!.maxRange.startTime / 1.days);
 
                   return SizedBox(
                     height: _outerChildHeight,
@@ -148,13 +149,13 @@ class _TimeZoomState extends State<TimeZoom>
   }
 
   void _onScaleStart(ScaleStartDetails details) {
-    _initialRange = _controller.value;
+    _initialRange = _controller!.value;
     _lastFocus = _getFocusTime(details.localFocalPoint.dy);
   }
 
   void _onScaleUpdate(ScaleUpdateDetails details) {
     final newDuration = (_initialRange!.duration * (1 / details.verticalScale))
-        .coerceIn(_controller.minDuration, _controller.maxRange.duration);
+        .coerceIn(_controller!.minDuration, _controller!.maxRange.duration);
 
     final newFocus = _focusToDuration(details.localFocalPoint.dy, newDuration);
     final newStart = _lastFocus! - newFocus;
@@ -199,13 +200,13 @@ class _TimeZoomState extends State<TimeZoom>
     }
 
     _setNewTimeRange(
-      _controller.maxRange.duration * (_animation!.value / _outerChildHeight),
-      _controller.value.duration,
+      _controller!.maxRange.duration * (_animation!.value / _outerChildHeight),
+      _controller!.value.duration,
     );
   }
 
   Duration _getFocusTime(double focalPoint) {
-    final range = _controller.value;
+    final range = _controller!.value;
     return range.startTime + _focusToDuration(focalPoint, range.duration);
   }
 
@@ -216,10 +217,10 @@ class _TimeZoomState extends State<TimeZoom>
       visibleDuration * (focalPoint / _parentHeight);
   void _setNewTimeRange(Duration startTime, Duration duration) {
     final actualStartTime = startTime.coerceIn(
-      _controller.maxRange.startTime,
-      _controller.maxRange.endTime - duration,
+      _controller!.maxRange.startTime,
+      _controller!.maxRange.endTime - duration,
     );
-    _controller.value =
+    _controller!.value =
         TimeRange.fromStartAndDuration(actualStartTime, duration);
   }
 }

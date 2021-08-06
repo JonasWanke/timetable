@@ -16,6 +16,12 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### 📦 Build & CI
 -->
 
+## 1.0.0-alpha.4 · 2021-08-06
+
+### 🐛 Bug Fixes
+* avoid "Unsupported operation: Infinity or NaN toInt" during time scale gesture ([`82abaa5`](https://github.com/JonasWanke/timetable/commit/82abaa5e2c745a5d2869fd7f41628f5fb63911ca)), closes: [#92](https://github.com/JonasWanke/timetable/issues/92)
+* avoid showing superfluous dates when `maxDate` is set in `VisibleDateRange.days` ([`e864409`](https://github.com/JonasWanke/timetable/commit/e86440978babea5c5c5e9b870772359f8bea452f)), closes: [#93](https://github.com/JonasWanke/timetable/issues/93)
+
 ## 1.0.0-alpha.3 · 2021-08-02
 
 ### 🎉 New Features

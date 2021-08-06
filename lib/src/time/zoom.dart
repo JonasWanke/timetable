@@ -154,8 +154,22 @@ class _TimeZoomState extends State<TimeZoom>
   }
 
   void _onScaleUpdate(ScaleUpdateDetails details) {
-    final newDuration = (_initialRange!.duration * (1 / details.verticalScale))
-        .coerceIn(_controller!.minDuration, _controller!.maxRange.duration);
+    final rawScale = details.verticalScale;
+    assert(rawScale >= 0);
+    final Duration newDuration;
+    if (rawScale <= 0 ||
+        _initialRange!.duration.inMicroseconds /
+                _controller!.maxRange.duration.inMicroseconds >=
+            rawScale) {
+      // When `rawScale` approaches zero, `1 / rawScale` in the `else`-branch
+      // can become infinity, producing an error when multiplying a `Duration`
+      // with it. Hence, we catch this early and coerce the `newDuration` to the
+      // maximum possible value directly.
+      newDuration = _controller!.maxRange.duration;
+    } else {
+      newDuration = (_initialRange!.duration * (1 / rawScale))
+          .coerceIn(_controller!.minDuration, _controller!.maxRange.duration);
+    }
 
     final newFocus = _focusToDuration(details.localFocalPoint.dy, newDuration);
     final newStart = _lastFocus! - newFocus;

@@ -85,7 +85,7 @@ To get you started, there's the subclass [`BasicEvent`], which you can instantia
 If you want to be more specific, you can also implement your own class extending [`Event`].
 
 > ⚠️ Most of Timetable's classes accept a type-parameter `E extends Event`.
-> Please set it to your chosen [`Event`]-subclass (e.g. [`BasicEvent`]) to avoid runtime exceptions.
+> Please set it to your chosen [`Event`]-subclass (e.g., [`BasicEvent`]) to avoid runtime exceptions.
 
 In addition, you also need a `Widget` to display your events.
 When using [`BasicEvent`], this can simply be [`BasicEventWidget`].

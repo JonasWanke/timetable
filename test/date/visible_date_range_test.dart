@@ -1,7 +1,9 @@
 import 'package:glados/glados.dart';
 import 'package:test/test.dart';
 import 'package:timetable/timetable.dart';
+import 'package:timetable/src/utils.dart';
 import 'package:tuple_glados/tuple_glados.dart';
+import 'package:supercharged/supercharged.dart';
 
 void main() {
   group('VisibleDateRange.days', () {
@@ -22,6 +24,26 @@ void main() {
       expect(
         VisibleDateRange.days(rangeSize).getTargetPageForCurrent(page),
         page.round(),
+      );
+    });
+
+    Glados(any.tuple2(any.positiveInt, any.positiveInt))
+        .test('scrolling with limits without swipe range', (it) {
+      final visibleDayCount = it.item1;
+      final maxDateOffset = it.item2;
+
+      final minDate = DateTimeTimetable.today();
+      final maxDate = minDate + maxDateOffset.days;
+      final range = DaysVisibleDateRange(
+        visibleDayCount,
+        minDate: minDate,
+        maxDate: maxDate,
+      );
+      expect(range.visibleDayCount, visibleDayCount);
+      expect(range.minPage, minDate.page);
+      expect(
+        range.maxPage,
+        (maxDate.page - visibleDayCount + 1).coerceAtLeast(minDate.page),
       );
     });
   });

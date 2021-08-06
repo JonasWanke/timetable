@@ -145,11 +145,11 @@ class DaysVisibleDateRange extends VisibleDateRange {
   }
 
   double _getMinimumPageForFocus(double focusPage) {
-    var page = focusPage;
+    var page = focusPage - visibleDayCount;
     while (true) {
       final target = getTargetPageForFocus(page);
-      if (target + visibleDayCount > page) return target;
-      page -= swipeRange;
+      if (target + visibleDayCount > focusPage) return target;
+      page += swipeRange;
     }
   }
 

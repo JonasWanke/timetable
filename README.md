@@ -61,7 +61,7 @@ Some date/time-related parameters also have special suffixes:
 * `timeOfDay`: A `Duration` between zero and 24 hours.
 * `dayOfWeek`: An `int` between one and seven ([`DateTime.monday`](https://api.flutter.dev/flutter/dart-core/DateTime/monday-constant.html) through [`DateTime.sunday`](https://api.flutter.dev/flutter/dart-core/DateTime/sunday-constant.html)).
 
-Timetable currently offers localizations for Chinese, English, French, German, Italian, Japanese, Portuguese and Spanish.
+Timetable currently offers localizations for Chinese, English, French, German, Italian, Japanese, Portuguese, and Spanish.
 Even if you're just supporting English in your app, you have to add Timetable's localization delegate to your `MaterialApp`/`CupertinoApp`/`WidgetsApp`:
 
 ```dart

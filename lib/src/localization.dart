@@ -85,22 +85,22 @@ class TimetableLocalizationsDelegate
 bool debugCheckHasTimetableLocalizations(BuildContext context) {
   assert(() {
     if (Localizations.of<TimetableLocalizations>(
-        context, TimetableLocalizations) ==
+            context, TimetableLocalizations) ==
         null) {
       throw FlutterError.fromParts(<DiagnosticsNode>[
         ErrorSummary('No TimetableLocalization found.'),
         ErrorDescription(
           '${context.widget.runtimeType} widgets require TimetableLocalization '
-              'to be provided by a Localizations widget ancestor.',
+          'to be provided by a Localizations widget ancestor.',
         ),
         ErrorDescription(
           'The timetable library uses Localizations to generate messages, '
-              'labels, and abbreviations.',
+          'labels, and abbreviations.',
         ),
         ErrorHint(
           'To introduce a TimetableLocalization, add a '
-              'TimetableLocalizationsDelegate() to your '
-              "Material-/Cupertino-/WidgetApp's localizationsDelegates.",
+          'TimetableLocalizationsDelegate() to your '
+          "Material-/Cupertino-/WidgetApp's localizationsDelegates.",
         ),
         ...context.describeMissingAncestor(
           expectedAncestorType: TimetableLocalizations,

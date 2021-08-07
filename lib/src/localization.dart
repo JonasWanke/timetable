@@ -38,24 +38,49 @@ import 'week.dart';
 /// 5. Open a pull request and you're done 🎉
 class TimetableLocalizationsDelegate
     extends LocalizationsDelegate<TimetableLocalizations> {
-  const TimetableLocalizationsDelegate({this.setIntlLocale = true});
+  const TimetableLocalizationsDelegate({
+    this.setIntlLocale = true,
+    this.fallbackLocale,
+  });
 
+  /// Whether to update `Intl.defaultLocale` when the app's locale changes.
   final bool setIntlLocale;
 
+  /// When localizations for a requested locale are missing, Timetable will
+  /// instead use this locale.
+  ///
+  /// If this is `null` (the default), Timetable widgets depending on
+  /// localizations will produce errors.
+  ///
+  /// If this is set, the locale must be supported by Timetable.
+  final Locale? fallbackLocale;
+
   @override
-  bool isSupported(Locale locale) => _getLocalization(locale) != null;
+  bool isSupported(Locale locale) {
+    assert(
+      fallbackLocale == null || _getLocalization(fallbackLocale!) != null,
+      "Timetable doesn't support the `fallbackLocale` \"$fallbackLocale\".",
+    );
+    return _getLocalization(locale) != null || fallbackLocale != null;
+  }
 
   @override
   Future<TimetableLocalizations> load(Locale locale) {
     assert(isSupported(locale));
+
     if (setIntlLocale) Intl.defaultLocale = locale.toLanguageTag();
-    return SynchronousFuture(_getLocalization(locale)!);
+
+    var localizations = _getLocalization(locale);
+    if (fallbackLocale != null) {
+      localizations ??= _getLocalization(fallbackLocale!)!;
+    }
+    return SynchronousFuture(localizations!);
   }
 
   @override
   bool shouldReload(TimetableLocalizationsDelegate old) => false;
 
-  TimetableLocalizations? _getLocalization(Locale locale) {
+  static TimetableLocalizations? _getLocalization(Locale locale) {
     switch (locale.languageCode) {
       case 'de':
         return const TimetableLocalizationDe();
@@ -77,19 +102,6 @@ class TimetableLocalizationsDelegate
         }
         return const TimetableLocalizationZhCn();
       default:
-        assert(() {
-          throw FlutterError.fromParts(<DiagnosticsNode>[
-            ErrorSummary(
-              "Timetable doesn't support the requested locale \"$locale\".",
-            ),
-            ErrorHint(
-              'You can open an issue for Timetable to support this locale, or, '
-              'preferably, create a pull request. The steps for adding support '
-              'for a new locale are listed in the doc comment of '
-              '[TimetableLocalizationsDelegate]',
-            ),
-          ]);
-        }());
         return null;
     }
   }
@@ -322,4 +334,3 @@ class TimetableLocalizationZhTw extends TimetableLocalizations {
   String weekOfYear(Week week) =>
       'Week ${week.weekOfYear}, ${week.weekBasedYear}';
 }
-

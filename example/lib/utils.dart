@@ -47,9 +47,7 @@ class ExampleApp extends StatelessWidget {
           locale: overrideState.locale,
           localizationsDelegates: [
             TimetableLocalizationsDelegate(),
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
+            ...GlobalMaterialLocalizations.delegates,
           ],
           supportedLocales: _supportedLocales,
           builder: kIsWeb ? null : DebugOverlay.builder(),

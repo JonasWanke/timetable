@@ -10,8 +10,10 @@ import 'week.dart';
 /// * `de` – German
 /// * `en` – English
 /// * `es` – Spanish
+/// * `fr` – French
 /// * `it` – Italian
 /// * `ja` – Japanese
+/// * `pt` – Portuguese
 /// * `zh_CN` – Chinese (Simplified)
 /// * `zh_TW` – Chinese (Traditional)
 ///
@@ -60,10 +62,14 @@ class TimetableLocalizationsDelegate
         return const TimetableLocalizationEn();
       case 'es':
         return const TimetableLocalizationEs();
+      case 'fr':
+        return const TimetableLocalizationFr();
       case 'it':
         return const TimetableLocalizationIt();
       case 'ja':
         return const TimetableLocalizationJa();
+      case 'pt':
+        return const TimetableLocalizationPt();
       case 'zh':
         if (locale.countryCode?.toLowerCase() == 'tw') {
           return const TimetableLocalizationZhTw();
@@ -195,6 +201,24 @@ class TimetableLocalizationEs extends TimetableLocalizations {
       'Semana ${week.weekOfYear}, ${week.weekBasedYear}';
 }
 
+class TimetableLocalizationFr extends TimetableLocalizations {
+  const TimetableLocalizationFr();
+
+  @override
+  List<String> weekLabels(Week week) {
+    return [
+      weekOfYear(week),
+      'Semaine ${week.weekOfYear}',
+      'S ${week.weekOfYear}',
+      '${week.weekOfYear}',
+    ];
+  }
+
+  @override
+  String weekOfYear(Week week) =>
+      'Semaine ${week.weekOfYear}, ${week.weekBasedYear}';
+}
+
 class TimetableLocalizationIt extends TimetableLocalizations {
   const TimetableLocalizationIt();
 
@@ -229,6 +253,24 @@ class TimetableLocalizationJa extends TimetableLocalizations {
   @override
   String weekOfYear(Week week) =>
       'Week ${week.weekOfYear}, ${week.weekBasedYear}';
+}
+
+class TimetableLocalizationPt extends TimetableLocalizations {
+  const TimetableLocalizationPt();
+
+  @override
+  List<String> weekLabels(Week week) {
+    return [
+      weekOfYear(week),
+      'Semana ${week.weekOfYear}',
+      'S ${week.weekOfYear}',
+      '${week.weekOfYear}',
+    ];
+  }
+
+  @override
+  String weekOfYear(Week week) =>
+      'Semana ${week.weekOfYear}, ${week.weekBasedYear}';
 }
 
 class TimetableLocalizationZhCn extends TimetableLocalizations {
@@ -266,3 +308,4 @@ class TimetableLocalizationZhTw extends TimetableLocalizations {
   String weekOfYear(Week week) =>
       'Week ${week.weekOfYear}, ${week.weekBasedYear}';
 }
+

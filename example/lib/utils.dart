@@ -11,6 +11,7 @@ final _supportedLocales = [
   const Locale('de'),
   const Locale('en'),
   const Locale('es'),
+  const Locale('it'),
   const Locale('ja'),
   const Locale('zh', 'CN'),
   const Locale('zh', 'TW'),

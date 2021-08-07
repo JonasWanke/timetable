@@ -32,7 +32,8 @@ import 'week.dart';
 /// 2. Add your class to the `_getLocalization` method below (again, ordered
 ///    alphabetically).
 /// 3. List the new locale in the README.
-/// 4. Open a pull request and you're done 🎉
+/// 4. Add the locale to `_supportedLocale` in `example/lib/utils.dart`.
+/// 5. Open a pull request and you're done 🎉
 class TimetableLocalizationsDelegate
     extends LocalizationsDelegate<TimetableLocalizations> {
   const TimetableLocalizationsDelegate({this.setIntlLocale = true});
@@ -151,7 +152,7 @@ extension BuildContextTimetableLocalizations on BuildContext {
   }
 }
 
-// You want to contribute a new localization? Great! Please follow the steps
+// You want to contribute a new localization? Awesome! Please follow the steps
 // listed in the doc comment of [TimetableLocalizationsDelegate] above.
 
 class TimetableLocalizationDe extends TimetableLocalizations {

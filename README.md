@@ -75,7 +75,7 @@ MaterialApp(
 ```
 
 > You want to contribute a new localization?
-> Great!
+> Awesome!
 > Please follow the steps listed in the doc comment of [`TimetableLocalizationsDelegate`].
 
 ### 1. Define your [`Event`]s

@@ -71,15 +71,6 @@ class _TimeZoomState extends State<TimeZoom>
     scrollController.jumpTo(_outerOffset);
   }
 
-  void _onScrollControllerChanged() {
-    _controller!.value = TimeRange.fromStartAndDuration(
-      _controller!.maxRange.startTime +
-          _controller!.maxRange.duration *
-              (_scrollController!.offset / _outerChildHeight),
-      _controller!.value.duration,
-    );
-  }
-
   @override
   void dispose() {
     _animationController.dispose();
@@ -94,9 +85,7 @@ class _TimeZoomState extends State<TimeZoom>
       builder: (context, constraints) {
         _parentHeight = constraints.maxHeight;
 
-        _scrollController ??=
-            ScrollController(initialScrollOffset: _outerOffset)
-              ..addListener(_onScrollControllerChanged);
+        _scrollController ??= _ScrollController(getOffset: () => _outerOffset);
 
         return RawGestureDetector(
           gestures: {
@@ -196,10 +185,9 @@ class _TimeZoomState extends State<TimeZoom>
 
     _animation =
         Tween<double>(begin: _outerOffset, end: frictionSimulation.finalX)
-            .animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.decelerate,
-    ));
+            .animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.decelerate),
+    );
     _animationController.duration = finalTime.seconds;
     _animation!.addListener(_onAnimate);
     _animationController.forward();
@@ -213,9 +201,12 @@ class _TimeZoomState extends State<TimeZoom>
       return;
     }
 
+    final controller = _controller!;
+    final offsetFromStartTime =
+        controller.maxRange.duration * (_animation!.value / _outerChildHeight);
     _setNewTimeRange(
-      _controller!.maxRange.duration * (_animation!.value / _outerChildHeight),
-      _controller!.value.duration,
+      controller.maxRange.startTime + offsetFromStartTime,
+      controller.value.duration,
     );
   }
 
@@ -238,6 +229,8 @@ class _TimeZoomState extends State<TimeZoom>
         TimeRange.fromStartAndDuration(actualStartTime, duration);
   }
 }
+
+// SingleChildScrollView
 
 /// A modified [SingleChildScrollView] that doesn't allow drags from a pointer.
 ///
@@ -409,8 +402,9 @@ class _RenderVerticalOverflowBox extends RenderShiftedBox {
   }
 }
 
-// Copied and modified from https://github.com/flutter/flutter/blob/f4abaa0735eba4dfd8f33f73363911d63931fe03/packages/flutter/lib/src/gestures/scale.dart
+// ScaleGestureRecognizer
 
+// Copied and modified from https://github.com/flutter/flutter/blob/f4abaa0735eba4dfd8f33f73363911d63931fe03/packages/flutter/lib/src/gestures/scale.dart
 class _ScaleGestureRecognizer extends OneSequenceGestureRecognizer {
   _ScaleGestureRecognizer({
     Object? debugOwner,
@@ -733,4 +727,100 @@ class _LineBetweenPointers {
   // The location and the id of the pointer that marks the end of the line.
   final Offset pointerEndLocation;
   final int pointerEndId;
+}
+
+// ScrollController
+
+/// Instead of storing the offset itself, or recalculating the position when the
+/// parent size changes, this class (and its `_ScrollPositionWithSingleContext`)
+/// retrieve the appropriate offset using `getOffset`, which calculates it from
+/// the `TimeController`.
+class _ScrollController extends ScrollController {
+  _ScrollController({required this.getOffset})
+      : super(initialScrollOffset: getOffset());
+
+  final ValueGetter<double> getOffset;
+
+  @override
+  ScrollPosition createScrollPosition(
+    ScrollPhysics physics,
+    ScrollContext context,
+    ScrollPosition? oldPosition,
+  ) {
+    return _ScrollPositionWithSingleContext(
+      physics: physics,
+      context: context,
+      getOffset: getOffset,
+      oldPosition: oldPosition,
+    );
+  }
+}
+
+class _ScrollPositionWithSingleContext extends ScrollPositionWithSingleContext {
+  _ScrollPositionWithSingleContext({
+    required ScrollPhysics physics,
+    required ScrollContext context,
+    required this.getOffset,
+    ScrollPosition? oldPosition,
+  }) : super(
+          physics: physics,
+          context: context,
+          keepScrollOffset: false,
+          oldPosition: oldPosition,
+        ) {
+    correctPixels(getOffset());
+  }
+
+  final ValueGetter<double> getOffset;
+
+  @override
+  void applyNewDimensions() {
+    super.applyNewDimensions();
+    correctPixels(getOffset());
+  }
+
+  @override
+  void goBallistic(double velocity) {
+    assert(velocity == 0);
+    return;
+  }
+
+  @override
+  Future<void> animateTo(
+    double to, {
+    required Duration duration,
+    required Curve curve,
+  }) {
+    throw UnsupportedError(
+      "TimeZoom's `_ScrollPositionWithSingleContext` doesn't support `animateTo`.",
+    );
+  }
+
+  @override
+  void pointerScroll(double delta) {
+    throw UnsupportedError(
+      "TimeZoom's `_ScrollPositionWithSingleContext` doesn't support `pointerScroll`.",
+    );
+  }
+
+  @override
+  void jumpToWithoutSettling(double value) {
+    throw UnsupportedError(
+      "TimeZoom's `_ScrollPositionWithSingleContext` doesn't support `jumpToWithoutSettling`.",
+    );
+  }
+
+  @override
+  ScrollHoldController hold(VoidCallback holdCancelCallback) {
+    throw UnsupportedError(
+      "TimeZoom's `_ScrollPositionWithSingleContext` doesn't support `hold`.",
+    );
+  }
+
+  @override
+  Drag drag(DragStartDetails details, VoidCallback dragCancelCallback) {
+    throw UnsupportedError(
+      "TimeZoom's `_ScrollPositionWithSingleContext` doesn't support `drag`.",
+    );
+  }
 }

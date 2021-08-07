@@ -122,7 +122,8 @@ You can also programmatically change those and, e.g., animate out to reveal the 
 final myTimeController = TimeController(
   // All parameters are optional. By default, the whole day is revealed
   // initially and you can zoom in to view just a single minute.
-  minDuration: 15.minutes,
+  minDuration: 15.minutes, // The closest you can zoom in.
+  maxDuration: 23.hours, // The farthest you can zoom out.
   initialRange: TimeRange(9.hours, 17.hours),
   maxRange: TimeRange(0.hours, 24.hours),
 );

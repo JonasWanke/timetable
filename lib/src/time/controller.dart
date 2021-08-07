@@ -17,40 +17,65 @@ import 'time_range.dart';
 class TimeController extends ValueNotifier<TimeRange> {
   TimeController({
     this.minDuration = const Duration(minutes: 1),
+    Duration? maxDuration,
     TimeRange? initialRange,
     TimeRange? maxRange,
   })  : assert(!minDuration.isNegative),
         assert(minDuration <= 1.days),
-        assert(initialRange == null || initialRange.duration >= minDuration),
-        maxRange = maxRange ?? TimeRange.fullDay,
-        assert(maxRange == null || maxRange.duration >= minDuration),
+        assert(maxDuration == null || maxDuration <= 1.days),
+        assert(maxDuration == null || minDuration <= maxDuration),
+        maxDuration = maxDuration ?? maxRange?.duration ?? 1.days,
+        assert(initialRange == null || minDuration <= initialRange.duration),
         assert(
-          initialRange == null ||
-              _isValidRange(
-                initialRange,
-                minDuration,
-                maxRange ?? TimeRange.fullDay,
-              ),
+          maxDuration == null ||
+              initialRange == null ||
+              initialRange.duration <= maxDuration,
         ),
-        super(initialRange ?? maxRange ?? TimeRange.fullDay);
+        assert(maxRange == null || minDuration <= maxRange.duration),
+        assert(
+          maxDuration == null ||
+              maxRange == null ||
+              maxDuration <= maxRange.duration,
+        ),
+        maxRange = maxRange ?? TimeRange.fullDay,
+        super(initialRange ?? _getInitialRange(maxDuration, maxRange)) {
+    assert(initialRange == null || _isValidRange(initialRange));
+  }
 
-  static bool _isValidRange(
-    TimeRange range,
-    Duration minDuration,
-    TimeRange maxRange,
-  ) =>
-      range.duration >= minDuration && maxRange.contains(range);
+  static TimeRange _getInitialRange(
+    Duration? maxDuration,
+    TimeRange? maxRange,
+  ) {
+    if (maxDuration != null &&
+        maxRange != null &&
+        maxDuration <= maxRange.duration) {
+      final maxDurationHalf = maxDuration * (1 / 2);
+      return TimeRange(
+        maxRange.centerTime - maxDurationHalf,
+        maxRange.centerTime + maxDurationHalf,
+      );
+    }
+    return maxRange ?? TimeRange.fullDay;
+  }
+
+  bool _isValidRange(TimeRange range) {
+    return minDuration <= range.duration &&
+        range.duration <= maxDuration &&
+        maxRange.contains(range);
+  }
 
   /// The minimum visible duration when zooming in.
   final Duration minDuration;
+
+  /// The maximim visible duration when zooming out.
+  final Duration maxDuration;
 
   /// The maximum range that can be revealed when zooming out.
   final TimeRange maxRange;
 
   @override
   set value(TimeRange value) {
-    assert(value.duration >= minDuration);
-    assert(maxRange.contains(value));
+    assert(_isValidRange(value));
     super.value = value;
   }
 
@@ -62,6 +87,8 @@ class TimeController extends ValueNotifier<TimeRange> {
     Duration duration = const Duration(milliseconds: 200),
     required TickerProvider vsync,
   }) {
+    assert(maxDuration == 1.days);
+
     return animateTo(
       TimeRange.fullDay,
       curve: curve,
@@ -76,7 +103,7 @@ class TimeController extends ValueNotifier<TimeRange> {
     Duration duration = const Duration(milliseconds: 200),
     required TickerProvider vsync,
   }) async {
-    assert(_isValidRange(newValue, minDuration, maxRange));
+    assert(_isValidRange(newValue));
 
     _animationController?.dispose();
     final previousRange = value;

@@ -40,6 +40,8 @@ class _TimetableExampleState extends State<TimetableExample>
 
   final _timeController = TimeController(
     // All parameters are optional.
+    // minDuration: 1.hours,
+    // maxDuration: 10.hours,
     // initialRange: TimeRange(8.hours, 20.hours),
     maxRange: TimeRange(0.hours, 24.hours),
   );

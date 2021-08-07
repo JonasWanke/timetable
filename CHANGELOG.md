@@ -16,6 +16,16 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### 📦 Build & CI
 -->
 
+## 1.0.0-alpha.5 · 2021-08-07
+
+### 🎉 New Features
+* add French and Portuguese localization ([#94](https://github.com/JonasWanke/timetable/pull/94)). Thanks to [@simo9900](https://github.com/simo9900)!
+* add `timeRange.maxDuration` ([`be77146`](https://github.com/JonasWanke/timetable/commit/be7714630d40ad1a5cee4293a8ea1eb400b18216)), closes: [#95](https://github.com/JonasWanke/timetable/issues/95)
+* add `timetableLocalizationsDelegate.fallbackLocale` ([`b65fa1b`](https://github.com/JonasWanke/timetable/commit/b65fa1b068610308e44a615cf3ec1f206dd91a5e))
+
+### 🐛 Bug Fixes
+* keep `TimeZoom`'s position after layout change ([`0beaf7d`](https://github.com/JonasWanke/timetable/commit/0beaf7d4b868712b967ca44e8525d4e31bf3c5c8)), closes: [#78](https://github.com/JonasWanke/timetable/issues/78)
+
 ## 1.0.0-alpha.4 · 2021-08-06
 
 ### 🐛 Bug Fixes

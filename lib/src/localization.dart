@@ -70,6 +70,19 @@ class TimetableLocalizationsDelegate
         }
         return const TimetableLocalizationZhCn();
       default:
+        assert(() {
+          throw FlutterError.fromParts(<DiagnosticsNode>[
+            ErrorSummary(
+              "Timetable doesn't support the requested locale \"$locale\".",
+            ),
+            ErrorHint(
+              'You can open an issue for Timetable to support this locale, or, '
+              'preferably, create a pull request. The steps for adding support '
+              'for a new locale are listed in the doc comment of '
+              '[TimetableLocalizationsDelegate]',
+            ),
+          ]);
+        }());
         return null;
     }
   }
@@ -98,7 +111,7 @@ bool debugCheckHasTimetableLocalizations(BuildContext context) {
         ),
         ...context.describeMissingAncestor(
           expectedAncestorType: TimetableLocalizations,
-        )
+        ),
       ]);
     }
     return true;

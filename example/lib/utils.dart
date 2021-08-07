@@ -11,8 +11,10 @@ final _supportedLocales = [
   const Locale('de'),
   const Locale('en'),
   const Locale('es'),
+  const Locale('fr'),
   const Locale('it'),
   const Locale('ja'),
+  const Locale('pt'),
   const Locale('zh', 'CN'),
   const Locale('zh', 'TW'),
 ];

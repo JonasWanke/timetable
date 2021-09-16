@@ -23,6 +23,6 @@ assignees: ''
 
 **Environment:**
 <!-- Please complete the following information: -->
-- Device:  <!-- e.g. Samsung Galaxy S8+ -->
-- OS version:  <!-- e.g. Android 9.0.0 -->
-- Package version:  <!-- e.g. 1.0.2 -->
+* OS version:  <!-- e.g. Android 9.0.0 -->
+* Flutter version:  <!-- e.g. 2.5.0 -->
+* Package version:  <!-- e.g. 1.0.2 -->

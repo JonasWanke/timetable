@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
+
 import 'week.dart';
 
 /// Provides localized strings for Timetable widgets.
@@ -34,9 +35,10 @@ import 'week.dart';
 ///    alphabetically.
 /// 2. Add your class to the `_getLocalization` method below (again, ordered
 ///    alphabetically).
-/// 3. List the new locale in the README.
-/// 4. Add the locale to `_supportedLocale` in `example/lib/utils.dart`.
-/// 5. Open a pull request and you're done 🎉
+/// 3. List the new locale in the README (alphabetically).
+/// 4. Add the new locale to the list above (alphabetically).
+/// 5. Add the locale to `_supportedLocale` in `example/lib/utils.dart`.
+/// 6. Open a pull request and you're done 🎉
 class TimetableLocalizationsDelegate
     extends LocalizationsDelegate<TimetableLocalizations> {
   const TimetableLocalizationsDelegate({
@@ -252,14 +254,8 @@ class TimetableLocalizationHu extends TimetableLocalizations {
   const TimetableLocalizationHu();
 
   @override
-  List<String> weekLabels(Week week) {
-    return [
-      weekOfYear(week),
-      '${week.weekOfYear}. hét',
-      '${week.weekOfYear}. hét',
-      '${week.weekOfYear}',
-    ];
-  }
+  List<String> weekLabels(Week week) =>
+      [weekOfYear(week), '${week.weekOfYear}. hét', '${week.weekOfYear}'];
 
   @override
   String weekOfYear(Week week) =>

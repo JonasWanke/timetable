@@ -76,9 +76,8 @@ class MonthWidget extends StatelessWidget {
         TimetableTheme.orDefaultOf(context).monthWidgetStyleProvider(month);
 
     final firstDay = month.previousOrSame(style.startOfWeek);
-    final weekCount = (month.lastDayOfMonth.difference(firstDay).inDays /
-            DateTime.daysPerWeek)
-        .ceil();
+    final minDayCount = month.lastDayOfMonth.difference(firstDay).inDays + 1;
+    final weekCount = (minDayCount / DateTime.daysPerWeek).ceil();
 
     final today = DateTimeTimetable.today();
 

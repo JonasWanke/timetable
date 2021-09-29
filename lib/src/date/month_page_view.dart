@@ -72,8 +72,13 @@ class _MonthPageViewState extends State<MonthPageView> {
     if (widget.shrinkWrapInCrossAxis) {
       child = AnimatedBuilder(
         animation: _controller._pageController,
-        builder: (context, child) =>
-            ImmediateSizedBox(heightGetter: _getHeight, child: child!),
+        builder: (context, child) => ImmediateSizedBox(
+          // By using a lambda, the `heightGetter`'s identity changes with every
+          // call, forcing the `ImmediateSizedBox` to run a new layout pass.
+          // ignore: unnecessary_lambdas
+          heightGetter: () => _getHeight(),
+          child: child!,
+        ),
         child: child,
       );
     }

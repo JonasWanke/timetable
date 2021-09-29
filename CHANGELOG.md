@@ -16,6 +16,15 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### 📦 Build & CI
 -->
 
+## 1.0.0-alpha.6 · 2021-09-29
+
+### 🎉 New Features
+* add Hungarian localization ([#112](https://github.com/JonasWanke/timetable/pull/112)). Thanks to [@bmxbandita](https://github.com/bmxbandita)!
+
+### 🐛 Bug Fixes
+* show missing dates in `MonthWidget` and `MonthPageView` ([`0937dea`](https://github.com/JonasWanke/timetable/commit/0937dea588ab85747762507530f443eea9effd8f)), closes: [#101](https://github.com/JonasWanke/timetable/issues/101)
+* support the new `computeHitSlop(…)` ([`f7bf2c0`](https://github.com/JonasWanke/timetable/commit/f7bf2c00efb63a1214868a05e3cff9e992c1bfed)), closes: [#105](https://github.com/JonasWanke/timetable/issues/105)
+
 ## 1.0.0-alpha.5 · 2021-08-07
 
 ### 🎉 New Features

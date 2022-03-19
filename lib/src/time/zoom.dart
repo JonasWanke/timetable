@@ -615,19 +615,14 @@ class _ScaleGestureRecognizer extends OneSequenceGestureRecognizer {
       final spanDelta = (_currentSpan - _initialSpan).abs();
       final focalPointDelta =
           (_currentFocalPoint - _initialFocalPoint).distance;
+
       // Change: We use the hit slop instead of the pan slop to allow scrolling
       // even inside a scrollable parent.
-
-      // TODO: When https://github.com/flutter/flutter/commit/5792c7347cb9f2bb49d8961deccda516506a6e02
-      // hits stable, update the invocation to use the new `mediaQueryData.gestureSettings`.
-      const dynamic computeHitSlopLocal = computeHitSlop;
-      final hitSlop = computeHitSlopLocal is double Function(PointerDeviceKind)
-          ? computeHitSlopLocal(pointerDeviceKind)
-          // ignore: avoid_dynamic_calls
-          : computeHitSlopLocal(pointerDeviceKind, null) as double;
-
       if (spanDelta > computeScaleSlop(pointerDeviceKind) ||
-          focalPointDelta > hitSlop) resolve(GestureDisposition.accepted);
+          focalPointDelta >
+              computeHitSlop(pointerDeviceKind, gestureSettings)) {
+        resolve(GestureDisposition.accepted);
+      }
     } else if (_state.index >= _ScaleState.accepted.index) {
       resolve(GestureDisposition.accepted);
     }

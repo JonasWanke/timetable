@@ -1,11 +1,11 @@
 import 'package:dart_date/dart_date.dart' show Interval;
 import 'package:flutter/widgets.dart' hide Interval;
-import 'package:supercharged/supercharged.dart';
 
 import 'week.dart';
 
+export 'package:collection/collection.dart';
 export 'package:dart_date/dart_date.dart' show Interval;
-export 'package:supercharged/supercharged.dart';
+export 'package:dartx/dartx.dart' show IntRangeToExtension, IterableMinBy;
 
 export 'utils/listenable.dart';
 export 'utils/size_reporting_widget.dart';
@@ -180,6 +180,9 @@ extension InternalDateTimeTimetable on DateTime {
     return DateTime(year, month, day, hour, minute, second, millisecond);
   }
 
+  DateTime operator +(Duration duration) => add(duration);
+  DateTime operator -(Duration duration) => subtract(duration);
+
   bool operator <(DateTime other) => isBefore(other);
   bool operator <=(DateTime other) =>
       isBefore(other) || isAtSameMomentAs(other);
@@ -198,9 +201,26 @@ extension NullableDateTimeTimetable on DateTime? {
       isValidTimetableDate && (this == null || this!.day == 1);
 }
 
+extension InternalDurationTimetable on Duration {
+  double operator /(Duration other) => inMicroseconds / other.inMicroseconds;
+}
+
 extension NullableDurationTimetable on Duration? {
   bool get isValidTimetableTimeOfDay =>
       this == null || (0.days <= this! && this! <= 1.days);
+}
+
+extension InternalNumTimetable on num {
+  Duration get weeks => (this * DateTime.daysPerWeek).days;
+  Duration get days => (this * Duration.hoursPerDay).hours;
+  Duration get hours => (this * Duration.minutesPerHour).minutes;
+  Duration get minutes => (this * Duration.secondsPerMinute).seconds;
+  Duration get seconds =>
+      (this * Duration.millisecondsPerSecond).round().milliseconds;
+}
+
+extension InternalIntTimetable on int {
+  Duration get milliseconds => Duration(milliseconds: this);
 }
 
 extension NullableIntTimetable on int? {

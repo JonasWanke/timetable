@@ -129,7 +129,7 @@ final myTimeController = TimeController(
 );
 ```
 
-> This example uses some of [<kbd>supercharged</kbd>]'s extension methods on `int` to create a [`Duration`] more concisely.
+> This example uses some of [<kbd>time</kbd>]'s extension methods on `int` to create a [`Duration`] more concisely.
 
 > Don't forget to [`dispose`][`TimeController.dispose`] your controller, e.g., in [`State.dispose`]!
 
@@ -284,5 +284,5 @@ The example above therefore draws a light gray background before 8 a.m. and af
 [`VisibleDateRange.days`]: https://pub.dev/documentation/timetable/latest/timetable/VisibleDateRange/days.html
 [`VisibleDateRange.week`]: https://pub.dev/documentation/timetable/latest/timetable/VisibleDateRange/week.html
 [`VisibleDateRange.weekAligned`]: https://pub.dev/documentation/timetable/latest/timetable/VisibleDateRange/foo.html
-<!-- supercharged -->
-[<kbd>supercharged</kbd>]: https://pub.dev/packages/supercharged
+<!-- time -->
+[<kbd>time</kbd>]: https://pub.dev/packages/time

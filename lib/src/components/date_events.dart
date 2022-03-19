@@ -288,8 +288,9 @@ class _DayEventsLayoutDelegate<E extends Event>
 
         final index = column
                 .where((e) => _actualEnd(e, height) >= event.start)
-                .map((e) => positions.eventPositions[e]!.index)
-                .max() ??
+                .map<num>((e) => positions.eventPositions[e]!.index)
+                .maxOrNull
+                ?.toInt() ??
             -1;
 
         final previousEnd = column

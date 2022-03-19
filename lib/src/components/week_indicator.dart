@@ -1,5 +1,4 @@
 import 'package:black_hole_flutter/black_hole_flutter.dart';
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:tuple/tuple.dart';
 
@@ -97,8 +96,7 @@ class WeekIndicator extends StatelessWidget {
       return Tuple2(it, textPainter.size.width);
     });
 
-    final narrowestText =
-        measuredLabels.minBy((a, b) => a.item2.compareTo(b.item2))!.item1;
+    final narrowestText = measuredLabels.minBy((it) => it.item2)!.item1;
     Widget build(String text) => Text(
           text,
           style: textStyle,
@@ -113,10 +111,11 @@ class WeekIndicator extends StatelessWidget {
       builder: (context, constraints) {
         // Select the first one that fits, or otherwise the narrowest one.
         final text = measuredLabels
-            .where((it) => it.item2 >= constraints.minWidth)
-            .where((it) => it.item2 <= constraints.maxWidth)
-            .map((it) => it.item1)
-            .firstOrElse(() => narrowestText);
+                .where((it) => it.item2 >= constraints.minWidth)
+                .where((it) => it.item2 <= constraints.maxWidth)
+                .map((it) => it.item1)
+                .firstOrNull ??
+            narrowestText;
 
         return build(text);
       },

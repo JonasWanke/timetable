@@ -126,9 +126,10 @@ class _DatePageViewState extends State<DatePageView> {
   double _getHeight(DatePageValue pageValue) {
     double maxHeightFrom(int page) {
       return page
-          .until(page + pageValue.visibleDayCount)
-          .map((it) => _heights[it] ?? 0)
-          .max()!;
+          .rangeTo(page + pageValue.visibleDayCount - 1)
+          .map<num>((it) => _heights[it] ?? 0)
+          .max
+          .toDouble();
     }
 
     final oldMaxHeight = maxHeightFrom(pageValue.page.floor());

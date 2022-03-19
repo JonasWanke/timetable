@@ -438,8 +438,8 @@ class _EventsLayout<E extends Event> extends RenderBox
 
       final maxEventPosition = _yPositions.entries
           .where((e) => e.key.interval.intersects(interval))
-          .map((e) => e.value)
-          .max();
+          .map<num>((e) => e.value)
+          .maxOrNull as int?;
       return maxEventPosition != null ? maxEventPosition + 1 : 0;
     }
 

@@ -122,8 +122,8 @@ class MonthWidget extends StatelessWidget {
           rowSpan: weekCount,
           child: _buildWeeks(context, style, firstDay, weekCount),
         ),
-        for (final week in 0.until(weekCount))
-          for (final weekday in 0.until(DateTime.daysPerWeek))
+        for (final week in 0.rangeTo(weekCount - 1))
+          for (final weekday in 0.rangeTo(DateTime.daysPerWeek - 1))
             GridPlacement(
               columnStart: 1 + weekday,
               rowStart: 1 + week,
@@ -148,7 +148,7 @@ class MonthWidget extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            for (final index in 0.until(weekCount))
+            for (final index in 0.rangeTo(weekCount - 1))
               weekBuilder(
                 context,
                 (firstDay + (index * DateTime.daysPerWeek).days).week,

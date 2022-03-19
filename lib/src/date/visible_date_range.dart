@@ -130,9 +130,9 @@ class DaysVisibleDateRange extends VisibleDateRange {
     Tolerance tolerance = Tolerance.defaultTolerance,
   }) {
     // Taken from [_InteractiveViewerState._kDrag].
-    const _kDrag = 0.0000135;
+    const kDrag = 0.0000135;
     final simulation =
-        FrictionSimulation(_kDrag, focusPage, velocity, tolerance: tolerance);
+        FrictionSimulation(kDrag, focusPage, velocity, tolerance: tolerance);
     final targetFocusPage = simulation.finalX;
 
     final alignmentOffset = alignmentDate.datePage % swipeRange;

@@ -169,9 +169,9 @@ class _PartDayDraggableEventState extends State<PartDayDraggableEvent> {
       onDraggableCanceled: widget.onDragCanceled != null
           ? (_, __) => widget.onDragCanceled!(_isMoved)
           : null,
-      child: widget.child,
-      childWhenDragging: widget.childWhileDragging,
       feedback: SizedBox.shrink(),
+      childWhenDragging: widget.childWhileDragging,
+      child: widget.child,
     );
   }
 }

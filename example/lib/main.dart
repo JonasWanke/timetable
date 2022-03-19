@@ -9,7 +9,7 @@ import 'package:timetable/timetable.dart';
 import 'positioning_demo.dart';
 import 'utils.dart';
 
-void main() async {
+Future<void> main() async {
   initDebugOverlay();
   runApp(ExampleApp(child: TimetableExample()));
 }
@@ -62,6 +62,7 @@ class _TimetableExampleState extends State<TimetableExample>
       dateController: _dateController,
       timeController: _timeController,
       eventBuilder: (context, event) => _buildPartDayEvent(event),
+      // ignore: sort_child_properties_last
       child: Column(children: [
         _buildAppBar(),
         Expanded(

@@ -485,8 +485,9 @@ class _ScaleGestureRecognizer extends OneSequenceGestureRecognizer {
     var shouldStartIfAccepted = false;
     if (event is PointerMoveEvent) {
       final tracker = _velocityTrackers[event.pointer]!;
-      if (!event.synthesized)
+      if (!event.synthesized) {
         tracker.addPosition(event.timeStamp, event.position);
+      }
       _pointerLocations[event.pointer] = event.position;
       shouldStartIfAccepted = true;
       _lastTransform = event.transform;
@@ -506,8 +507,9 @@ class _ScaleGestureRecognizer extends OneSequenceGestureRecognizer {
     _updateLines();
     _update();
 
-    if (!didChangeConfiguration || _reconfigure(event.pointer))
+    if (!didChangeConfiguration || _reconfigure(event.pointer)) {
       _advanceStateMachine(shouldStartIfAccepted, event.kind);
+    }
     stopTrackingIfPointerNoLongerDown(event);
   }
 
@@ -516,8 +518,9 @@ class _ScaleGestureRecognizer extends OneSequenceGestureRecognizer {
 
     // Compute the focal point
     var focalPoint = Offset.zero;
-    for (final pointer in _pointerLocations.keys)
+    for (final pointer in _pointerLocations.keys) {
       focalPoint += _pointerLocations[pointer]!;
+    }
     _currentFocalPoint =
         count > 0 ? focalPoint / count.toDouble() : Offset.zero;
 
@@ -583,10 +586,11 @@ class _ScaleGestureRecognizer extends OneSequenceGestureRecognizer {
         if (_isFlingGesture(velocity)) {
           final pixelsPerSecond = velocity.pixelsPerSecond;
           if (pixelsPerSecond.distanceSquared >
-              kMaxFlingVelocity * kMaxFlingVelocity)
+              kMaxFlingVelocity * kMaxFlingVelocity) {
             velocity = Velocity(
                 pixelsPerSecond: (pixelsPerSecond / pixelsPerSecond.distance) *
                     kMaxFlingVelocity);
+          }
           invokeCallback<void>(
               'onEnd',
               () => onEnd!(ScaleEndDetails(
@@ -632,7 +636,7 @@ class _ScaleGestureRecognizer extends OneSequenceGestureRecognizer {
       _dispatchOnStartCallbackIfNeeded();
     }
 
-    if (_state == _ScaleState.started && onUpdate != null)
+    if (_state == _ScaleState.started && onUpdate != null) {
       invokeCallback<void>('onUpdate', () {
         onUpdate!(ScaleUpdateDetails(
           scale: _scaleFactor,
@@ -645,11 +649,12 @@ class _ScaleGestureRecognizer extends OneSequenceGestureRecognizer {
           pointerCount: _pointerQueue.length,
         ));
       });
+    }
   }
 
   void _dispatchOnStartCallbackIfNeeded() {
     assert(_state == _ScaleState.started);
-    if (onStart != null)
+    if (onStart != null) {
       invokeCallback<void>('onStart', () {
         onStart!(ScaleStartDetails(
           focalPoint: _currentFocalPoint,
@@ -658,6 +663,7 @@ class _ScaleGestureRecognizer extends OneSequenceGestureRecognizer {
           pointerCount: _pointerQueue.length,
         ));
       });
+    }
   }
 
   @override

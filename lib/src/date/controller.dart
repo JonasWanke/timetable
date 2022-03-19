@@ -1,8 +1,6 @@
 import 'dart:ui';
 
-import 'package:flutter/animation.dart' hide Interval;
 import 'package:flutter/foundation.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
 
 import '../config.dart';

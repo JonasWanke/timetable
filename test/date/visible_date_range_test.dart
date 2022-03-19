@@ -1,6 +1,4 @@
 import 'package:glados/glados.dart';
-import 'package:supercharged/supercharged.dart';
-import 'package:test/test.dart';
 import 'package:timetable/src/utils.dart';
 import 'package:timetable/timetable.dart';
 import 'package:tuple_glados/tuple_glados.dart';

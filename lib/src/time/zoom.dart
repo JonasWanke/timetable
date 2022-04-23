@@ -104,7 +104,7 @@ class _TimeZoomState extends State<TimeZoom>
             // to move before it is considered a pan (in this case, a scroll).
             // If this widget is used in a scrollable context, then the outer
             // scrollable view would always win in the gesture arena because it
-            // uses `computeHitSlop` which is half that amount.
+            // uses `computeHitSlop`, which is half that amount.
             _ScaleGestureRecognizer:
                 GestureRecognizerFactoryWithHandlers<_ScaleGestureRecognizer>(
               () => _ScaleGestureRecognizer(debugOwner: this),
@@ -830,11 +830,8 @@ class _ScrollPositionWithSingleContext extends ScrollPositionWithSingleContext {
   }
 
   @override
-  void pointerScroll(double delta) {
-    throw UnsupportedError(
-      "TimeZoom's `_ScrollPositionWithSingleContext` doesn't support `pointerScroll`.",
-    );
-  }
+  void pointerScroll(double delta) =>
+      setOffset((pixels + delta).clamp(minScrollExtent, maxScrollExtent));
 
   @override
   void jumpTo(double value, {bool isInternalCall = false}) {

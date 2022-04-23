@@ -70,7 +70,7 @@ class MultiDateTimetable<E extends Event> extends StatefulWidget {
     return (context, onLeadingWidthChanged) => MultiDateTimetableContent<E>(
           leading: SizeReportingWidget(
             onSizeChanged: (size) => onLeadingWidthChanged(size.width),
-            child: contentLeading ?? _defaultContentLeading,
+            child: contentLeading ?? _DefaultContentLeading(),
           ),
         );
   }
@@ -147,7 +147,7 @@ class MultiDateTimetableContent<E extends Event> extends StatelessWidget {
     Widget? leading,
     Widget? divider,
     Widget? content,
-  })  : leading = leading ?? _defaultContentLeading,
+  })  : leading = leading ?? _DefaultContentLeading(),
         divider = divider ?? VerticalDivider(width: 0),
         content = content ?? MultiDateContent<E>(),
         super(key: key);
@@ -166,23 +166,27 @@ class MultiDateTimetableContent<E extends Event> extends StatelessWidget {
   }
 }
 
-// TODO(JonasWanke): Explicitly disable the scrollbar when they're shown by
-// default on desktop: https://flutter.dev/docs/release/breaking-changes/default-desktop-scrollbars
-// Builder(
-//   builder:(context) => ScrollConfiguration(
-//   behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
-// )
+class _DefaultContentLeading extends StatelessWidget {
+  const _DefaultContentLeading({Key? key}) : super(key: key);
 
-Widget _defaultContentLeading = TimeZoom(
-  child: Padding(
-    padding: EdgeInsets.symmetric(horizontal: 8),
-    child: Builder(
-      builder: (context) => TimeIndicators.hours(
-        // `TimeIndicators.hours` overwrites the style provider's labels by
-        // default, but here we want the user's style provider from the ambient
-        // theme to take precedence.
-        styleProvider: TimetableTheme.of(context)?.timeIndicatorStyleProvider,
+  @override
+  Widget build(BuildContext context) {
+    return ScrollConfiguration(
+      behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
+      child: TimeZoom(
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 8),
+          child: Builder(
+            builder: (context) => TimeIndicators.hours(
+              // `TimeIndicators.hours` overwrites the style provider's labels by
+              // default, but here we want the user's style provider from the ambient
+              // theme to take precedence.
+              styleProvider:
+                  TimetableTheme.of(context)?.timeIndicatorStyleProvider,
+            ),
+          ),
+        ),
       ),
-    ),
-  ),
-);
+    );
+  }
+}

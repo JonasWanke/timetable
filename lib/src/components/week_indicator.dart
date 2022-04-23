@@ -1,6 +1,5 @@
 import 'package:black_hole_flutter/black_hole_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:tuple/tuple.dart';
 
 import '../callbacks.dart';
 import '../config.dart';
@@ -85,40 +84,10 @@ class WeekIndicator extends StatelessWidget {
   }
 
   Widget _buildText(BuildContext context, WeekIndicatorStyle style) {
-    final textStyle = _getEffectiveTextStyle(context, style.textStyle);
-
-    final measuredLabels = style.labels.map((it) {
-      final textPainter = TextPainter(
-        text: TextSpan(text: it, style: textStyle),
-        maxLines: 1,
-        textDirection: TextDirection.ltr,
-      )..layout(minWidth: 0, maxWidth: double.infinity);
-      return Tuple2(it, textPainter.size.width);
-    });
-
-    final narrowestText = measuredLabels.minBy((it) => it.item2)!.item1;
-    Widget build(String text) => Text(
-          text,
-          style: textStyle,
-          maxLines: 1,
-          overflow: TextOverflow.visible,
-          softWrap: false,
-        );
-
-    if (alwaysUseNarrowestVariant) return build(narrowestText);
-
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        // Select the first one that fits, or otherwise the narrowest one.
-        final text = measuredLabels
-                .where((it) => it.item2 >= constraints.minWidth)
-                .where((it) => it.item2 <= constraints.maxWidth)
-                .map((it) => it.item1)
-                .firstOrNull ??
-            narrowestText;
-
-        return build(text);
-      },
+    return _WeekIndicatorText(
+      style.labels,
+      style: _getEffectiveTextStyle(context, style.textStyle),
+      alwaysUseNarrowestVariant: alwaysUseNarrowestVariant,
     );
   }
 
@@ -133,6 +102,149 @@ class WeekIndicator extends StatelessWidget {
           .merge(const TextStyle(fontWeight: FontWeight.bold));
     }
     return effectiveTextStyle;
+  }
+}
+
+class _WeekIndicatorText extends SingleChildRenderObjectWidget {
+  const _WeekIndicatorText(
+    this.labels, {
+    required this.style,
+    required this.alwaysUseNarrowestVariant,
+  }) : assert(labels.length > 0);
+
+  final List<String> labels;
+  final TextStyle style;
+  final bool alwaysUseNarrowestVariant;
+
+  @override
+  RenderObject createRenderObject(BuildContext context) {
+    return _RenderWeekIndicatorText(
+      labels,
+      style,
+      context.directionality,
+      alwaysUseNarrowestVariant,
+    );
+  }
+
+  @override
+  void updateRenderObject(
+    BuildContext context,
+    _RenderWeekIndicatorText renderObject,
+  ) {
+    renderObject.labels = labels;
+    renderObject.style = style;
+    renderObject.textDirection = context.directionality;
+    renderObject.alwaysUseNarrowestVariant = alwaysUseNarrowestVariant;
+  }
+}
+
+class _RenderWeekIndicatorText extends RenderBox {
+  _RenderWeekIndicatorText(
+    this._labels,
+    this._style,
+    this._textDirection,
+    // ignore: avoid_positional_boolean_parameters
+    this._alwaysUseNarrowestVariant,
+  ) : assert(_labels.isNotEmpty) {
+    _generateLabelPainters();
+  }
+
+  late List<String> _labels;
+  List<String> get labels => _labels;
+  set labels(List<String> labels) {
+    if (DeepCollectionEquality().equals(_labels, labels)) return;
+
+    _labels = labels;
+    markNeedsLayout();
+    _generateLabelPainters();
+  }
+
+  TextStyle _style;
+  TextStyle get style => _style;
+  set style(TextStyle style) {
+    if (DeepCollectionEquality().equals(_style, style)) return;
+
+    _style = style;
+    markNeedsLayout();
+    _generateLabelPainters();
+  }
+
+  TextDirection _textDirection;
+  TextDirection get textDirection => _textDirection;
+  set textDirection(TextDirection textDirection) {
+    if (textDirection == _textDirection) return;
+
+    _textDirection = textDirection;
+    markNeedsLayout();
+    _generateLabelPainters();
+  }
+
+  bool _alwaysUseNarrowestVariant;
+  bool get alwaysUseNarrowestVariant => _alwaysUseNarrowestVariant;
+  set alwaysUseNarrowestVariant(bool alwaysUseNarrowestVariant) {
+    if (alwaysUseNarrowestVariant == _alwaysUseNarrowestVariant) return;
+
+    _alwaysUseNarrowestVariant = alwaysUseNarrowestVariant;
+    markNeedsLayout();
+  }
+
+  List<TextPainter> _labelPainters = [];
+  void _generateLabelPainters() {
+    _labelPainters = labels.map((it) {
+      final textPainter = TextPainter(
+        text: TextSpan(text: it, style: _style),
+        textDirection: textDirection,
+        maxLines: 1,
+      )..layout(minWidth: 0, maxWidth: double.infinity);
+      return textPainter;
+    }).toList();
+  }
+
+  late TextPainter _labelPainter;
+
+  @override
+  double computeMinIntrinsicWidth(double height) =>
+      _labelPainters.map<num>((it) => it.width).min.toDouble();
+  @override
+  double computeMaxIntrinsicWidth(double height) {
+    final widths = _labelPainters.map<num>((it) => it.width);
+    return (alwaysUseNarrowestVariant ? widths.min : widths.max).toDouble();
+  }
+
+  @override
+  double computeMinIntrinsicHeight(double width) =>
+      _labelPainters.map<num>((it) => it.height).min.toDouble();
+  @override
+  double computeMaxIntrinsicHeight(double width) {
+    final heights = _labelPainters.map<num>((it) => it.height);
+    return (alwaysUseNarrowestVariant ? heights.min : heights.max).toDouble();
+  }
+
+  @override
+  void performLayout() {
+    for (final painter in _labelPainters) {
+      painter.layout(minWidth: 0, maxWidth: double.infinity);
+    }
+
+    TextPainter narrowestPainter() => _labelPainters.minBy((it) => it.width)!;
+    if (alwaysUseNarrowestVariant) {
+      _labelPainter = narrowestPainter();
+    } else {
+      _labelPainter = _labelPainters
+              .where(
+                (it) =>
+                    constraints.minWidth <= it.size.width &&
+                    it.size.width <= constraints.maxWidth,
+              )
+              .firstOrNull ??
+          narrowestPainter();
+    }
+    size = _labelPainter.size;
+  }
+
+  @override
+  void paint(PaintingContext context, Offset offset) {
+    _labelPainter.paint(context.canvas, offset);
   }
 }
 

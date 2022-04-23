@@ -6,7 +6,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 
 <!-- Template:
-## NEW · 2021-xx-xx
+## NEW · 2022-xx-xx
 ### ⚠️ BREAKING CHANGES
 ### 🎉 New Features
 ### ⚡ Changes
@@ -15,6 +15,19 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### 🏗️ Refactoring
 ### 📦 Build & CI
 -->
+
+## 1.0.0-alpha.7 · 2022-04-23
+
+### 🎉 New Features
+* add `dateController.visibleDates `, `datePageValue.visibleDates`, `.firstVisibleDate`, `.firstVisiblePage`,`.lastVisibleDate`, and `.lastVisiblePage` ([`74df510`](https://github.com/JonasWanke/timetable/commit/74df51089d1c51187146c36736be05a58ede64da)), closes: [#119](https://github.com/JonasWanke/timetable/issues/119)
+* support scrolling with a `Scrollbar` in `TimeZoom` ([`e196576`](https://github.com/JonasWanke/timetable/commit/e1965764279eb25b12538052f593141d6989898a))
+* support mouse scrolling in `TimeZoom` ([`1a286f2`](https://github.com/JonasWanke/timetable/commit/1a286f2e80178efddaa5ce3cc44aaf9e7df5b55c))
+
+### ⚡ Changes
+* `WeekIndicator` no longer uses a `LayoutBuilder` internally ([`a8d04ee`](https://github.com/JonasWanke/timetable/commit/a8d04ee29b7e688aea619176b3561f5a09c4a145))
+
+### 🐛 Bug Fixes
+* remove scrollbar for default time indicators ([`47cb162`](https://github.com/JonasWanke/timetable/commit/47cb162aee378e76c7af544de71d491354a00f15)), closes: [#116](https://github.com/JonasWanke/timetable/issues/116)
 
 ## 1.0.0-alpha.6 · 2021-09-29
 

@@ -333,7 +333,7 @@ class _EventsLayout<E extends Event> extends RenderBox
   bool _debugThrowIfNotCheckingIntrinsics() {
     assert(() {
       if (!RenderObject.debugCheckingIntrinsics) {
-        throw Exception("_EventsLayout doesn't have an intrinsic width.");
+        throw Exception("$runtimeType doesn't have an intrinsic width.");
       }
       return true;
     }());

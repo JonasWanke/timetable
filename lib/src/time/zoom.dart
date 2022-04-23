@@ -30,7 +30,7 @@ class _TimeZoomState extends State<TimeZoom>
   Animation<double>? _animation;
 
   TimeController? _controller;
-  ScrollController? _scrollController;
+  _ScrollController? _scrollController;
 
   late double _parentHeight;
 
@@ -68,7 +68,7 @@ class _TimeZoomState extends State<TimeZoom>
   void _onControllerChanged() {
     final scrollController = _scrollController;
     if (scrollController == null || !scrollController.hasClients) return;
-    scrollController.jumpTo(_outerOffset);
+    scrollController.jumpToInternal(_outerOffset);
   }
 
   @override
@@ -85,7 +85,17 @@ class _TimeZoomState extends State<TimeZoom>
       builder: (context, constraints) {
         _parentHeight = constraints.maxHeight;
 
-        _scrollController ??= _ScrollController(getOffset: () => _outerOffset);
+        _scrollController ??= _ScrollController(
+          getOffset: () => _outerOffset,
+          setOffset: (value) {
+            final controller = _controller!;
+            controller.value = TimeRange.fromStartAndDuration(
+              controller.maxRange.startTime +
+                  controller.maxRange.duration * (value / _outerChildHeight),
+              controller.value.duration,
+            );
+          },
+        );
 
         return RawGestureDetector(
           gestures: {
@@ -745,10 +755,11 @@ class _LineBetweenPointers {
 /// retrieve the appropriate offset using `getOffset`, which calculates it from
 /// the `TimeController`.
 class _ScrollController extends ScrollController {
-  _ScrollController({required this.getOffset})
+  _ScrollController({required this.getOffset, required this.setOffset})
       : super(initialScrollOffset: getOffset());
 
   final ValueGetter<double> getOffset;
+  final ValueSetter<double> setOffset;
 
   @override
   ScrollPosition createScrollPosition(
@@ -760,8 +771,19 @@ class _ScrollController extends ScrollController {
       physics: physics,
       context: context,
       getOffset: getOffset,
+      setOffset: setOffset,
       oldPosition: oldPosition,
     );
+  }
+
+  void jumpToInternal(double value) {
+    assert(
+      positions.isNotEmpty,
+      '$runtimeType it not attached to any scroll views.',
+    );
+    for (final position in List.of(positions)) {
+      (position as _ScrollPositionWithSingleContext).jumpToInternal(value);
+    }
   }
 }
 
@@ -770,6 +792,7 @@ class _ScrollPositionWithSingleContext extends ScrollPositionWithSingleContext {
     required ScrollPhysics physics,
     required ScrollContext context,
     required this.getOffset,
+    required this.setOffset,
     ScrollPosition? oldPosition,
   }) : super(
           physics: physics,
@@ -781,6 +804,7 @@ class _ScrollPositionWithSingleContext extends ScrollPositionWithSingleContext {
   }
 
   final ValueGetter<double> getOffset;
+  final ValueSetter<double> setOffset;
 
   @override
   void applyNewDimensions() {
@@ -811,6 +835,14 @@ class _ScrollPositionWithSingleContext extends ScrollPositionWithSingleContext {
       "TimeZoom's `_ScrollPositionWithSingleContext` doesn't support `pointerScroll`.",
     );
   }
+
+  @override
+  void jumpTo(double value, {bool isInternalCall = false}) {
+    // This method was not called by us, but, e.g., by a [Scrollbar].
+    setOffset(value);
+  }
+
+  void jumpToInternal(double value) => super.jumpTo(value);
 
   @override
   void jumpToWithoutSettling(double value) {

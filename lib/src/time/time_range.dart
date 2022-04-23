@@ -63,5 +63,5 @@ class TimeRange {
   }
 
   @override
-  String toString() => 'TimeRange(startTime = $startTime, endTime = $endTime)';
+  String toString() => 'TimeRange($startTime – $endTime)';
 }

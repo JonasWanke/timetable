@@ -8,7 +8,6 @@ import '../callbacks.dart';
 import '../config.dart';
 import '../date/controller.dart';
 import '../date/date_page_view.dart';
-import '../date/visible_date_range.dart';
 import '../event/all_day.dart';
 import '../event/builder.dart';
 import '../event/event.dart';
@@ -79,15 +78,6 @@ class MultiDateEventHeader<E extends Event> extends StatelessWidget {
     DatePageValue pageValue,
     double width,
   ) {
-    final visibleDates = Interval(
-      DateTimeTimetable.dateFromPage(pageValue.page.floor()),
-      DateTimeTimetable.dateFromPage(
-            (pageValue.page + pageValue.visibleDayCount).ceil(),
-          ) -
-          1.milliseconds,
-    );
-    assert(visibleDates.isValidTimetableDateInterval);
-
     final onBackgroundTap = this.onBackgroundTap ??
         DefaultTimetableCallbacks.of(context)?.onDateBackgroundTap;
 
@@ -101,25 +91,20 @@ class MultiDateEventHeader<E extends Event> extends StatelessWidget {
               onBackgroundTap(DateTimeTimetable.dateFromPage(page));
             }
           : null,
-      child: _buildEventLayout(context, style, visibleDates, pageValue),
+      child: _buildEventLayout(context, style, pageValue),
     );
   }
 
   Widget _buildEventLayout(
     BuildContext context,
     MultiDateEventHeaderStyle style,
-    Interval visibleDates,
     DatePageValue pageValue,
   ) {
-    assert(visibleDates.isValidTimetableDateInterval);
-
     final events =
-        DefaultEventProvider.of<E>(context)?.call(visibleDates) ?? [];
+        DefaultEventProvider.of<E>(context)?.call(pageValue.visibleDates) ?? [];
 
     return _EventsWidget<E>(
-      visibleRange: pageValue.visibleRange,
-      currentlyVisibleDates: visibleDates,
-      page: pageValue.page,
+      pageValue: pageValue,
       eventHeight: style.eventHeight,
       children: [
         for (final event in events)
@@ -220,24 +205,18 @@ class _EventParentDataWidget<E extends Event>
 
 class _EventsWidget<E extends Event> extends MultiChildRenderObjectWidget {
   _EventsWidget({
-    required this.visibleRange,
-    required this.currentlyVisibleDates,
-    required this.page,
+    required this.pageValue,
     required this.eventHeight,
     required List<_EventParentDataWidget<E>> children,
   }) : super(children: children);
 
-  final VisibleDateRange visibleRange;
-  final Interval currentlyVisibleDates;
-  final double page;
+  final DatePageValue pageValue;
   final double eventHeight;
 
   @override
   RenderObject createRenderObject(BuildContext context) {
     return _EventsLayout<E>(
-      visibleRange: visibleRange,
-      currentlyVisibleDates: currentlyVisibleDates,
-      page: page,
+      pageValue: pageValue,
       eventHeight: eventHeight,
     );
   }
@@ -245,9 +224,7 @@ class _EventsWidget<E extends Event> extends MultiChildRenderObjectWidget {
   @override
   void updateRenderObject(BuildContext context, _EventsLayout<E> renderObject) {
     renderObject
-      ..visibleRange = visibleRange
-      ..currentlyVisibleDates = currentlyVisibleDates
-      ..page = page
+      ..pageValue = pageValue
       ..eventHeight = eventHeight;
   }
 }
@@ -262,41 +239,17 @@ class _EventsLayout<E extends Event> extends RenderBox
         ContainerRenderObjectMixin<RenderBox, _EventParentData<E>>,
         RenderBoxContainerDefaultsMixin<RenderBox, _EventParentData<E>> {
   _EventsLayout({
-    required VisibleDateRange visibleRange,
-    required Interval currentlyVisibleDates,
-    required double page,
+    required DatePageValue pageValue,
     required double eventHeight,
-  })  : _visibleRange = visibleRange,
-        assert(currentlyVisibleDates.isValidTimetableDateInterval),
-        _currentlyVisibleDates = currentlyVisibleDates,
-        _page = page,
+  })  : _pageValue = pageValue,
         _eventHeight = eventHeight;
 
-  VisibleDateRange _visibleRange;
-  VisibleDateRange get visibleRange => _visibleRange;
-  set visibleRange(VisibleDateRange value) {
-    if (_visibleRange == value) return;
+  DatePageValue _pageValue;
+  DatePageValue get pageValue => _pageValue;
+  set pageValue(DatePageValue value) {
+    if (_pageValue == value) return;
 
-    _visibleRange = value;
-    markNeedsLayout();
-  }
-
-  Interval _currentlyVisibleDates;
-  Interval get currentlyVisibleDates => _currentlyVisibleDates;
-  set currentlyVisibleDates(Interval value) {
-    assert(value.isValidTimetableDateInterval);
-    if (_currentlyVisibleDates == value) return;
-
-    _currentlyVisibleDates = value;
-    markNeedsLayout();
-  }
-
-  double _page;
-  double get page => _page;
-  set page(double value) {
-    if (_page == value) return;
-
-    _page = value;
+    _pageValue = value;
     markNeedsLayout();
   }
 
@@ -366,8 +319,8 @@ class _EventsLayout<E extends Event> extends RenderBox
   void _updateEventPositions() {
     // Remove events outside the current viewport (with some buffer).
     _yPositions.removeWhere((e, _) {
-      return e.start.page.floor() >= currentlyVisibleDates.end.page.ceil() ||
-          e.end.page.ceil() <= currentlyVisibleDates.start.page;
+      return e.start.page.floor() > pageValue.lastVisiblePage ||
+          e.end.page.ceil() <= pageValue.firstVisibleDate.page;
     });
 
     // Remove old events.
@@ -400,16 +353,17 @@ class _EventsLayout<E extends Event> extends RenderBox
   }
 
   void _positionEvents() {
-    final dateWidth = size.width / visibleRange.visibleDayCount;
+    final dateWidth = size.width / pageValue.visibleDayCount;
     for (final child in children) {
       final data = child.data<E>();
       final event = data.event!;
 
       final dateInterval = event.interval.dateInterval;
       final startPage = dateInterval.start.page;
-      final left = ((startPage - page) * dateWidth).coerceAtLeast(0);
+      final left = ((startPage - pageValue.page) * dateWidth).coerceAtLeast(0);
       final endPage = dateInterval.end.page.ceilToDouble();
-      final right = ((endPage - page) * dateWidth).coerceAtMost(size.width);
+      final right =
+          ((endPage - pageValue.page) * dateWidth).coerceAtMost(size.width);
 
       child.layout(
         BoxConstraints(
@@ -420,7 +374,7 @@ class _EventsLayout<E extends Event> extends RenderBox
         ),
         parentUsesSize: true,
       );
-      final actualLeft = startPage >= page
+      final actualLeft = startPage >= pageValue.page
           ? left
           : left.coerceAtMost(right - child.size.width);
       data.offset = Offset(actualLeft, _yPositions[event]! * eventHeight);
@@ -429,24 +383,18 @@ class _EventsLayout<E extends Event> extends RenderBox
 
   double _parallelEventCount() {
     int parallelEventsFrom(int page) {
-      final startDate = DateTimeTimetable.dateFromPage(page);
-      final interval = Interval(
-        startDate,
-        (startDate + (visibleRange.visibleDayCount - 1).days).atEndOfDay,
-      );
-      assert(interval.isValidTimetableDateInterval);
-
+      final visibleDates = pageValue.visibleDates;
       final maxEventPosition = _yPositions.entries
-          .where((e) => e.key.interval.intersects(interval))
+          .where((e) => e.key.interval.intersects(visibleDates))
           .map<num>((e) => e.value)
           .maxOrNull as int?;
       return maxEventPosition != null ? maxEventPosition + 1 : 0;
     }
 
     _updateEventPositions();
-    final oldParallelEvents = parallelEventsFrom(page.floor());
-    final newParallelEvents = parallelEventsFrom(page.ceil());
-    final t = page - page.floorToDouble();
+    final oldParallelEvents = parallelEventsFrom(pageValue.page.floor());
+    final newParallelEvents = parallelEventsFrom(pageValue.page.ceil());
+    final t = pageValue.page - pageValue.page.floorToDouble();
     return lerpDouble(oldParallelEvents, newParallelEvents, t)!;
   }
 

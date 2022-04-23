@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/widgets.dart' hide Interval;
 
 import '../config.dart';
 import '../utils.dart';
@@ -28,8 +28,12 @@ class DateController extends ValueNotifier<DatePageValue> {
           0,
         )) {
     // The correct value is set via the listener when we assign to our value.
-    _date = _DateValueNotifier(DateTimeTimetable.dateFromPage(0));
+    _date = ValueNotifier(DateTimeTimetable.dateFromPage(0));
     addListener(() => _date.value = value.date);
+
+    // The correct value is set via the listener when we assign to our value.
+    _visibleDates = ValueNotifier(Interval(DateTime(0), DateTime(0)));
+    addListener(() => _visibleDates.value = value.visibleDates);
 
     final rawStartPage = initialDate?.page ?? DateTimeTimetable.today().page;
     value = value.copyWith(
@@ -47,6 +51,9 @@ class DateController extends ValueNotifier<DatePageValue> {
       visibleRange: visibleRange,
     );
   }
+
+  late final ValueNotifier<Interval> _visibleDates;
+  ValueListenable<Interval> get visibleDates => _visibleDates;
 
   // Animation
   AnimationController? _animationController;
@@ -127,12 +134,6 @@ class DateController extends ValueNotifier<DatePageValue> {
   }
 }
 
-class _DateValueNotifier extends ValueNotifier<DateTime> {
-  _DateValueNotifier(DateTime date)
-      : assert(date.isValidTimetableDate),
-        super(date);
-}
-
 /// The value held by [DateController].
 @immutable
 class DatePageValue {
@@ -143,6 +144,31 @@ class DatePageValue {
 
   final double page;
   DateTime get date => DateTimeTimetable.dateFromPage(page.floor());
+
+  int get firstVisiblePage => page.floor();
+
+  /// The first date that is at least partially visible.
+  DateTime get firstVisibleDate {
+    final result = DateTimeTimetable.dateFromPage(firstVisiblePage);
+    assert(result.isValidTimetableDate);
+    return result;
+  }
+
+  int get lastVisiblePage => page.ceil() + visibleDayCount - 1;
+
+  /// The last date that is at least partially visible.
+  DateTime get lastVisibleDate {
+    final result = DateTimeTimetable.dateFromPage(lastVisiblePage);
+    assert(result.isValidTimetableDate);
+    return result;
+  }
+
+  /// The interval of dates that are at least partially visible.
+  Interval get visibleDates {
+    final result = Interval(firstVisibleDate, lastVisibleDate.atEndOfDay);
+    assert(result.isValidTimetableDateInterval);
+    return result;
+  }
 
   DatePageValue copyWith({VisibleDateRange? visibleRange, double? page}) {
     return DatePageValue(visibleRange ?? this.visibleRange, page ?? this.page);

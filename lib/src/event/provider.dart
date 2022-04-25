@@ -64,11 +64,6 @@ extension EventProviderTimetable<E extends Event> on EventProvider<E> {
         return true;
       }());
 
-      assert(
-        events.toSet().length == events.length,
-        'Events may not contain duplicates.',
-      );
-
       return events;
     };
   }

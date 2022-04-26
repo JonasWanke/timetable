@@ -1,7 +1,4 @@
-import 'dart:ui';
-
 import 'package:flutter/foundation.dart';
-import 'package:flutter/widgets.dart' hide Interval;
 
 import '../utils.dart';
 import 'basic.dart';
@@ -24,17 +21,6 @@ abstract class Event with Diagnosticable {
   final DateTime end;
 
   bool get isAllDay => end.difference(start).inDays >= 1;
-
-  @override
-  bool operator ==(dynamic other) {
-    return other is Event &&
-        runtimeType == other.runtimeType &&
-        start == other.start &&
-        end == other.end;
-  }
-
-  @override
-  int get hashCode => hashValues(runtimeType, start, end);
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {

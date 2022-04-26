@@ -30,10 +30,6 @@ class DateContent<E extends Event> extends StatelessWidget {
           events.every((e) => e.interval.intersects(date.fullDayInterval)),
           'All events must intersect the given date',
         ),
-        assert(
-          events.toSet().length == events.length,
-          'Events may not contain duplicates',
-        ),
         events = events.sortedByStartLength(),
         super(key: key);
 

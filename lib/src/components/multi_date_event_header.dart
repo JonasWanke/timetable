@@ -35,10 +35,10 @@ import '../utils.dart';
 ///   Timetable widgets.
 class MultiDateEventHeader<E extends Event> extends StatelessWidget {
   const MultiDateEventHeader({
-    Key? key,
+    super.key,
     this.onBackgroundTap,
     this.style,
-  }) : super(key: key);
+  });
 
   final DateTapCallback? onBackgroundTap;
   final MultiDateEventHeaderStyle? style;
@@ -180,10 +180,10 @@ class MultiDateEventHeaderStyle {
 class _EventParentDataWidget<E extends Event>
     extends ParentDataWidget<_EventParentData<E>> {
   const _EventParentDataWidget({
-    Key? key,
+    super.key,
     required this.event,
-    required Widget child,
-  }) : super(key: key, child: child);
+    required super.child,
+  });
 
   final E event;
 
@@ -207,8 +207,8 @@ class _EventsWidget<E extends Event> extends MultiChildRenderObjectWidget {
   _EventsWidget({
     required this.pageValue,
     required this.eventHeight,
-    required List<_EventParentDataWidget<E>> children,
-  }) : super(children: children);
+    required super.children,
+  });
 
   final DatePageValue pageValue;
   final double eventHeight;

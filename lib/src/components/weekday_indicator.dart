@@ -17,10 +17,9 @@ import '../utils.dart';
 class WeekdayIndicator extends StatelessWidget {
   WeekdayIndicator(
     this.date, {
-    Key? key,
+    super.key,
     this.style,
-  })  : assert(date.isValidTimetableDate),
-        super(key: key);
+  }) : assert(date.isValidTimetableDate);
 
   final DateTime date;
   final WeekdayIndicatorStyle? style;

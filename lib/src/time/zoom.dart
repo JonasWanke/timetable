@@ -14,7 +14,7 @@ import 'time_range.dart';
 /// This uses a [TimeController] to maintain its state, which has to be supplied
 /// by a [DefaultTimeController] above in the widget tree.
 class TimeZoom extends StatefulWidget {
-  const TimeZoom({Key? key, required this.child}) : super(key: key);
+  const TimeZoom({super.key, required this.child});
 
   final Widget child;
 
@@ -248,29 +248,17 @@ class _TimeZoomState extends State<TimeZoom>
 class _NoDragSingleChildScrollView extends SingleChildScrollView {
   /// Creates a box in which a single widget can be scrolled.
   const _NoDragSingleChildScrollView({
-    Key? key,
-    Axis scrollDirection = Axis.vertical,
-    bool reverse = false,
-    EdgeInsetsGeometry? padding,
-    ScrollPhysics? physics,
-    ScrollController? controller,
-    Widget? child,
-    DragStartBehavior dragStartBehavior = DragStartBehavior.start,
-    Clip clipBehavior = Clip.hardEdge,
-    String? restorationId,
-  }) : super(
-          key: key,
-          scrollDirection: scrollDirection,
-          reverse: reverse,
-          padding: padding,
-          controller: controller,
-          primary: false,
-          physics: physics,
-          child: child,
-          dragStartBehavior: dragStartBehavior,
-          clipBehavior: clipBehavior,
-          restorationId: restorationId,
-        );
+    super.key,
+    super.scrollDirection = Axis.vertical,
+    super.reverse = false,
+    super.padding,
+    super.physics,
+    super.controller,
+    super.child,
+    super.dragStartBehavior = DragStartBehavior.start,
+    super.clipBehavior = Clip.hardEdge,
+    super.restorationId,
+  }) : super(primary: false);
 
   @override
   Widget build(BuildContext context) {
@@ -290,28 +278,17 @@ class _NoDragSingleChildScrollView extends SingleChildScrollView {
 
 class _Scrollable extends Scrollable {
   const _Scrollable({
-    Key? key,
-    AxisDirection axisDirection = AxisDirection.down,
-    ScrollController? controller,
-    ScrollPhysics? physics,
-    required ViewportBuilder viewportBuilder,
-    ScrollIncrementCalculator? incrementCalculator,
-    bool excludeFromSemantics = false,
-    int? semanticChildCount,
-    DragStartBehavior dragStartBehavior = DragStartBehavior.start,
-    String? restorationId,
-  }) : super(
-          key: key,
-          axisDirection: axisDirection,
-          controller: controller,
-          physics: physics,
-          viewportBuilder: viewportBuilder,
-          incrementCalculator: incrementCalculator,
-          excludeFromSemantics: excludeFromSemantics,
-          semanticChildCount: semanticChildCount,
-          dragStartBehavior: dragStartBehavior,
-          restorationId: restorationId,
-        );
+    super.key,
+    super.axisDirection = AxisDirection.down,
+    super.controller,
+    super.physics,
+    required super.viewportBuilder,
+    super.incrementCalculator,
+    super.excludeFromSemantics = false,
+    super.semanticChildCount,
+    super.dragStartBehavior = DragStartBehavior.start,
+    super.restorationId,
+  });
 
   @override
   _ScrollableState createState() => _ScrollableState();
@@ -326,11 +303,11 @@ class _ScrollableState extends ScrollableState {
 // Copied and modified from [OverflowBox].
 class _VerticalOverflowBox extends SingleChildRenderObjectWidget {
   const _VerticalOverflowBox({
-    Key? key,
+    super.key,
     required this.height,
     required this.offset,
-    Widget? child,
-  }) : super(key: key, child: child);
+    super.child,
+  });
 
   final double height;
   final double offset;
@@ -417,10 +394,10 @@ class _RenderVerticalOverflowBox extends RenderShiftedBox {
 // Copied and modified from https://github.com/flutter/flutter/blob/f4abaa0735eba4dfd8f33f73363911d63931fe03/packages/flutter/lib/src/gestures/scale.dart
 class _ScaleGestureRecognizer extends OneSequenceGestureRecognizer {
   _ScaleGestureRecognizer({
-    Object? debugOwner,
-    Set<PointerDeviceKind>? supportedDevices,
+    super.debugOwner,
+    super.supportedDevices,
     this.dragStartBehavior = DragStartBehavior.down,
-  }) : super(debugOwner: debugOwner, supportedDevices: supportedDevices);
+  });
 
   DragStartBehavior dragStartBehavior;
   GestureScaleStartCallback? onStart;
@@ -789,17 +766,12 @@ class _ScrollController extends ScrollController {
 
 class _ScrollPositionWithSingleContext extends ScrollPositionWithSingleContext {
   _ScrollPositionWithSingleContext({
-    required ScrollPhysics physics,
-    required ScrollContext context,
+    required super.physics,
+    required super.context,
     required this.getOffset,
     required this.setOffset,
-    ScrollPosition? oldPosition,
-  }) : super(
-          physics: physics,
-          context: context,
-          keepScrollOffset: false,
-          oldPosition: oldPosition,
-        ) {
+    super.oldPosition,
+  }) : super(keepScrollOffset: false) {
     correctPixels(getOffset());
   }
 

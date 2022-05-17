@@ -19,7 +19,7 @@ import 'time_indicator.dart';
 /// * [TimeIndicator], which is usually used inside a [TimeIndicatorsChild] to
 ///   display a label.
 class TimeIndicators extends StatelessWidget {
-  const TimeIndicators({Key? key, required this.children}) : super(key: key);
+  const TimeIndicators({super.key, required this.children});
 
   factory TimeIndicators.hours({
     Key? key,
@@ -129,8 +129,7 @@ class TimeIndicators extends StatelessWidget {
 }
 
 class _TimeIndicators extends MultiChildRenderObjectWidget {
-  _TimeIndicators({required List<TimeIndicatorsChild> children})
-      : super(children: children);
+  _TimeIndicators({required super.children});
 
   @override
   RenderObject createRenderObject(BuildContext context) =>
@@ -142,9 +141,9 @@ class TimeIndicatorsChild extends ParentDataWidget<_TimeIndicatorParentData> {
   TimeIndicatorsChild({
     required this.time,
     this.alignment = Alignment.centerRight,
-    required Widget child,
+    required super.child,
   })  : assert(time.isValidTimetableTimeOfDay),
-        super(key: ValueKey(time), child: child);
+        super(key: ValueKey(time));
 
   /// The time of day that this widget positioned next to.
   final Duration time;

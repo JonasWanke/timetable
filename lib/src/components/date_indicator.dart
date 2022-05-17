@@ -23,11 +23,10 @@ import '../utils.dart';
 class DateIndicator extends StatelessWidget {
   DateIndicator(
     this.date, {
-    Key? key,
+    super.key,
     this.onTap,
     this.style,
-  })  : assert(date.isValidTimetableDate),
-        super(key: key);
+  }) : assert(date.isValidTimetableDate);
 
   final DateTime date;
   final VoidCallback? onTap;

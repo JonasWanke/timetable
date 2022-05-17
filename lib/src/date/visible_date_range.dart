@@ -13,7 +13,7 @@ abstract class VisibleDateRange {
 
   /// A visible range that shows [visibleDayCount] consecutive days.
   ///
-  /// This range snapps to every `swipeRange` days (defaults to every day) that
+  /// This range snaps to every `swipeRange` days (defaults to every day) that
   /// are aligned to `alignmentDate` (defaults to today).
   ///
   /// When set, swiping is limited from `minDate` to `maxDate` so that both can

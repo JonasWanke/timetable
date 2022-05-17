@@ -20,7 +20,7 @@ import 'time_overlays.dart';
 ///   Timetable widgets.
 class DateContent<E extends Event> extends StatelessWidget {
   DateContent({
-    Key? key,
+    super.key,
     required this.date,
     required List<E> events,
     this.overlays = const [],
@@ -30,8 +30,7 @@ class DateContent<E extends Event> extends StatelessWidget {
           events.every((e) => e.interval.intersects(date.fullDayInterval)),
           'All events must intersect the given date',
         ),
-        events = events.sortedByStartLength(),
-        super(key: key);
+        events = events.sortedByStartLength();
 
   final DateTime date;
 

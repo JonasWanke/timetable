@@ -21,11 +21,10 @@ import 'time_indicators.dart';
 ///   descendant Timetable widgets.
 class TimeIndicator extends StatelessWidget {
   TimeIndicator({
-    Key? key,
+    super.key,
     required this.time,
     this.style,
-  })  : assert(time.isValidTimetableTimeOfDay),
-        super(key: key);
+  }) : assert(time.isValidTimetableTimeOfDay);
 
   static String formatHour(Duration time) => _format(DateFormat.j(), time);
   static String formatHourMinute(Duration time) =>

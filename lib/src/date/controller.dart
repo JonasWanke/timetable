@@ -197,8 +197,8 @@ class DatePageValue {
 class DefaultDateController extends InheritedWidget {
   const DefaultDateController({
     required this.controller,
-    required Widget child,
-  }) : super(child: child);
+    required super.child,
+  });
 
   final DateController controller;
 

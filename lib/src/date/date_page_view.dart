@@ -19,11 +19,11 @@ const _precisionErrorTolerance = 1e-5;
 /// a [DefaultDateController] above in the widget tree.
 class DatePageView extends StatefulWidget {
   const DatePageView({
-    Key? key,
+    super.key,
     this.controller,
     this.shrinkWrapInCrossAxis = false,
     required this.builder,
-  }) : super(key: key);
+  });
 
   final DateController? controller;
   final bool shrinkWrapInCrossAxis;
@@ -145,7 +145,7 @@ class _DatePageViewState extends State<DatePageView> {
         onSizeChanged: (size) {
           if (_heights[page] == size.height) return;
           _heights[page] = size.height;
-          WidgetsBinding.instance!.addPostFrameCallback((_) => setState(() {}));
+          WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
         },
         child: child,
       );
@@ -213,16 +213,11 @@ class _MultiDateScrollController extends ScrollController {
 class MultiDateScrollPosition extends ScrollPositionWithSingleContext {
   MultiDateScrollPosition(
     this.owner, {
-    required ScrollPhysics physics,
-    required ScrollContext context,
+    required super.physics,
+    required super.context,
     required this.initialPage,
-    ScrollPosition? oldPosition,
-  }) : super(
-          physics: physics,
-          context: context,
-          initialPixels: null,
-          oldPosition: oldPosition,
-        );
+    super.oldPosition,
+  }) : super(initialPixels: null);
 
   final _MultiDateScrollController owner;
   DateController get controller => owner.controller;

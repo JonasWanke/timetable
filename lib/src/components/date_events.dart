@@ -18,7 +18,7 @@ import '../utils.dart';
 ///   descendant Timetable widgets.
 class DateEvents<E extends Event> extends StatelessWidget {
   DateEvents({
-    Key? key,
+    super.key,
     required this.date,
     required List<E> events,
     this.eventBuilder,
@@ -28,8 +28,7 @@ class DateEvents<E extends Event> extends StatelessWidget {
           events.every((e) => e.interval.intersects(date.fullDayInterval)),
           'All events must intersect the given date',
         ),
-        events = events.sortedByStartLength(),
-        super(key: key);
+        events = events.sortedByStartLength();
 
   final DateTime date;
   final List<E> events;

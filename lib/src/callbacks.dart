@@ -100,8 +100,8 @@ class TimetableCallbacks {
 class DefaultTimetableCallbacks extends InheritedWidget {
   const DefaultTimetableCallbacks({
     required this.callbacks,
-    required Widget child,
-  }) : super(child: child);
+    required super.child,
+  });
 
   final TimetableCallbacks callbacks;
 

@@ -5,8 +5,7 @@ import 'date_page_view.dart';
 import 'visible_date_range.dart';
 
 class DateScrollPhysics extends ScrollPhysics {
-  const DateScrollPhysics(this.visibleRangeListenable, {ScrollPhysics? parent})
-      : super(parent: parent);
+  const DateScrollPhysics(this.visibleRangeListenable, {super.parent});
 
   final ValueListenable<VisibleDateRange> visibleRangeListenable;
   VisibleDateRange get visibleRange => visibleRangeListenable.value;

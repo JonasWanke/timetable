@@ -4,10 +4,10 @@ import 'package:flutter/widgets.dart';
 // Copied and modified from https://github.com/Limbou/expandable_page_view/blob/d692cff38f9e098ad5c020d80123a13ab2a53083/lib/size_reporting_widget.dart
 class SizeReportingWidget extends StatefulWidget {
   const SizeReportingWidget({
-    Key? key,
+    super.key,
     required this.onSizeChanged,
     required this.child,
-  }) : super(key: key);
+  });
 
   final ValueChanged<Size> onSizeChanged;
   final Widget child;
@@ -22,10 +22,10 @@ class _SizeReportingWidgetState extends State<SizeReportingWidget> {
 
   @override
   Widget build(BuildContext context) {
-    WidgetsBinding.instance!.addPostFrameCallback((_) => _notifySize());
+    WidgetsBinding.instance.addPostFrameCallback((_) => _notifySize());
     return NotificationListener<SizeChangedLayoutNotification>(
       onNotification: (_) {
-        WidgetsBinding.instance!.addPostFrameCallback((_) => _notifySize());
+        WidgetsBinding.instance.addPostFrameCallback((_) => _notifySize());
         return true;
       },
       child: SizeChangedLayoutNotifier(
@@ -83,10 +83,10 @@ class ImmediateSizeReportingOverflowPage extends StatelessWidget {
 
 class ImmediateSizeReportingWidget extends SingleChildRenderObjectWidget {
   const ImmediateSizeReportingWidget({
-    Key? key,
+    super.key,
     required this.onSizeChanged,
-    required Widget child,
-  }) : super(key: key, child: child);
+    required super.child,
+  });
 
   /// Called during layout!
   final ValueChanged<Size> onSizeChanged;
@@ -125,10 +125,10 @@ class _ImmediateSizeReportingRenderObject extends RenderProxyBox {
 /// A widget that requests its height during layout via [heightGetter].
 class ImmediateSizedBox extends SingleChildRenderObjectWidget {
   const ImmediateSizedBox({
-    Key? key,
+    super.key,
     required this.heightGetter,
-    required Widget child,
-  }) : super(key: key, child: child);
+    required super.child,
+  });
 
   final ValueGetter<double> heightGetter;
 

@@ -40,7 +40,7 @@ typedef MultiDateTimetableContentBuilder = Widget Function(
 ///   Sunday without dates.
 class MultiDateTimetable<E extends Event> extends StatefulWidget {
   MultiDateTimetable({
-    Key? key,
+    super.key,
     MultiDateTimetableHeaderBuilder? headerBuilder,
     MultiDateTimetableContentBuilder? contentBuilder,
     Widget? contentLeading,
@@ -50,8 +50,7 @@ class MultiDateTimetable<E extends Event> extends StatefulWidget {
           "`contentLeading` can't be used when `contentBuilder` is specified.",
         ),
         contentBuilder =
-            contentBuilder ?? _defaultContentBuilder<E>(contentLeading),
-        super(key: key);
+            contentBuilder ?? _defaultContentBuilder<E>(contentLeading);
 
   final MultiDateTimetableHeaderBuilder headerBuilder;
   static MultiDateTimetableHeaderBuilder
@@ -100,7 +99,7 @@ class _MultiDateTimetableState<E extends Event>
           eventProvider: (visibleDates) =>
               eventProvider(visibleDates).where((it) => it.isPartDay).toList(),
           child: Builder(
-            builder: (contxt) => widget.contentBuilder(
+            builder: (context) => widget.contentBuilder(
               context,
               (newWidth) => setState(() => _leadingWidth = newWidth),
             ),
@@ -113,15 +112,14 @@ class _MultiDateTimetableState<E extends Event>
 
 class MultiDateTimetableHeader<E extends Event> extends StatelessWidget {
   MultiDateTimetableHeader({
-    Key? key,
+    super.key,
     Widget? leading,
     DateWidgetBuilder? dateHeaderBuilder,
     Widget? bottom,
   })  : leading = leading ?? Center(child: WeekIndicator.forController(null)),
         dateHeaderBuilder =
             dateHeaderBuilder ?? ((context, date) => DateHeader(date)),
-        bottom = bottom ?? MultiDateEventHeader<E>(),
-        super(key: key);
+        bottom = bottom ?? MultiDateEventHeader<E>();
 
   final Widget leading;
   final DateWidgetBuilder dateHeaderBuilder;
@@ -143,14 +141,13 @@ class MultiDateTimetableHeader<E extends Event> extends StatelessWidget {
 
 class MultiDateTimetableContent<E extends Event> extends StatelessWidget {
   MultiDateTimetableContent({
-    Key? key,
+    super.key,
     Widget? leading,
     Widget? divider,
     Widget? content,
   })  : leading = leading ?? _DefaultContentLeading(),
         divider = divider ?? VerticalDivider(width: 0),
-        content = content ?? MultiDateContent<E>(),
-        super(key: key);
+        content = content ?? MultiDateContent<E>();
 
   final Widget leading;
   final Widget divider;
@@ -167,7 +164,7 @@ class MultiDateTimetableContent<E extends Event> extends StatelessWidget {
 }
 
 class _DefaultContentLeading extends StatelessWidget {
-  const _DefaultContentLeading({Key? key}) : super(key: key);
+  const _DefaultContentLeading({super.key});
 
   @override
   Widget build(BuildContext context) {

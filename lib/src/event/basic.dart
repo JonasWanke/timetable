@@ -14,9 +14,9 @@ class BasicEvent extends Event {
     required this.id,
     required this.title,
     required this.backgroundColor,
-    required DateTime start,
-    required DateTime end,
-  }) : super(start: start, end: end);
+    required super.start,
+    required super.end,
+  });
 
   /// An ID for this event.
   ///
@@ -65,10 +65,10 @@ class BasicEvent extends Event {
 class BasicEventWidget extends StatelessWidget {
   const BasicEventWidget(
     this.event, {
-    Key? key,
+    super.key,
     this.onTap,
     this.margin = const EdgeInsets.only(right: 1),
-  }) : super(key: key);
+  });
 
   /// The event to be displayed.
   final BasicEvent event;
@@ -114,11 +114,11 @@ class BasicEventWidget extends StatelessWidget {
 class BasicAllDayEventWidget extends StatelessWidget {
   const BasicAllDayEventWidget(
     this.event, {
-    Key? key,
+    super.key,
     required this.info,
     this.onTap,
     this.style,
-  }) : super(key: key);
+  });
 
   /// The event to be displayed.
   final BasicEvent event;

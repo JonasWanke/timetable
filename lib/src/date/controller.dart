@@ -143,7 +143,7 @@ class DatePageValue {
   int get visibleDayCount => visibleRange.visibleDayCount;
 
   final double page;
-  DateTime get date => DateTimeTimetable.dateFromPage(page.floor());
+  DateTime get date => DateTimeTimetable.dateFromPage(page.round());
 
   int get firstVisiblePage => page.floor();
 

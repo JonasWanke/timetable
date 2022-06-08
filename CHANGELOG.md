@@ -16,6 +16,14 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### 📦 Build & CI
 -->
 
+## 1.0.0-alpha.8 · 2022-06-08
+
+### ⚠️ BREAKING CHANGES
+* `DatePageValue.date` now rounds the raw page value instead of flooring it ([`9d17622`](https://github.com/JonasWanke/timetable/commit/9d17622c5e13294232e6e17255caf734330f0937))
+
+### 📦 Build & CI
+* update to Flutter 3 ([#122](https://github.com/JonasWanke/timetable/pull/122)). Thanks to [@ThexXTURBOXx](https://github.com/ThexXTURBOXx)!
+
 ## 1.0.0-alpha.7 · 2022-04-23
 
 ### 🎉 New Features

@@ -13,7 +13,7 @@ class SizeReportingWidget extends StatefulWidget {
   final Widget child;
 
   @override
-  _SizeReportingWidgetState createState() => _SizeReportingWidgetState();
+  State<SizeReportingWidget> createState() => _SizeReportingWidgetState();
 }
 
 class _SizeReportingWidgetState extends State<SizeReportingWidget> {
@@ -97,8 +97,9 @@ class ImmediateSizeReportingWidget extends SingleChildRenderObjectWidget {
   @override
   void updateRenderObject(
     BuildContext context,
-    _ImmediateSizeReportingRenderObject renderObject,
+    covariant RenderObject renderObject,
   ) {
+    renderObject as _ImmediateSizeReportingRenderObject;
     renderObject.onSizeChanged = onSizeChanged;
   }
 }
@@ -138,8 +139,9 @@ class ImmediateSizedBox extends SingleChildRenderObjectWidget {
   @override
   void updateRenderObject(
     BuildContext context,
-    _ImmediateSizedBoxRenderObject renderObject,
+    covariant RenderObject renderObject,
   ) {
+    renderObject as _ImmediateSizedBoxRenderObject;
     renderObject.heightGetter = heightGetter;
   }
 }

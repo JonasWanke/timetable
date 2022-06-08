@@ -138,7 +138,7 @@ class PartDayDraggableEvent extends StatefulWidget {
   final Widget childWhileDragging;
 
   @override
-  _PartDayDraggableEventState createState() => _PartDayDraggableEventState();
+  State<PartDayDraggableEvent> createState() => _PartDayDraggableEventState();
 }
 
 class _PartDayDraggableEventState extends State<PartDayDraggableEvent> {

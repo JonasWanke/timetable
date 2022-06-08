@@ -75,7 +75,7 @@ class MultiDateTimetable<E extends Event> extends StatefulWidget {
   }
 
   @override
-  _MultiDateTimetableState<E> createState() => _MultiDateTimetableState();
+  State<MultiDateTimetable<E>> createState() => _MultiDateTimetableState();
 }
 
 class _MultiDateTimetableState<E extends Event>
@@ -164,7 +164,7 @@ class MultiDateTimetableContent<E extends Event> extends StatelessWidget {
 }
 
 class _DefaultContentLeading extends StatelessWidget {
-  const _DefaultContentLeading({super.key});
+  const _DefaultContentLeading();
 
   @override
   Widget build(BuildContext context) {

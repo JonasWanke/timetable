@@ -21,8 +21,12 @@ class MonthIndicator extends StatelessWidget {
     super.key,
     this.style,
   }) : assert(month.isValidTimetableMonth);
-  static Widget forController(DateController? controller, {Key? key}) =>
-      _MonthIndicatorForController(controller, key: key);
+  static Widget forController(
+    DateController? controller, {
+    Key? key,
+    MonthIndicatorStyle? style,
+  }) =>
+      _MonthIndicatorForController(controller, key: key, style: style);
 
   final DateTime month;
   final MonthIndicatorStyle? style;

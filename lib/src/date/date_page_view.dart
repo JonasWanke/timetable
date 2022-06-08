@@ -30,12 +30,12 @@ class DatePageView extends StatefulWidget {
   final DateWidgetBuilder builder;
 
   @override
-  _DatePageViewState createState() => _DatePageViewState();
+  State<DatePageView> createState() => _DatePageViewState();
 }
 
 class _DatePageViewState extends State<DatePageView> {
   DateController? _controller;
-  _MultiDateScrollController? _scrollController;
+  MultiDateScrollController? _scrollController;
   final _heights = <int, double>{};
 
   @override
@@ -46,7 +46,7 @@ class _DatePageViewState extends State<DatePageView> {
       _scrollController!.dispose();
     }
     _controller = widget.controller ?? DefaultDateController.of(context)!;
-    _scrollController = _MultiDateScrollController(_controller!);
+    _scrollController = MultiDateScrollController(_controller!);
     _controller!.date.addListener(_onDateChanged);
   }
 
@@ -154,8 +154,8 @@ class _DatePageViewState extends State<DatePageView> {
   }
 }
 
-class _MultiDateScrollController extends ScrollController {
-  _MultiDateScrollController(this.controller)
+class MultiDateScrollController extends ScrollController {
+  MultiDateScrollController(this.controller)
       : super(initialScrollOffset: controller.value.page) {
     controller.addListener(_listenToController);
   }
@@ -179,7 +179,7 @@ class _MultiDateScrollController extends ScrollController {
   void attach(ScrollPosition position) {
     assert(
       position is MultiDateScrollPosition,
-      '_MultiDateScrollControllers can only be used with '
+      'MultiDateScrollControllers can only be used with '
       'MultiDateScrollPositions.',
     );
     final linkedPosition = position as MultiDateScrollPosition;
@@ -219,7 +219,7 @@ class MultiDateScrollPosition extends ScrollPositionWithSingleContext {
     super.oldPosition,
   }) : super(initialPixels: null);
 
-  final _MultiDateScrollController owner;
+  final MultiDateScrollController owner;
   DateController get controller => owner.controller;
   double initialPage;
 

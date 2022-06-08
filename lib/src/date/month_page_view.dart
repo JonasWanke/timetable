@@ -19,7 +19,7 @@ class MonthPageView extends StatefulWidget {
   final MonthWidgetBuilder builder;
 
   @override
-  _MonthPageViewState createState() => _MonthPageViewState();
+  State<MonthPageView> createState() => _MonthPageViewState();
 }
 
 class _MonthPageViewState extends State<MonthPageView> {

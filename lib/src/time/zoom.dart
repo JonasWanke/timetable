@@ -19,7 +19,7 @@ class TimeZoom extends StatefulWidget {
   final Widget child;
 
   @override
-  _TimeZoomState createState() => _TimeZoomState();
+  State<TimeZoom> createState() => _TimeZoomState();
 }
 
 class _TimeZoomState extends State<TimeZoom>
@@ -247,18 +247,8 @@ class _TimeZoomState extends State<TimeZoom>
 /// Necessary because we handle drags ourselves to also detect zoom gestures.
 class _NoDragSingleChildScrollView extends SingleChildScrollView {
   /// Creates a box in which a single widget can be scrolled.
-  const _NoDragSingleChildScrollView({
-    super.key,
-    super.scrollDirection = Axis.vertical,
-    super.reverse = false,
-    super.padding,
-    super.physics,
-    super.controller,
-    super.child,
-    super.dragStartBehavior = DragStartBehavior.start,
-    super.clipBehavior = Clip.hardEdge,
-    super.restorationId,
-  }) : super(primary: false);
+  const _NoDragSingleChildScrollView({super.controller, super.child})
+      : super(primary: false);
 
   @override
   Widget build(BuildContext context) {
@@ -278,14 +268,10 @@ class _NoDragSingleChildScrollView extends SingleChildScrollView {
 
 class _Scrollable extends Scrollable {
   const _Scrollable({
-    super.key,
     super.axisDirection = AxisDirection.down,
     super.controller,
     super.physics,
     required super.viewportBuilder,
-    super.incrementCalculator,
-    super.excludeFromSemantics = false,
-    super.semanticChildCount,
     super.dragStartBehavior = DragStartBehavior.start,
     super.restorationId,
   });
@@ -303,7 +289,6 @@ class _ScrollableState extends ScrollableState {
 // Copied and modified from [OverflowBox].
 class _VerticalOverflowBox extends SingleChildRenderObjectWidget {
   const _VerticalOverflowBox({
-    super.key,
     required this.height,
     required this.offset,
     super.child,
@@ -395,7 +380,7 @@ class _RenderVerticalOverflowBox extends RenderShiftedBox {
 class _ScaleGestureRecognizer extends OneSequenceGestureRecognizer {
   _ScaleGestureRecognizer({
     super.debugOwner,
-    super.supportedDevices,
+    // ignore: unused_element
     this.dragStartBehavior = DragStartBehavior.down,
   });
 

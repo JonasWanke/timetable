@@ -18,7 +18,7 @@ class CompactMonthTimetable extends StatefulWidget {
   final MonthWidgetBuilder monthBuilder;
 
   @override
-  _CompactMonthTimetableState createState() => _CompactMonthTimetableState();
+  State<CompactMonthTimetable> createState() => _CompactMonthTimetableState();
 }
 
 class _CompactMonthTimetableState extends State<CompactMonthTimetable>

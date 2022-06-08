@@ -35,7 +35,7 @@ class TimetableConfig<E extends Event> extends StatefulWidget {
   final Widget child;
 
   @override
-  _TimetableConfigState<E> createState() => _TimetableConfigState<E>();
+  State<TimetableConfig<E>> createState() => _TimetableConfigState<E>();
 }
 
 class _TimetableConfigState<E extends Event> extends State<TimetableConfig<E>> {

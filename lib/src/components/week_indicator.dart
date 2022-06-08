@@ -28,20 +28,19 @@ import '../week.dart';
 class WeekIndicator extends StatelessWidget {
   const WeekIndicator(
     this.week, {
-    Key? key,
+    super.key,
     this.alwaysUseNarrowestVariant = false,
     this.onTap,
     this.style,
-  }) : super(key: key);
+  });
   WeekIndicator.forDate(
     DateTime date, {
-    Key? key,
+    super.key,
     this.alwaysUseNarrowestVariant = false,
     this.onTap,
     this.style,
   })  : assert(date.isValidTimetableDate),
-        week = date.week,
-        super(key: key);
+        week = date.week;
   static Widget forController(
     DateController? controller, {
     Key? key,
@@ -333,11 +332,11 @@ class WeekIndicatorStyle {
 class _WeekIndicatorForController extends StatelessWidget {
   const _WeekIndicatorForController(
     this.controller, {
-    Key? key,
+    super.key,
     this.alwaysUseNarrowestVariant = false,
     this.onTap,
     this.style,
-  }) : super(key: key);
+  });
 
   final DateController? controller;
   final bool alwaysUseNarrowestVariant;

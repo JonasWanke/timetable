@@ -12,7 +12,7 @@ import 'time/overlay.dart';
 
 class TimetableConfig<E extends Event> extends StatefulWidget {
   TimetableConfig({
-    Key? key,
+    super.key,
     this.dateController,
     this.timeController,
     EventProvider<E>? eventProvider,
@@ -22,8 +22,7 @@ class TimetableConfig<E extends Event> extends StatefulWidget {
     this.callbacks,
     this.theme,
     required this.child,
-  })  : eventProvider = eventProvider?.debugChecked,
-        super(key: key);
+  }) : eventProvider = eventProvider?.debugChecked;
 
   final DateController? dateController;
   final TimeController? timeController;

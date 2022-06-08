@@ -72,9 +72,8 @@ extension EventProviderTimetable<E extends Event> on EventProvider<E> {
 class DefaultEventProvider<E extends Event> extends InheritedWidget {
   DefaultEventProvider({
     required EventProvider<E> eventProvider,
-    required Widget child,
-  })  : eventProvider = eventProvider.debugChecked,
-        super(child: child);
+    required super.child,
+  }) : eventProvider = eventProvider.debugChecked;
 
   final EventProvider<E> eventProvider;
 

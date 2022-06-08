@@ -25,10 +25,9 @@ import 'multi_date.dart';
 ///   concrete dates and be swipeable.
 class RecurringMultiDateTimetable<E extends Event> extends StatelessWidget {
   RecurringMultiDateTimetable({
-    Key? key,
+    super.key,
     WidgetBuilder? timetableBuilder,
-  })  : timetableBuilder = timetableBuilder ?? _defaultTimetableBuilder<E>(),
-        super(key: key);
+  }) : timetableBuilder = timetableBuilder ?? _defaultTimetableBuilder<E>();
 
   final WidgetBuilder timetableBuilder;
   static WidgetBuilder _defaultTimetableBuilder<E extends Event>() {

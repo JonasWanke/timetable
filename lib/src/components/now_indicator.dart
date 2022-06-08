@@ -23,10 +23,10 @@ import '../utils.dart';
 ///   descendant Timetable widgets.
 class NowIndicator extends StatelessWidget {
   const NowIndicator({
-    Key? key,
+    super.key,
     this.style,
     this.child,
-  }) : super(key: key);
+  });
 
   final NowIndicatorStyle? style;
   final Widget? child;

@@ -12,10 +12,9 @@ class DefaultEventBuilder<E extends Event> extends InheritedWidget {
   DefaultEventBuilder({
     required this.builder,
     AllDayEventBuilder<E>? allDayBuilder,
-    required Widget child,
-  })  : allDayBuilder =
-            allDayBuilder ?? ((context, event, _) => builder(context, event)),
-        super(child: child);
+    required super.child,
+  }) : allDayBuilder =
+            allDayBuilder ?? ((context, event, _) => builder(context, event));
 
   final EventBuilder<E> builder;
   final AllDayEventBuilder<E> allDayBuilder;

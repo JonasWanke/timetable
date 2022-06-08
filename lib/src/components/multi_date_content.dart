@@ -31,7 +31,7 @@ import 'now_indicator.dart';
 ///   [DatePageView], and [DateContent], which are used internally by this
 ///   widget and can be styled.
 class MultiDateContent<E extends Event> extends StatelessWidget {
-  const MultiDateContent({Key? key}) : super(key: key);
+  const MultiDateContent({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -76,8 +76,8 @@ class _DragInfos extends InheritedWidget {
     required this.context,
     required this.dateController,
     required this.size,
-    required Widget child,
-  }) : super(child: child);
+    required super.child,
+  });
 
   // Storing the context feels wrong but I haven't found a different way to
   // transform global coordinates back to local ones in this context.
@@ -125,7 +125,7 @@ class PartDayDraggableEvent extends StatefulWidget {
 
   /// Called when a drag gesture is ended.
   ///
-  /// The [DateTime] is `null` when the user long tapps but then doesn't move
+  /// The [DateTime] is `null` when the user long taps but then doesn't move
   /// their finger at all.
   final void Function(DateTime?)? onDragEnd;
 

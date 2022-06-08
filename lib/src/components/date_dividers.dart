@@ -4,7 +4,7 @@ import '../config.dart';
 import '../date/controller.dart';
 import '../theme.dart';
 
-/// A widget that displays vertical dividers betweeen dates.
+/// A widget that displays vertical dividers between dates.
 ///
 /// A [DefaultDateController] must be above in the widget tree.
 ///
@@ -15,10 +15,10 @@ import '../theme.dart';
 ///   descendant Timetable widgets.
 class DateDividers extends StatelessWidget {
   const DateDividers({
-    Key? key,
+    super.key,
     this.style,
     this.child,
-  }) : super(key: key);
+  });
 
   final DateDividersStyle? style;
   final Widget? child;

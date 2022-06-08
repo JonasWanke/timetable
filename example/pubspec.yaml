@@ -3,8 +3,8 @@ description: A simple example app for the timetable package
 publish_to: none
 
 environment:
-  sdk: '>=2.12.0 <3.0.0'
-  flutter: '>=2.8.0'
+  sdk: '>=2.17.0-266.8.beta <3.0.0'
+  flutter: '>=2.13.0-0.4.pre'
 
 dependencies:
   debug_overlay: ^0.1.1

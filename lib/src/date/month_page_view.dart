@@ -59,7 +59,7 @@ class _MonthPageViewState extends State<MonthPageView> {
             onSizeChanged: (size) {
               if (_heights[page] == size.height) return;
               _heights[page] = size.height;
-              WidgetsBinding.instance!
+              WidgetsBinding.instance
                   .addPostFrameCallback((_) => setState(() {}));
             },
             child: child,

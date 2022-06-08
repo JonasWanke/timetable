@@ -4,7 +4,7 @@ import '../config.dart';
 import '../theme.dart';
 import '../utils.dart';
 
-/// A widget that displays horizontal dividers betweeen hours of a day.
+/// A widget that displays horizontal dividers between hours of a day.
 ///
 /// See also:
 ///
@@ -13,10 +13,10 @@ import '../utils.dart';
 ///   descendant Timetable widgets.
 class HourDividers extends StatelessWidget {
   const HourDividers({
-    Key? key,
+    super.key,
     this.style,
     this.child,
-  }) : super(key: key);
+  });
 
   final HourDividersStyle? style;
   final Widget? child;

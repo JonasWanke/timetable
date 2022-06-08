@@ -143,7 +143,7 @@ class DatePageValue {
   int get visibleDayCount => visibleRange.visibleDayCount;
 
   final double page;
-  DateTime get date => DateTimeTimetable.dateFromPage(page.floor());
+  DateTime get date => DateTimeTimetable.dateFromPage(page.round());
 
   int get firstVisiblePage => page.floor();
 
@@ -197,8 +197,8 @@ class DatePageValue {
 class DefaultDateController extends InheritedWidget {
   const DefaultDateController({
     required this.controller,
-    required Widget child,
-  }) : super(child: child);
+    required super.child,
+  });
 
   final DateController controller;
 

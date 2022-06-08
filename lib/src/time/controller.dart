@@ -64,7 +64,7 @@ class TimeController extends ValueNotifier<TimeRange> {
   /// The minimum visible duration when zooming in.
   final Duration minDuration;
 
-  /// The maximim visible duration when zooming out.
+  /// The maximum visible duration when zooming out.
   final Duration maxDuration;
 
   /// The maximum range that can be revealed when zooming out.
@@ -128,8 +128,8 @@ class TimeController extends ValueNotifier<TimeRange> {
 class DefaultTimeController extends InheritedWidget {
   const DefaultTimeController({
     required this.controller,
-    required Widget child,
-  }) : super(child: child);
+    required super.child,
+  });
 
   final TimeController controller;
 

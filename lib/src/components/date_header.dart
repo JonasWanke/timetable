@@ -24,11 +24,10 @@ import 'weekday_indicator.dart';
 class DateHeader extends StatelessWidget {
   DateHeader(
     this.date, {
-    Key? key,
+    super.key,
     this.onTap,
     this.style,
-  })  : assert(date.isValidTimetableDate),
-        super(key: key);
+  }) : assert(date.isValidTimetableDate);
 
   final DateTime date;
   final VoidCallback? onTap;

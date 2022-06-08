@@ -187,8 +187,8 @@ class TimetableThemeData {
 class TimetableTheme extends InheritedWidget {
   const TimetableTheme({
     required this.data,
-    required Widget child,
-  }) : super(child: child);
+    required super.child,
+  });
 
   final TimetableThemeData data;
 

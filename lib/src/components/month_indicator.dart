@@ -18,10 +18,9 @@ import '../utils.dart';
 class MonthIndicator extends StatelessWidget {
   MonthIndicator(
     this.month, {
-    Key? key,
+    super.key,
     this.style,
-  })  : assert(month.isValidTimetableMonth),
-        super(key: key);
+  }) : assert(month.isValidTimetableMonth);
   static Widget forController(DateController? controller, {Key? key}) =>
       _MonthIndicatorForController(controller, key: key);
 
@@ -91,9 +90,9 @@ class MonthIndicatorStyle {
 class _MonthIndicatorForController extends StatelessWidget {
   const _MonthIndicatorForController(
     this.controller, {
-    Key? key,
+    super.key,
     this.style,
-  }) : super(key: key);
+  });
 
   final DateController? controller;
   final MonthIndicatorStyle? style;

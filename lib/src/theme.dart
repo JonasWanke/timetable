@@ -84,7 +84,7 @@ class TimetableThemeData {
     required this.timeIndicatorStyleProvider,
     required this.weekdayIndicatorStyleProvider,
     required this.weekIndicatorStyleProvider,
-  }) : assert(startOfWeek.isValidTimetableDayOfWeek);
+  }) : assert(startOfWeek.debugCheckIsValidTimetableDayOfWeek());
 
   final int startOfWeek;
   final DateDividersStyle dateDividersStyle;

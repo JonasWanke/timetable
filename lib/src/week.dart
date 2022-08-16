@@ -23,7 +23,7 @@ class Week implements Comparable<Week> {
       : assert(weekOfYear >= 1 && weekOfYear <= 53);
 
   factory Week.forDate(DateTime date) {
-    assert(date.isValidTimetableDate);
+    assert(date.debugCheckIsValidTimetableDate());
 
     // Algorithm from https://en.wikipedia.org/wiki/ISO_week_date#Calculating_the_week_number_from_a_month_and_day_of_the_month_or_ordinal_date
     final year = date.year;
@@ -51,7 +51,7 @@ class Week implements Comparable<Week> {
   final int weekOfYear;
 
   DateTime getDayOfWeek(int dayOfWeek) {
-    assert(dayOfWeek.isValidTimetableDayOfWeek);
+    assert(dayOfWeek.debugCheckIsValidTimetableDayOfWeek());
 
     // Algorithm from https://en.wikipedia.org/wiki/ISO_week_date#`Calculating_an_ordinal_or_month_date_from_a_week_date`
     final base = weekOfYear * DateTime.daysPerWeek + dayOfWeek;

@@ -41,13 +41,13 @@ typedef DateWidgetBuilder = Widget Function(
 extension DateTimeTimetable on DateTime {
   static DateTime date(int year, [int month = 1, int day = 1]) {
     final date = DateTime.utc(year, month, day);
-    assert(date.isValidTimetableDate);
+    assert(date.debugCheckIsValidTimetableDate());
     return date;
   }
 
   static DateTime month(int year, int month) {
     final date = DateTime.utc(year, month, 1);
-    assert(date.isValidTimetableMonth);
+    assert(date.debugCheckIsValidTimetableMonth());
     return date;
   }
 
@@ -84,19 +84,19 @@ extension DateTimeTimetable on DateTime {
 
   static DateTime now() {
     final date = DateTime.now().copyWith(isUtc: true);
-    assert(date.isValidTimetableDateTime);
+    assert(date.debugCheckIsValidTimetableDateTime());
     return date;
   }
 
   static DateTime today() {
     final date = DateTimeTimetable.now().atStartOfDay;
-    assert(date.isValidTimetableDate);
+    assert(date.debugCheckIsValidTimetableDate());
     return date;
   }
 
   static DateTime currentMonth() {
     final month = DateTimeTimetable.today().firstDayOfMonth;
-    assert(month.isValidTimetableMonth);
+    assert(month.debugCheckIsValidTimetableMonth());
     return month;
   }
 
@@ -110,14 +110,14 @@ extension DateTimeTimetable on DateTime {
 
   DateTime nextOrSame(int dayOfWeek) {
     assert(isValidTimetableDate);
-    assert(weekday.isValidTimetableDayOfWeek);
+    assert(weekday.debugCheckIsValidTimetableDayOfWeek());
 
     return this + ((dayOfWeek - weekday) % DateTime.daysPerWeek).days;
   }
 
   DateTime previousOrSame(int weekday) {
     assert(isValidTimetableDate);
-    assert(weekday.isValidTimetableDayOfWeek);
+    assert(weekday.debugCheckIsValidTimetableDayOfWeek());
 
     return this - ((this.weekday - weekday) % DateTime.daysPerWeek).days;
   }
@@ -132,7 +132,7 @@ extension DateTimeTimetable on DateTime {
   DateTime get lastDayOfMonth => copyWith(day: daysInMonth);
 
   DateTime roundTimeToMultipleOf(Duration duration) {
-    assert(duration.isValidTimetableTimeOfDay);
+    assert(duration.debugCheckIsValidTimetableTimeOfDay());
     return atStartOfDay + duration * (timeOfDay / duration).floor();
   }
 
@@ -151,7 +151,7 @@ extension DateTimeTimetable on DateTime {
       (page * Duration.millisecondsPerDay).toInt(),
       isUtc: true,
     );
-    assert(date.isValidTimetableDate);
+    assert(date.debugCheckIsValidTimetableDate());
     return date;
   }
 
@@ -195,10 +195,92 @@ extension InternalDateTimeTimetable on DateTime {
 
 extension NullableDateTimeTimetable on DateTime? {
   bool get isValidTimetableDateTime => this == null || this!.isUtc;
+  bool debugCheckIsValidTimetableDateTime() {
+    assert(() {
+      if (isValidTimetableDateTime) return true;
+
+      throw FlutterError.fromParts([
+        ErrorSummary('Invalid DateTime for timetable: `$this`'),
+        ..._dateTimeExplanation,
+      ]);
+    }());
+    return true;
+  }
+
   bool get isValidTimetableDate =>
       isValidTimetableDateTime && (this == null || this!.isAtStartOfDay);
+  bool debugCheckIsValidTimetableDate() {
+    assert(() {
+      if (isValidTimetableDate) return true;
+
+      throw FlutterError.fromParts([
+        ErrorSummary('Invalid date for timetable: `$this`'),
+        ..._dateExplanation,
+      ]);
+    }());
+    return true;
+  }
+
+  static final _dateTimeExplanation = [
+    ErrorDescription(
+      'A valid `DateTime` for timetable must have `isUtc` set to `true`.',
+    ),
+    ErrorHint(
+      'The actual time zone is ignored when displaying events, timetable '
+      'only uses the `year`, `month`, `day`, `hour`, `minute`, `second`, '
+      'and `millisecond` fields.',
+    ),
+    _localDateTimeNotUtcExplanation,
+    _localDateTimeToTimetableExplanation,
+  ];
+  static final _dateExplanation = [
+    ErrorDescription(
+      'A valid date for timetable must be a valid `DateTime` for timetable '
+      'and be at midnight.',
+    ),
+    ErrorHint(
+      'The actual time zone is ignored when displaying events, timetable '
+      'only uses the `year`, `month`, and `day` fields.',
+    ),
+    _localDateTimeNotUtcExplanation,
+    _localDateTimeToTimetableExplanation,
+  ];
+  static final _localDateTimeNotUtcExplanation = ErrorHint(
+    "We're not using `DateTime.utc(…)` to represent a `DateTime` in UTC, but "
+    'to represent a `DateTime` independent of time zones because these are '
+    'not relevant for the calendar widgets. Other languages like Kotlin/Java '
+    'or C# have separate types for these: `Instant` is a point in time, '
+    'whereas `LocalDateTime` only has a time-zone-independent date and time '
+    '(which is what we want).',
+  );
+  static final _localDateTimeToTimetableExplanation = ErrorHint(
+    'To convert a `DateTime` with `isUtc` set to `false` (i.e., a local one) '
+    'into a `DateTime` for timetable, use our provided extension method '
+    '`dateTime.copyWith(isUtc: true)` instead of `dateTime.toUtc()`.',
+  );
+
   bool get isValidTimetableMonth =>
       isValidTimetableDate && (this == null || this!.day == 1);
+  bool debugCheckIsValidTimetableMonth() {
+    assert(() {
+      if (isValidTimetableMonth) return true;
+
+      throw FlutterError.fromParts([
+        ErrorSummary('Invalid month for timetable: `$this`'),
+        ErrorDescription(
+          'A valid month for timetable must be a valid month for timetable '
+          'and be the first day of the month.',
+        ),
+        ErrorHint(
+          'The actual time zone is ignored when displaying events, timetable '
+          'only uses the `year` and `month` fields.',
+        ),
+        _localDateTimeNotUtcExplanation,
+        _localDateTimeToTimetableExplanation,
+      ]);
+    }());
+    return true;
+  }
 }
 
 extension InternalDurationTimetable on Duration {
@@ -208,6 +290,21 @@ extension InternalDurationTimetable on Duration {
 extension NullableDurationTimetable on Duration? {
   bool get isValidTimetableTimeOfDay =>
       this == null || (0.days <= this! && this! <= 1.days);
+  bool debugCheckIsValidTimetableTimeOfDay() {
+    assert(() {
+      if (isValidTimetableTimeOfDay) return true;
+
+      throw FlutterError.fromParts([
+        ErrorSummary('Invalid time of day for timetable: `$this`'),
+        ErrorDescription(
+          'A time of the day must be a `Duration` between `Duration.zero` '
+          '(midnight / start of the day) and `Duration(days: 1)` (midnight / '
+          'end of the day), inclusive.',
+        ),
+      ]);
+    }());
+    return true;
+  }
 }
 
 extension InternalNumTimetable on num {
@@ -226,8 +323,37 @@ extension InternalIntTimetable on int {
 extension NullableIntTimetable on int? {
   bool get isValidTimetableDayOfWeek =>
       this == null || (DateTime.monday <= this! && this! <= DateTime.sunday);
+  bool debugCheckIsValidTimetableDayOfWeek() {
+    assert(() {
+      if (isValidTimetableDayOfWeek) return true;
+
+      throw FlutterError.fromParts([
+        ErrorSummary('Invalid day of week for timetable: `$this`'),
+        ErrorDescription(
+          'A day of the week must be an integer between ${DateTime.monday} '
+          '(Monday) and ${DateTime.sunday} (Sunday), inclusive.',
+        ),
+      ]);
+    }());
+    return true;
+  }
+
   bool get isValidTimetableMonth =>
       this == null || (1 <= this! && this! <= DateTime.monthsPerYear);
+  bool debugCheckIsValidTimetableMonth() {
+    assert(() {
+      if (isValidTimetableMonth) return true;
+
+      throw FlutterError.fromParts([
+        ErrorSummary('Invalid month for timetable: `$this`'),
+        ErrorDescription(
+          'A month must be an integer between 1 (January) and '
+          '${DateTime.monthsPerYear} (December), inclusive.',
+        ),
+      ]);
+    }());
+    return true;
+  }
 }
 
 extension IntervalTimetable on Interval {
@@ -238,7 +364,7 @@ extension IntervalTimetable on Interval {
       start.atStartOfDay,
       (end - 1.milliseconds).atEndOfDay,
     );
-    assert(interval.isValidTimetableDateInterval);
+    assert(interval.debugCheckIsValidTimetableDateInterval());
     return interval;
   }
 }
@@ -250,9 +376,52 @@ extension NullableIntervalTimetable on Interval? {
         this!.end.isValidTimetableDateTime;
   }
 
+  bool debugCheckIsValidTimetableInterval() {
+    assert(() {
+      if (isValidTimetableInterval) return true;
+
+      throw FlutterError.fromParts([
+        ErrorSummary('Invalid interval for timetable: `$this`'),
+        ErrorDescription(
+          'A (date/time) interval for timetable must have valid timetable '
+          '`DateTime`s for its `start` and `end`.',
+        ),
+        ErrorHint(
+          'The actual time zone is ignored when displaying events, timetable '
+          'only uses the `year`, `month`, `day`, `hour`, `minute`, `second`, '
+          'and `millisecond` fields.',
+        ),
+        ...NullableDateTimeTimetable._dateTimeExplanation,
+      ]);
+    }());
+    return true;
+  }
+
   bool get isValidTimetableDateInterval {
     return isValidTimetableInterval &&
         (this == null ||
             (this!.start.isValidTimetableDate && this!.end.isAtEndOfDay));
+  }
+
+  bool debugCheckIsValidTimetableDateInterval() {
+    assert(() {
+      if (isValidTimetableDateInterval) return true;
+
+      throw FlutterError.fromParts([
+        ErrorSummary('Invalid date interval for timetable: `$this`'),
+        ErrorDescription(
+          'A date interval for timetable must have a valid timetable date for '
+          'its `start` and a valid timetable `DateTime` at with '
+          '`dateTime.isAtEndOfDay` for `end`.',
+        ),
+        ErrorHint(
+          'The actual time zone is ignored when displaying events, timetable '
+          'only uses the `year`, `month`, `day`, `hour`, `minute`, `second`, '
+          'and `millisecond` fields.',
+        ),
+        ...NullableDateTimeTimetable._dateTimeExplanation,
+      ]);
+    }());
+    return true;
   }
 }

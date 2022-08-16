@@ -207,7 +207,7 @@ List<TimeOverlay> positioningDemoOverlayProvider(
   BuildContext context,
   DateTime date,
 ) {
-  assert(date.isValidTimetableDate);
+  assert(date.debugCheckIsValidTimetableDate());
 
   final widget =
       ColoredBox(color: context.theme.brightness.contrastColor.withOpacity(.1));

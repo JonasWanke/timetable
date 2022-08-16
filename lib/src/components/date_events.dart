@@ -23,7 +23,7 @@ class DateEvents<E extends Event> extends StatelessWidget {
     required List<E> events,
     this.eventBuilder,
     this.style,
-  })  : assert(date.isValidTimetableDate),
+  })  : assert(date.debugCheckIsValidTimetableDate()),
         assert(
           events.every((e) => e.interval.intersects(date.fullDayInterval)),
           'All events must intersect the given date',
@@ -174,7 +174,7 @@ class DateEventsStyle {
 class _DayEventsLayoutDelegate<E extends Event>
     extends MultiChildLayoutDelegate {
   _DayEventsLayoutDelegate(this.date, this.events, this.style)
-      : assert(date.isValidTimetableDate);
+      : assert(date.debugCheckIsValidTimetableDate());
 
   static const minWidth = 4.0;
 
@@ -188,12 +188,12 @@ class _DayEventsLayoutDelegate<E extends Event>
     final positions = _calculatePositions(size.height);
 
     double durationToY(Duration duration) {
-      assert(duration.isValidTimetableTimeOfDay);
+      assert(duration.debugCheckIsValidTimetableTimeOfDay());
       return size.height * (duration / 1.days);
     }
 
     double timeToY(DateTime dateTime) {
-      assert(dateTime.isValidTimetableDateTime);
+      assert(dateTime.debugCheckIsValidTimetableDateTime());
 
       if (dateTime < date) return 0;
       if (dateTime.atStartOfDay > date) return size.height;

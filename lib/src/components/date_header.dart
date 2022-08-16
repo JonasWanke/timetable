@@ -27,7 +27,7 @@ class DateHeader extends StatelessWidget {
     super.key,
     this.onTap,
     this.style,
-  }) : assert(date.isValidTimetableDate);
+  }) : assert(date.debugCheckIsValidTimetableDate());
 
   final DateTime date;
   final VoidCallback? onTap;
@@ -82,7 +82,7 @@ class DateHeaderStyle {
     double? indicatorSpacing,
     bool? showDateIndicator,
   }) {
-    assert(date.isValidTimetableDate);
+    assert(date.debugCheckIsValidTimetableDate());
 
     return DateHeaderStyle.raw(
       tooltip: tooltip ??

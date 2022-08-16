@@ -19,7 +19,7 @@ class WeekdayIndicator extends StatelessWidget {
     this.date, {
     super.key,
     this.style,
-  }) : assert(date.isValidTimetableDate);
+  }) : assert(date.debugCheckIsValidTimetableDate());
 
   final DateTime date;
   final WeekdayIndicatorStyle? style;
@@ -54,7 +54,7 @@ class WeekdayIndicatorStyle {
     TextStyle? textStyle,
     String? label,
   }) {
-    assert(date.isValidTimetableDate);
+    assert(date.debugCheckIsValidTimetableDate());
 
     final theme = context.theme;
     return WeekdayIndicatorStyle.raw(

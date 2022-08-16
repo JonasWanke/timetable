@@ -25,7 +25,7 @@ class MonthWidget extends StatelessWidget {
     WeekWidgetBuilder? weekBuilder,
     DateWidgetBuilder? dateBuilder,
     this.style,
-  })  : assert(month.isValidTimetableMonth),
+  })  : assert(month.debugCheckIsValidTimetableMonth()),
         weekDayBuilder =
             weekDayBuilder ?? ((context, date) => WeekdayIndicator(date)),
         weekBuilder = weekBuilder ??
@@ -44,7 +44,7 @@ class MonthWidget extends StatelessWidget {
             }),
         dateBuilder = dateBuilder ??
             ((context, date) {
-              assert(date.isValidTimetableDate);
+              assert(date.debugCheckIsValidTimetableDate());
 
               final timetableTheme = TimetableTheme.orDefaultOf(context);
               DateIndicatorStyle? dateStyle;
@@ -139,7 +139,7 @@ class MonthWidget extends StatelessWidget {
     DateTime firstDay,
     int weekCount,
   ) {
-    assert(firstDay.isValidTimetableDate);
+    assert(firstDay.debugCheckIsValidTimetableDate());
 
     return DecoratedBox(
       decoration: style.weeksDecoration,
@@ -178,8 +178,8 @@ class MonthWidgetStyle {
     bool? showDatesFromOtherMonths,
     bool? showDatesFromOtherMonthsAsDisabled,
   }) {
-    assert(startOfWeek.isValidTimetableDayOfWeek);
-    assert(month.isValidTimetableMonth);
+    assert(startOfWeek.debugCheckIsValidTimetableDayOfWeek());
+    assert(month.debugCheckIsValidTimetableMonth());
 
     final theme = context.theme;
     removeIndividualWeekDecorations ??= true;

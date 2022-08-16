@@ -25,7 +25,7 @@ class DateContent<E extends Event> extends StatelessWidget {
     required List<E> events,
     this.overlays = const [],
     this.onBackgroundTap,
-  })  : assert(date.isValidTimetableDate),
+  })  : assert(date.debugCheckIsValidTimetableDate()),
         assert(
           events.every((e) => e.interval.intersects(date.fullDayInterval)),
           'All events must intersect the given date',

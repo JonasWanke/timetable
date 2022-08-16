@@ -104,8 +104,8 @@ class DaysVisibleDateRange extends VisibleDateRange {
     this.minDate,
     this.maxDate,
   })  : alignmentDate = alignmentDate ?? DateTimeTimetable.today(),
-        assert(minDate.isValidTimetableDate),
-        assert(maxDate.isValidTimetableDate),
+        assert(minDate.debugCheckIsValidTimetableDate()),
+        assert(maxDate.debugCheckIsValidTimetableDate()),
         assert(minDate == null || maxDate == null || minDate <= maxDate),
         super(visibleDayCount: visibleDayCount, canScroll: true) {
     minPage = minDate == null ? null : getTargetPageForFocus(minDate!.page);
@@ -183,7 +183,7 @@ class FixedDaysVisibleDateRange extends VisibleDateRange {
   FixedDaysVisibleDateRange(
     this.startDate,
     int visibleDayCount,
-  )   : assert(startDate.isValidTimetableDate),
+  )   : assert(startDate.debugCheckIsValidTimetableDate()),
         super(visibleDayCount: visibleDayCount, canScroll: false);
 
   final DateTime startDate;

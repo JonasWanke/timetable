@@ -20,7 +20,7 @@ class MonthIndicator extends StatelessWidget {
     this.month, {
     super.key,
     this.style,
-  }) : assert(month.isValidTimetableMonth);
+  }) : assert(month.debugCheckIsValidTimetableMonth());
   static Widget forController(
     DateController? controller, {
     Key? key,
@@ -53,7 +53,7 @@ class MonthIndicatorStyle {
     TextStyle? textStyle,
     String? label,
   }) {
-    assert(month.isValidTimetableMonth);
+    assert(month.debugCheckIsValidTimetableMonth());
 
     final theme = context.theme;
     return MonthIndicatorStyle.raw(

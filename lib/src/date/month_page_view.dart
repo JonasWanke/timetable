@@ -106,7 +106,7 @@ class _MonthPageViewState extends State<MonthPageView> {
 class MonthPageController extends ChangeNotifier
     implements ValueListenable<DateTime> {
   MonthPageController({required DateTime initialMonth})
-      : assert(initialMonth.isValidTimetableMonth),
+      : assert(initialMonth.debugCheckIsValidTimetableMonth()),
         _pageController =
             PageController(initialPage: _pageFromMonth(initialMonth)) {
     _pageController.addListener(notifyListeners);
@@ -146,7 +146,7 @@ class MonthPageController extends ChangeNotifier
   }
 
   static int _pageFromMonth(DateTime month) {
-    assert(month.isValidTimetableMonth);
+    assert(month.debugCheckIsValidTimetableMonth());
     return (month.year * DateTime.monthsPerYear) + (month.month - 1) - _minPage;
   }
 

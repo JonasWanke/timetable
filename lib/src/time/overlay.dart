@@ -10,8 +10,8 @@ class TimeOverlay {
     required this.end,
     required this.widget,
     this.position = TimeOverlayPosition.behindEvents,
-  })  : assert(start.isValidTimetableTimeOfDay),
-        assert(end.isValidTimetableTimeOfDay),
+  })  : assert(start.debugCheckIsValidTimetableTimeOfDay()),
+        assert(end.debugCheckIsValidTimetableTimeOfDay()),
         assert(start < end);
 
   final Duration start;
@@ -43,7 +43,7 @@ List<TimeOverlay> emptyTimeOverlayProvider(
   BuildContext context,
   DateTime date,
 ) {
-  assert(date.isValidTimetableDate);
+  assert(date.debugCheckIsValidTimetableDate());
   return [];
 }
 
@@ -79,7 +79,7 @@ extension EventToTimeOverlay on Event {
     required Widget widget,
     TimeOverlayPosition position = TimeOverlayPosition.inFrontOfEvents,
   }) {
-    assert(date.isValidTimetableDate);
+    assert(date.debugCheckIsValidTimetableDate());
 
     if (!interval.intersects(date.fullDayInterval)) return null;
 

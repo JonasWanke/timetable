@@ -24,7 +24,7 @@ class TimeIndicator extends StatelessWidget {
     super.key,
     required this.time,
     this.style,
-  }) : assert(time.isValidTimetableTimeOfDay);
+  }) : assert(time.debugCheckIsValidTimetableTimeOfDay());
 
   static String formatHour(Duration time) => _format(DateFormat.j(), time);
   static String formatHourMinute(Duration time) =>
@@ -39,7 +39,7 @@ class TimeIndicator extends StatelessWidget {
       _format(DateFormat.Hms(), time);
 
   static String _format(DateFormat format, Duration time) {
-    assert(time.isValidTimetableTimeOfDay);
+    assert(time.debugCheckIsValidTimetableTimeOfDay());
     return format.format(DateTime(0) + time);
   }
 
@@ -69,7 +69,7 @@ class TimeIndicatorStyle {
     String? label,
     bool alwaysUse24HourFormat = false,
   }) {
-    assert(time.isValidTimetableTimeOfDay);
+    assert(time.debugCheckIsValidTimetableTimeOfDay());
 
     final theme = context.theme;
     final caption = theme.textTheme.caption!;

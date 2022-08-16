@@ -21,7 +21,7 @@ class DateController extends ValueNotifier<DatePageValue> {
   DateController({
     DateTime? initialDate,
     VisibleDateRange? visibleRange,
-  })  : assert(initialDate.isValidTimetableDate),
+  })  : assert(initialDate.debugCheckIsValidTimetableDate()),
         // We set the correct value in the body below.
         super(DatePageValue(
           visibleRange ?? VisibleDateRange.week(),
@@ -115,7 +115,7 @@ class DateController extends ValueNotifier<DatePageValue> {
 
   void jumpToToday() => jumpTo(DateTimeTimetable.today());
   void jumpTo(DateTime date) {
-    assert(date.isValidTimetableDate);
+    assert(date.debugCheckIsValidTimetableDate());
     jumpToPage(date.page);
   }
 
@@ -150,7 +150,7 @@ class DatePageValue {
   /// The first date that is at least partially visible.
   DateTime get firstVisibleDate {
     final result = DateTimeTimetable.dateFromPage(firstVisiblePage);
-    assert(result.isValidTimetableDate);
+    assert(result.debugCheckIsValidTimetableDate());
     return result;
   }
 
@@ -159,14 +159,14 @@ class DatePageValue {
   /// The last date that is at least partially visible.
   DateTime get lastVisibleDate {
     final result = DateTimeTimetable.dateFromPage(lastVisiblePage);
-    assert(result.isValidTimetableDate);
+    assert(result.debugCheckIsValidTimetableDate());
     return result;
   }
 
   /// The interval of dates that are at least partially visible.
   Interval get visibleDates {
     final result = Interval(firstVisibleDate, lastVisibleDate.atEndOfDay);
-    assert(result.isValidTimetableDateInterval);
+    assert(result.debugCheckIsValidTimetableDateInterval());
     return result;
   }
 

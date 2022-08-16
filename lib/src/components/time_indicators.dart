@@ -99,7 +99,7 @@ class TimeIndicators extends StatelessWidget {
     TimeBasedStyleProvider<TimeIndicatorStyle>? styleProvider,
     String Function(Duration time) formatter,
   ) {
-    assert(time.isValidTimetableTimeOfDay);
+    assert(time.debugCheckIsValidTimetableTimeOfDay());
 
     return TimeIndicatorsChild(
       time: time,
@@ -142,7 +142,7 @@ class TimeIndicatorsChild extends ParentDataWidget<_TimeIndicatorParentData> {
     required this.time,
     this.alignment = Alignment.centerRight,
     required super.child,
-  })  : assert(time.isValidTimetableTimeOfDay),
+  })  : assert(time.debugCheckIsValidTimetableTimeOfDay()),
         super(key: ValueKey(time));
 
   /// The time of day that this widget positioned next to.

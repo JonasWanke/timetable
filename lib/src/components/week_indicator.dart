@@ -39,7 +39,7 @@ class WeekIndicator extends StatelessWidget {
     this.alwaysUseNarrowestVariant = false,
     this.onTap,
     this.style,
-  })  : assert(date.isValidTimetableDate),
+  })  : assert(date.debugCheckIsValidTimetableDate()),
         week = date.week;
   static Widget forController(
     DateController? controller, {

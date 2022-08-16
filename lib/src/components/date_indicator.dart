@@ -26,7 +26,7 @@ class DateIndicator extends StatelessWidget {
     super.key,
     this.onTap,
     this.style,
-  }) : assert(date.isValidTimetableDate);
+  }) : assert(date.debugCheckIsValidTimetableDate());
 
   final DateTime date;
   final VoidCallback? onTap;
@@ -66,7 +66,7 @@ class DateIndicatorStyle {
     TextStyle? textStyle,
     String? label,
   }) {
-    assert(date.isValidTimetableDate);
+    assert(date.debugCheckIsValidTimetableDate());
 
     final today = DateTimeTimetable.today();
     final isInFuture = date > today;

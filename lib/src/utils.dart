@@ -104,19 +104,19 @@ extension DateTimeTimetable on DateTime {
 
   Interval get interval => Interval(atStartOfDay, atEndOfDay);
   Interval get fullDayInterval {
-    assert(isValidTimetableDate);
+    assert(debugCheckIsValidTimetableDate());
     return Interval(this, atEndOfDay);
   }
 
   DateTime nextOrSame(int dayOfWeek) {
-    assert(isValidTimetableDate);
+    assert(debugCheckIsValidTimetableDate());
     assert(weekday.debugCheckIsValidTimetableDayOfWeek());
 
     return this + ((dayOfWeek - weekday) % DateTime.daysPerWeek).days;
   }
 
   DateTime previousOrSame(int weekday) {
-    assert(isValidTimetableDate);
+    assert(debugCheckIsValidTimetableDate());
     assert(weekday.debugCheckIsValidTimetableDayOfWeek());
 
     return this - ((this.weekday - weekday) % DateTime.daysPerWeek).days;
@@ -137,12 +137,12 @@ extension DateTimeTimetable on DateTime {
   }
 
   double get page {
-    assert(isValidTimetableDateTime);
+    assert(debugCheckIsValidTimetableDateTime());
     return millisecondsSinceEpoch / Duration.millisecondsPerDay;
   }
 
   int get datePage {
-    assert(isValidTimetableDate);
+    assert(debugCheckIsValidTimetableDate());
     return page.floor();
   }
 

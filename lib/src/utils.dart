@@ -102,7 +102,6 @@ extension DateTimeTimetable on DateTime {
 
   bool get isToday => atStartOfDay == DateTimeTimetable.today();
 
-  Interval get interval => Interval(atStartOfDay, atEndOfDay);
   Interval get fullDayInterval {
     assert(debugCheckIsValidTimetableDate());
     return Interval(this, atEndOfDay);

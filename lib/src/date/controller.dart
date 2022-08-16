@@ -170,9 +170,16 @@ class DatePageValue {
     return result;
   }
 
-  DatePageValue copyWith({VisibleDateRange? visibleRange, double? page}) {
-    return DatePageValue(visibleRange ?? this.visibleRange, page ?? this.page);
+  Iterable<DateTime> get visibleDatesIterable sync* {
+    var currentDate = firstVisibleDate;
+    while (currentDate <= lastVisibleDate) {
+      yield currentDate;
+      currentDate = currentDate.add(1.days);
+    }
   }
+
+  DatePageValue copyWith({VisibleDateRange? visibleRange, double? page}) =>
+      DatePageValue(visibleRange ?? this.visibleRange, page ?? this.page);
 
   @override
   int get hashCode => hashValues(visibleRange, page);

@@ -161,6 +161,8 @@ abstract class TimetableLocalizations {
     )!;
   }
 
+  String allDayOverflow(int overflowCount) => '+$overflowCount';
+
   List<String> weekLabels(Week week);
   String weekOfYear(Week week);
 }

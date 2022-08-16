@@ -1,6 +1,7 @@
 library timetable;
 
 export 'src/callbacks.dart';
+export 'src/components/all_day_overflow.dart';
 export 'src/components/date_content.dart';
 export 'src/components/date_dividers.dart';
 export 'src/components/date_events.dart';

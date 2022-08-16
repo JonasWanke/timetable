@@ -16,7 +16,7 @@ Future<void> main() async {
 
 class TimetableExample extends StatefulWidget {
   @override
-  _TimetableExampleState createState() => _TimetableExampleState();
+  State<TimetableExample> createState() => _TimetableExampleState();
 }
 
 class _TimetableExampleState extends State<TimetableExample>

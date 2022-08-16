@@ -174,10 +174,8 @@ extension InternalDateTimeTimetable on DateTime {
     int millisecond = 0,
     bool isUtc = true,
   }) {
-    if (isUtc) {
-      return DateTime.utc(year, month, day, hour, minute, second, millisecond);
-    }
-    return DateTime(year, month, day, hour, minute, second, millisecond);
+    final constructor = isUtc ? DateTime.utc : DateTime.new;
+    return constructor(year, month, day, hour, minute, second, millisecond);
   }
 
   DateTime operator +(Duration duration) => add(duration);

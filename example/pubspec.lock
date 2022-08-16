@@ -22,13 +22,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.2.0"
-  charcode:
-    dependency: transitive
-    description:
-      name: charcode
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.3.1"
   clock:
     dependency: transitive
     description:
@@ -77,56 +70,56 @@ packages:
       name: debug_overlay
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.3"
+    version: "0.2.1"
   device_info_plus:
     dependency: transitive
     description:
       name: device_info_plus
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.2.3"
+    version: "4.1.2"
   device_info_plus_linux:
     dependency: transitive
     description:
       name: device_info_plus_linux
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.1"
+    version: "3.0.0"
   device_info_plus_macos:
     dependency: transitive
     description:
       name: device_info_plus_macos
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.2.3"
+    version: "3.0.0"
   device_info_plus_platform_interface:
     dependency: transitive
     description:
       name: device_info_plus_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.3.0+1"
+    version: "3.0.0"
   device_info_plus_web:
     dependency: transitive
     description:
       name: device_info_plus_web
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.0"
+    version: "3.0.0"
   device_info_plus_windows:
     dependency: transitive
     description:
       name: device_info_plus_windows
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.1"
+    version: "4.0.0"
   ffi:
     dependency: transitive
     description:
       name: ffi
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.2.1"
+    version: "2.0.1"
   file:
     dependency: transitive
     description:
@@ -162,14 +155,14 @@ packages:
       name: http
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.13.4"
+    version: "0.13.5"
   http_parser:
     dependency: transitive
     description:
       name: http_parser
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.0.0"
+    version: "4.0.1"
   implicitly_animated_list:
     dependency: transitive
     description:
@@ -204,7 +197,7 @@ packages:
       name: matcher
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.12.11"
+    version: "0.12.12"
   material_color_utilities:
     dependency: transitive
     description:
@@ -225,7 +218,7 @@ packages:
       name: package_info_plus
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.4.2"
+    version: "1.4.3+1"
   package_info_plus_linux:
     dependency: transitive
     description:
@@ -260,7 +253,7 @@ packages:
       name: package_info_plus_windows
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.5"
+    version: "2.0.0"
   path:
     dependency: transitive
     description:
@@ -288,21 +281,21 @@ packages:
       name: sensors_plus
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.3.1"
+    version: "1.3.4+1"
   sensors_plus_platform_interface:
     dependency: transitive
     description:
       name: sensors_plus_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.1.0"
+    version: "1.1.1"
   sensors_plus_web:
     dependency: transitive
     description:
       name: sensors_plus_web
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.1.0"
+    version: "1.1.1"
   shake:
     dependency: transitive
     description:
@@ -321,7 +314,7 @@ packages:
       name: source_span
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.9.0"
+    version: "1.9.1"
   stack_trace:
     dependency: transitive
     description:
@@ -342,21 +335,21 @@ packages:
       name: term_glyph
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.2.0"
+    version: "1.2.1"
   time:
     dependency: transitive
     description:
       name: time
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.0"
+    version: "2.1.1"
   timeago:
     dependency: transitive
     description:
       name: timeago
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.2.2"
+    version: "3.3.0"
   timetable:
     dependency: "direct main"
     description:
@@ -391,7 +384,7 @@ packages:
       name: win32
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.6.1"
+    version: "2.7.0"
 sdks:
   dart: ">=2.17.0 <3.0.0"
-  flutter: ">=2.13.0-0.4.pre"
+  flutter: ">=3.0.0"

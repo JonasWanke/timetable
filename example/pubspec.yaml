@@ -7,7 +7,7 @@ environment:
   flutter: '>=2.13.0-0.4.pre'
 
 dependencies:
-  debug_overlay: ^0.1.1
+  debug_overlay: ^0.2.1
   flutter:
     sdk: flutter
   flutter_localizations:

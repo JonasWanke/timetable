@@ -8,17 +8,17 @@
 | :------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------: |
 | ![](https://github.com/JonasWanke/timetable/raw/main/doc/demo-callbacks.webp?raw=true) | ![](https://github.com/JonasWanke/timetable/raw/main/doc/demo-visibleDateRange.webp?raw=true) |
 
-* [Available Layouts](#available-layouts)
-* [Getting started](#getting-started)
-  * [0. General Information](#0-general-information)
-  * [1. Define your `Event`s](#1-define-your-events)
-  * [2. Create a `DateController` (optional)](#2-create-a-datecontroller-optional)
-  * [3. Create a `TimeController` (optional)](#3-create-a-timecontroller-optional)
-  * [4. Create your Timetable](#4-create-your-timetable)
-* [Theming](#theming)
-* [Advanced Features](#advanced-features)
-  * [Drag and Drop](#drag-and-drop)
-  * [Time Overlays](#time-overlays)
+- [Available Layouts](#available-layouts)
+- [Getting started](#getting-started)
+  - [0. General Information](#0-general-information)
+  - [1. Define your `Event`s](#1-define-your-events)
+  - [2. Create a `DateController` (optional)](#2-create-a-datecontroller-optional)
+  - [3. Create a `TimeController` (optional)](#3-create-a-timecontroller-optional)
+  - [4. Create your Timetable](#4-create-your-timetable)
+- [Theming](#theming)
+- [Advanced Features](#advanced-features)
+  - [Drag and Drop](#drag-and-drop)
+  - [Time Overlays](#time-overlays)
 
 ## Available Layouts
 
@@ -56,10 +56,10 @@ All supplied `DateTime`s must have `isUtc` set to `true`, but the actual time zo
 
 Some date/time-related parameters also have special suffixes:
 
-* `date`: A `DateTime` with a time of zero.
-* `month`: A `DateTime` with a time of zero and a day of one.
-* `timeOfDay`: A `Duration` between zero and 24 hours.
-* `dayOfWeek`: An `int` between one and seven ([`DateTime.monday`](https://api.flutter.dev/flutter/dart-core/DateTime/monday-constant.html) through [`DateTime.sunday`](https://api.flutter.dev/flutter/dart-core/DateTime/sunday-constant.html)).
+- `date`: A `DateTime` with a time of zero.
+- `month`: A `DateTime` with a time of zero and a day of one.
+- `timeOfDay`: A `Duration` between zero and 24 hours.
+- `dayOfWeek`: An `int` between one and seven ([`DateTime.monday`](https://api.flutter.dev/flutter/dart-core/DateTime/monday-constant.html) through [`DateTime.sunday`](https://api.flutter.dev/flutter/dart-core/DateTime/sunday-constant.html)).
 
 Timetable currently offers localizations for Chinese, English, French, German, Hungarian, Italian, Japanese, Portuguese, and Spanish.
 Even if you're just supporting English in your app, you have to add Timetable's localization delegate to your `MaterialApp`/`CupertinoApp`/`WidgetsApp`:
@@ -108,9 +108,9 @@ final myDateController = DateController(
 
 Here are some of the available [`VisibleDateRange`]s:
 
-* [`VisibleDateRange.days`]: displays `visibleDayCount` consecutive days, snapping to every `swipeRange` days (aligned to `alignmentDate`) in the range from `minDate` to `maxDate`
-* [`VisibleDateRange.week`]: displays and snaps to whole weeks with a customizable `startOfWeek` in the range from `minDate` to `maxDate`
-* [`VisibleDateRange.weekAligned`]: displays `visibleDayCount` consecutive days while snapping to whole weeks with a customizable `firstDay` in the range from `minDate` to `maxDate` – can be used, e.g., to display a five-day workweek
+- [`VisibleDateRange.days`]: displays `visibleDayCount` consecutive days, snapping to every `swipeRange` days (aligned to `alignmentDate`) in the range from `minDate` to `maxDate`
+- [`VisibleDateRange.week`]: displays and snaps to whole weeks with a customizable `startOfWeek` in the range from `minDate` to `maxDate`
+- [`VisibleDateRange.weekAligned`]: displays `visibleDayCount` consecutive days while snapping to whole weeks with a customizable `firstDay` in the range from `minDate` to `maxDate` – can be used, e.g., to display a five-day workweek
 
 ### 3. Create a [`TimeController`] (optional)
 
@@ -194,9 +194,9 @@ TimetableConfig<BasicEvent>(
 
 > [`TimetableThemeData`] and all component styles provide two constructors each:
 >
-> * The default constructor takes a `BuildContext` and sometimes a day or month, using information from the ambient theme and locale to generate default values.
+> - The default constructor takes a `BuildContext` and sometimes a day or month, using information from the ambient theme and locale to generate default values.
 >   You can still override all options via optional, named parameters.
-> * The named `raw` constructor is usually `const` and has required parameters for all options.
+> - The named `raw` constructor is usually `const` and has required parameters for all options.
 
 ## Advanced Features
 

@@ -200,22 +200,11 @@ class _TimeIndicatorsLayout extends RenderBox
   }
 
   @override
-  double computeMinIntrinsicWidth(double height) {
-    return children
-            .map<num>((it) => it.getMinIntrinsicWidth(height))
-            .maxOrNull
-            ?.toDouble() ??
-        0;
-  }
-
+  double computeMinIntrinsicWidth(double height) =>
+      children.map((it) => it.getMinIntrinsicWidth(height)).maxOrNull ?? 0;
   @override
-  double computeMaxIntrinsicWidth(double height) {
-    return children
-            .map<num>((it) => it.getMaxIntrinsicWidth(height))
-            .maxOrNull
-            ?.toDouble() ??
-        0;
-  }
+  double computeMaxIntrinsicWidth(double height) =>
+      children.map((it) => it.getMaxIntrinsicWidth(height)).maxOrNull ?? 0;
 
   @override
   double computeMinIntrinsicHeight(double width) {

@@ -206,7 +206,7 @@ class _MultiDateEventHeaderEventsState<E extends Event>
 
   @override
   void initState() {
-    _updateEventPositions();
+    _updateEventPositions(oldMaxEventRows: null);
     super.initState();
   }
 
@@ -214,17 +214,18 @@ class _MultiDateEventHeaderEventsState<E extends Event>
   void didUpdateWidget(covariant _MultiDateEventHeaderEvents<E> oldWidget) {
     if (oldWidget.pageValue != widget.pageValue ||
         !DeepCollectionEquality().equals(oldWidget.events, widget.events) ||
-        oldWidget.eventHeight != widget.eventHeight) {
-      _updateEventPositions();
+        oldWidget.eventHeight != widget.eventHeight ||
+        oldWidget.maxEventRows != widget.maxEventRows) {
+      _updateEventPositions(oldMaxEventRows: oldWidget.maxEventRows);
     }
     super.didUpdateWidget(oldWidget);
   }
 
-  void _updateEventPositions() {
+  void _updateEventPositions({required int? oldMaxEventRows}) {
     // Remove events outside the current viewport (with some buffer).
-    _yPositions.removeWhere((e, _) {
-      return e.start.page.floor() > widget.pageValue.lastVisiblePage ||
-          e.end.page.ceil() <= widget.pageValue.firstVisibleDate.page;
+    _yPositions.removeWhere((event, yPosition) {
+      return event.start.page.floor() > widget.pageValue.lastVisiblePage ||
+          event.end.page.ceil() <= widget.pageValue.firstVisibleDate.page;
     });
     _maxEventPositions.removeWhere((date, _) {
       return date < widget.pageValue.firstVisiblePage ||
@@ -234,10 +235,26 @@ class _MultiDateEventHeaderEventsState<E extends Event>
     // Remove old events.
     _yPositions.removeWhere((it, _) => !widget.events.contains(it));
 
-    // Insert new events.
-    final sortedEvents = widget.events
-        .where((it) => !_yPositions.containsKey(it))
-        .sortedByStartLength();
+    if (oldMaxEventRows != null && oldMaxEventRows > widget.maxEventRows) {
+      // Remove events that no longer fit the decreased `maxEventRows`.
+      for (final entry in _yPositions.entries) {
+        if (entry.value == null || entry.value! < widget.maxEventRows) continue;
+
+        _yPositions[entry.key] = null;
+      }
+    }
+
+    // Insert new events and, in case [maxEventRows] increased, display
+    // previously overflowed events.
+    final sortedEvents = widget.events.where((it) {
+      if (oldMaxEventRows == null) {
+        return !_yPositions.containsKey(it);
+      } else if (oldMaxEventRows < widget.maxEventRows) {
+        return _yPositions[it] == null;
+      } else {
+        return false;
+      }
+    }).sortedByStartLength();
 
     Iterable<E> eventsWithPosition(int y) =>
         _yPositions.entries.where((it) => it.value == y).map((it) => it.key);

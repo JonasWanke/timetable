@@ -1,5 +1,7 @@
+import 'dart:async';
 import 'dart:math' as math;
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/physics.dart';
@@ -30,6 +32,7 @@ class _TimeZoomState extends State<TimeZoom>
   Animation<double>? _animation;
 
   TimeController? _controller;
+  TimeControllerClientRegistration? _registration;
   _ScrollController? _scrollController;
 
   late double _parentHeight;
@@ -58,9 +61,17 @@ class _TimeZoomState extends State<TimeZoom>
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _controller?.removeListener(_onControllerChanged);
-    _controller = DefaultTimeController.of(context)!
-      ..addListener(_onControllerChanged);
+
+    final newController = DefaultTimeController.of(context)!;
+    if (_controller == null) {
+      assert(_registration == null);
+    } else if (newController != _controller) {
+      _controller!.removeListener(_onControllerChanged);
+      _registration?.unregister();
+    }
+    _controller = newController;
+    newController.addListener(_onControllerChanged);
+
     _scrollController?.dispose();
     _scrollController = null;
   }
@@ -74,7 +85,12 @@ class _TimeZoomState extends State<TimeZoom>
   @override
   void dispose() {
     _animationController.dispose();
-    _controller?.removeListener(_onControllerChanged);
+    if (_controller != null) {
+      _controller!.removeListener(_onControllerChanged);
+      _registration?.unregister();
+    } else {
+      assert(_registration == null);
+    }
     _scrollController?.dispose();
     super.dispose();
   }
@@ -84,6 +100,20 @@ class _TimeZoomState extends State<TimeZoom>
     return LayoutBuilder(
       builder: (context, constraints) {
         _parentHeight = constraints.maxHeight;
+
+        final heightToReport =
+            _parentHeight * (1.days / _controller!.maxRange.duration);
+        if (_registration == null || heightToReport != _registration!.height) {
+          scheduleMicrotask(() {
+            // This might update the controller's value, causing a rebuild
+            //  which is not permitted during the build phase).
+            if (_registration == null) {
+              _registration = _controller!.registerClient(heightToReport);
+            } else {
+              _registration!.notifyHeightChanged(heightToReport);
+            }
+          });
+        }
 
         _scrollController ??= _ScrollController(
           getOffset: () => _outerOffset,
@@ -153,21 +183,20 @@ class _TimeZoomState extends State<TimeZoom>
   }
 
   void _onScaleUpdate(ScaleUpdateDetails details) {
+    final controller = _controller!;
     final rawScale = details.verticalScale;
     assert(rawScale >= 0);
+
     final Duration newDuration;
-    if (rawScale <= 0 ||
-        _initialRange!.duration.inMicroseconds /
-                _controller!.maxDuration.inMicroseconds >=
-            rawScale) {
+    if (rawScale <= precisionErrorTolerance) {
       // When `rawScale` approaches zero, `1 / rawScale` in the `else`-branch
       // can become infinity, producing an error when multiplying a `Duration`
       // with it. Hence, we catch this early and coerce the `newDuration` to the
       // maximum possible value directly.
-      newDuration = _controller!.maxDuration;
+      newDuration = controller.actualMaxDuration;
     } else {
       newDuration = (_initialRange!.duration * (1 / rawScale))
-          .coerceIn(_controller!.minDuration, _controller!.maxDuration);
+          .coerceIn(controller.actualMinDuration, controller.actualMaxDuration);
     }
 
     final newFocus = _focusToDuration(details.localFocalPoint.dy, newDuration);

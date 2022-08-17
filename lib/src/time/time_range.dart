@@ -13,7 +13,9 @@ class TimeRange {
         assert(endTime.debugCheckIsValidTimetableTimeOfDay()),
         assert(startTime <= endTime);
   factory TimeRange.fromStartAndDuration(
-          Duration startTime, Duration duration) =>
+    Duration startTime,
+    Duration duration,
+  ) =>
       TimeRange(startTime, startTime + duration);
 
   factory TimeRange.centeredAround(
@@ -23,16 +25,24 @@ class TimeRange {
   }) {
     assert(duration <= 1.days);
 
+    final TimeRange newRange;
     final halfDuration = duration * (1 / 2);
     if (center - halfDuration < 0.days) {
       assert(canShiftIfDoesntFit);
-      return TimeRange(0.days, duration);
+      newRange = TimeRange(0.days, duration);
     } else if (center + halfDuration > 1.days) {
       assert(canShiftIfDoesntFit);
-      return TimeRange(1.days - duration, 1.days);
+      newRange = TimeRange(1.days - duration, 1.days);
     } else {
-      return TimeRange(center - halfDuration, center + halfDuration);
+      newRange = TimeRange(
+        // Ensure that the resulting duration is exactly [duration], even if
+        // [halfDuration] was rounded.
+        center - duration + halfDuration,
+        center + halfDuration,
+      );
     }
+    assert(newRange.duration == duration);
+    return newRange;
   }
 
   static final fullDay = TimeRange(0.days, 1.days);

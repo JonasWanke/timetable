@@ -84,29 +84,38 @@ class _MultiDateTimetableState<E extends Event>
 
   @override
   Widget build(BuildContext context) {
+    final style = TimetableTheme.orDefaultOf(context).multiDateTimetableStyle;
     final eventProvider = DefaultEventProvider.of<E>(context) ?? (_) => [];
 
-    return Column(children: [
-      DefaultEventProvider<E>(
-        eventProvider: (visibleDates) =>
-            eventProvider(visibleDates).where((it) => it.isAllDay).toList(),
-        child: Builder(
-          builder: (context) => widget.headerBuilder(context, _leadingWidth),
+    final header = DefaultEventProvider<E>(
+      eventProvider: (visibleDates) =>
+          eventProvider(visibleDates).where((it) => it.isAllDay).toList(),
+      child: Builder(
+        builder: (context) => widget.headerBuilder(context, _leadingWidth),
+      ),
+    );
+
+    final content = DefaultEventProvider<E>(
+      eventProvider: (visibleDates) =>
+          eventProvider(visibleDates).where((it) => it.isPartDay).toList(),
+      child: Builder(
+        builder: (context) => widget.contentBuilder(
+          context,
+          (newWidth) => setState(() => _leadingWidth = newWidth),
         ),
       ),
-      Expanded(
-        child: DefaultEventProvider<E>(
-          eventProvider: (visibleDates) =>
-              eventProvider(visibleDates).where((it) => it.isPartDay).toList(),
-          child: Builder(
-            builder: (context) => widget.contentBuilder(
-              context,
-              (newWidth) => setState(() => _leadingWidth = newWidth),
-            ),
-          ),
+    );
+
+    return LayoutBuilder(builder: (context, constraints) {
+      final maxHeaderHeight = constraints.maxHeight * style.maxHeaderFraction;
+      return Column(children: [
+        ConstrainedBox(
+          constraints: BoxConstraints(maxHeight: maxHeaderHeight),
+          child: header,
         ),
-      ),
-    ]);
+        Expanded(child: content),
+      ]);
+    });
   }
 }
 
@@ -131,8 +140,11 @@ class MultiDateTimetableHeader<E extends Event> extends StatelessWidget {
       leading,
       Expanded(
         child: Column(children: [
-          DatePageView(shrinkWrapInCrossAxis: true, builder: dateHeaderBuilder),
-          bottom,
+          DatePageView(
+            shrinkWrapInCrossAxis: true,
+            builder: dateHeaderBuilder,
+          ),
+          Flexible(child: bottom),
         ]),
       ),
     ]);
@@ -160,6 +172,52 @@ class MultiDateTimetableContent<E extends Event> extends StatelessWidget {
       divider,
       Expanded(child: content),
     ]);
+  }
+}
+
+/// Defines visual properties for [MultiDateTimetable] and
+/// [RecurringMultiDateTimetable].
+class MultiDateTimetableStyle {
+  factory MultiDateTimetableStyle(
+    // To allow future updates to use the context and align the parameters to
+    // other style constructors.
+    // ignore: avoid_unused_constructor_parameters
+    BuildContext context, {
+    double? maxHeaderFraction,
+  }) {
+    return MultiDateTimetableStyle.raw(
+      maxHeaderFraction: maxHeaderFraction ?? 0.5,
+    );
+  }
+
+  const MultiDateTimetableStyle.raw({this.maxHeaderFraction = 0.5})
+      : assert(0 < maxHeaderFraction),
+        assert(maxHeaderFraction < 1);
+
+  /// The maximum fraction (between 0 and 1, exclusive) that the header
+  /// [MultiDateTimetableHeader] may consume of the timetable's total height.
+  ///
+  /// This ensures that a header containing many all-day events in parallel
+  /// doesn't push away the content (i.e., part-time events).
+  ///
+  /// See also:
+  ///
+  /// * [MultiDateEventHeaderStyle.maxEventRows], which configures the maximum
+  ///   number of rows that header events can allocate.
+  final double maxHeaderFraction;
+
+  MultiDateTimetableStyle copyWith({double? maxHeaderFraction}) {
+    return MultiDateTimetableStyle.raw(
+      maxHeaderFraction: maxHeaderFraction ?? this.maxHeaderFraction,
+    );
+  }
+
+  @override
+  int get hashCode => maxHeaderFraction.hashCode;
+  @override
+  bool operator ==(Object other) {
+    return other is MultiDateTimetableStyle &&
+        maxHeaderFraction == other.maxHeaderFraction;
   }
 }
 

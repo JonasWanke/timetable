@@ -12,6 +12,7 @@ import 'components/now_indicator.dart';
 import 'components/time_indicator.dart';
 import 'components/week_indicator.dart';
 import 'components/weekday_indicator.dart';
+import 'layouts/multi_date.dart';
 import 'utils.dart';
 import 'week.dart';
 
@@ -38,6 +39,7 @@ class TimetableThemeData {
     MonthBasedStyleProvider<MonthIndicatorStyle>? monthIndicatorStyleProvider,
     MonthBasedStyleProvider<MonthWidgetStyle>? monthWidgetStyleProvider,
     MultiDateEventHeaderStyle? multiDateEventHeaderStyle,
+    MultiDateTimetableStyle? multiDateTimetableStyle,
     NowIndicatorStyle? nowIndicatorStyle,
     TimeBasedStyleProvider<TimeIndicatorStyle>? timeIndicatorStyleProvider,
     DateBasedStyleProvider<WeekdayIndicatorStyle>?
@@ -60,6 +62,8 @@ class TimetableThemeData {
           (month) => MonthWidgetStyle(context, month, startOfWeek: startOfWeek),
       multiDateEventHeaderStyle:
           multiDateEventHeaderStyle ?? MultiDateEventHeaderStyle(context),
+      multiDateTimetableStyle:
+          multiDateTimetableStyle ?? MultiDateTimetableStyle(context),
       nowIndicatorStyle: nowIndicatorStyle ?? NowIndicatorStyle(context),
       timeIndicatorStyleProvider: timeIndicatorStyleProvider ??
           (time) => TimeIndicatorStyle(context, time),
@@ -80,6 +84,7 @@ class TimetableThemeData {
     required this.monthIndicatorStyleProvider,
     required this.monthWidgetStyleProvider,
     required this.multiDateEventHeaderStyle,
+    required this.multiDateTimetableStyle,
     required this.nowIndicatorStyle,
     required this.timeIndicatorStyleProvider,
     required this.weekdayIndicatorStyleProvider,
@@ -96,6 +101,7 @@ class TimetableThemeData {
       monthIndicatorStyleProvider;
   final MonthBasedStyleProvider<MonthWidgetStyle> monthWidgetStyleProvider;
   final MultiDateEventHeaderStyle multiDateEventHeaderStyle;
+  final MultiDateTimetableStyle multiDateTimetableStyle;
   final NowIndicatorStyle nowIndicatorStyle;
   final TimeBasedStyleProvider<TimeIndicatorStyle> timeIndicatorStyleProvider;
   final DateBasedStyleProvider<WeekdayIndicatorStyle>
@@ -112,6 +118,7 @@ class TimetableThemeData {
     MonthBasedStyleProvider<MonthIndicatorStyle>? monthIndicatorStyleProvider,
     MonthBasedStyleProvider<MonthWidgetStyle>? monthWidgetStyleProvider,
     MultiDateEventHeaderStyle? multiDateEventHeaderStyle,
+    MultiDateTimetableStyle? multiDateTimetableStyle,
     NowIndicatorStyle? nowIndicatorStyle,
     TimeBasedStyleProvider<TimeIndicatorStyle>? timeIndicatorStyleProvider,
     DateBasedStyleProvider<WeekdayIndicatorStyle>?
@@ -134,6 +141,8 @@ class TimetableThemeData {
           monthWidgetStyleProvider ?? this.monthWidgetStyleProvider,
       multiDateEventHeaderStyle:
           multiDateEventHeaderStyle ?? this.multiDateEventHeaderStyle,
+      multiDateTimetableStyle:
+          multiDateTimetableStyle ?? this.multiDateTimetableStyle,
       nowIndicatorStyle: nowIndicatorStyle ?? this.nowIndicatorStyle,
       timeIndicatorStyleProvider:
           timeIndicatorStyleProvider ?? this.timeIndicatorStyleProvider,
@@ -155,6 +164,7 @@ class TimetableThemeData {
         monthIndicatorStyleProvider,
         monthWidgetStyleProvider,
         multiDateEventHeaderStyle,
+        multiDateTimetableStyle,
         nowIndicatorStyle,
         timeIndicatorStyleProvider,
         weekdayIndicatorStyleProvider,
@@ -172,6 +182,7 @@ class TimetableThemeData {
         monthIndicatorStyleProvider == other.monthIndicatorStyleProvider &&
         monthWidgetStyleProvider == other.monthWidgetStyleProvider &&
         multiDateEventHeaderStyle == other.multiDateEventHeaderStyle &&
+        multiDateTimetableStyle == other.multiDateTimetableStyle &&
         nowIndicatorStyle == other.nowIndicatorStyle &&
         timeIndicatorStyleProvider == other.timeIndicatorStyleProvider &&
         weekdayIndicatorStyleProvider == other.weekdayIndicatorStyleProvider &&

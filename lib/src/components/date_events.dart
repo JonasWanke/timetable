@@ -185,6 +185,8 @@ class _DayEventsLayoutDelegate<E extends Event>
 
   @override
   void performLayout(Size size) {
+    assert(size.height > 0);
+
     final positions = _calculatePositions(size.height);
 
     double durationToY(Duration duration) {

@@ -13,12 +13,13 @@ import '../event/all_day.dart';
 import '../event/builder.dart';
 import '../event/event.dart';
 import '../event/provider.dart';
+import '../layouts/multi_date.dart';
 import '../theme.dart';
 import '../utils.dart';
 
 /// A widget that displays all-day [Event]s.
 ///
-/// A [DefaultDateController] and [DefaultEventBuilder] must be above in the
+/// A [DefaultDateController] and a [DefaultEventBuilder] must be above in the
 /// widget tree.
 ///
 /// If [onBackgroundTap] is not supplied, [DefaultTimetableCallbacks]'s
@@ -49,36 +50,42 @@ class MultiDateEventHeader<E extends Event> extends StatelessWidget {
     final style = this.style ??
         TimetableTheme.orDefaultOf(context).multiDateEventHeaderStyle;
 
+    final child = LayoutBuilder(builder: (context, constraints) {
+      var maxEventRows = style.maxEventRows;
+      if (constraints.maxHeight.isFinite) {
+        final maxRowsFromHeight =
+            (constraints.maxHeight / style.eventHeight).floor();
+        final maxEventRowsFromHeight = (maxRowsFromHeight - 1).coerceAtLeast(0);
+        maxEventRows = maxEventRowsFromHeight.coerceAtMost(maxEventRows);
+      }
+
+      return ValueListenableBuilder<DatePageValue>(
+        valueListenable: DefaultDateController.of(context)!,
+        builder: (context, pageValue, __) => _buildContent(
+          context,
+          pageValue,
+          width: constraints.maxWidth,
+          eventHeight: style.eventHeight,
+          maxEventRows: maxEventRows,
+        ),
+      );
+    });
+
     return Stack(children: [
       Positioned.fill(
         child: DatePageView(builder: (context, date) => SizedBox()),
       ),
-      ClipRect(
-        child: Padding(
-          padding: style.padding,
-          child: LayoutBuilder(
-            builder: (context, constraints) =>
-                ValueListenableBuilder<DatePageValue>(
-              valueListenable: DefaultDateController.of(context)!,
-              builder: (context, pageValue, __) => _buildContent(
-                context,
-                style,
-                pageValue,
-                constraints.maxWidth,
-              ),
-            ),
-          ),
-        ),
-      ),
+      ClipRect(child: Padding(padding: style.padding, child: child)),
     ]);
   }
 
   Widget _buildContent(
     BuildContext context,
-    MultiDateEventHeaderStyle style,
-    DatePageValue pageValue,
-    double width,
-  ) {
+    DatePageValue pageValue, {
+    required double width,
+    required double eventHeight,
+    required int maxEventRows,
+  }) {
     final onBackgroundTap = this.onBackgroundTap ??
         DefaultTimetableCallbacks.of(context)?.onDateBackgroundTap;
 
@@ -97,8 +104,8 @@ class MultiDateEventHeader<E extends Event> extends StatelessWidget {
         events:
             DefaultEventProvider.of<E>(context)?.call(pageValue.visibleDates) ??
                 [],
-        eventHeight: style.eventHeight,
-        maxEventRows: style.maxEventRows,
+        eventHeight: eventHeight,
+        maxEventRows: maxEventRows,
       ),
     );
   }
@@ -154,6 +161,17 @@ class MultiDateEventHeaderStyle {
   /// If there are more events than this, [DefaultEventBuilder.allDayOverflowOf]
   /// will be called to display information about the overflowed events. This
   /// adds one more row.
+  ///
+  /// If there's not enough space to display this many rows (plus one for the
+  /// overflows), [MultiDateEventHeader] will automatically reduce the number of
+  /// rows to fit the available height.
+  ///
+  /// See also:
+  ///
+  /// * [MultiDateTimetableStyle.maxHeaderFraction], which additionally
+  ///   constrains the header to only occupy up to that fraction of the
+  ///   available height, ensuring that the content still has space on short
+  ///   screens with many parallel header events.
   final int maxEventRows;
 
   final EdgeInsetsGeometry padding;

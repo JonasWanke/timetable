@@ -15,6 +15,7 @@ import '../theme.dart';
 import '../time/controller.dart';
 import '../time/zoom.dart';
 import '../utils.dart';
+import '../utils/constraints_passing_column.dart';
 import 'recurring_multi_date.dart';
 
 typedef MultiDateTimetableHeaderBuilder = Widget Function(
@@ -58,7 +59,11 @@ class MultiDateTimetable<E extends Event> extends StatefulWidget {
     return (context, leadingWidth) => MultiDateTimetableHeader<E>(
           leading: SizedBox(
             width: leadingWidth,
-            child: Center(child: WeekIndicator.forController(null)),
+            child: Align(
+              heightFactor: 1,
+              alignment: Alignment.center,
+              child: WeekIndicator.forController(null),
+            ),
           ),
         );
   }
@@ -125,7 +130,7 @@ class MultiDateTimetableHeader<E extends Event> extends StatelessWidget {
     Widget? leading,
     DateWidgetBuilder? dateHeaderBuilder,
     Widget? bottom,
-  })  : leading = leading ?? Center(child: WeekIndicator.forController(null)),
+  })  : leading = leading ?? WeekIndicator.forController(null),
         dateHeaderBuilder =
             dateHeaderBuilder ?? ((context, date) => DateHeader(date)),
         bottom = bottom ?? MultiDateEventHeader<E>();
@@ -139,12 +144,12 @@ class MultiDateTimetableHeader<E extends Event> extends StatelessWidget {
     return Row(children: [
       leading,
       Expanded(
-        child: Column(children: [
+        child: ConstraintsPassingColumn(children: [
           DatePageView(
             shrinkWrapInCrossAxis: true,
             builder: dateHeaderBuilder,
           ),
-          Flexible(child: bottom),
+          bottom,
         ]),
       ),
     ]);

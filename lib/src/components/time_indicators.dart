@@ -221,9 +221,7 @@ class _TimeIndicatorsLayout extends RenderBox
   bool _debugThrowIfNotCheckingIntrinsics() {
     assert(() {
       if (!RenderObject.debugCheckingIntrinsics) {
-        throw Exception(
-          "_TimeIndicatorsLayout doesn't have an intrinsic height.",
-        );
+        throw Exception("$runtimeType doesn't have an intrinsic height.");
       }
       return true;
     }());
@@ -259,8 +257,7 @@ class _TimeIndicatorsLayout extends RenderBox
         size.width,
         yAnchor + child.size.height,
       );
-      (child.parentData! as _TimeIndicatorParentData).offset =
-          alignment.inscribe(child.size, outerRect).topLeft;
+      data.offset = alignment.inscribe(child.size, outerRect).topLeft;
     }
   }
 

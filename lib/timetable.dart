@@ -1,7 +1,6 @@
 library timetable;
 
 export 'src/callbacks.dart';
-export 'src/components/all_day_overflow.dart';
 export 'src/components/date_content.dart';
 export 'src/components/date_dividers.dart';
 export 'src/components/date_events.dart';
@@ -12,6 +11,7 @@ export 'src/components/month_indicator.dart';
 export 'src/components/month_widget.dart';
 export 'src/components/multi_date_content.dart';
 export 'src/components/multi_date_event_header.dart';
+export 'src/components/multi_date_event_header_overflow.dart';
 export 'src/components/now_indicator.dart';
 export 'src/components/time_indicator.dart';
 export 'src/components/time_indicators.dart';

@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart' hide Interval;
 
-import '../components/all_day_overflow.dart';
+import '../components/multi_date_event_header_overflow.dart';
 import 'all_day.dart';
 import 'event.dart';
 
@@ -23,8 +23,10 @@ class DefaultEventBuilder<E extends Event> extends InheritedWidget {
   })  : allDayBuilder =
             allDayBuilder ?? ((context, event, _) => builder(context, event)),
         allDayOverflowBuilder = allDayOverflowBuilder ??
-            ((context, date, overflowedEvents) =>
-                AllDayOverflow(date, overflowCount: overflowedEvents.length));
+            ((context, date, overflowedEvents) => MultiDateEventHeaderOverflow(
+                  date,
+                  overflowCount: overflowedEvents.length,
+                ));
 
   final EventBuilder<E> builder;
   final AllDayEventBuilder<E> allDayBuilder;

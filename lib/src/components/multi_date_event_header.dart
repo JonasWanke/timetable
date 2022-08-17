@@ -111,24 +111,6 @@ class MultiDateEventHeader<E extends Event> extends StatelessWidget {
   }
 }
 
-class _MultiDateEventHeaderEvents<E extends Event> extends StatefulWidget {
-  const _MultiDateEventHeaderEvents({
-    required this.pageValue,
-    required this.events,
-    required this.eventHeight,
-    required this.maxEventRows,
-  });
-
-  final DatePageValue pageValue;
-  final List<E> events;
-  final double eventHeight;
-  final int maxEventRows;
-
-  @override
-  State<_MultiDateEventHeaderEvents<E>> createState() =>
-      _MultiDateEventHeaderEventsState<E>();
-}
-
 /// Defines visual properties for [MultiDateEventHeader].
 class MultiDateEventHeaderStyle {
   factory MultiDateEventHeaderStyle(
@@ -197,6 +179,24 @@ class MultiDateEventHeaderStyle {
         maxEventRows == other.maxEventRows &&
         padding == other.padding;
   }
+}
+
+class _MultiDateEventHeaderEvents<E extends Event> extends StatefulWidget {
+  const _MultiDateEventHeaderEvents({
+    required this.pageValue,
+    required this.events,
+    required this.eventHeight,
+    required this.maxEventRows,
+  });
+
+  final DatePageValue pageValue;
+  final List<E> events;
+  final double eventHeight;
+  final int maxEventRows;
+
+  @override
+  State<_MultiDateEventHeaderEvents<E>> createState() =>
+      _MultiDateEventHeaderEventsState<E>();
 }
 
 class _MultiDateEventHeaderEventsState<E extends Event>
@@ -295,7 +295,7 @@ class _MultiDateEventHeaderEventsState<E extends Event>
     return _EventsWidget(
       pageValue: widget.pageValue,
       eventHeight: widget.eventHeight,
-      maxEventRowss: Map.from(_maxEventPositions),
+      maxEventRows: Map.from(_maxEventPositions),
       children: [
         for (final event in widget.events)
           if (_yPositions[event] != null)
@@ -376,20 +376,20 @@ class _EventsWidget extends MultiChildRenderObjectWidget {
   _EventsWidget({
     required this.pageValue,
     required this.eventHeight,
-    required this.maxEventRowss,
+    required this.maxEventRows,
     required super.children,
   });
 
   final DatePageValue pageValue;
   final double eventHeight;
-  final Map<int, int> maxEventRowss;
+  final Map<int, int> maxEventRows;
 
   @override
   RenderObject createRenderObject(BuildContext context) {
     return _EventsLayout(
       pageValue: pageValue,
       eventHeight: eventHeight,
-      maxEventRowss: maxEventRowss,
+      maxEventRows: maxEventRows,
     );
   }
 
@@ -398,7 +398,7 @@ class _EventsWidget extends MultiChildRenderObjectWidget {
     renderObject
       ..pageValue = pageValue
       ..eventHeight = eventHeight
-      ..maxEventRowss = maxEventRowss;
+      ..maxEventRows = maxEventRows;
   }
 }
 
@@ -414,10 +414,10 @@ class _EventsLayout extends RenderBox
   _EventsLayout({
     required DatePageValue pageValue,
     required double eventHeight,
-    required Map<int, int> maxEventRowss,
+    required Map<int, int> maxEventRows,
   })  : _pageValue = pageValue,
         _eventHeight = eventHeight,
-        _maxEventPositions = maxEventRowss;
+        _maxEventPositions = maxEventRows;
 
   DatePageValue _pageValue;
   DatePageValue get pageValue => _pageValue;
@@ -438,8 +438,8 @@ class _EventsLayout extends RenderBox
   }
 
   Map<int, int> _maxEventPositions;
-  Map<int, int> get maxEventRowss => _maxEventPositions;
-  set maxEventRowss(Map<int, int> value) {
+  Map<int, int> get maxEventRows => _maxEventPositions;
+  set maxEventRows(Map<int, int> value) {
     if (_maxEventPositions == value) return;
 
     _maxEventPositions = value;

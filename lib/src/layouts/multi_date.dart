@@ -45,17 +45,22 @@ class MultiDateTimetable<E extends Event> extends StatefulWidget {
     MultiDateTimetableHeaderBuilder? headerBuilder,
     MultiDateTimetableContentBuilder? contentBuilder,
     Widget? contentLeading,
+    GlobalKey<MultiDateContentGeometry>? contentGeometryKey,
   }) {
     assert(
       contentBuilder == null || contentLeading == null,
       "`contentLeading` can't be used when `contentBuilder` is specified.",
     );
+    assert(
+      contentBuilder == null || contentGeometryKey == null,
+      "`contentGeometryKey` can't be used when `contentBuilder` is specified.",
+    );
 
     return MultiDateTimetable.raw(
       key: key,
       headerBuilder: headerBuilder ?? _defaultHeaderBuilder<E>(),
-      contentBuilder:
-          contentBuilder ?? _defaultContentBuilder<E>(contentLeading),
+      contentBuilder: contentBuilder ??
+          _defaultContentBuilder<E>(contentLeading, contentGeometryKey),
     );
   }
 
@@ -84,12 +89,14 @@ class MultiDateTimetable<E extends Event> extends StatefulWidget {
   static MultiDateTimetableContentBuilder
       _defaultContentBuilder<E extends Event>(
     Widget? contentLeading,
+    GlobalKey<MultiDateContentGeometry>? contentGeometryKey,
   ) {
     return (context, onLeadingWidthChanged) => MultiDateTimetableContent<E>(
           leading: SizeReportingWidget(
             onSizeChanged: (size) => onLeadingWidthChanged(size.width),
             child: contentLeading ?? _DefaultContentLeading(),
           ),
+          contentGeometryKey: contentGeometryKey,
         );
   }
 
@@ -186,12 +193,17 @@ class MultiDateTimetableContent<E extends Event> extends StatelessWidget {
     Widget? leading,
     Widget? divider,
     Widget? content,
+    GlobalKey<MultiDateContentGeometry>? contentGeometryKey,
   }) {
+    assert(
+      content == null || contentGeometryKey == null,
+      "`contentGeometryKey` can't be used when `content` is specified.",
+    );
     return MultiDateTimetableContent.raw(
       key: key,
       leading: leading ?? _DefaultContentLeading(),
       divider: divider ?? VerticalDivider(width: 0),
-      content: content ?? MultiDateContent<E>(),
+      content: content ?? MultiDateContent<E>(geometryKey: contentGeometryKey),
     );
   }
 

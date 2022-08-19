@@ -246,15 +246,9 @@ class _MultiDateEventHeaderEventsState<E extends Event>
 
     // Insert new events and, in case [maxEventRows] increased, display
     // previously overflowed events.
-    final sortedEvents = widget.events.where((it) {
-      if (oldMaxEventRows == null) {
-        return !_yPositions.containsKey(it);
-      } else if (oldMaxEventRows < widget.maxEventRows) {
-        return _yPositions[it] == null;
-      } else {
-        return false;
-      }
-    }).sortedByStartLength();
+    final sortedEvents = widget.events
+        .where((it) => _yPositions[it] == null)
+        .sortedByStartLength();
 
     Iterable<E> eventsWithPosition(int y) =>
         _yPositions.entries.where((it) => it.value == y).map((it) => it.key);

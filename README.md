@@ -150,7 +150,8 @@ TimetableConfig<BasicEvent>(
   allDayEventBuilder: (context, event, info) =>
       BasicAllDayEventWidget(event, info: info),
   callbacks: TimetableCallbacks(
-    // onWeekTap, onDateTap, onDateBackgroundTap, onDateTimeBackgroundTap
+    // onWeekTap, onDateTap, onDateBackgroundTap, onDateTimeBackgroundTap, and
+    // onMultiDateHeaderOverflowTap
   ),
   theme: TimetableThemeData(
     context,

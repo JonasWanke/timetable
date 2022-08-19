@@ -213,9 +213,9 @@ class _MultiDateEventHeaderEventsState<E extends Event>
   @override
   void didUpdateWidget(covariant _MultiDateEventHeaderEvents<E> oldWidget) {
     if (oldWidget.pageValue != widget.pageValue ||
-        !DeepCollectionEquality().equals(oldWidget.events, widget.events) ||
         oldWidget.eventHeight != widget.eventHeight ||
-        oldWidget.maxEventRows != widget.maxEventRows) {
+        oldWidget.maxEventRows != widget.maxEventRows ||
+        !DeepCollectionEquality().equals(oldWidget.events, widget.events)) {
       _updateEventPositions(oldMaxEventRows: oldWidget.maxEventRows);
     }
     super.didUpdateWidget(oldWidget);

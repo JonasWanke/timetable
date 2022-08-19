@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart' hide Interval;
 
@@ -30,63 +31,98 @@ import 'now_indicator.dart';
 /// * [DateDividers], [TimeZoom], [HourDividers], [NowIndicator],
 ///   [DatePageView], and [DateContent], which are used internally by this
 ///   widget and can be styled.
-class MultiDateContent<E extends Event> extends StatelessWidget {
-  const MultiDateContent({super.key});
+class MultiDateContent<E extends Event> extends StatefulWidget {
+  const MultiDateContent({super.key, this.geometryKey});
+
+  final GlobalKey<MultiDateContentGeometry>? geometryKey;
+
+  @override
+  State<MultiDateContent<E>> createState() => _MultiDateContentState<E>();
+}
+
+class _MultiDateContentState<E extends Event>
+    extends State<MultiDateContent<E>> {
+  late GlobalKey<MultiDateContentGeometry> geometryKey;
+  late bool wasGeometryKeyFromWidget;
+
+  @override
+  void initState() {
+    super.initState();
+    geometryKey = widget.geometryKey ?? GlobalKey<MultiDateContentGeometry>();
+    wasGeometryKeyFromWidget = widget.geometryKey != null;
+  }
+
+  @override
+  void didUpdateWidget(covariant MultiDateContent<E> oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.geometryKey == null && wasGeometryKeyFromWidget) {
+      geometryKey = GlobalKey<MultiDateContentGeometry>();
+      wasGeometryKeyFromWidget = false;
+    } else if (widget.geometryKey != null &&
+        geometryKey != widget.geometryKey) {
+      geometryKey = widget.geometryKey!;
+      wasGeometryKeyFromWidget = true;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    final datePages = DatePageView(
+      controller: DefaultDateController.of(context)!,
+      builder: (context, date) => DateContent<E>(
+        date: date,
+        events:
+            DefaultEventProvider.of<E>(context)?.call(date.fullDayInterval) ??
+                [],
+        overlays:
+            DefaultTimeOverlayProvider.of(context)?.call(context, date) ?? [],
+      ),
+    );
+
     return DateDividers(
       child: TimeZoom(
         child: HourDividers(
           child: NowIndicator(
-            child: Builder(builder: _buildEvents),
+            child: _MultiDateContentGeometryWidget(
+              key: geometryKey,
+              child: datePages,
+            ),
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildEvents(BuildContext context) {
-    final dateController = DefaultDateController.of(context)!;
-
-    return _MultiDateContentDragInfo(
-      context: context,
-      dateController: dateController,
-      child: DatePageView(
-        controller: dateController,
-        builder: (context, date) => DateContent<E>(
-          date: date,
-          events:
-              DefaultEventProvider.of<E>(context)?.call(date.fullDayInterval) ??
-                  [],
-          overlays:
-              DefaultTimeOverlayProvider.of(context)?.call(context, date) ?? [],
         ),
       ),
     );
   }
 }
 
-class _MultiDateContentDragInfo extends InheritedWidget {
-  const _MultiDateContentDragInfo({
-    required this.context,
-    required this.dateController,
-    required super.child,
-  });
+class _MultiDateContentGeometryWidget extends StatefulWidget {
+  const _MultiDateContentGeometryWidget({
+    required GlobalKey<MultiDateContentGeometry> key,
+    required this.child,
+  }) : super(key: key);
 
-  // Storing the context feels wrong but I haven't found a different way to
-  // transform global coordinates back to local ones in this context.
-  final BuildContext context;
-  final DateController dateController;
+  final Widget child;
 
-  static DateTime resolveOffset(BuildContext context, Offset globalOffset) {
-    final dragInfos = context
-        .dependOnInheritedWidgetOfExactType<_MultiDateContentDragInfo>()!;
+  @override
+  MultiDateContentGeometry createState() => MultiDateContentGeometry._();
+}
 
-    final renderBox = dragInfos.context.findRenderObject()! as RenderBox;
+class MultiDateContentGeometry extends State<_MultiDateContentGeometryWidget> {
+  MultiDateContentGeometry._();
+
+  @override
+  Widget build(BuildContext context) => widget.child;
+
+  bool contains(Offset globalOffset) {
+    final renderBox = _findRenderBox();
+    final localOffset = renderBox.globalToLocal(globalOffset);
+    return (Offset.zero & renderBox.size).contains(localOffset);
+  }
+
+  DateTime resolveOffset(Offset globalOffset) {
+    final renderBox = _findRenderBox();
     final size = renderBox.size;
     final localOffset = renderBox.globalToLocal(globalOffset);
-    final pageValue = dragInfos.dateController.value;
+    final pageValue = DefaultDateController.of(context)!.value;
     final page = (pageValue.page +
             localOffset.dx / size.width * pageValue.visibleDayCount)
         .floor();
@@ -94,18 +130,56 @@ class _MultiDateContentDragInfo extends InheritedWidget {
         1.days * (localOffset.dy / size.height);
   }
 
-  @override
-  bool updateShouldNotify(_MultiDateContentDragInfo oldWidget) {
-    return context != oldWidget.context ||
-        dateController != oldWidget.dateController;
-  }
+  RenderBox _findRenderBox() => context.findRenderObject()! as RenderBox;
+
+  static MultiDateContentGeometry? maybeOf(BuildContext context) =>
+      context.findAncestorStateOfType<MultiDateContentGeometry>();
 }
+
+typedef PartDayDragStartCallback = VoidCallback;
+typedef PartDayDragUpdateCallback = void Function(
+  GlobalKey<MultiDateContentGeometry>? geometryKey,
+  DateTime dateTime,
+);
+typedef PartDayDragEndCallback = void Function(
+  GlobalKey<MultiDateContentGeometry>? geometryKey,
+  DateTime? dateTime,
+);
+typedef PartDayDragCanceledCallback = void Function(
+  GlobalKey<MultiDateContentGeometry>? geometryKey,
+  bool wasMoved,
+);
 
 /// A widget that makes its child draggable starting from long press.
 ///
 /// It must be used inside a [MultiDateContent].
 class PartDayDraggableEvent extends StatefulWidget {
   PartDayDraggableEvent({
+    VoidCallback? onDragStart,
+    ValueChanged<DateTime>? onDragUpdate,
+    ValueSetter<DateTime?>? onDragEnd,
+    void Function(bool wasMoved)? onDragCanceled,
+    required Widget child,
+    Widget? childWhileDragging,
+  }) : this.forGeometryKeys(
+          {},
+          onDragStart: onDragStart,
+          onDragUpdate: onDragUpdate == null
+              ? null
+              : (geometryKeys, dateTime) => onDragUpdate(dateTime),
+          onDragEnd: onDragEnd == null
+              ? null
+              : (geometryKeys, dateTime) => onDragEnd(dateTime),
+          onDragCanceled: onDragCanceled == null
+              ? null
+              : (geometryKeys, wasMoved) => onDragCanceled(wasMoved),
+          // ignore: sort_child_properties_last
+          child: child,
+          childWhileDragging: childWhileDragging,
+        );
+
+  PartDayDraggableEvent.forGeometryKeys(
+    this.geometryKeys, {
     this.onDragStart,
     this.onDragUpdate,
     this.onDragEnd,
@@ -115,19 +189,33 @@ class PartDayDraggableEvent extends StatefulWidget {
   }) : childWhileDragging =
             childWhileDragging ?? Opacity(opacity: 0.6, child: child);
 
-  final void Function()? onDragStart;
-  final void Function(DateTime)? onDragUpdate;
+  /// - If this set is empty, the [MultiDateContentGeometry] will be looked up
+  ///   in the widget ancestors. This is the default for events placed in a
+  ///   [MultiDateContent].
+  /// - If this set contains a single key, it's geometry will be used, even if
+  ///   the event is not currently dragged directly over it.
+  /// - If this set contains multiple keys, the first key whose geometry
+  ///   contains the current drag position will be used. E.g., if you have two
+  ///   [MultiDateContent] widgets next to each other, we will use the key of
+  ///   the [MultiDateContent] that this is currently being dragged over.
+  ///
+  ///   Otherwise, if the current drag position does not match any geometry, the
+  ///   first key will be used.
+  final Set<GlobalKey<MultiDateContentGeometry>> geometryKeys;
+
+  final PartDayDragStartCallback? onDragStart;
+  final PartDayDragUpdateCallback? onDragUpdate;
 
   /// Called when a drag gesture is ended.
   ///
   /// The [DateTime] is `null` when the user long taps but then doesn't move
   /// their finger at all.
-  final void Function(DateTime?)? onDragEnd;
+  final PartDayDragEndCallback? onDragEnd;
 
   /// Called when a drag gesture is canceled.
   ///
   /// The [bool] indicates whether the user moved their finger or not.
-  final void Function(bool isMoved)? onDragCanceled;
+  final PartDayDragCanceledCallback? onDragCanceled;
 
   final Widget child;
   final Widget childWhileDragging;
@@ -137,37 +225,152 @@ class PartDayDraggableEvent extends StatefulWidget {
 }
 
 class _PartDayDraggableEventState extends State<PartDayDraggableEvent> {
-  DateTime? _lastDragDateTime;
-  var _isMoved = false;
+  /// The initial pointer position inside this widget.
+  double? _pointerVerticalAlignment;
+  Offset? _lastOffset;
+  var _wasMoved = false;
+  void _resetState() {
+    _pointerVerticalAlignment = null;
+    _lastOffset = null;
+    _wasMoved = false;
+  }
+
+  RenderBox _findRenderBox() => context.findRenderObject()! as RenderBox;
 
   @override
   Widget build(BuildContext context) {
-    return LongPressDraggable<_DragData>(
-      data: _DragData(),
-      maxSimultaneousDrags: 1,
-      onDragStarted: widget.onDragStart,
-      onDragUpdate: (details) {
-        if (widget.onDragUpdate != null) {
-          _lastDragDateTime = _MultiDateContentDragInfo.resolveOffset(
-              context, details.globalPosition);
-          widget.onDragUpdate!(_lastDragDateTime!);
-        }
-        _isMoved = true;
+    return _PartDayDraggable(
+      onDragStarted: (offset) {
+        final renderBox = _findRenderBox();
+        final offsetInLocalSpace = renderBox.globalToLocal(offset);
+        _pointerVerticalAlignment =
+            offsetInLocalSpace.dy / renderBox.size.height;
+        _lastOffset = offset;
+
+        widget.onDragStart?.call();
       },
-      onDragEnd: (details) {
-        if (widget.onDragEnd != null) {
-          widget.onDragEnd!(_lastDragDateTime);
-          _lastDragDateTime = null;
-        }
-        _isMoved = false;
+      onDragUpdate: (offset) {
+        _lastOffset = offset;
+        final adjustedOffset = _pointerToWidgetTopCenter(offset);
+        final geometry = _findGeometry(context, adjustedOffset);
+        widget.onDragUpdate?.call(
+          geometry.key,
+          geometry.value.resolveOffset(adjustedOffset),
+        );
+        _wasMoved = true;
       },
-      onDraggableCanceled: widget.onDragCanceled != null
-          ? (_, __) => widget.onDragCanceled!(_isMoved)
-          : null,
+      onDragEnd: () {
+        final adjustedOffset = _pointerToWidgetTopCenter(_lastOffset!);
+        final geometry = _findGeometry(context, adjustedOffset);
+        widget.onDragEnd?.call(
+          geometry.key,
+          geometry.value.resolveOffset(adjustedOffset),
+        );
+        _resetState();
+      },
+      onDragCanceled: () {
+        if (_pointerVerticalAlignment == null) {
+          // The drag already ended.
+          assert(_lastOffset == null);
+          assert(_wasMoved == false);
+          return;
+        }
+
+        final adjustedOffset = _pointerToWidgetTopCenter(_lastOffset!);
+        final geometry = _findGeometry(context, adjustedOffset);
+        widget.onDragCanceled?.call(geometry.key, _wasMoved);
+        _resetState();
+      },
       feedback: SizedBox.shrink(),
       childWhenDragging: widget.childWhileDragging,
       child: widget.child,
     );
+  }
+
+  Offset _pointerToWidgetTopCenter(Offset offset) {
+    final renderBox = _findRenderBox();
+    final adjustment =
+        Offset(0, _pointerVerticalAlignment! * renderBox.size.height);
+
+    final local = renderBox.globalToLocal(offset);
+    final localAdjusted = local - adjustment;
+    return renderBox.localToGlobal(localAdjusted);
+  }
+
+  MapEntry<GlobalKey<MultiDateContentGeometry>?, MultiDateContentGeometry>
+      _findGeometry(
+    BuildContext context,
+    Offset globalOffset,
+  ) {
+    if (widget.geometryKeys.isNotEmpty) {
+      if (widget.geometryKeys.length == 1) {
+        final geometryKey = widget.geometryKeys.single;
+        return MapEntry(geometryKey, geometryKey.currentState!);
+      }
+
+      for (final geometryKey in widget.geometryKeys) {
+        final geometry = geometryKey.currentState!;
+        if (!geometry.contains(globalOffset)) continue;
+        return MapEntry(geometryKey, geometry);
+      }
+
+      final geometryKey = widget.geometryKeys.first;
+      return MapEntry(geometryKey, geometryKey.currentState!);
+    }
+
+    final geometry = MultiDateContentGeometry.maybeOf(context);
+    if (geometry != null) return MapEntry(null, geometry);
+
+    throw FlutterError.fromParts(<DiagnosticsNode>[
+      ErrorSummary(
+        "`PartDayDraggableEvent` can't find a `MultiDateContentGeometry`.",
+      ),
+      ErrorHint(
+        'The `MultiDateContentGeometry`, which is created for every '
+        '`MultiDateContent` widget, is automatically picked up if this widget '
+        'is inside it, i.e., a normal event displayed by timetable.',
+      ),
+      ErrorHint(
+        'If you want to display a `PartDayDraggableEvent` outside of a '
+        '`MultiDateContent`, you have to supply a '
+        '`GlobalKey<MultiDateContentGeometry> geometryKey` to both this '
+        '`PartDayDraggableEvent` and the target `MultiDateContent` that this '
+        'event is supposed to be dropped in.',
+      ),
+      context.describeElement('The context used was'),
+    ]);
+  }
+}
+
+class _PartDayDraggable extends LongPressDraggable<_DragData> {
+  _PartDayDraggable({
+    required ValueSetter<Offset> onDragStarted,
+    required ValueChanged<Offset> onDragUpdate,
+    required VoidCallback onDragEnd,
+    required VoidCallback onDragCanceled,
+    required super.child,
+    required super.childWhenDragging,
+    required super.feedback,
+  })  : onDragStartedWithOffset = onDragStarted,
+        super(
+          data: _DragData(),
+          maxSimultaneousDrags: 1,
+          onDragStarted: null,
+          onDragUpdate: (details) => onDragUpdate(details.globalPosition),
+          onDragEnd: (details) => onDragEnd(),
+          onDraggableCanceled: (_, offset) => onDragCanceled(),
+        );
+
+  final ValueSetter<Offset> onDragStartedWithOffset;
+
+  @override
+  DelayedMultiDragGestureRecognizer createRecognizer(
+    GestureMultiDragStartCallback onStart,
+  ) {
+    return super.createRecognizer((offset) {
+      onDragStartedWithOffset(offset);
+      return onStart(offset);
+    });
   }
 }
 

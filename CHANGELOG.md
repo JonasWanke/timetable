@@ -16,6 +16,29 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### 📦 Build & CI
 -->
 
+## 1.0.0-alpha.9 · 2022-08-19
+
+### ⚠️ BREAKING CHANGES
+* remove `DateTimeTimetable.interval` in favor of `.fullDayInterval` ([`bee93d7`](https://github.com/JonasWanke/timetable/commit/bee93d73f7fa1c0ef9b51db7f1ab561793b27e35))
+* `TimetableThemeData.raw(…)` takes a new required parameter `MultiDateTimetableStyle multiDateTimetableStyle` ([`1fef623`](https://github.com/JonasWanke/timetable/commit/1fef623c05ebbe51327c99c3148115e1b5e7d6df))
+
+### 🎉 New Features
+* `MultiDateEventHeader` supports limiting the number of rows to display events in. If there are more events in parallel, overflow indicators are displayed.
+  * add `multiDateEventHeaderStyle.maxEventRows` ([`0ea6549`](https://github.com/JonasWanke/timetable/commit/0ea654907542a294729f962a9622f7ecd12cbe6c)) and `multiDateTimetableStyle.maxHeaderFraction` ([`1fef623`](https://github.com/JonasWanke/timetable/commit/1fef623c05ebbe51327c99c3148115e1b5e7d6df)), closes: [#89](https://github.com/JonasWanke/timetable/issues/89)
+  * coerce `multiDateEventHeaderStyle.maxEventRows` to fit available height ([`0009716`](https://github.com/JonasWanke/timetable/commit/0009716a96743473535731d38e3a5a561f980719)), closes: [#63](https://github.com/JonasWanke/timetable/issues/63)
+  * add `timetableCallbacks.onMultiDateHeaderOverflowTap` ([`ec18ef1`](https://github.com/JonasWanke/timetable/commit/ec18ef191b38c81b42afa5c8942062263d675362))
+* add `timeController.minDayHeight` to ensure that labels and events have enough space available when zooming out ([`8dafaa5`](https://github.com/JonasWanke/timetable/commit/8dafaa5e577349f896b0cb1fb17857685bdd2269)), closes: [#76](https://github.com/JonasWanke/timetable/issues/76)
+* enable dragging widgets into timetable content ([`b54154d`](https://github.com/JonasWanke/timetable/commit/b54154dc249e8e7f2ac882af5572a7f47232cf01)), closes: [#124](https://github.com/JonasWanke/timetable/issues/124)
+  * add `contentGeometryKey` to `MultiDateTimetable` and `MultiDateTimetableHeader` constructors ([`caf9ef9`](https://github.com/JonasWanke/timetable/commit/caf9ef9563ef650484bf14b8ce591a7ba620a5e7))
+* complete remaining `Event`'s and `BasicEvent`'s `debugFillProperties(…)` ([`c3a15e9`](https://github.com/JonasWanke/timetable/commit/c3a15e90c42bf36bf21c47f6b06d33eb070cfb86))
+* add `.raw` constructors for `MultiDateTimetable`, `MultiDateTimetableHeader`, and `MultiDateTimetableContent` ([`bb7767e`](https://github.com/JonasWanke/timetable/commit/bb7767e755a503a100479978c1e46c81ee628262))
+
+Weerthstraße 8 Berlin, Berlin 12489 Deutschland### 🐛 Bug Fixes
+* honor initial vertical pointer alignment while dragging events ([`b54154d`](https://github.com/JonasWanke/timetable/commit/b54154dc249e8e7f2ac882af5572a7f47232cf01))
+
+### 📜 Documentation updates
+* add detailed error messages for `isValidTimetable…` assertions ([`3b6f115`](https://github.com/JonasWanke/timetable/commit/3b6f115ba00593f36d7977503c63b37cd5785c03)), closes: [#127](https://github.com/JonasWanke/timetable/issues/127)
+
 ## 1.0.0-alpha.8 · 2022-06-08
 
 ### ⚠️ BREAKING CHANGES

@@ -16,6 +16,12 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### 📦 Build & CI
 -->
 
+## 1.0.0-alpha.10 · 2022-08-19
+
+### 📜 Documentation updates
+* add `multiDateContentGeometry.resolveOffset(…)` to README
+
+
 ## 1.0.0-alpha.9 · 2022-08-19
 
 ### ⚠️ BREAKING CHANGES

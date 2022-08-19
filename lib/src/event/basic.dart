@@ -1,4 +1,5 @@
 import 'package:black_hole_flutter/black_hole_flutter.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'all_day.dart';
@@ -59,6 +60,14 @@ class BasicEvent extends Event {
       super == other &&
       title == other.title &&
       backgroundColor == other.backgroundColor;
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty('id', id));
+    properties.add(StringProperty('title', title));
+    properties.add(ColorProperty('backgroundColor', backgroundColor));
+  }
 }
 
 /// A simple [Widget] for displaying a [BasicEvent].

@@ -222,8 +222,30 @@ PartDayDraggableEvent(
 ```
 
 Timetable doesn't automatically show a moving feedback widget at the current pointer position.
-Instead, you can customize this and, e.g., snap to multiples of 15 minutes.
+Instead, you can customize this and, e.g., snap event starts to multiples of 15 minutes.
 Have a look at the included example app where we implemented exactly that by displaying the drag feedback as a time overlay.
+
+If you have widgets outside of timetable that can be dragged into timetable, you have to give your [`MultiDateContent`] and each [`PartDayDraggableEvent`] a `geometryKey`.
+A `geometryKey` is a [`GlobalKey`]`<`[`MultiDateContentGeometry`]`>` with which the current drag offset can be converted to a [`DateTime`].
+
+```dart
+final geometryKey = GlobalKey<MultiDateContentGeometry>();
+
+final timetable = MultiDateTimetable(contentGeometryKey: geometryKey);
+// Or `MultiDateContent(geometryKey: geometryKey)` if you build your timetable
+// from the provided, modular widgets.
+
+final draggableEvent = PartDayDraggableEvent.forGeometryKeys(
+  {geometryKey},
+  // `child`, `childWhileDragging`, and the callbacks are available here as
+  // well.
+);
+```
+
+You could even offer to drag the event into one of multiple timetables:
+Give each timetable its own `geometryKey` and pass all of them to [`PartDayDraggableEvent.forGeometryKeys`].
+In the callbacks, you receive the `geometryKey` of the timetable that the event is currently being dragged over.
+See [`PartDayDraggableEvent.geometryKeys`] for the exact behavior.
 
 ### Time Overlays
 
@@ -257,7 +279,9 @@ The example above therefore draws a light gray background before 8 a.m. and af
 
 [example/main.dart]: https://github.com/JonasWanke/timetable/blob/main/example/lib/main.dart
 <!-- Flutter -->
+[`DateTime`]: https://api.flutter.dev/flutter/dart-core/DateTime-class.html
 [`Duration`]: https://api.flutter.dev/flutter/dart-core/Duration-class.html
+[`GlobalKey`]: https://api.flutter.dev/flutter/widgets/GlobalKey-class.html
 [`ScrollController`]: https://api.flutter.dev/flutter/widgets/ScrollController-class.html
 [`State.dispose`]: https://api.flutter.dev/flutter/widgets/State/dispose.html
 [`TabController`]: https://api.flutter.dev/flutter/material/TabController-class.html
@@ -270,8 +294,12 @@ The example above therefore draws a light gray background before 8 a.m. and af
 [`DefaultTimeOverlayProvider`]: https://pub.dev/documentation/timetable/latest/timetable/DefaultTimeOverlayProvider-class.html
 [`Event`]: https://pub.dev/documentation/timetable/latest/timetable/Event-class.html
 [`MonthWidget`]: https://pub.dev/documentation/timetable/latest/timetable/MonthWidget-class.html
+[`MultiDateContent`]: https://pub.dev/documentation/timetable/latest/timetable/MultiDateContent-class.html
+[`MultiDateContentGeometry`]: https://pub.dev/documentation/timetable/latest/timetable/MultiDateContentGeometry-class.html
 [`MultiDateTimetable`]: https://pub.dev/documentation/timetable/latest/timetable/MultiDateTimetable-class.html
 [`PartDayDraggableEvent`]: https://pub.dev/documentation/timetable/latest/timetable/PartDayDraggableEvent-class.html
+[`PartDayDraggableEvent.forGeometryKeys`]: https://pub.dev/documentation/timetable/latest/timetable/PartDayDraggableEvent/PartDayDraggableEvent.forGeometryKeys.html
+[`PartDayDraggableEvent.geometryKeys`]: https://pub.dev/documentation/timetable/latest/timetable/PartDayDraggableEvent/geometryKeys.html
 [`RecurringMultiDateTimetable`]: https://pub.dev/documentation/timetable/latest/timetable/RecurringMultiDateTimetable-class.html
 [`TimeController`]: https://pub.dev/documentation/timetable/latest/timetable/TimeController-class.html
 [`TimeController.dispose`]: https://pub.dev/documentation/timetable/latest/timetable/TimeController/dispose.html

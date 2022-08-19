@@ -40,18 +40,30 @@ typedef MultiDateTimetableContentBuilder = Widget Function(
 ///   scrolling and specific dates – e.g., to show a generic week from Monday to
 ///   Sunday without dates.
 class MultiDateTimetable<E extends Event> extends StatefulWidget {
-  MultiDateTimetable({
-    super.key,
+  factory MultiDateTimetable({
+    Key? key,
     MultiDateTimetableHeaderBuilder? headerBuilder,
     MultiDateTimetableContentBuilder? contentBuilder,
     Widget? contentLeading,
-  })  : headerBuilder = headerBuilder ?? _defaultHeaderBuilder<E>(),
-        assert(
-          contentBuilder == null || contentLeading == null,
-          "`contentLeading` can't be used when `contentBuilder` is specified.",
-        ),
-        contentBuilder =
-            contentBuilder ?? _defaultContentBuilder<E>(contentLeading);
+  }) {
+    assert(
+      contentBuilder == null || contentLeading == null,
+      "`contentLeading` can't be used when `contentBuilder` is specified.",
+    );
+
+    return MultiDateTimetable.raw(
+      key: key,
+      headerBuilder: headerBuilder ?? _defaultHeaderBuilder<E>(),
+      contentBuilder:
+          contentBuilder ?? _defaultContentBuilder<E>(contentLeading),
+    );
+  }
+
+  const MultiDateTimetable.raw({
+    super.key,
+    required this.headerBuilder,
+    required this.contentBuilder,
+  });
 
   final MultiDateTimetableHeaderBuilder headerBuilder;
   static MultiDateTimetableHeaderBuilder
@@ -70,7 +82,9 @@ class MultiDateTimetable<E extends Event> extends StatefulWidget {
 
   final MultiDateTimetableContentBuilder contentBuilder;
   static MultiDateTimetableContentBuilder
-      _defaultContentBuilder<E extends Event>(Widget? contentLeading) {
+      _defaultContentBuilder<E extends Event>(
+    Widget? contentLeading,
+  ) {
     return (context, onLeadingWidthChanged) => MultiDateTimetableContent<E>(
           leading: SizeReportingWidget(
             onSizeChanged: (size) => onLeadingWidthChanged(size.width),
@@ -126,14 +140,24 @@ class _MultiDateTimetableState<E extends Event>
 
 class MultiDateTimetableHeader<E extends Event> extends StatelessWidget {
   MultiDateTimetableHeader({
-    super.key,
+    Key? key,
     Widget? leading,
     DateWidgetBuilder? dateHeaderBuilder,
     Widget? bottom,
-  })  : leading = leading ?? WeekIndicator.forController(null),
-        dateHeaderBuilder =
-            dateHeaderBuilder ?? ((context, date) => DateHeader(date)),
-        bottom = bottom ?? MultiDateEventHeader<E>();
+  }) : this.raw(
+          key: key,
+          leading: leading ?? WeekIndicator.forController(null),
+          dateHeaderBuilder:
+              dateHeaderBuilder ?? ((context, date) => DateHeader(date)),
+          bottom: bottom ?? MultiDateEventHeader<E>(),
+        );
+
+  const MultiDateTimetableHeader.raw({
+    super.key,
+    required this.leading,
+    required this.dateHeaderBuilder,
+    required this.bottom,
+  });
 
   final Widget leading;
   final DateWidgetBuilder dateHeaderBuilder;
@@ -157,14 +181,26 @@ class MultiDateTimetableHeader<E extends Event> extends StatelessWidget {
 }
 
 class MultiDateTimetableContent<E extends Event> extends StatelessWidget {
-  MultiDateTimetableContent({
-    super.key,
+  factory MultiDateTimetableContent({
+    Key? key,
     Widget? leading,
     Widget? divider,
     Widget? content,
-  })  : leading = leading ?? _DefaultContentLeading(),
-        divider = divider ?? VerticalDivider(width: 0),
-        content = content ?? MultiDateContent<E>();
+  }) {
+    return MultiDateTimetableContent.raw(
+      key: key,
+      leading: leading ?? _DefaultContentLeading(),
+      divider: divider ?? VerticalDivider(width: 0),
+      content: content ?? MultiDateContent<E>(),
+    );
+  }
+
+  const MultiDateTimetableContent.raw({
+    super.key,
+    required this.leading,
+    required this.divider,
+    required this.content,
+  });
 
   final Widget leading;
   final Widget divider;

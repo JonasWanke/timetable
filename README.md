@@ -242,6 +242,9 @@ final draggableEvent = PartDayDraggableEvent.forGeometryKeys(
   // `child`, `childWhileDragging`, and the callbacks are available here as
   // well.
 );
+
+// Alternatively, you can manually convert an offset to a `DateTime:`
+final dateTime = geometryKey.currentState!.resolveOffset(globalOffset);
 ```
 
 You could even offer to drag the event into one of multiple timetables:

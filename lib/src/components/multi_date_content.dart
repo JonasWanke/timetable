@@ -39,23 +39,19 @@ class MultiDateContent<E extends Event> extends StatelessWidget {
       child: TimeZoom(
         child: HourDividers(
           child: NowIndicator(
-            child: LayoutBuilder(
-              builder: (context, constraints) =>
-                  _buildEvents(context, constraints.biggest),
-            ),
+            child: Builder(builder: _buildEvents),
           ),
         ),
       ),
     );
   }
 
-  Widget _buildEvents(BuildContext context, Size size) {
+  Widget _buildEvents(BuildContext context) {
     final dateController = DefaultDateController.of(context)!;
 
-    return _DragInfos(
+    return _MultiDateContentDragInfo(
       context: context,
       dateController: dateController,
-      size: size,
       child: DatePageView(
         controller: dateController,
         builder: (context, date) => DateContent<E>(
@@ -71,11 +67,10 @@ class MultiDateContent<E extends Event> extends StatelessWidget {
   }
 }
 
-class _DragInfos extends InheritedWidget {
-  const _DragInfos({
+class _MultiDateContentDragInfo extends InheritedWidget {
+  const _MultiDateContentDragInfo({
     required this.context,
     required this.dateController,
-    required this.size,
     required super.child,
   });
 
@@ -83,26 +78,26 @@ class _DragInfos extends InheritedWidget {
   // transform global coordinates back to local ones in this context.
   final BuildContext context;
   final DateController dateController;
-  final Size size;
 
   static DateTime resolveOffset(BuildContext context, Offset globalOffset) {
-    final dragInfos = context.dependOnInheritedWidgetOfExactType<_DragInfos>()!;
+    final dragInfos = context
+        .dependOnInheritedWidgetOfExactType<_MultiDateContentDragInfo>()!;
 
-    final localOffset = (dragInfos.context.findRenderObject()! as RenderBox)
-        .globalToLocal(globalOffset);
+    final renderBox = dragInfos.context.findRenderObject()! as RenderBox;
+    final size = renderBox.size;
+    final localOffset = renderBox.globalToLocal(globalOffset);
     final pageValue = dragInfos.dateController.value;
     final page = (pageValue.page +
-            localOffset.dx / dragInfos.size.width * pageValue.visibleDayCount)
+            localOffset.dx / size.width * pageValue.visibleDayCount)
         .floor();
     return DateTimeTimetable.dateFromPage(page) +
-        1.days * (localOffset.dy / dragInfos.size.height);
+        1.days * (localOffset.dy / size.height);
   }
 
   @override
-  bool updateShouldNotify(_DragInfos oldWidget) {
+  bool updateShouldNotify(_MultiDateContentDragInfo oldWidget) {
     return context != oldWidget.context ||
-        dateController != oldWidget.dateController ||
-        size != oldWidget.size;
+        dateController != oldWidget.dateController;
   }
 }
 
@@ -153,8 +148,8 @@ class _PartDayDraggableEventState extends State<PartDayDraggableEvent> {
       onDragStarted: widget.onDragStart,
       onDragUpdate: (details) {
         if (widget.onDragUpdate != null) {
-          _lastDragDateTime =
-              _DragInfos.resolveOffset(context, details.globalPosition);
+          _lastDragDateTime = _MultiDateContentDragInfo.resolveOffset(
+              context, details.globalPosition);
           widget.onDragUpdate!(_lastDragDateTime!);
         }
         _isMoved = true;

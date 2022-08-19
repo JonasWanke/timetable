@@ -33,7 +33,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 * complete remaining `Event`'s and `BasicEvent`'s `debugFillProperties(…)` ([`c3a15e9`](https://github.com/JonasWanke/timetable/commit/c3a15e90c42bf36bf21c47f6b06d33eb070cfb86))
 * add `.raw` constructors for `MultiDateTimetable`, `MultiDateTimetableHeader`, and `MultiDateTimetableContent` ([`bb7767e`](https://github.com/JonasWanke/timetable/commit/bb7767e755a503a100479978c1e46c81ee628262))
 
-Weerthstraße 8 Berlin, Berlin 12489 Deutschland### 🐛 Bug Fixes
+### 🐛 Bug Fixes
 * honor initial vertical pointer alignment while dragging events ([`b54154d`](https://github.com/JonasWanke/timetable/commit/b54154dc249e8e7f2ac882af5572a7f47232cf01))
 
 ### 📜 Documentation updates

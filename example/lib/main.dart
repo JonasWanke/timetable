@@ -103,6 +103,8 @@ class _TimetableExampleState extends State<TimetableExample>
             _showSnackBar('Tapped on date background at $date.'),
         onDateTimeBackgroundTap: (dateTime) =>
             _showSnackBar('Tapped on date-time background at $dateTime.'),
+        onMultiDateHeaderOverflowTap: (date) =>
+            _showSnackBar('Tapped on the overflow of $date.'),
       ),
       theme: TimetableThemeData(
         context,

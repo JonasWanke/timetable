@@ -1,6 +1,7 @@
 import 'package:black_hole_flutter/black_hole_flutter.dart';
 import 'package:flutter/material.dart';
 
+import '../callbacks.dart';
 import '../event/all_day.dart';
 import '../event/basic.dart';
 import '../event/builder.dart';
@@ -16,6 +17,8 @@ import 'multi_date_event_header.dart';
 ///
 /// See also:
 ///
+/// * [TimetableCallbacks.onMultiDateHeaderOverflowTap], which is called when
+///   the user taps this widget.
 /// * [MultiDateEventHeader], which shows these overflow widgets.
 /// * [MultiDateEventHeaderStyle.maxEventRows] and
 ///   [MultiDateTimetableStyle.maxHeaderFraction], which control how many rows
@@ -35,6 +38,8 @@ class MultiDateEventHeaderOverflow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final onMultiDateHeaderOverflowTap =
+        DefaultTimetableCallbacks.of(context)?.onMultiDateHeaderOverflowTap;
     return BasicAllDayEventWidget(
       BasicEvent(
         id: date,
@@ -44,6 +49,9 @@ class MultiDateEventHeaderOverflow extends StatelessWidget {
         end: date.atEndOfDay,
       ),
       info: AllDayEventLayoutInfo(hiddenStartDays: 0, hiddenEndDays: 0),
+      onTap: onMultiDateHeaderOverflowTap == null
+          ? null
+          : () => onMultiDateHeaderOverflowTap(date),
     );
   }
 }

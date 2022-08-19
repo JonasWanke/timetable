@@ -3,7 +3,10 @@ import 'package:flutter/widgets.dart';
 import 'components/date_content.dart';
 import 'components/date_header.dart';
 import 'components/multi_date_event_header.dart';
+import 'components/multi_date_event_header_overflow.dart';
 import 'components/week_indicator.dart';
+import 'event/builder.dart';
+import 'layouts/multi_date.dart';
 import 'week.dart';
 
 typedef WeekTapCallback = void Function(Week week);
@@ -17,6 +20,7 @@ class TimetableCallbacks {
     this.onDateTap,
     this.onDateBackgroundTap,
     this.onDateTimeBackgroundTap,
+    this.onMultiDateHeaderOverflowTap,
   });
 
   /// Called when the user taps on a week.
@@ -47,6 +51,23 @@ class TimetableCallbacks {
   /// Used internally by [DateContent].
   final DateTimeTapCallback? onDateTimeBackgroundTap;
 
+  /// Called when the user taps on the overflow of a [MultiDateEventHeader].
+  ///
+  /// These overflows are shown when there are more multi-date events in
+  /// parallel than may be shown as separate rows in the header.
+  ///
+  /// See also:
+  ///
+  /// * [MultiDateEventHeader], which shows the overflow widgets.
+  /// * [MultiDateEventHeaderStyle.maxEventRows] and
+  ///   [MultiDateTimetableStyle.maxHeaderFraction], which control how many rows
+  ///   are allowed before creating an overflow.
+  /// * [DefaultEventBuilder.allDayOverflowBuilder], which creates the overflow
+  ///   widgets.
+  /// * [MultiDateEventHeaderOverflow], the default widget for representing the
+  ///   overflow.
+  final DateTapCallback? onMultiDateHeaderOverflowTap;
+
   TimetableCallbacks copyWith({
     WeekTapCallback? onWeekTap,
     bool clearOnWeekTap = false,
@@ -56,11 +77,17 @@ class TimetableCallbacks {
     bool clearOnDateBackgroundTap = false,
     DateTimeTapCallback? onDateTimeBackgroundTap,
     bool clearOnDateTimeBackgroundTap = false,
+    DateTapCallback? onMultiDateHeaderOverflowTap,
+    bool clearOnMultiDateHeaderOverflowTap = false,
   }) {
     assert(!(clearOnWeekTap && onWeekTap != null));
     assert(!(clearOnDateTap && onDateTap != null));
     assert(!(clearOnDateBackgroundTap && onDateBackgroundTap != null));
     assert(!(clearOnDateTimeBackgroundTap && onDateTimeBackgroundTap != null));
+    assert(
+      !(clearOnMultiDateHeaderOverflowTap &&
+          onMultiDateHeaderOverflowTap != null),
+    );
 
     return TimetableCallbacks(
       onWeekTap: clearOnWeekTap ? null : onWeekTap ?? this.onWeekTap,
@@ -71,6 +98,9 @@ class TimetableCallbacks {
       onDateTimeBackgroundTap: clearOnDateTimeBackgroundTap
           ? null
           : onDateTimeBackgroundTap ?? this.onDateTimeBackgroundTap,
+      onMultiDateHeaderOverflowTap: clearOnMultiDateHeaderOverflowTap
+          ? null
+          : onMultiDateHeaderOverflowTap ?? this.onMultiDateHeaderOverflowTap,
     );
   }
 
@@ -81,6 +111,7 @@ class TimetableCallbacks {
       onDateTap,
       onDateBackgroundTap,
       onDateTimeBackgroundTap,
+      onMultiDateHeaderOverflowTap,
     );
   }
 
@@ -90,7 +121,8 @@ class TimetableCallbacks {
         onWeekTap == other.onWeekTap &&
         onDateTap == other.onDateTap &&
         onDateBackgroundTap == other.onDateBackgroundTap &&
-        onDateTimeBackgroundTap == other.onDateTimeBackgroundTap;
+        onDateTimeBackgroundTap == other.onDateTimeBackgroundTap &&
+        onMultiDateHeaderOverflowTap == other.onMultiDateHeaderOverflowTap;
   }
 }
 

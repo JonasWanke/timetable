@@ -149,6 +149,7 @@ TimetableConfig<BasicEvent>(
   eventProvider: (date) => someListOfEvents,
   allDayEventBuilder: (context, event, info) =>
       BasicAllDayEventWidget(event, info: info),
+  allDayOverflowBuilder: (date, overflowedEvents) => /* … */,
   callbacks: TimetableCallbacks(
     // onWeekTap, onDateTap, onDateBackgroundTap, onDateTimeBackgroundTap, and
     // onMultiDateHeaderOverflowTap

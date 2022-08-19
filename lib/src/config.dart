@@ -18,6 +18,7 @@ class TimetableConfig<E extends Event> extends StatefulWidget {
     EventProvider<E>? eventProvider,
     this.eventBuilder,
     this.allDayEventBuilder,
+    this.allDayOverflowBuilder,
     this.timeOverlayProvider,
     this.callbacks,
     this.theme,
@@ -29,6 +30,7 @@ class TimetableConfig<E extends Event> extends StatefulWidget {
   final EventProvider<E>? eventProvider;
   final EventBuilder<E>? eventBuilder;
   final AllDayEventBuilder<E>? allDayEventBuilder;
+  final AllDayOverflowBuilder<E>? allDayOverflowBuilder;
   final TimeOverlayProvider? timeOverlayProvider;
   final TimetableCallbacks? callbacks;
   final TimetableThemeData? theme;
@@ -77,6 +79,7 @@ class _TimetableConfigState<E extends Event> extends State<TimetableConfig<E>> {
       child: DefaultEventBuilder(
         builder: widget.eventBuilder ?? DefaultEventBuilder.of<E>(context)!,
         allDayBuilder: widget.allDayEventBuilder,
+        allDayOverflowBuilder: widget.allDayOverflowBuilder,
         child: child,
       ),
     );

@@ -183,10 +183,8 @@ class _DemoEvent extends BasicEvent {
           id: '$demoId-$eventId',
           title: '$demoId-$eventId',
           backgroundColor: _getColor('$demoId-$eventId'),
-          start: DateTime.now().toUtc().atStartOfDay + demoId.days + start,
-          end: DateTime.now().toUtc().atStartOfDay +
-              (demoId + endDateOffset).days +
-              end,
+          start: DateTimeTimetable.today() + demoId.days + start,
+          end: DateTimeTimetable.today() + (demoId + endDateOffset).days + end,
         );
 
   _DemoEvent.allDay(int id, int startOffset, int length)
@@ -194,9 +192,8 @@ class _DemoEvent extends BasicEvent {
           id: 'a-$id',
           title: 'a-$id',
           backgroundColor: _getColor('a-$id'),
-          start: DateTime.now().toUtc().atStartOfDay + startOffset.days,
-          end:
-              DateTime.now().toUtc().atStartOfDay + (startOffset + length).days,
+          start: DateTimeTimetable.today() + startOffset.days,
+          end: DateTimeTimetable.today() + (startOffset + length).days,
         );
 
   static Color _getColor(String id) {

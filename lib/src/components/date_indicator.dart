@@ -79,9 +79,9 @@ class DateIndicatorStyle {
             shape: BoxShape.circle,
             color: isToday ? theme.colorScheme.primary : Colors.transparent,
           ),
-      padding: padding ?? EdgeInsets.all(8),
+      padding: padding ?? const EdgeInsets.all(8),
       textStyle: textStyle ??
-          context.textTheme.subtitle1!.copyWith(
+          context.textTheme.titleMedium!.copyWith(
             color: isToday
                 ? theme.colorScheme.primary.highEmphasisOnColor
                 : isInFuture
@@ -123,7 +123,7 @@ class DateIndicatorStyle {
   }
 
   @override
-  int get hashCode => hashValues(decoration, padding, textStyle, label);
+  int get hashCode => Object.hash(decoration, padding, textStyle, label);
   @override
   bool operator ==(Object other) {
     return other is DateIndicatorStyle &&

@@ -170,14 +170,14 @@ class _TimetableExampleState extends State<TimetableExample>
           : MonthIndicator.forController(_dateController),
       actions: <Widget>[
         IconButton(
-          icon: Icon(Icons.today),
+          icon: const Icon(Icons.today),
           onPressed: () {
             _dateController.animateToToday(vsync: this);
             _timeController.animateToShowFullDay(vsync: this);
           },
           tooltip: 'Go to today',
         ),
-        SizedBox(width: 8),
+        const SizedBox(width: 8),
         DropdownButton<PredefinedVisibleDateRange>(
           onChanged: (visibleRange) => _updateVisibleDateRange(visibleRange!),
           value: _visibleDateRange,
@@ -189,7 +189,7 @@ class _TimetableExampleState extends State<TimetableExample>
               ),
           ],
         ),
-        SizedBox(width: 16),
+        const SizedBox(width: 16),
       ],
     );
 
@@ -197,7 +197,7 @@ class _TimetableExampleState extends State<TimetableExample>
       child = Column(children: [
         child,
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: Builder(builder: (context) {
             return DefaultTimetableCallbacks(
               callbacks: DefaultTimetableCallbacks.of(context)!.copyWith(

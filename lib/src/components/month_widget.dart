@@ -37,7 +37,7 @@ class MonthWidget extends StatelessWidget {
                         .removeIndividualWeekDecorations
                     ? timetableTheme
                         .weekIndicatorStyleProvider(week)
-                        .copyWith(decoration: BoxDecoration())
+                        .copyWith(decoration: const BoxDecoration())
                     : null,
                 alwaysUseNarrowestVariant: true,
               );
@@ -84,7 +84,7 @@ class MonthWidget extends StatelessWidget {
     Widget buildDate(int week, int weekday) {
       final date = firstDay + (DateTime.daysPerWeek * week + weekday).days;
       if (!style.showDatesFromOtherMonths && date.firstDayOfMonth != month) {
-        return SizedBox.shrink();
+        return const SizedBox.shrink();
       }
 
       return Center(
@@ -192,10 +192,10 @@ class MonthWidgetStyle {
                       .withOpacity(0.05),
                   borderRadius: BorderRadius.circular(4),
                 )
-              : BoxDecoration()),
-      weeksPadding: weeksPadding ?? EdgeInsets.symmetric(vertical: 12),
+              : const BoxDecoration()),
+      weeksPadding: weeksPadding ?? const EdgeInsets.symmetric(vertical: 12),
       removeIndividualWeekDecorations: removeIndividualWeekDecorations,
-      datePadding: datePadding ?? EdgeInsets.all(4),
+      datePadding: datePadding ?? const EdgeInsets.all(4),
       showDatesFromOtherMonths: showDatesFromOtherMonths ?? true,
       showDatesFromOtherMonthsAsDisabled:
           showDatesFromOtherMonthsAsDisabled ?? true,
@@ -248,15 +248,18 @@ class MonthWidgetStyle {
   }
 
   @override
-  int get hashCode => hashValues(
-        startOfWeek,
-        weeksDecoration,
-        weeksPadding,
-        removeIndividualWeekDecorations,
-        datePadding,
-        showDatesFromOtherMonths,
-        showDatesFromOtherMonthsAsDisabled,
-      );
+  int get hashCode {
+    return Object.hash(
+      startOfWeek,
+      weeksDecoration,
+      weeksPadding,
+      removeIndividualWeekDecorations,
+      datePadding,
+      showDatesFromOtherMonths,
+      showDatesFromOtherMonthsAsDisabled,
+    );
+  }
+
   @override
   bool operator ==(Object other) {
     return other is MonthWidgetStyle &&

@@ -12,12 +12,12 @@ void main() {
       _TestEvent(start, start + 2.days),
       _TestEvent(start + 10.hours, start + 12.hours),
       _TestEvent(
-        start + Duration(hours: 10),
-        start + Duration(days: 1, hours: 12),
+        start + const Duration(hours: 10),
+        start + const Duration(days: 1, hours: 12),
       ),
       _TestEvent(
-        start + Duration(hours: 10),
-        start + Duration(days: 2, hours: 12),
+        start + const Duration(hours: 10),
+        start + const Duration(days: 2, hours: 12),
       ),
     ];
 

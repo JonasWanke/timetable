@@ -28,14 +28,13 @@ class AllDayEventLayoutInfo {
   final double hiddenEndDays;
 
   @override
+  int get hashCode => Object.hash(hiddenStartDays, hiddenEndDays);
+  @override
   bool operator ==(dynamic other) {
     return other is AllDayEventLayoutInfo &&
         hiddenStartDays == other.hiddenStartDays &&
         hiddenEndDays == other.hiddenEndDays;
   }
-
-  @override
-  int get hashCode => hashValues(hiddenStartDays, hiddenEndDays);
 }
 
 class AllDayEventBackgroundPainter extends CustomPainter {
@@ -110,7 +109,7 @@ class AllDayEventBorder extends ShapeBorder {
   }
 
   @override
-  int get hashCode => hashValues(info, side, radii);
+  int get hashCode => Object.hash(info, side, radii);
   @override
   bool operator ==(Object other) {
     if (other.runtimeType != runtimeType) return false;
@@ -255,7 +254,7 @@ class AllDayEventBorderRadii {
   }
 
   @override
-  int get hashCode => hashValues(cornerRadius, leftTipRadius, rightTipRadius);
+  int get hashCode => Object.hash(cornerRadius, leftTipRadius, rightTipRadius);
   @override
   bool operator ==(Object other) {
     return other is AllDayEventBorderRadii &&

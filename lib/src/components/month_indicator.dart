@@ -57,7 +57,7 @@ class MonthIndicatorStyle {
 
     final theme = context.theme;
     return MonthIndicatorStyle.raw(
-      textStyle: textStyle ?? theme.textTheme.subtitle1!,
+      textStyle: textStyle ?? theme.textTheme.titleMedium!,
       label: label ??
           () {
             context.dependOnTimetableLocalizations();
@@ -82,7 +82,7 @@ class MonthIndicatorStyle {
   }
 
   @override
-  int get hashCode => hashValues(textStyle, label);
+  int get hashCode => Object.hash(textStyle, label);
   @override
   bool operator ==(Object other) {
     return other is MonthIndicatorStyle &&

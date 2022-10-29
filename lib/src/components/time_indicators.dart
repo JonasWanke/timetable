@@ -122,7 +122,7 @@ class TimeIndicators extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTextStyle(
-      style: context.textTheme.caption!,
+      style: context.textTheme.bodySmall!,
       child: _TimeIndicators(children: children),
     );
   }

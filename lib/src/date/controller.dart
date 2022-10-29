@@ -182,7 +182,7 @@ class DatePageValue {
       DatePageValue(visibleRange ?? this.visibleRange, page ?? this.page);
 
   @override
-  int get hashCode => hashValues(visibleRange, page);
+  int get hashCode => Object.hash(visibleRange, page);
   @override
   bool operator ==(Object other) {
     return other is DatePageValue &&

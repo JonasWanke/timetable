@@ -47,7 +47,7 @@ class DateHeader extends StatelessWidget {
         child: Padding(
           padding: style.padding,
           child: DefaultTimetableCallbacks(
-            callbacks: (callbacks ?? TimetableCallbacks())
+            callbacks: (callbacks ?? const TimetableCallbacks())
                 .copyWith(clearOnDateTap: true),
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -90,7 +90,7 @@ class DateHeaderStyle {
             context.dependOnTimetableLocalizations();
             return DateFormat.yMMMMEEEEd().format(date);
           }(),
-      padding: padding ?? EdgeInsets.all(4),
+      padding: padding ?? const EdgeInsets.all(4),
       showWeekdayIndicator: showWeekdayIndicator ?? true,
       indicatorSpacing: indicatorSpacing ?? 4,
       showDateIndicator: showDateIndicator ?? true,
@@ -128,13 +128,16 @@ class DateHeaderStyle {
   }
 
   @override
-  int get hashCode => hashValues(
-        tooltip,
-        padding,
-        showWeekdayIndicator,
-        indicatorSpacing,
-        showDateIndicator,
-      );
+  int get hashCode {
+    return Object.hash(
+      tooltip,
+      padding,
+      showWeekdayIndicator,
+      indicatorSpacing,
+      showDateIndicator,
+    );
+  }
+
   @override
   bool operator ==(Object other) {
     return other is DateHeaderStyle &&

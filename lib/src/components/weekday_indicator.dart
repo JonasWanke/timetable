@@ -58,10 +58,10 @@ class WeekdayIndicatorStyle {
 
     final theme = context.theme;
     return WeekdayIndicatorStyle.raw(
-      decoration: decoration ?? BoxDecoration(),
+      decoration: decoration ?? const BoxDecoration(),
       padding: padding ?? EdgeInsets.zero,
       textStyle: textStyle ??
-          theme.textTheme.caption!.copyWith(
+          theme.textTheme.bodySmall!.copyWith(
             color: date.isToday
                 ? theme.colorScheme.primary
                 : theme.colorScheme.background.mediumEmphasisOnColor,
@@ -101,7 +101,7 @@ class WeekdayIndicatorStyle {
   }
 
   @override
-  int get hashCode => hashValues(decoration, padding, textStyle, label);
+  int get hashCode => Object.hash(decoration, padding, textStyle, label);
   @override
   bool operator ==(Object other) {
     return other is WeekdayIndicatorStyle &&

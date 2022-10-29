@@ -56,7 +56,7 @@ class _TimetableConfigState<E extends Event> extends State<TimetableConfig<E>> {
     Widget child = DefaultTimetableCallbacks(
       callbacks: widget.callbacks ??
           DefaultTimetableCallbacks.of(context) ??
-          TimetableCallbacks(),
+          const TimetableCallbacks(),
       child: TimetableTheme(
         data: widget.theme ??
             TimetableTheme.of(context) ??

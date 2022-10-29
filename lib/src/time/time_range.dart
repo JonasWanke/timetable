@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/foundation.dart';
 
 import '../utils.dart';
@@ -64,7 +62,7 @@ class TimeRange {
   }
 
   @override
-  int get hashCode => hashValues(startTime, endTime);
+  int get hashCode => Object.hash(startTime, endTime);
   @override
   bool operator ==(Object other) {
     return other is TimeRange &&

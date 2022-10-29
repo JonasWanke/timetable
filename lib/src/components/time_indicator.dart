@@ -72,16 +72,17 @@ class TimeIndicatorStyle {
     assert(time.debugCheckIsValidTimetableTimeOfDay());
 
     final theme = context.theme;
-    final caption = theme.textTheme.caption!;
-    final proportionalFiguresFeature = FontFeature.proportionalFigures().value;
+    final bodySmall = theme.textTheme.bodySmall!;
+    final proportionalFiguresFeature =
+        const FontFeature.proportionalFigures().value;
     return TimeIndicatorStyle.raw(
       textStyle: textStyle ??
-          caption.copyWith(
+          bodySmall.copyWith(
             color: theme.colorScheme.background.disabledOnColor,
             fontFeatures: [
-              ...?caption.fontFeatures
+              ...?bodySmall.fontFeatures
                   ?.where((it) => it.value != proportionalFiguresFeature),
-              FontFeature.tabularFigures(),
+              const FontFeature.tabularFigures(),
             ],
           ),
       label: label ??
@@ -110,7 +111,7 @@ class TimeIndicatorStyle {
   }
 
   @override
-  int get hashCode => hashValues(textStyle, label);
+  int get hashCode => Object.hash(textStyle, label);
   @override
   bool operator ==(Object other) {
     return other is TimeIndicatorStyle &&

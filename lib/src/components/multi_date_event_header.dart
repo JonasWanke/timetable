@@ -73,7 +73,7 @@ class MultiDateEventHeader<E extends Event> extends StatelessWidget {
 
     return Stack(children: [
       Positioned.fill(
-        child: DatePageView(builder: (context, date) => SizedBox()),
+        child: DatePageView(builder: (context, date) => const SizedBox()),
       ),
       ClipRect(child: Padding(padding: style.padding, child: child)),
     ]);
@@ -171,7 +171,7 @@ class MultiDateEventHeaderStyle {
   }
 
   @override
-  int get hashCode => hashValues(eventHeight, maxEventRows, padding);
+  int get hashCode => Object.hash(eventHeight, maxEventRows, padding);
   @override
   bool operator ==(Object other) {
     return other is MultiDateEventHeaderStyle &&
@@ -215,7 +215,8 @@ class _MultiDateEventHeaderEventsState<E extends Event>
     if (oldWidget.pageValue != widget.pageValue ||
         oldWidget.eventHeight != widget.eventHeight ||
         oldWidget.maxEventRows != widget.maxEventRows ||
-        !DeepCollectionEquality().equals(oldWidget.events, widget.events)) {
+        !const DeepCollectionEquality()
+            .equals(oldWidget.events, widget.events)) {
       _updateEventPositions(oldMaxEventRows: oldWidget.maxEventRows);
     }
     super.didUpdateWidget(oldWidget);

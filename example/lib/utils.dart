@@ -46,7 +46,7 @@ class ExampleApp extends StatelessWidget {
           darkTheme: _createTheme(Brightness.dark),
           themeMode: overrideState.themeMode,
           locale: overrideState.locale,
-          localizationsDelegates: [
+          localizationsDelegates: const [
             TimetableLocalizationsDelegate(),
             ...GlobalMaterialLocalizations.delegates,
           ],
@@ -64,14 +64,15 @@ class ExampleApp extends StatelessWidget {
       applyElevationOverlayColor: true,
       primaryColor: Colors.blue,
       primarySwatch: Colors.blue,
-      snackBarTheme: SnackBarThemeData(behavior: SnackBarBehavior.floating),
+      snackBarTheme:
+          const SnackBarThemeData(behavior: SnackBarBehavior.floating),
     );
     theme = theme.copyWith(
       colorScheme: theme.colorScheme
           .copyWith(onBackground: theme.colorScheme.background.contrastColor),
       textTheme: theme.textTheme.copyWith(
-        headline6:
-            theme.textTheme.headline6!.copyWith(fontWeight: FontWeight.normal),
+        titleLarge:
+            theme.textTheme.titleLarge!.copyWith(fontWeight: FontWeight.normal),
       ),
     );
 

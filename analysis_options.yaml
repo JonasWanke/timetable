@@ -55,7 +55,6 @@ linter:
     throw_in_finally: true
     tighten_type_of_initializing_formals: true
     unawaited_futures: true
-    unnecessary_await_in_return: false
     unnecessary_lambdas: true
     unnecessary_parenthesis: true
     unnecessary_statements: true

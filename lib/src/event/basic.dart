@@ -104,7 +104,7 @@ class BasicEventWidget extends StatelessWidget {
         child: InkWell(
           onTap: onTap,
           child: Padding(
-            padding: EdgeInsets.fromLTRB(4, 2, 4, 0),
+            padding: const EdgeInsets.fromLTRB(4, 2, 4, 0),
             child: DefaultTextStyle(
               style: context.textTheme.bodyText2!.copyWith(
                 fontSize: 12,
@@ -188,14 +188,14 @@ class BasicAllDayEventWidgetStyle {
     TextStyle? textStyle,
   }) {
     return BasicAllDayEventWidgetStyle.raw(
-      margin: margin ?? EdgeInsets.all(2),
+      margin: margin ?? const EdgeInsets.all(2),
       radii: radii ??
           AllDayEventBorderRadii(
             cornerRadius: BorderRadius.circular(4),
             leftTipRadius: 4,
             rightTipRadius: 4,
           ),
-      padding: padding ?? EdgeInsets.fromLTRB(4, 2, 0, 2),
+      padding: padding ?? const EdgeInsets.fromLTRB(4, 2, 0, 2),
       textStyle: textStyle ??
           context.theme.textTheme.bodyText2!.copyWith(
             fontSize: 14,

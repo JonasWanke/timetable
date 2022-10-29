@@ -94,7 +94,7 @@ class MultiDateTimetable<E extends Event> extends StatefulWidget {
     return (context, onLeadingWidthChanged) => MultiDateTimetableContent<E>(
           leading: SizeReportingWidget(
             onSizeChanged: (size) => onLeadingWidthChanged(size.width),
-            child: contentLeading ?? _DefaultContentLeading(),
+            child: contentLeading ?? const _DefaultContentLeading(),
           ),
           contentGeometryKey: contentGeometryKey,
         );
@@ -201,8 +201,8 @@ class MultiDateTimetableContent<E extends Event> extends StatelessWidget {
     );
     return MultiDateTimetableContent.raw(
       key: key,
-      leading: leading ?? _DefaultContentLeading(),
-      divider: divider ?? VerticalDivider(width: 0),
+      leading: leading ?? const _DefaultContentLeading(),
+      divider: divider ?? const VerticalDivider(width: 0),
       content: content ?? MultiDateContent<E>(geometryKey: contentGeometryKey),
     );
   }
@@ -283,7 +283,7 @@ class _DefaultContentLeading extends StatelessWidget {
       behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
       child: TimeZoom(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 8),
           child: Builder(
             builder: (context) => TimeIndicators.hours(
               // `TimeIndicators.hours` overwrites the style provider's labels by

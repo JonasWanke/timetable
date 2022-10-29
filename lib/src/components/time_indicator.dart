@@ -73,7 +73,8 @@ class TimeIndicatorStyle {
 
     final theme = context.theme;
     final caption = theme.textTheme.caption!;
-    final proportionalFiguresFeature = FontFeature.proportionalFigures().value;
+    final proportionalFiguresFeature =
+        const FontFeature.proportionalFigures().value;
     return TimeIndicatorStyle.raw(
       textStyle: textStyle ??
           caption.copyWith(
@@ -81,7 +82,7 @@ class TimeIndicatorStyle {
             fontFeatures: [
               ...?caption.fontFeatures
                   ?.where((it) => it.value != proportionalFiguresFeature),
-              FontFeature.tabularFigures(),
+              const FontFeature.tabularFigures(),
             ],
           ),
       label: label ??

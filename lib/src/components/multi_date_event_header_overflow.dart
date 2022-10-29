@@ -48,7 +48,7 @@ class MultiDateEventHeaderOverflow extends StatelessWidget {
         start: date,
         end: date.atEndOfDay,
       ),
-      info: AllDayEventLayoutInfo(hiddenStartDays: 0, hiddenEndDays: 0),
+      info: const AllDayEventLayoutInfo(hiddenStartDays: 0, hiddenEndDays: 0),
       onTap: onMultiDateHeaderOverflowTap == null
           ? null
           : () => onMultiDateHeaderOverflowTap(date),

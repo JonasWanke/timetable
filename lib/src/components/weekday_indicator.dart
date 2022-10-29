@@ -58,7 +58,7 @@ class WeekdayIndicatorStyle {
 
     final theme = context.theme;
     return WeekdayIndicatorStyle.raw(
-      decoration: decoration ?? BoxDecoration(),
+      decoration: decoration ?? const BoxDecoration(),
       padding: padding ?? EdgeInsets.zero,
       textStyle: textStyle ??
           theme.textTheme.caption!.copyWith(

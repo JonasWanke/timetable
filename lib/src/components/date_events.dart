@@ -79,12 +79,12 @@ class DateEventsStyle {
     double? stackedEventSpacing,
   }) {
     return DateEventsStyle.raw(
-      minEventDuration: minEventDuration ?? Duration(minutes: 30),
+      minEventDuration: minEventDuration ?? const Duration(minutes: 30),
       minEventHeight: minEventHeight ?? 16,
-      padding: padding ?? EdgeInsets.only(right: 1),
+      padding: padding ?? const EdgeInsets.only(right: 1),
       enableStacking: enableStacking ?? true,
       minEventDeltaForStacking:
-          minEventDeltaForStacking ?? Duration(minutes: 15),
+          minEventDeltaForStacking ?? const Duration(minutes: 15),
       stackedEventSpacing: stackedEventSpacing ?? 4,
     );
   }
@@ -359,7 +359,7 @@ class _DayEventsLayoutDelegate<E extends Event>
   bool shouldRelayout(_DayEventsLayoutDelegate<E> oldDelegate) {
     return date != oldDelegate.date ||
         style != oldDelegate.style ||
-        !DeepCollectionEquality().equals(events, oldDelegate.events);
+        !const DeepCollectionEquality().equals(events, oldDelegate.events);
   }
 }
 

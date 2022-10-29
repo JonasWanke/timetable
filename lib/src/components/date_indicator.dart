@@ -79,7 +79,7 @@ class DateIndicatorStyle {
             shape: BoxShape.circle,
             color: isToday ? theme.colorScheme.primary : Colors.transparent,
           ),
-      padding: padding ?? EdgeInsets.all(8),
+      padding: padding ?? const EdgeInsets.all(8),
       textStyle: textStyle ??
           context.textTheme.subtitle1!.copyWith(
             color: isToday

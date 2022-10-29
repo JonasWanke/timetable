@@ -317,7 +317,7 @@ class _PartDayDraggableEventState extends State<PartDayDraggableEvent> {
         widget.onDragCanceled?.call(geometry.key, _wasMoved);
         _resetState();
       },
-      feedback: SizedBox.shrink(),
+      feedback: const SizedBox.shrink(),
       childWhenDragging: widget.childWhileDragging,
       child: widget.child,
     );
@@ -389,7 +389,7 @@ class _PartDayDraggable extends LongPressDraggable<_DragData> {
     required super.feedback,
   })  : onDragStartedWithOffset = onDragStarted,
         super(
-          data: _DragData(),
+          data: const _DragData(),
           maxSimultaneousDrags: 1,
           onDragStarted: null,
           onDragUpdate: (details) => onDragUpdate(details.globalPosition),

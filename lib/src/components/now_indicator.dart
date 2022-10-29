@@ -163,7 +163,7 @@ class EmptyNowIndicatorShape extends NowIndicatorShape {
   ) {}
 
   @override
-  EmptyNowIndicatorShape copyWith() => EmptyNowIndicatorShape();
+  EmptyNowIndicatorShape copyWith() => const EmptyNowIndicatorShape();
 
   @override
   int get hashCode => 0;

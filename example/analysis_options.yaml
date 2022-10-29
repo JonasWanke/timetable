@@ -39,7 +39,6 @@ linter:
     omit_local_variable_types: true
     only_throw_errors: true
     prefer_asserts_in_initializer_lists: true
-    prefer_const_constructors: false
     prefer_const_literals_to_create_immutables: false
     prefer_final_in_for_each: true
     prefer_final_locals: true

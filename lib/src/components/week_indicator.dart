@@ -151,7 +151,7 @@ class _RenderWeekIndicatorText extends RenderBox {
   late List<String> _labels;
   List<String> get labels => _labels;
   set labels(List<String> labels) {
-    if (DeepCollectionEquality().equals(_labels, labels)) return;
+    if (const DeepCollectionEquality().equals(_labels, labels)) return;
 
     _labels = labels;
     markNeedsLayout();
@@ -161,7 +161,7 @@ class _RenderWeekIndicatorText extends RenderBox {
   TextStyle _style;
   TextStyle get style => _style;
   set style(TextStyle style) {
-    if (DeepCollectionEquality().equals(_style, style)) return;
+    if (const DeepCollectionEquality().equals(_style, style)) return;
 
     _style = style;
     markNeedsLayout();
@@ -272,7 +272,8 @@ class WeekIndicatorStyle {
             color: colorScheme.brightness.contrastColor.withOpacity(0.05),
             borderRadius: BorderRadius.circular(4),
           ),
-      padding: padding ?? EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+      padding:
+          padding ?? const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
       textStyle: textStyle ??
           context.textTheme.bodyText2!
               .copyWith(color: colorScheme.background.mediumEmphasisOnColor),
@@ -317,7 +318,7 @@ class WeekIndicatorStyle {
       decoration,
       padding,
       textStyle,
-      DeepCollectionEquality().hash(labels),
+      const DeepCollectionEquality().hash(labels),
     );
   }
 
@@ -328,7 +329,7 @@ class WeekIndicatorStyle {
         decoration == other.decoration &&
         padding == other.padding &&
         textStyle == other.textStyle &&
-        DeepCollectionEquality().equals(labels, other.labels);
+        const DeepCollectionEquality().equals(labels, other.labels);
   }
 }
 

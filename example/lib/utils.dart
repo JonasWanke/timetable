@@ -47,7 +47,7 @@ class ExampleApp extends StatelessWidget {
           themeMode: overrideState.themeMode,
           locale: overrideState.locale,
           localizationsDelegates: [
-            TimetableLocalizationsDelegate(),
+            const TimetableLocalizationsDelegate(),
             ...GlobalMaterialLocalizations.delegates,
           ],
           supportedLocales: _supportedLocales,
@@ -64,7 +64,8 @@ class ExampleApp extends StatelessWidget {
       applyElevationOverlayColor: true,
       primaryColor: Colors.blue,
       primarySwatch: Colors.blue,
-      snackBarTheme: SnackBarThemeData(behavior: SnackBarBehavior.floating),
+      snackBarTheme:
+          const SnackBarThemeData(behavior: SnackBarBehavior.floating),
     );
     theme = theme.copyWith(
       colorScheme: theme.colorScheme

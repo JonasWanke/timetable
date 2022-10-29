@@ -275,7 +275,7 @@ class WeekIndicatorStyle {
       padding:
           padding ?? const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
       textStyle: textStyle ??
-          context.textTheme.bodyText2!
+          context.textTheme.bodyMedium!
               .copyWith(color: colorScheme.background.mediumEmphasisOnColor),
       labels: labels ?? localizations.weekLabels(week),
     );

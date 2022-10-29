@@ -71,8 +71,8 @@ class ExampleApp extends StatelessWidget {
       colorScheme: theme.colorScheme
           .copyWith(onBackground: theme.colorScheme.background.contrastColor),
       textTheme: theme.textTheme.copyWith(
-        headline6:
-            theme.textTheme.headline6!.copyWith(fontWeight: FontWeight.normal),
+        titleLarge:
+            theme.textTheme.titleLarge!.copyWith(fontWeight: FontWeight.normal),
       ),
     );
 

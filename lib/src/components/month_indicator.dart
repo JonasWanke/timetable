@@ -57,7 +57,7 @@ class MonthIndicatorStyle {
 
     final theme = context.theme;
     return MonthIndicatorStyle.raw(
-      textStyle: textStyle ?? theme.textTheme.subtitle1!,
+      textStyle: textStyle ?? theme.textTheme.titleMedium!,
       label: label ??
           () {
             context.dependOnTimetableLocalizations();

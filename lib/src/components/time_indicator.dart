@@ -72,15 +72,15 @@ class TimeIndicatorStyle {
     assert(time.debugCheckIsValidTimetableTimeOfDay());
 
     final theme = context.theme;
-    final caption = theme.textTheme.caption!;
+    final bodySmall = theme.textTheme.bodySmall!;
     final proportionalFiguresFeature =
         const FontFeature.proportionalFigures().value;
     return TimeIndicatorStyle.raw(
       textStyle: textStyle ??
-          caption.copyWith(
+          bodySmall.copyWith(
             color: theme.colorScheme.background.disabledOnColor,
             fontFeatures: [
-              ...?caption.fontFeatures
+              ...?bodySmall.fontFeatures
                   ?.where((it) => it.value != proportionalFiguresFeature),
               const FontFeature.tabularFigures(),
             ],

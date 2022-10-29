@@ -61,7 +61,7 @@ class WeekdayIndicatorStyle {
       decoration: decoration ?? const BoxDecoration(),
       padding: padding ?? EdgeInsets.zero,
       textStyle: textStyle ??
-          theme.textTheme.caption!.copyWith(
+          theme.textTheme.bodySmall!.copyWith(
             color: date.isToday
                 ? theme.colorScheme.primary
                 : theme.colorScheme.background.mediumEmphasisOnColor,

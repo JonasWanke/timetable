@@ -81,7 +81,7 @@ class DateIndicatorStyle {
           ),
       padding: padding ?? const EdgeInsets.all(8),
       textStyle: textStyle ??
-          context.textTheme.subtitle1!.copyWith(
+          context.textTheme.titleMedium!.copyWith(
             color: isToday
                 ? theme.colorScheme.primary.highEmphasisOnColor
                 : isInFuture

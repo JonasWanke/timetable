@@ -53,7 +53,7 @@ class BasicEvent extends Event {
   }
 
   @override
-  int get hashCode => hashValues(super.hashCode, title, backgroundColor);
+  int get hashCode => Object.hash(super.hashCode, title, backgroundColor);
   @override
   bool operator ==(dynamic other) =>
       other is BasicEvent &&
@@ -231,7 +231,7 @@ class BasicAllDayEventWidgetStyle {
   }
 
   @override
-  int get hashCode => hashValues(margin, radii, padding, textStyle);
+  int get hashCode => Object.hash(margin, radii, padding, textStyle);
   @override
   bool operator ==(Object other) {
     return other is BasicAllDayEventWidgetStyle &&

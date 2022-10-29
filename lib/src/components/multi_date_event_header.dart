@@ -171,7 +171,7 @@ class MultiDateEventHeaderStyle {
   }
 
   @override
-  int get hashCode => hashValues(eventHeight, maxEventRows, padding);
+  int get hashCode => Object.hash(eventHeight, maxEventRows, padding);
   @override
   bool operator ==(Object other) {
     return other is MultiDateEventHeaderStyle &&

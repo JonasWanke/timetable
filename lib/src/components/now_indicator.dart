@@ -88,7 +88,7 @@ class NowIndicatorStyle {
   }
 
   @override
-  int get hashCode => hashValues(shape, lineColor, lineWidth);
+  int get hashCode => Object.hash(shape, lineColor, lineWidth);
   @override
   bool operator ==(Object other) {
     return other is NowIndicatorStyle &&
@@ -216,7 +216,7 @@ class CircleNowIndicatorShape extends NowIndicatorShape {
   }
 
   @override
-  int get hashCode => hashValues(color, radius);
+  int get hashCode => Object.hash(color, radius);
   @override
   bool operator ==(Object other) {
     return other is CircleNowIndicatorShape &&
@@ -273,7 +273,7 @@ class TriangleNowIndicatorShape extends NowIndicatorShape {
   }
 
   @override
-  int get hashCode => hashValues(color, size);
+  int get hashCode => Object.hash(color, size);
   @override
   bool operator ==(Object other) {
     return other is TriangleNowIndicatorShape &&

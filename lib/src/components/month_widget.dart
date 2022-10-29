@@ -248,15 +248,18 @@ class MonthWidgetStyle {
   }
 
   @override
-  int get hashCode => hashValues(
-        startOfWeek,
-        weeksDecoration,
-        weeksPadding,
-        removeIndividualWeekDecorations,
-        datePadding,
-        showDatesFromOtherMonths,
-        showDatesFromOtherMonthsAsDisabled,
-      );
+  int get hashCode {
+    return Object.hash(
+      startOfWeek,
+      weeksDecoration,
+      weeksPadding,
+      removeIndividualWeekDecorations,
+      datePadding,
+      showDatesFromOtherMonths,
+      showDatesFromOtherMonthsAsDisabled,
+    );
+  }
+
   @override
   bool operator ==(Object other) {
     return other is MonthWidgetStyle &&

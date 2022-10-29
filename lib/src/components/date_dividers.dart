@@ -70,7 +70,7 @@ class DateDividersStyle {
   }
 
   @override
-  int get hashCode => hashValues(color, width);
+  int get hashCode => Object.hash(color, width);
   @override
   bool operator ==(Object other) {
     return other is DateDividersStyle &&

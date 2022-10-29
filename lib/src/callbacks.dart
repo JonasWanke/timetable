@@ -106,7 +106,7 @@ class TimetableCallbacks {
 
   @override
   int get hashCode {
-    return hashValues(
+    return Object.hash(
       onWeekTap,
       onDateTap,
       onDateBackgroundTap,

@@ -154,22 +154,25 @@ class TimetableThemeData {
   }
 
   @override
-  int get hashCode => hashValues(
-        startOfWeek,
-        dateDividersStyle,
-        dateEventsStyleProvider,
-        dateHeaderStyleProvider,
-        dateIndicatorStyleProvider,
-        hourDividersStyle,
-        monthIndicatorStyleProvider,
-        monthWidgetStyleProvider,
-        multiDateEventHeaderStyle,
-        multiDateTimetableStyle,
-        nowIndicatorStyle,
-        timeIndicatorStyleProvider,
-        weekdayIndicatorStyleProvider,
-        weekIndicatorStyleProvider,
-      );
+  int get hashCode {
+    return Object.hash(
+      startOfWeek,
+      dateDividersStyle,
+      dateEventsStyleProvider,
+      dateHeaderStyleProvider,
+      dateIndicatorStyleProvider,
+      hourDividersStyle,
+      monthIndicatorStyleProvider,
+      monthWidgetStyleProvider,
+      multiDateEventHeaderStyle,
+      multiDateTimetableStyle,
+      nowIndicatorStyle,
+      timeIndicatorStyleProvider,
+      weekdayIndicatorStyleProvider,
+      weekIndicatorStyleProvider,
+    );
+  }
+
   @override
   bool operator ==(Object other) {
     return other is TimetableThemeData &&

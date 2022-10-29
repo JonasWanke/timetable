@@ -311,13 +311,16 @@ class WeekIndicatorStyle {
   }
 
   @override
-  int get hashCode => hashValues(
-        tooltip,
-        decoration,
-        padding,
-        textStyle,
-        DeepCollectionEquality().hash(labels),
-      );
+  int get hashCode {
+    return Object.hash(
+      tooltip,
+      decoration,
+      padding,
+      textStyle,
+      DeepCollectionEquality().hash(labels),
+    );
+  }
+
   @override
   bool operator ==(Object other) {
     return other is WeekIndicatorStyle &&

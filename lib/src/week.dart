@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:meta/meta.dart';
 
 import 'utils.dart';
@@ -69,8 +67,7 @@ class Week implements Comparable<Week> {
   }
 
   @override
-  int get hashCode => hashValues(weekBasedYear, weekOfYear);
-
+  int get hashCode => Object.hash(weekBasedYear, weekOfYear);
   @override
   bool operator ==(Object other) {
     return other is Week &&

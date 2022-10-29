@@ -82,7 +82,7 @@ class MonthIndicatorStyle {
   }
 
   @override
-  int get hashCode => hashValues(textStyle, label);
+  int get hashCode => Object.hash(textStyle, label);
   @override
   bool operator ==(Object other) {
     return other is MonthIndicatorStyle &&

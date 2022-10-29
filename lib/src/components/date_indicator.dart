@@ -123,7 +123,7 @@ class DateIndicatorStyle {
   }
 
   @override
-  int get hashCode => hashValues(decoration, padding, textStyle, label);
+  int get hashCode => Object.hash(decoration, padding, textStyle, label);
   @override
   bool operator ==(Object other) {
     return other is DateIndicatorStyle &&

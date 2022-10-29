@@ -128,13 +128,16 @@ class DateHeaderStyle {
   }
 
   @override
-  int get hashCode => hashValues(
-        tooltip,
-        padding,
-        showWeekdayIndicator,
-        indicatorSpacing,
-        showDateIndicator,
-      );
+  int get hashCode {
+    return Object.hash(
+      tooltip,
+      padding,
+      showWeekdayIndicator,
+      indicatorSpacing,
+      showDateIndicator,
+    );
+  }
+
   @override
   bool operator ==(Object other) {
     return other is DateHeaderStyle &&

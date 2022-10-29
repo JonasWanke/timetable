@@ -151,14 +151,17 @@ class DateEventsStyle {
   }
 
   @override
-  int get hashCode => hashValues(
-        minEventDuration,
-        minEventHeight,
-        padding,
-        enableStacking,
-        minEventDeltaForStacking,
-        stackedEventSpacing,
-      );
+  int get hashCode {
+    return Object.hash(
+      minEventDuration,
+      minEventHeight,
+      padding,
+      enableStacking,
+      minEventDeltaForStacking,
+      stackedEventSpacing,
+    );
+  }
+
   @override
   bool operator ==(Object other) {
     return other is DateEventsStyle &&

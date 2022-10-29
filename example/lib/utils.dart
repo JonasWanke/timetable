@@ -46,8 +46,8 @@ class ExampleApp extends StatelessWidget {
           darkTheme: _createTheme(Brightness.dark),
           themeMode: overrideState.themeMode,
           locale: overrideState.locale,
-          localizationsDelegates: [
-            const TimetableLocalizationsDelegate(),
+          localizationsDelegates: const [
+            TimetableLocalizationsDelegate(),
             ...GlobalMaterialLocalizations.delegates,
           ],
           supportedLocales: _supportedLocales,

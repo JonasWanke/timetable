@@ -191,7 +191,7 @@ class TimeController extends ValueNotifier<TimeRange> {
   }) async {
     assert(_isValidRange(newValue));
 
-    _animationController?.dispose();
+    cancelAnimation();
     final previousRange = value;
     _animationController =
         AnimationController(debugLabel: 'TimeController', vsync: vsync)
@@ -205,7 +205,22 @@ class TimeController extends ValueNotifier<TimeRange> {
           ..animateTo(1, duration: duration, curve: curve);
   }
 
-  void jumpToShowFullDay() => value = TimeRange.fullDay;
+  void jumpToShowFullDay() {
+    cancelAnimation();
+    value = TimeRange.fullDay;
+  }
+
+  void jumpTo(TimeRange range) {
+    assert(_isValidRange(range));
+
+    cancelAnimation();
+    value = range;
+  }
+
+  void cancelAnimation() {
+    _animationController?.dispose();
+    _animationController = null;
+  }
 }
 
 /// Provides the [TimeController] for Timetable widgets below it.

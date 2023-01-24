@@ -91,7 +91,7 @@ class DateController extends ValueNotifier<DatePageValue> {
     Duration duration = const Duration(milliseconds: 200),
     required TickerProvider vsync,
   }) async {
-    _animationController?.dispose();
+    cancelAnimation();
     final controller =
         AnimationController(debugLabel: 'DateController', vsync: vsync);
     _animationController = controller;
@@ -120,8 +120,14 @@ class DateController extends ValueNotifier<DatePageValue> {
   }
 
   void jumpToPage(double page) {
+    cancelAnimation();
     value =
         value.copyWith(page: value.visibleRange.getTargetPageForFocus(page));
+  }
+
+  void cancelAnimation() {
+    _animationController?.dispose();
+    _animationController = null;
   }
 
   bool _isDisposed = false;

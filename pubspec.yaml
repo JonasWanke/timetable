@@ -9,7 +9,7 @@ environment:
 
 dependencies:
   async: ^2.6.0
-  black_hole_flutter: ^0.3.0
+  black_hole_flutter: ^1.0.0
   collection: ^1.15.0
   dart_date: ^1.1.0
   dartx: ^1.0.0

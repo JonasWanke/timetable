@@ -143,7 +143,7 @@ class DateController extends ValueNotifier<DatePageValue> {
 
 /// The value held by [DateController].
 @immutable
-class DatePageValue {
+class DatePageValue with Diagnosticable {
   const DatePageValue(this.visibleRange, this.page);
 
   final VisibleDateRange visibleRange;
@@ -198,8 +198,14 @@ class DatePageValue {
   }
 
   @override
-  String toString() =>
-      'DatePageValue(visibleRange = $visibleRange, page = $page)';
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(
+      DiagnosticsProperty<VisibleDateRange>('visibleRange', visibleRange),
+    );
+    properties.add(DoubleProperty('page', page));
+    properties.add(DateDiagnosticsProperty('date', date));
+  }
 }
 
 /// Provides the [DateController] for Timetable widgets below it.

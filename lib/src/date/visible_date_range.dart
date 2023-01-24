@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/physics.dart';
 
 import '../layouts/recurring_multi_date.dart';
@@ -5,7 +6,7 @@ import '../utils.dart';
 
 /// Defines how many days are visible at once and whether they, e.g., snap to
 /// weeks.
-abstract class VisibleDateRange {
+abstract class VisibleDateRange with Diagnosticable {
   const VisibleDateRange({
     required this.visibleDayCount,
     required this.canScroll,
@@ -174,16 +175,27 @@ class DaysVisibleDateRange extends VisibleDateRange {
     );
     return page - targetPage;
   }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(IntProperty('swipeRange', swipeRange));
+    properties.add(DateDiagnosticsProperty('alignmentDate', alignmentDate));
+    properties
+        .add(DateDiagnosticsProperty('minDate', minDate, defaultValue: null));
+    properties.add(DoubleProperty('minPage', minPage, defaultValue: null));
+    properties
+        .add(DateDiagnosticsProperty('maxDate', maxDate, defaultValue: null));
+    properties.add(DoubleProperty('maxPage', maxPage, defaultValue: null));
+  }
 }
 
 /// A non-scrollable [VisibleDateRange], used by [VisibleDateRange.fixed].
 ///
 /// This is useful for, e.g., [RecurringMultiDateTimetable].
 class FixedDaysVisibleDateRange extends VisibleDateRange {
-  FixedDaysVisibleDateRange(
-    this.startDate,
-    int visibleDayCount,
-  )   : assert(startDate.debugCheckIsValidTimetableDate()),
+  FixedDaysVisibleDateRange(this.startDate, int visibleDayCount)
+      : assert(startDate.debugCheckIsValidTimetableDate()),
         super(visibleDayCount: visibleDayCount, canScroll: false);
 
   final DateTime startDate;
@@ -204,4 +216,11 @@ class FixedDaysVisibleDateRange extends VisibleDateRange {
     Tolerance tolerance = Tolerance.defaultTolerance,
   }) =>
       page;
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DateDiagnosticsProperty('startDate', startDate));
+    properties.add(DoubleProperty('page', page));
+  }
 }

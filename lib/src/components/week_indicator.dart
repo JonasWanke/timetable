@@ -238,13 +238,12 @@ class _RenderWeekIndicatorText extends RenderBox {
               .firstOrNull ??
           narrowestPainter();
     }
-    size = _labelPainter.size;
+    size = constraints.constrain(_labelPainter.size);
   }
 
   @override
-  void paint(PaintingContext context, Offset offset) {
-    _labelPainter.paint(context.canvas, offset);
-  }
+  void paint(PaintingContext context, Offset offset) =>
+      _labelPainter.paint(context.canvas, offset);
 }
 
 /// Defines visual properties for [WeekIndicator].

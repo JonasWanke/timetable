@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:ui';
 
 import 'package:async/async.dart';
@@ -314,7 +315,7 @@ class _NowIndicatorPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    _repaint?.cancel();
+    unawaited(_repaint?.cancel());
     _repaint = null;
 
     final pageValue = controller.value;
@@ -340,11 +341,14 @@ class _NowIndicatorPainter extends CustomPainter {
     final maxDistance = 0.5 / devicePixelRatio;
     final delay = 1.days * (maxDistance / size.height);
     _repaint = CancelableOperation.fromFuture(
-      Future<void>.delayed(delay).then((_) {
-        // [ChangeNotifier.notifyListeners] is protected, so we use a
-        // [ValueNotifier] and always set a different time.
-        _repaintNotifier.value = DateTimeTimetable.now();
-      }),
+      Future<void>.delayed(
+        delay,
+        () {
+          // [ChangeNotifier.notifyListeners] is protected, so we use a
+          // [ValueNotifier] and always set a different time.
+          _repaintNotifier.value = DateTimeTimetable.now();
+        },
+      ),
     );
   }
 
@@ -362,7 +366,7 @@ class _NowIndicatorPainter extends CustomPainter {
   void removeListener(VoidCallback listener) {
     _activeListenerCount--;
     if (_activeListenerCount == 0) {
-      _repaint?.cancel();
+      unawaited(_repaint?.cancel());
       _repaint = null;
     }
     super.removeListener(listener);

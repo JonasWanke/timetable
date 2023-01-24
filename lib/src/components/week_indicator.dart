@@ -203,19 +203,19 @@ class _RenderWeekIndicatorText extends RenderBox {
 
   @override
   double computeMinIntrinsicWidth(double height) =>
-      _labelPainters.map<num>((it) => it.width).min.toDouble();
+      _labelPainters.map((it) => it.width).min.toDouble();
   @override
   double computeMaxIntrinsicWidth(double height) {
-    final widths = _labelPainters.map<num>((it) => it.width);
+    final widths = _labelPainters.map((it) => it.width);
     return (alwaysUseNarrowestVariant ? widths.min : widths.max).toDouble();
   }
 
   @override
   double computeMinIntrinsicHeight(double width) =>
-      _labelPainters.map<num>((it) => it.height).min.toDouble();
+      _labelPainters.map((it) => it.height).min.toDouble();
   @override
   double computeMaxIntrinsicHeight(double width) {
-    final heights = _labelPainters.map<num>((it) => it.height);
+    final heights = _labelPainters.map((it) => it.height);
     return (alwaysUseNarrowestVariant ? heights.min : heights.max).toDouble();
   }
 

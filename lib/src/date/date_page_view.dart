@@ -127,7 +127,7 @@ class _DatePageViewState extends State<DatePageView> {
     double maxHeightFrom(int page) {
       return page
           .rangeTo(page + pageValue.visibleDayCount - 1)
-          .map<num>((it) => _heights[it] ?? 0)
+          .map((it) => _heights[it] ?? 0)
           .max
           .toDouble();
     }

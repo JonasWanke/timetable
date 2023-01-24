@@ -6,7 +6,8 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 
 <!-- Template:
-## NEW · 2022-xx-xx
+## NEW · 2023-xx-xx
+
 ### ⚠️ BREAKING CHANGES
 ### 🎉 New Features
 ### ⚡ Changes
@@ -15,6 +16,25 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### 🏗️ Refactoring
 ### 📦 Build & CI
 -->
+
+## 1.0.0-alpha.11 · 2023-01-24
+
+### ⚠️ BREAKING CHANGES
+* Add `DateScrollActivity` and subclasses. `dateController.value.activity` tells you the current activity and even the target when currently animating between dates. This is breaking because `dateController.value` now stores a `DatePageValueWithScrollActivity` instead of a `DatePageValue` ([`59b0eb4`](https://github.com/JonasWanke/timetable/commit/59b0eb48506cfe25aa5cda0de3bade261d502f43)), closes: [#110](https://github.com/JonasWanke/timetable/issues/110)
+
+### 🎉 New Features
+* add `DateDiagnosticsProperty` ([`469a0de`](https://github.com/JonasWanke/timetable/commit/469a0ded6acab100ad5deaae8eab0bf6b29a7544))
+* implement `Diagnosticable` for `VisibleDateRange` and `DatePageValue` ([`8855d85`](https://github.com/JonasWanke/timetable/commit/8855d85690ef9f5b497fb27b28c1d9bf37734df9))
+
+### 🐛 Bug Fixes
+* cancel ongoing animations when jumping in `DateController`/`TimeController` ([`c0167c2`](https://github.com/JonasWanke/timetable/commit/c0167c24100fdd607ffb8a8d5ed9094a536e5848)), closes: [#135](https://github.com/JonasWanke/timetable/issues/135)
+* honor maximum constraints in `WeekIndicator`  ([`8e0315c`](https://github.com/JonasWanke/timetable/commit/8e0315cb4169b1a0d3c04c5411b2132ce0f2ce71)), closes: [#131](https://github.com/JonasWanke/timetable/issues/131)
+* fix `MonthPageView`'s shrink-wrapped height when jumping to far-away date ([`763661e`](https://github.com/JonasWanke/timetable/commit/763661eeae0a84ab1d2af3d2cd0b05277f62c044))
+* fix `allDayEventBorder.toString()` ([`b35b240`](https://github.com/JonasWanke/timetable/commit/b35b24032919a231d3d817e9afbeb816ef9a768d))
+
+### 📦 Build & CI
+* upgrade to Flutter: `>=3.3.0`, Dart `>=2.18.0 <3.0.0` ([`ed2d0a0`](https://github.com/JonasWanke/timetable/commit/ed2d0a0aeb6a57741b808088be847a430fecae6a))
+* update `black_hole_flutter` to `^1.0.0` ([`40f1b67`](https://github.com/JonasWanke/timetable/commit/40f1b6764bf2e5fb7df9a95ea448c9a7071832a8))
 
 ## 1.0.0-alpha.10 · 2022-08-19
 

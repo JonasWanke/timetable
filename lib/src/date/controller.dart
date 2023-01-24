@@ -13,6 +13,7 @@ import 'visible_date_range.dart';
 ///
 /// To programmatically change the visible dates, use any of the following
 /// functions:
+///
 /// * [animateToToday], [animateTo], or [animateToPage] if you want an animation
 /// * [jumpToToday], [jumpTo], or [jumpToPage] if you don't want an animation
 ///
@@ -208,10 +209,7 @@ class DatePageValue {
 /// * [TimetableConfig], which bundles multiple configuration widgets for
 ///   Timetable.
 class DefaultDateController extends InheritedWidget {
-  const DefaultDateController({
-    required this.controller,
-    required super.child,
-  });
+  const DefaultDateController({required this.controller, required super.child});
 
   final DateController controller;
 

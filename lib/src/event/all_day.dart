@@ -121,7 +121,7 @@ class AllDayEventBorder extends ShapeBorder {
 
   @override
   String toString() =>
-      '${objectRuntimeType(this, 'RoundedRectangleBorder')}($side, $radii)';
+      '${objectRuntimeType(this, 'AllDayEventBorder')}($side, $radii)';
 }
 
 @immutable

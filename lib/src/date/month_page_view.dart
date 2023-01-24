@@ -94,9 +94,12 @@ class _MonthPageViewState extends State<MonthPageView> {
     final oldMaxHeight = _heights[page.floor()];
     final newMaxHeight = _heights[page.ceil()];
 
-    // When swiping, the next page might not have been measured yet.
-    if (oldMaxHeight == null) return newMaxHeight!;
-    if (newMaxHeight == null) return oldMaxHeight;
+    // When swiping, the next page might not have been measured yet. When
+    // jumping to a page that hasn't been measured yet, we might not have any
+    // heights for that or neighboring pages at all.
+    if (oldMaxHeight == null || newMaxHeight == null) {
+      return oldMaxHeight ?? newMaxHeight ?? _heights.values.min;
+    }
 
     return lerpDouble(oldMaxHeight, newMaxHeight, page - page.floorToDouble())!;
   }

@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
@@ -264,7 +265,17 @@ class MultiDateScrollPosition extends ScrollPositionWithSingleContext {
 
     _updateUserScrollDirectionFromDelta(newPixels - pixels);
     final overscroll = super.setPixels(newPixels);
-    controller.value = controller.value.copyWith(page: pixelsToPage(pixels));
+
+    final activity = this.activity;
+    final dateScrollActivity = activity is DragScrollActivity ||
+            (activity is BallisticScrollActivity &&
+                activity.velocity.abs() > precisionErrorTolerance)
+        ? const DragDateScrollActivity()
+        : const IdleDateScrollActivity();
+    controller.value = controller.value.copyWithActivity(
+      page: pixelsToPage(pixels),
+      activity: dateScrollActivity,
+    );
     return overscroll;
   }
 

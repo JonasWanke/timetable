@@ -18,15 +18,16 @@ import 'visible_date_range.dart';
 /// * [jumpToToday], [jumpTo], or [jumpToPage] if you don't want an animation
 ///
 /// You can also get and update the [VisibleDateRange] via [visibleRange].
-class DateController extends ValueNotifier<DatePageValue> {
+class DateController extends ValueNotifier<DatePageValueWithScrollActivity> {
   DateController({
     DateTime? initialDate,
     VisibleDateRange? visibleRange,
   })  : assert(initialDate.debugCheckIsValidTimetableDate()),
         // We set the correct value in the body below.
-        super(DatePageValue(
+        super(DatePageValueWithScrollActivity(
           visibleRange ?? VisibleDateRange.week(),
           0,
+          const IdleDateScrollActivity(),
         )) {
     // The correct value is set via the listener when we assign to our value.
     _date = ValueNotifier(DateTimeTimetable.dateFromPage(0));
@@ -37,8 +38,9 @@ class DateController extends ValueNotifier<DatePageValue> {
     addListener(() => _visibleDates.value = value.visibleDates);
 
     final rawStartPage = initialDate?.page ?? DateTimeTimetable.today().page;
-    value = value.copyWith(
+    value = value.copyWithActivity(
       page: value.visibleRange.getTargetPageForFocus(rawStartPage),
+      activity: const IdleDateScrollActivity(),
     );
   }
 
@@ -47,9 +49,11 @@ class DateController extends ValueNotifier<DatePageValue> {
 
   VisibleDateRange get visibleRange => value.visibleRange;
   set visibleRange(VisibleDateRange visibleRange) {
-    value = value.copyWith(
+    cancelAnimation();
+    value = value.copyWithActivity(
       page: visibleRange.getTargetPageForFocus(value.page),
       visibleRange: visibleRange,
+      activity: const IdleDateScrollActivity(),
     );
   }
 
@@ -99,9 +103,13 @@ class DateController extends ValueNotifier<DatePageValue> {
 
     final previousPage = value.page;
     final targetPage = value.visibleRange.getTargetPageForFocus(page);
+    final targetDatePageValue = DatePageValue(visibleRange, targetPage);
     controller.addListener(() {
-      value = value.copyWith(
+      value = value.copyWithActivity(
         page: lerpDouble(previousPage, targetPage, controller.value)!,
+        activity: controller.isAnimating
+            ? DrivenDateScrollActivity(targetDatePageValue)
+            : const IdleDateScrollActivity(),
       );
     });
 
@@ -122,12 +130,17 @@ class DateController extends ValueNotifier<DatePageValue> {
 
   void jumpToPage(double page) {
     cancelAnimation();
-    value =
-        value.copyWith(page: value.visibleRange.getTargetPageForFocus(page));
+    value = value.copyWithActivity(
+      page: value.visibleRange.getTargetPageForFocus(page),
+      activity: const IdleDateScrollActivity(),
+    );
   }
 
   void cancelAnimation() {
-    _animationController?.dispose();
+    if (_animationController == null) return;
+
+    value = value.copyWithActivity(activity: const IdleDateScrollActivity());
+    _animationController!.dispose();
     _animationController = null;
   }
 
@@ -205,6 +218,65 @@ class DatePageValue with Diagnosticable {
     );
     properties.add(DoubleProperty('page', page));
     properties.add(DateDiagnosticsProperty('date', date));
+  }
+}
+
+class DatePageValueWithScrollActivity extends DatePageValue {
+  const DatePageValueWithScrollActivity(
+    super.visibleRange,
+    super.page,
+    this.activity,
+  );
+
+  final DateScrollActivity activity;
+
+  DatePageValueWithScrollActivity copyWithActivity({
+    VisibleDateRange? visibleRange,
+    double? page,
+    required DateScrollActivity activity,
+  }) {
+    return DatePageValueWithScrollActivity(
+      visibleRange ?? this.visibleRange,
+      page ?? this.page,
+      activity,
+    );
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+        .add(DiagnosticsProperty<DateScrollActivity>('activity', activity));
+  }
+}
+
+/// The equivalent of [ScrollActivity] for [DateController].
+@immutable
+abstract class DateScrollActivity with Diagnosticable {
+  const DateScrollActivity();
+}
+
+/// A scroll activity that does nothing.
+class IdleDateScrollActivity extends DateScrollActivity {
+  const IdleDateScrollActivity();
+}
+
+/// The activity a [DateController] performs when the user drags their finger
+/// across the screen and is settling afterwards.
+class DragDateScrollActivity extends DateScrollActivity {
+  const DragDateScrollActivity();
+}
+
+/// A scroll activity for when the [DateController] is animated to a new page.
+class DrivenDateScrollActivity extends DateScrollActivity {
+  const DrivenDateScrollActivity(this.target);
+
+  final DatePageValue target;
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<DatePageValue>('target', target));
   }
 }
 

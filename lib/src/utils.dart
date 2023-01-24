@@ -1,4 +1,5 @@
 import 'package:dart_date/dart_date.dart' show Interval;
+import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart' hide Interval;
 
 import 'week.dart';
@@ -159,6 +160,31 @@ extension DateTimeTimetable on DateTime {
       (page * Duration.millisecondsPerDay).toInt(),
       isUtc: true,
     );
+  }
+}
+
+class DateDiagnosticsProperty extends DiagnosticsProperty<DateTime> {
+  /// Create a diagnostics property for [Color].
+  ///
+  /// The [showName], [style], and [level] arguments must not be null.
+  DateDiagnosticsProperty(
+    String super.name,
+    super.value, {
+    super.showName,
+    super.defaultValue,
+    super.style,
+    super.level,
+  }) : assert(value.isValidTimetableDate);
+
+  @override
+  String valueToString({TextTreeConfiguration? parentConfiguration}) {
+    final value = this.value;
+    if (value == null) return value.toString();
+
+    final year = value.year.toString().padLeft(4, '0');
+    final month = value.month.toString().padLeft(2, '0');
+    final day = value.day.toString().padLeft(2, '0');
+    return '$year-$month-$day';
   }
 }
 

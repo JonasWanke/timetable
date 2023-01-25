@@ -6,7 +6,17 @@ import 'week.dart';
 
 export 'package:collection/collection.dart';
 export 'package:dart_date/dart_date.dart' show Interval;
-export 'package:dartx/dartx.dart' show IntRangeToExtension, IterableMinBy;
+export 'package:dartx/dartx.dart'
+    show
+        ComparableCoerceAtLeastExtension,
+        ComparableCoerceAtMostExtension,
+        ComparableCoerceInExtension,
+        IntRangeToExtension,
+        IterableMapNotNull,
+        IterableMinBy,
+        IterableSecondItem,
+        NumCoerceAtLeastExtension,
+        NumCoerceAtMostExtension;
 
 export 'utils/listenable.dart';
 export 'utils/size_reporting_widget.dart';
@@ -16,17 +26,6 @@ extension DoubleTimetable on double {
   double coerceAtMost(double max) => this > max ? max : this;
   double coerceIn(double min, double max) =>
       coerceAtLeast(min).coerceAtMost(max);
-}
-
-extension ComparableTimetable<T extends Comparable<T>> on T {
-  bool operator <(T other) => compareTo(other) < 0;
-  bool operator <=(T other) => compareTo(other) <= 0;
-  bool operator >(T other) => compareTo(other) > 0;
-  bool operator >=(T other) => compareTo(other) >= 0;
-
-  T coerceAtLeast(T min) => (this < min) ? min : this;
-  T coerceAtMost(T max) => this > max ? max : this;
-  T coerceIn(T min, T max) => coerceAtLeast(min).coerceAtMost(max);
 }
 
 typedef MonthWidgetBuilder = Widget Function(

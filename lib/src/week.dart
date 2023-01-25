@@ -25,7 +25,7 @@ class Week implements Comparable<Week> {
 
     // Algorithm from https://en.wikipedia.org/wiki/ISO_week_date#Calculating_the_week_number_from_a_month_and_day_of_the_month_or_ordinal_date
     final year = date.year;
-    final weekOfYear = (10 + date.dayOfYear - date.weekday) ~/ 7;
+    final weekOfYear = (date.dayOfYear + 10 - date.weekday) ~/ 7;
 
     if (weekOfYear == 0) {
       // If the week number thus obtained equals 0, it means that the given date

@@ -308,13 +308,19 @@ class _DayEventsLayoutDelegate<E extends Event>
       // If no column fits
       if (!columnFound) {
         positions.eventPositions[event] = _SingleEventPosition(
-            positions.groupColumnCounts.length, columns.length, 0);
+          positions.groupColumnCounts.length,
+          columns.length,
+          0,
+        );
         columns.add([event]);
         continue;
       }
 
       positions.eventPositions[event] = _SingleEventPosition(
-          positions.groupColumnCounts.length, minColumn, minIndex + 1);
+        positions.groupColumnCounts.length,
+        minColumn,
+        minIndex + 1,
+      );
       columns[minColumn].add(event);
     }
 

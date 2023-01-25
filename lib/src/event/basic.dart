@@ -23,6 +23,7 @@ class BasicEvent extends Event {
   ///
   /// This is not used by Timetable itself, but can be handy, e.g., when
   /// implementing drag & drop.
+  // ignore: no-object-declaration
   final Object id;
 
   /// A title displayed to the user.
@@ -97,14 +98,14 @@ class BasicEventWidget extends StatelessWidget {
             color: context.theme.scaffoldBackgroundColor,
             width: 0.75,
           ),
-          borderRadius: BorderRadius.circular(4),
+          borderRadius: const BorderRadius.all(Radius.circular(4)),
         ),
         clipBehavior: Clip.hardEdge,
         color: event.backgroundColor,
         child: InkWell(
           onTap: onTap,
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(4, 2, 4, 0),
+            padding: const EdgeInsets.only(left: 4, top: 2, right: 4),
             child: DefaultTextStyle(
               style: context.textTheme.bodyMedium!.copyWith(
                 fontSize: 12,
@@ -190,12 +191,12 @@ class BasicAllDayEventWidgetStyle {
     return BasicAllDayEventWidgetStyle.raw(
       margin: margin ?? const EdgeInsets.all(2),
       radii: radii ??
-          AllDayEventBorderRadii(
-            cornerRadius: BorderRadius.circular(4),
+          const AllDayEventBorderRadii(
+            cornerRadius: BorderRadius.all(Radius.circular(4)),
             leftTipRadius: 4,
             rightTipRadius: 4,
           ),
-      padding: padding ?? const EdgeInsets.fromLTRB(4, 2, 0, 2),
+      padding: padding ?? const EdgeInsets.only(left: 4, top: 2, bottom: 2),
       textStyle: textStyle ??
           context.theme.textTheme.bodyMedium!.copyWith(
             fontSize: 14,

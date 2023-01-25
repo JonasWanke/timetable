@@ -115,9 +115,11 @@ class TimetableLocalizationsDelegate
 // Modified version of `debugCheckHasMaterialLocalizations`.
 bool debugCheckHasTimetableLocalizations(BuildContext context) {
   assert(() {
-    if (Localizations.of<TimetableLocalizations>(
-            context, TimetableLocalizations) ==
-        null) {
+    final localizations = Localizations.of<TimetableLocalizations>(
+      context,
+      TimetableLocalizations,
+    );
+    if (localizations == null) {
       throw FlutterError.fromParts(<DiagnosticsNode>[
         ErrorSummary('No TimetableLocalization found.'),
         ErrorDescription(

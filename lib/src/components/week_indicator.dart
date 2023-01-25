@@ -190,12 +190,11 @@ class _RenderWeekIndicatorText extends RenderBox {
   List<TextPainter> _labelPainters = [];
   void _generateLabelPainters() {
     _labelPainters = labels.map((it) {
-      final textPainter = TextPainter(
+      return TextPainter(
         text: TextSpan(text: it, style: _style),
         textDirection: textDirection,
         maxLines: 1,
       )..layout(minWidth: 0, maxWidth: double.infinity);
-      return textPainter;
     }).toList();
   }
 
@@ -269,7 +268,7 @@ class WeekIndicatorStyle {
       decoration: decoration ??
           BoxDecoration(
             color: colorScheme.brightness.contrastColor.withOpacity(0.05),
-            borderRadius: BorderRadius.circular(4),
+            borderRadius: const BorderRadius.all(Radius.circular(4)),
           ),
       padding:
           padding ?? const EdgeInsets.symmetric(horizontal: 8, vertical: 2),

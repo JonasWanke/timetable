@@ -276,51 +276,58 @@ class _PartDayDraggableEventState extends State<PartDayDraggableEvent> {
   @override
   Widget build(BuildContext context) {
     return _PartDayDraggable(
-      onDragStarted: (offset) {
-        final renderBox = _findRenderBox();
-        final offsetInLocalSpace = renderBox.globalToLocal(offset);
-        _pointerVerticalAlignment =
-            offsetInLocalSpace.dy / renderBox.size.height;
-        _lastOffset = offset;
-
-        widget.onDragStart?.call();
-      },
-      onDragUpdate: (offset) {
-        _lastOffset = offset;
-        final adjustedOffset = _pointerToWidgetTopCenter(offset);
-        final geometry = _findGeometry(context, adjustedOffset);
-        widget.onDragUpdate?.call(
-          geometry.key,
-          geometry.value.resolveOffset(adjustedOffset),
-        );
-        _wasMoved = true;
-      },
-      onDragEnd: () {
-        final adjustedOffset = _pointerToWidgetTopCenter(_lastOffset!);
-        final geometry = _findGeometry(context, adjustedOffset);
-        widget.onDragEnd?.call(
-          geometry.key,
-          geometry.value.resolveOffset(adjustedOffset),
-        );
-        _resetState();
-      },
-      onDragCanceled: () {
-        if (_pointerVerticalAlignment == null) {
-          // The drag already ended.
-          assert(_lastOffset == null);
-          assert(_wasMoved == false);
-          return;
-        }
-
-        final adjustedOffset = _pointerToWidgetTopCenter(_lastOffset!);
-        final geometry = _findGeometry(context, adjustedOffset);
-        widget.onDragCanceled?.call(geometry.key, _wasMoved);
-        _resetState();
-      },
+      onDragStarted: _onDragStarted,
+      onDragUpdate: _onDragUpdate,
+      onDragEnd: _onDragEnd,
+      onDragCanceled: _onDragCanceled,
       feedback: const SizedBox.shrink(),
       childWhenDragging: widget.childWhileDragging,
       child: widget.child,
     );
+  }
+
+  void _onDragStarted(Offset offset) {
+    final renderBox = _findRenderBox();
+    final offsetInLocalSpace = renderBox.globalToLocal(offset);
+    _pointerVerticalAlignment = offsetInLocalSpace.dy / renderBox.size.height;
+    _lastOffset = offset;
+
+    widget.onDragStart?.call();
+  }
+
+  void _onDragUpdate(Offset offset) {
+    _lastOffset = offset;
+    final adjustedOffset = _pointerToWidgetTopCenter(offset);
+    final geometry = _findGeometry(context, adjustedOffset);
+    widget.onDragUpdate?.call(
+      geometry.key,
+      geometry.value.resolveOffset(adjustedOffset),
+    );
+    _wasMoved = true;
+  }
+
+  void _onDragEnd() {
+    final adjustedOffset = _pointerToWidgetTopCenter(_lastOffset!);
+    final geometry = _findGeometry(context, adjustedOffset);
+    widget.onDragEnd?.call(
+      geometry.key,
+      geometry.value.resolveOffset(adjustedOffset),
+    );
+    _resetState();
+  }
+
+  void _onDragCanceled() {
+    if (_pointerVerticalAlignment == null) {
+      // The drag already ended.
+      assert(_lastOffset == null);
+      assert(!_wasMoved);
+      return;
+    }
+
+    final adjustedOffset = _pointerToWidgetTopCenter(_lastOffset!);
+    final geometry = _findGeometry(context, adjustedOffset);
+    widget.onDragCanceled?.call(geometry.key, _wasMoved);
+    _resetState();
   }
 
   Offset _pointerToWidgetTopCenter(Offset offset) {

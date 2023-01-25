@@ -125,8 +125,8 @@ class MonthWidget extends StatelessWidget {
         for (final week in 0.rangeTo(weekCount - 1))
           for (final weekday in 0.rangeTo(DateTime.daysPerWeek - 1))
             GridPlacement(
-              columnStart: 1 + weekday,
-              rowStart: 1 + week,
+              columnStart: weekday + 1,
+              rowStart: week + 1,
               child: buildDate(week, weekday),
             ),
       ],
@@ -190,7 +190,7 @@ class MonthWidgetStyle {
               ? BoxDecoration(
                   color: theme.colorScheme.brightness.contrastColor
                       .withOpacity(0.05),
-                  borderRadius: BorderRadius.circular(4),
+                  borderRadius: const BorderRadius.all(Radius.circular(4)),
                 )
               : const BoxDecoration()),
       weeksPadding: weeksPadding ?? const EdgeInsets.symmetric(vertical: 12),

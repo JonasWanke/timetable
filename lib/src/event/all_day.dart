@@ -210,7 +210,7 @@ class AllDayEventBorderRadii {
             ) &
             Size.square(radii.rightTipRadius * 2),
         -rightTipAngle,
-        2 * rightTipAngle,
+        rightTipAngle * 2,
         false,
       )
       // Right bottom
@@ -240,7 +240,7 @@ class AllDayEventBorderRadii {
         Offset(left, size.height / 2 - radii.leftTipRadius) &
             Size.square(radii.leftTipRadius * 2),
         math.pi - leftTipAngle,
-        2 * leftTipAngle,
+        leftTipAngle * 2,
         false,
       )
       // Left top

@@ -5,15 +5,17 @@ import 'package:tuple_glados/tuple_glados.dart';
 
 void main() {
   group('VisibleDateRange.days', () {
-    Glados(any.tuple2(any.positiveInt, any.int)).test('getTargetPageForFocus',
-        (it) {
-      final rangeSize = it.item1;
-      final page = it.item2.toDouble();
-      expect(
-        VisibleDateRange.days(rangeSize).getTargetPageForFocus(page),
-        page,
-      );
-    });
+    Glados(any.tuple2(any.positiveInt, any.int)).test(
+      'getTargetPageForFocus',
+      (it) {
+        final rangeSize = it.item1;
+        final page = it.item2.toDouble();
+        expect(
+          VisibleDateRange.days(rangeSize).getTargetPageForFocus(page),
+          page,
+        );
+      },
+    );
 
     Glados(any.tuple2(any.positiveInt, any.double))
         .test('getTargetPageForCurrent', (it) {
@@ -47,20 +49,22 @@ void main() {
   });
 
   group('VisibleDateRange.week', () {
-    Glados(any.tuple2(any.dayOfWeek, any.int)).test('getTargetPageForFocus',
-        (it) {
-      final startOfWeek = it.item1;
-      final page = it.item2;
+    Glados(any.tuple2(any.dayOfWeek, any.int)).test(
+      'getTargetPageForFocus',
+      (it) {
+        final startOfWeek = it.item1;
+        final page = it.item2;
 
-      final daysFromWeekStart =
-          (DateTimeTimetable.dateFromPage(page).weekday - startOfWeek) %
-              DateTime.daysPerWeek;
-      expect(
-        VisibleDateRange.week(startOfWeek: startOfWeek)
-            .getTargetPageForFocus(page.toDouble()),
-        page - daysFromWeekStart,
-      );
-    });
+        final daysFromWeekStart =
+            (DateTimeTimetable.dateFromPage(page).weekday - startOfWeek) %
+                DateTime.daysPerWeek;
+        expect(
+          VisibleDateRange.week(startOfWeek: startOfWeek)
+              .getTargetPageForFocus(page.toDouble()),
+          page - daysFromWeekStart,
+        );
+      },
+    );
 
     Glados(any.tuple2(any.dayOfWeek, any.double))
         .test('getTargetPageForCurrent', (it) {
@@ -86,8 +90,7 @@ void main() {
   });
 }
 
-extension AnyTimetable on Any {
-  Generator<DateTime> get date => any.int.map(DateTimeTimetable.dateFromPage);
+extension on Any {
   Generator<int> get dayOfWeek =>
       any.intInRange(DateTime.monday, DateTime.sunday);
 }

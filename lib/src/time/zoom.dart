@@ -97,83 +97,83 @@ class _TimeZoomState extends State<TimeZoom>
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        _parentHeight = constraints.maxHeight;
+    return LayoutBuilder(builder: (context, constraints) {
+      _parentHeight = constraints.maxHeight;
 
-        final heightToReport =
-            _parentHeight * (1.days / _controller!.maxRange.duration);
-        if (_registration == null || heightToReport != _registration!.height) {
-          scheduleMicrotask(() {
-            // This might update the controller's value, causing a rebuild
-            //  which is not permitted during the build phase).
-            if (_registration == null) {
-              _registration = _controller!.registerClient(heightToReport);
-            } else {
-              _registration!.notifyHeightChanged(heightToReport);
-            }
-          });
-        }
+      final heightToReport =
+          _parentHeight * (1.days / _controller!.maxRange.duration);
+      if (_registration == null || heightToReport != _registration!.height) {
+        scheduleMicrotask(() {
+          // This might update the controller's value, causing a rebuild
+          //  which is not permitted during the build phase).
+          if (_registration == null) {
+            _registration = _controller!.registerClient(heightToReport);
+          } else {
+            _registration!.notifyHeightChanged(heightToReport);
+          }
+        });
+      }
 
-        _scrollController ??= _ScrollController(
-          getOffset: () => _outerOffset,
-          setOffset: (value) {
-            final controller = _controller!;
-            controller.value = TimeRange.fromStartAndDuration(
-              controller.maxRange.startTime +
-                  controller.maxRange.duration * (value / _outerChildHeight),
-              controller.value.duration,
-            );
-          },
-        );
+      _scrollController ??= _ScrollController(
+        getOffset: () => _outerOffset,
+        setOffset: _setOffset,
+      );
 
-        return RawGestureDetector(
-          gestures: {
-            // We can't use a `GestureDetector` with scaling as that uses
-            // `computePanSlop` to determine the minimum distance a pointer has
-            // to move before it is considered a pan (in this case, a scroll).
-            // If this widget is used in a scrollable context, then the outer
-            // scrollable view would always win in the gesture arena because it
-            // uses `computeHitSlop`, which is half that amount.
-            _ScaleGestureRecognizer:
-                GestureRecognizerFactoryWithHandlers<_ScaleGestureRecognizer>(
-              () => _ScaleGestureRecognizer(debugOwner: this),
-              (instance) {
-                instance
-                  ..onStart = _onScaleStart
-                  ..onUpdate = _onScaleUpdate
-                  ..onEnd = _onScaleEnd
-                  ..dragStartBehavior = DragStartBehavior.down;
+      return RawGestureDetector(
+        gestures: {
+          // We can't use a `GestureDetector` with scaling as that uses
+          // `computePanSlop` to determine the minimum distance a pointer has
+          // to move before it is considered a pan (in this case, a scroll).
+          // If this widget is used in a scrollable context, then the outer
+          // scrollable view would always win in the gesture arena because it
+          // uses `computeHitSlop`, which is half that amount.
+          _ScaleGestureRecognizer:
+              GestureRecognizerFactoryWithHandlers<_ScaleGestureRecognizer>(
+            () => _ScaleGestureRecognizer(debugOwner: this),
+            (instance) {
+              instance
+                ..onStart = _onScaleStart
+                ..onUpdate = _onScaleUpdate
+                ..onEnd = _onScaleEnd
+                ..dragStartBehavior = DragStartBehavior.down;
+            },
+          ),
+        },
+        child: ClipRect(
+          child: _NoDragSingleChildScrollView(
+            controller: _scrollController!,
+            child: ValueListenableBuilder(
+              valueListenable: _controller!,
+              builder: (context, _, child) {
+                // Layouts the child so only [_controller.maxRange] is
+                // visible.
+                final innerChildHeight = _outerChildHeight *
+                    (1.days / _controller!.maxRange.duration);
+                final innerOffset = -innerChildHeight *
+                    (_controller!.maxRange.startTime / 1.days);
+
+                return SizedBox(
+                  height: _outerChildHeight,
+                  child: _VerticalOverflowBox(
+                    offset: innerOffset,
+                    height: innerChildHeight,
+                    child: widget.child,
+                  ),
+                );
               },
             ),
-          },
-          child: ClipRect(
-            child: _NoDragSingleChildScrollView(
-              controller: _scrollController!,
-              child: ValueListenableBuilder<TimeRange>(
-                valueListenable: _controller!,
-                builder: (context, _, child) {
-                  // Layouts the child so only [_controller.maxRange] is
-                  // visible.
-                  final innerChildHeight = _outerChildHeight *
-                      (1.days / _controller!.maxRange.duration);
-                  final innerOffset = -innerChildHeight *
-                      (_controller!.maxRange.startTime / 1.days);
-
-                  return SizedBox(
-                    height: _outerChildHeight,
-                    child: _VerticalOverflowBox(
-                      offset: innerOffset,
-                      height: innerChildHeight,
-                      child: widget.child,
-                    ),
-                  );
-                },
-              ),
-            ),
           ),
-        );
-      },
+        ),
+      );
+    });
+  }
+
+  void _setOffset(double value) {
+    final controller = _controller!;
+    controller.value = TimeRange.fromStartAndDuration(
+      controller.maxRange.startTime +
+          controller.maxRange.duration * (value / _outerChildHeight),
+      controller.value.duration,
     );
   }
 
@@ -552,22 +552,22 @@ class _ScaleGestureRecognizer extends OneSequenceGestureRecognizer {
     if (count < 2) {
       _initialLine = _currentLine;
     } else if (_initialLine != null &&
-        _initialLine!.pointerStartId == _pointerQueue[0] &&
-        _initialLine!.pointerEndId == _pointerQueue[1]) {
+        _initialLine!.pointerStartId == _pointerQueue.first &&
+        _initialLine!.pointerEndId == _pointerQueue.second) {
       /// Rotation updated, set the [_currentLine]
       _currentLine = _LineBetweenPointers(
-        pointerStartId: _pointerQueue[0],
-        pointerStartLocation: _pointerLocations[_pointerQueue[0]]!,
-        pointerEndId: _pointerQueue[1],
-        pointerEndLocation: _pointerLocations[_pointerQueue[1]]!,
+        pointerStartId: _pointerQueue.first,
+        pointerStartLocation: _pointerLocations[_pointerQueue.first]!,
+        pointerEndId: _pointerQueue.second,
+        pointerEndLocation: _pointerLocations[_pointerQueue.second]!,
       );
     } else {
       /// A new rotation process is on the way, set the [_initialLine]
       _initialLine = _LineBetweenPointers(
-        pointerStartId: _pointerQueue[0],
-        pointerStartLocation: _pointerLocations[_pointerQueue[0]]!,
-        pointerEndId: _pointerQueue[1],
-        pointerEndLocation: _pointerLocations[_pointerQueue[1]]!,
+        pointerStartId: _pointerQueue.first,
+        pointerStartLocation: _pointerLocations[_pointerQueue.first]!,
+        pointerEndId: _pointerQueue.second,
+        pointerEndLocation: _pointerLocations[_pointerQueue.second]!,
       );
       _currentLine = null;
     }
@@ -589,19 +589,29 @@ class _ScaleGestureRecognizer extends OneSequenceGestureRecognizer {
           if (pixelsPerSecond.distanceSquared >
               kMaxFlingVelocity * kMaxFlingVelocity) {
             velocity = Velocity(
-                pixelsPerSecond: (pixelsPerSecond / pixelsPerSecond.distance) *
-                    kMaxFlingVelocity);
+              pixelsPerSecond: (pixelsPerSecond / pixelsPerSecond.distance) *
+                  kMaxFlingVelocity,
+            );
           }
           invokeCallback<void>(
-              'onEnd',
-              () => onEnd!(ScaleEndDetails(
-                  velocity: velocity, pointerCount: _pointerQueue.length)));
+            'onEnd',
+            () => onEnd!(
+              ScaleEndDetails(
+                velocity: velocity,
+                pointerCount: _pointerQueue.length,
+              ),
+            ),
+          );
         } else {
           invokeCallback<void>(
-              'onEnd',
-              () => onEnd!(ScaleEndDetails(
-                  velocity: Velocity.zero,
-                  pointerCount: _pointerQueue.length)));
+            'onEnd',
+            () => onEnd!(
+              ScaleEndDetails(
+                velocity: Velocity.zero,
+                pointerCount: _pointerQueue.length,
+              ),
+            ),
+          );
         }
       }
       _state = _ScaleState.accepted;
@@ -645,7 +655,9 @@ class _ScaleGestureRecognizer extends OneSequenceGestureRecognizer {
           verticalScale: _verticalScaleFactor,
           focalPoint: _currentFocalPoint,
           localFocalPoint: PointerEvent.transformPosition(
-              _lastTransform, _currentFocalPoint),
+            _lastTransform,
+            _currentFocalPoint,
+          ),
           rotation: _computeRotationFactor(),
           pointerCount: _pointerQueue.length,
         ));
@@ -660,7 +672,9 @@ class _ScaleGestureRecognizer extends OneSequenceGestureRecognizer {
         onStart!(ScaleStartDetails(
           focalPoint: _currentFocalPoint,
           localFocalPoint: PointerEvent.transformPosition(
-              _lastTransform, _currentFocalPoint),
+            _lastTransform,
+            _currentFocalPoint,
+          ),
           pointerCount: _pointerQueue.length,
         ));
       });

@@ -40,6 +40,7 @@ typedef TimeOverlayProvider = List<TimeOverlay> Function(
 );
 
 List<TimeOverlay> emptyTimeOverlayProvider(
+  // ignore: avoid-unused-parameters, To match [TimeOverlayProvider]
   BuildContext context,
   DateTime date,
 ) {

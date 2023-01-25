@@ -81,8 +81,10 @@ class _TimetableExampleState extends State<TimetableExample>
       timeOverlayProvider: mergeTimeOverlayProviders([
         positioningDemoOverlayProvider,
         (context, date) => _draggedEvents
-            .map((it) =>
-                it.toTimeOverlay(date: date, widget: BasicEventWidget(it)))
+            .map(
+              (it) =>
+                  it.toTimeOverlay(date: date, widget: BasicEventWidget(it)),
+            )
             .whereNotNull()
             .toList(),
       ]),
@@ -132,9 +134,7 @@ class _TimetableExampleState extends State<TimetableExample>
     final roundedTo = 15.minutes;
 
     return PartDayDraggableEvent(
-      onDragStart: () => setState(() {
-        _draggedEvents.add(event.copyWith(showOnTop: true));
-      }),
+      onDragStart: () => setState(() => _draggedEvents.add(event)),
       onDragUpdate: (dateTime) => setState(() {
         dateTime = dateTime.roundTimeToMultipleOf(roundedTo);
         final index = _draggedEvents.indexWhere((it) => it.id == event.id);

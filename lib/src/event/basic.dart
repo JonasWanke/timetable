@@ -40,7 +40,6 @@ class BasicEvent extends Event {
     Object? id,
     String? title,
     Color? backgroundColor,
-    bool? showOnTop,
     DateTime? start,
     DateTime? end,
   }) {

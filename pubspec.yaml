@@ -21,6 +21,7 @@ dependencies:
   tuple: ^2.0.0
 
 dev_dependencies:
+  dart_code_metrics: ^5.0.1
   flutter_lints: ^2.0.1
   flutter_test:
     sdk: flutter

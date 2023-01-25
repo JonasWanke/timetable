@@ -5,6 +5,8 @@ analyzer:
     strict-casts: true
     strict-inference: true
     strict-raw-types: true
+  plugins:
+    - dart_code_metrics
 
 linter:
   rules:
@@ -27,14 +29,18 @@ linter:
     cancel_subscriptions: true
     cast_nullable_to_non_nullable: true
     close_sinks: true
+    collection_methods_unrelated_type: true
     combinators_ordering: true
     comment_references: true
     conditional_uri_does_not_exist: true
+    dangling_library_doc_comments: true
     directives_ordering: true
     discarded_futures: true
+    enable_null_safety: true
     flutter_style_todos: true
-    invariant_booleans: true
+    implicit_call_tearoffs: true
     join_return_with_assignment: true
+    library_annotations: true
     no_adjacent_strings_in_list: true
     omit_local_variable_types: true
     only_throw_errors: true
@@ -57,6 +63,7 @@ linter:
     unawaited_futures: true
     unnecessary_await_in_return: false
     unnecessary_lambdas: true
+    unnecessary_library_directive: true
     unnecessary_null_aware_operator_on_extension_on_nullable: true
     unnecessary_parenthesis: true
     unnecessary_statements: true
@@ -71,3 +78,50 @@ linter:
     use_string_buffers: true
     use_string_in_part_of_directives: true
     use_super_parameters: true
+
+dart_code_metrics:
+  rules:
+    - always-remove-listener
+    - avoid-border-all
+    - avoid-cascade-after-if-null
+    - avoid-collection-methods-with-unrelated-types
+    - avoid-duplicate-exports
+    - avoid-global-state
+    - avoid-missing-enum-constant-in-map
+    - avoid-nested-conditional-expressions:
+        acceptable-level: 3
+    - avoid-shrink-wrap-in-lists
+    - avoid-top-level-members-in-tests
+    - avoid-unnecessary-setstate
+    - avoid-unnecessary-type-assertions
+    - avoid-unnecessary-type-casts
+    - avoid-unrelated-type-assertions
+    - avoid-unused-parameters
+    - avoid-use-expanded-as-spacer
+    - avoid-wrapping-in-padding
+    - binary-expression-operand-order
+    - check-for-equals-in-render-object-setters
+    - consistent-update-render-object
+    - double-literal-format
+    - missing-test-assertion
+    - no-boolean-literal-compare
+    - no-equal-then-else
+    - no-object-declaration
+    - prefer-async-await
+    - prefer-const-border-radius # ?
+    - prefer-correct-edge-insets-constructor
+    - prefer-correct-test-file-name
+    - prefer-enums-by-name
+    - prefer-extracting-callbacks:
+        allowed-line-count: 5
+        ignored-named-arguments:
+          - builder
+          - rowBuilder
+    - prefer-first
+    - prefer-immediate-return
+    - prefer-intl-name
+    - prefer-iterable-of
+    - prefer-last
+    - prefer-trailing-comma
+    - provide-correct-intl-args
+    - tag-name

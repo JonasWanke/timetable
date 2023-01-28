@@ -97,7 +97,6 @@ dart_code_metrics:
     - avoid-unnecessary-type-casts
     - avoid-unrelated-type-assertions
     - avoid-unused-parameters
-    - avoid-use-expanded-as-spacer
     - avoid-wrapping-in-padding
     - binary-expression-operand-order
     - check-for-equals-in-render-object-setters

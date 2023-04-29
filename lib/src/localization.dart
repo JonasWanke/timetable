@@ -8,6 +8,8 @@ import 'week.dart';
 ///
 /// Supported [Locale.languageCode]s:
 ///
+/// * `cs` – Czech
+/// * `de` – German
 /// * `de` – German
 /// * `en` – English
 /// * `es` – Spanish
@@ -89,6 +91,8 @@ class TimetableLocalizationsDelegate
         return const TimetableLocalizationDe();
       case 'en':
         return const TimetableLocalizationEn();
+      case 'cs':
+        return const TimetableLocalizationCs();
       case 'es':
         return const TimetableLocalizationEs();
       case 'fr':
@@ -216,6 +220,24 @@ class TimetableLocalizationEn extends TimetableLocalizations {
   @override
   String weekOfYear(Week week) =>
       'Week ${week.weekOfYear}, ${week.weekBasedYear}';
+}
+
+class TimetableLocalizationCs extends TimetableLocalizations {
+  const TimetableLocalizationCs();
+
+  @override
+  List<String> weekLabels(Week week) {
+    return [
+      weekOfYear(week),
+      'Týden ${week.weekOfYear}',
+      'T ${week.weekOfYear}',
+      '${week.weekOfYear}',
+    ];
+  }
+
+  @override
+  String weekOfYear(Week week) =>
+      'Týden ${week.weekOfYear}, ${week.weekBasedYear}';
 }
 
 class TimetableLocalizationEs extends TimetableLocalizations {

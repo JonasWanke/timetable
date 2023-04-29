@@ -9,12 +9,15 @@
 | ![](https://github.com/JonasWanke/timetable/raw/main/doc/demo-callbacks.webp?raw=true) | ![](https://github.com/JonasWanke/timetable/raw/main/doc/demo-visibleDateRange.webp?raw=true) |
 
 - [Available Layouts](#available-layouts)
+  - [`MultiDateTimetable`](#multidatetimetable)
+  - [`RecurringMultiDateTimetable`](#recurringmultidatetimetable)
+  - [`CompactMonthTimetable`](#compactmonthtimetable)
 - [Getting started](#getting-started)
   - [0. General Information](#0-general-information)
   - [1. Define your `Event`s](#1-define-your-events)
   - [2. Create a `DateController` (optional)](#2-create-a-datecontroller-optional)
   - [3. Create a `TimeController` (optional)](#3-create-a-timecontroller-optional)
-  - [4. Create your Timetable](#4-create-your-timetable)
+  - [4. Create your Timetable widget](#4-create-your-timetable-widget)
 - [Theming](#theming)
 - [Advanced Features](#advanced-features)
   - [Drag and Drop](#drag-and-drop)
@@ -46,7 +49,6 @@ A Timetable widget that displays [`MonthWidget`]s in a page view.
 | :------------------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------------: |
 | ![](https://github.com/JonasWanke/timetable/raw/main/doc/screenshot-CompactMonthTimetable-light.webp?raw=true) | ![](https://github.com/JonasWanke/timetable/raw/main/doc/screenshot-CompactMonthTimetable-dark.webp?raw=true) |
 
-
 ## Getting started
 
 ### 0. General Information
@@ -61,7 +63,7 @@ Some date/time-related parameters also have special suffixes:
 - `timeOfDay`: A `Duration` between zero and 24 hours.
 - `dayOfWeek`: An `int` between one and seven ([`DateTime.monday`](https://api.flutter.dev/flutter/dart-core/DateTime/monday-constant.html) through [`DateTime.sunday`](https://api.flutter.dev/flutter/dart-core/DateTime/sunday-constant.html)).
 
-Timetable currently offers localizations for Chinese, English, French, German, Hungarian, Italian, Japanese, Portuguese, and Spanish.
+Timetable currently offers localizations for Czech, Chinese, English, French, German, Hungarian, Italian, Japanese, Portuguese, and Spanish.
 Even if you're just supporting English in your app, you have to add Timetable's localization delegate to your `MaterialApp`/`CupertinoApp`/`WidgetsApp`:
 
 ```dart

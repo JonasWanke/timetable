@@ -324,10 +324,12 @@ class _PartDayDraggableEventState extends State<PartDayDraggableEvent> {
       return;
     }
 
-    final adjustedOffset = _pointerToWidgetTopCenter(_lastOffset!);
-    final geometry = _findGeometry(context, adjustedOffset);
-    widget.onDragCanceled?.call(geometry.key, _wasMoved);
-    _resetState();
+    if (context.mounted) {
+      final adjustedOffset = _pointerToWidgetTopCenter(_lastOffset!);
+      final geometry = _findGeometry(context, adjustedOffset);
+      widget.onDragCanceled?.call(geometry.key, _wasMoved);
+      _resetState();
+    }
   }
 
   Offset _pointerToWidgetTopCenter(Offset offset) {

@@ -329,6 +329,9 @@ class _PartDayDraggableEventState extends State<PartDayDraggableEvent> {
       final geometry = _findGeometry(context, adjustedOffset);
       widget.onDragCanceled?.call(geometry.key, _wasMoved);
       _resetState();
+    } else {
+      widget.onDragCanceled?.call(null, _wasMoved);
+      _resetState();
     }
   }
 

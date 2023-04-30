@@ -324,7 +324,7 @@ class _PartDayDraggableEventState extends State<PartDayDraggableEvent> {
       return;
     }
 
-    if (context.mounted) {
+    if (mounted) {
       final adjustedOffset = _pointerToWidgetTopCenter(_lastOffset!);
       final geometry = _findGeometry(context, adjustedOffset);
       widget.onDragCanceled?.call(geometry.key, _wasMoved);

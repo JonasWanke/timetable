@@ -160,11 +160,14 @@ typedef PartDayDragEndCallbackWithGeometryKey = void Function(
 
 typedef PartDayDragCanceledCallbackRaw = void Function(
   GlobalKey<MultiDateContentGeometry>? geometryKey,
+  // ignore: avoid_positional_boolean_parameters
   bool wasMoved,
 );
+// ignore: avoid_positional_boolean_parameters
 typedef PartDayDragCanceledCallback = void Function(bool wasMoved);
 typedef PartDayDragCanceledCallbackWithGeometryKey = void Function(
   GlobalKey<MultiDateContentGeometry> geometryKey,
+  // ignore: avoid_positional_boolean_parameters
   bool wasMoved,
 );
 

@@ -29,7 +29,6 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 * update `intl` to `^0.18.0` ([#122](https://github.com/JonasWanke/timetable/pull/137)), closes: [#136](https://github.com/JonasWanke/timetable/issues/136). Thanks to [@TatsuUkraine](https://github.com/TatsuUkraine)!
 * widen `intl` support to `>=0.17.0 <0.19.0` ([`90fb56d`](https://github.com/JonasWanke/timetable/commit/90fb56db9a2d75918c292b292cdb3c0db4700260))
 
-
 ## 1.0.0-alpha.11 · 2023-01-24
 
 ### ⚠️ BREAKING CHANGES

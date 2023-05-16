@@ -364,7 +364,7 @@ class _PartDayDraggableEventState extends State<PartDayDraggableEvent> {
     final geometry = MultiDateContentGeometry.maybeOf(context);
     if (geometry != null) return MapEntry(null, geometry);
 
-    throw FlutterError.fromParts(<DiagnosticsNode>[
+    throw FlutterError.fromParts([
       ErrorSummary(
         "`PartDayDraggableEvent` can't find a `MultiDateContentGeometry`.",
       ),

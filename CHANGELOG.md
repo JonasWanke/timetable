@@ -17,6 +17,19 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### 📦 Build & CI
 -->
 
+## 1.0.0-alpha.12 · 2023-05-16
+
+### ⚠️ BREAKING CHANGES
+* remove `basicEvent.copyWith(…)`'s unused `showOnTop` parameter ([`ff19958`](https://github.com/JonasWanke/timetable/commit/ff1995893e7e85b19fe39f02c17925a9306f7bdc))
+
+### 🐛 Bug Fixes
+* handle `didUpdateWidget(…)` in `DatePageView` ([`ab34b71`](https://github.com/JonasWanke/timetable/commit/ab34b71e2a906be8355ac7505d9fd2022314a97f)), closes: [#141](https://github.com/JonasWanke/timetable/issues/141)
+
+### 📦 Build & CI
+* update `intl` to `^0.18.0` ([#122](https://github.com/JonasWanke/timetable/pull/137)), closes: [#136](https://github.com/JonasWanke/timetable/issues/136). Thanks to [@TatsuUkraine](https://github.com/TatsuUkraine)!
+* widen `intl` support to `>=0.17.0 <0.19.0` ([`90fb56d`](https://github.com/JonasWanke/timetable/commit/90fb56db9a2d75918c292b292cdb3c0db4700260))
+
+
 ## 1.0.0-alpha.11 · 2023-01-24
 
 ### ⚠️ BREAKING CHANGES

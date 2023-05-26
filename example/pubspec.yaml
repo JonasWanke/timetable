@@ -3,7 +3,7 @@ description: A simple example app for the timetable package
 publish_to: none
 
 environment:
-  sdk: '>=2.18.0 <3.0.0'
+  sdk: '>=2.18.0 <4.0.0'
   flutter: '>=3.3.0'
 
 dependencies:
@@ -17,6 +17,9 @@ dependencies:
 
 dev_dependencies:
   flutter_lints: ^2.0.1
+
+dependency_overrides:
+  intl: ^0.18.0
 
 flutter:
   uses-material-design: true

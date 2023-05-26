@@ -52,6 +52,7 @@ class DateScrollPhysics extends ScrollPhysics {
       return super.createBallisticSimulation(position, velocity);
     }
 
+    final tolerance = toleranceFor(position);
     final targetPage = visibleRange.getTargetPageForCurrent(
       position.page,
       velocity: position.pixelDeltaToPageDelta(velocity),

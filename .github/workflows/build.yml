@@ -2,17 +2,21 @@ name: Build & Lint
 
 on:
   pull_request:
+  push:
+    branches: [main]
   schedule:
-    - cron: '0 4 * * *'
+    - cron: 0 4 * * *
 
 env:
   JAVA_VERSION: 12.x
-  FLUTTER_CHANNEL: beta
 
 jobs:
   test:
     name: Run tests
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        flutter-channel: [stable, beta]
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-java@v3
@@ -21,7 +25,7 @@ jobs:
           java-version: ${{ env.JAVA_VERSION }}
       - uses: subosito/flutter-action@v2
         with:
-          channel: ${{ env.FLUTTER_CHANNEL }}
+          channel: ${{ matrix.flutter-channel }}
 
       - run: flutter pub get
 
@@ -30,6 +34,9 @@ jobs:
   lint:
     name: Lint
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        flutter-channel: [stable, beta]
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-java@v3
@@ -38,7 +45,7 @@ jobs:
           java-version: ${{ env.JAVA_VERSION }}
       - uses: subosito/flutter-action@v2
         with:
-          channel: ${{ env.FLUTTER_CHANNEL }}
+          channel: ${{ matrix.flutter-channel }}
 
       - run: flutter pub get
 
@@ -47,14 +54,18 @@ jobs:
   build-example:
     name: Build example
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        flutter-channel: [stable, beta]
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-java@v1
+      - uses: actions/setup-java@v3
         with:
-          java-version: '12.x'
+          distribution: zulu
+          java-version: ${{ env.JAVA_VERSION }}
       - uses: subosito/flutter-action@v2
         with:
-          channel: ${{ env.FLUTTER_CHANNEL }}
+          channel: ${{ matrix.flutter-channel }}
 
       - run: flutter pub get
         working-directory: example

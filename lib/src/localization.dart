@@ -124,7 +124,7 @@ bool debugCheckHasTimetableLocalizations(BuildContext context) {
       TimetableLocalizations,
     );
     if (localizations == null) {
-      throw FlutterError.fromParts(<DiagnosticsNode>[
+      throw FlutterError.fromParts([
         ErrorSummary('No TimetableLocalization found.'),
         ErrorDescription(
           '${context.widget.runtimeType} widgets require TimetableLocalization '

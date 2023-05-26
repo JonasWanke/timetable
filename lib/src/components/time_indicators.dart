@@ -129,6 +129,8 @@ class TimeIndicators extends StatelessWidget {
 }
 
 class _TimeIndicators extends MultiChildRenderObjectWidget {
+  // TODO(JonasWanke): Make this const when upgrading the minimum Flutter version.
+  // ignore: prefer_const_constructors_in_immutables
   _TimeIndicators({required super.children});
 
   @override

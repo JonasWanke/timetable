@@ -39,14 +39,11 @@ typedef TimeOverlayProvider = List<TimeOverlay> Function(
   DateTime date,
 );
 
-List<TimeOverlay> emptyTimeOverlayProvider(
-  // ignore: avoid-unused-parameters, To match [TimeOverlayProvider]
-  BuildContext context,
-  DateTime date,
-) {
+// ignore: prefer_function_declarations_over_variables
+final TimeOverlayProvider emptyTimeOverlayProvider = (context, date) {
   assert(date.debugCheckIsValidTimetableDate());
   return [];
-}
+};
 
 TimeOverlayProvider mergeTimeOverlayProviders(
   List<TimeOverlayProvider> overlayProviders,

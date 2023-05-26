@@ -168,7 +168,7 @@ class _TimetableExampleState extends State<TimetableExample>
       title: _isRecurringLayout
           ? null
           : MonthIndicator.forController(_dateController),
-      actions: <Widget>[
+      actions: [
         IconButton(
           icon: const Icon(Icons.today),
           onPressed: () {

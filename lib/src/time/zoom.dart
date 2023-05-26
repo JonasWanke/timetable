@@ -474,8 +474,8 @@ class _ScaleGestureRecognizer extends OneSequenceGestureRecognizer {
       _currentHorizontalSpan = 0.0;
       _initialVerticalSpan = 0.0;
       _currentVerticalSpan = 0.0;
-      _pointerLocations = <int, Offset>{};
-      _pointerQueue = <int>[];
+      _pointerLocations = {};
+      _pointerQueue = [];
     }
   }
 

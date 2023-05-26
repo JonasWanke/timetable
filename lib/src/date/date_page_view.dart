@@ -40,15 +40,16 @@ class _DatePageViewState extends State<DatePageView> {
   final _heights = <int, double>{};
 
   @override
+  void didUpdateWidget(DatePageView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    assert(_controller != null);
+    _updateController();
+  }
+
+  @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    if (_controller != null && !_controller!.isDisposed) {
-      _controller!.date.removeListener(_onDateChanged);
-      _scrollController!.dispose();
-    }
-    _controller = widget.controller ?? DefaultDateController.of(context)!;
-    _scrollController = MultiDateScrollController(_controller!);
-    _controller!.date.addListener(_onDateChanged);
+    _updateController();
   }
 
   @override
@@ -56,6 +57,19 @@ class _DatePageViewState extends State<DatePageView> {
     _controller!.date.removeListener(_onDateChanged);
     _scrollController!.dispose();
     super.dispose();
+  }
+
+  void _updateController() {
+    if (_controller != null && widget.controller == _controller) return;
+
+    if (_controller != null && !_controller!.isDisposed) {
+      _controller!.date.removeListener(_onDateChanged);
+      _scrollController!.dispose();
+    }
+
+    _controller = widget.controller ?? DefaultDateController.of(context)!;
+    _scrollController = MultiDateScrollController(_controller!);
+    _controller!.date.addListener(_onDateChanged);
   }
 
   void _onDateChanged() {
@@ -185,7 +199,7 @@ class MultiDateScrollController extends ScrollController {
     );
     final linkedPosition = position as MultiDateScrollPosition;
     assert(
-      linkedPosition.owner == this,
+      linkedPosition.controller == controller,
       'MultiDateScrollPosition cannot change controllers once created.',
     );
     super.attach(position);

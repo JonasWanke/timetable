@@ -160,11 +160,14 @@ typedef PartDayDragEndCallbackWithGeometryKey = void Function(
 
 typedef PartDayDragCanceledCallbackRaw = void Function(
   GlobalKey<MultiDateContentGeometry>? geometryKey,
+  // ignore: avoid_positional_boolean_parameters
   bool wasMoved,
 );
+// ignore: avoid_positional_boolean_parameters
 typedef PartDayDragCanceledCallback = void Function(bool wasMoved);
 typedef PartDayDragCanceledCallbackWithGeometryKey = void Function(
   GlobalKey<MultiDateContentGeometry> geometryKey,
+  // ignore: avoid_positional_boolean_parameters
   bool wasMoved,
 );
 
@@ -369,7 +372,7 @@ class _PartDayDraggableEventState extends State<PartDayDraggableEvent> {
     final geometry = MultiDateContentGeometry.maybeOf(context);
     if (geometry != null) return MapEntry(null, geometry);
 
-    throw FlutterError.fromParts(<DiagnosticsNode>[
+    throw FlutterError.fromParts([
       ErrorSummary(
         "`PartDayDraggableEvent` can't find a `MultiDateContentGeometry`.",
       ),

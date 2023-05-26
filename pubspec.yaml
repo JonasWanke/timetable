@@ -1,10 +1,23 @@
 name: timetable
 description: Customizable, animated calendar widget including day, week, and month views
-version: 1.0.0-alpha.11
+version: 1.0.0-alpha.12
 repository: https://github.com/JonasWanke/timetable
+screenshots:
+  - description: Navigation with synchronized month and week views
+    path: doc/demo-navigation.webp
+  - description: Default date and time animations
+    path: doc/demo-animation.webp
+  - description: Many different callbacks
+    path: doc/demo-callbacks.webp
+  - description: Changeable `VisibleDateRange`
+    path: doc/demo-visibleDateRange.webp
+  - description: Support for dark mode
+    path: doc/screenshot-MultiDateTimetable-dark.webp
+  - description: Support for drag and drop
+    path: doc/demo-dragAndDrop.webp
 
 environment:
-  sdk: '>=2.18.0 <3.0.0'
+  sdk: '>=2.18.0 <4.0.0'
   flutter: '>=3.3.0'
 
 dependencies:
@@ -16,7 +29,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_layout_grid: ^2.0.0
-  intl: ^0.17.0
+  intl: '>=0.17.0 <0.19.0'
   meta: ^1.3.0
   tuple: ^2.0.0
 

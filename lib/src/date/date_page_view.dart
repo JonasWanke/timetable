@@ -81,14 +81,14 @@ class _DatePageViewState extends State<DatePageView> {
 
   @override
   Widget build(BuildContext context) {
-    Widget child = ValueListenableBuilder<bool>(
+    Widget child = ValueListenableBuilder(
       valueListenable: _controller!.map((it) => it.visibleRange.canScroll),
       builder: (context, canScroll, _) =>
           canScroll ? _buildScrollingChild() : _buildNonScrollingChild(),
     );
 
     if (widget.shrinkWrapInCrossAxis) {
-      child = ValueListenableBuilder<DatePageValue>(
+      child = ValueListenableBuilder(
         valueListenable: _controller!,
         builder: (context, pageValue, child) => ImmediateSizedBox(
           heightGetter: () => _getHeight(pageValue),
@@ -105,36 +105,32 @@ class _DatePageViewState extends State<DatePageView> {
       axisDirection: AxisDirection.right,
       physics: DateScrollPhysics(_controller!.map((it) => it.visibleRange)),
       controller: _scrollController!,
-      viewportBuilder: (context, position) {
-        return Viewport(
-          axisDirection: AxisDirection.right,
-          offset: position,
-          slivers: [
-            ValueListenableBuilder<int>(
-              valueListenable: _controller!.map((it) => it.visibleDayCount),
-              builder: (context, visibleDayCount, _) => SliverFillViewport(
-                padEnds: false,
-                viewportFraction: 1 / visibleDayCount,
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) => _buildPage(context, _minPage + index),
-                ),
+      viewportBuilder: (context, position) => Viewport(
+        axisDirection: AxisDirection.right,
+        offset: position,
+        slivers: [
+          ValueListenableBuilder(
+            valueListenable: _controller!.map((it) => it.visibleDayCount),
+            builder: (context, visibleDayCount, _) => SliverFillViewport(
+              padEnds: false,
+              viewportFraction: 1 / visibleDayCount,
+              delegate: SliverChildBuilderDelegate(
+                (context, index) => _buildPage(context, _minPage + index),
               ),
             ),
-          ],
-        );
-      },
+          ),
+        ],
+      ),
     );
   }
 
   Widget _buildNonScrollingChild() {
-    return ValueListenableBuilder<DatePageValue>(
+    return ValueListenableBuilder(
       valueListenable: _controller!,
-      builder: (context, value, _) => Row(
-        children: [
-          for (var i = 0; i < value.visibleDayCount; i++)
-            Expanded(child: _buildPage(context, value.page.toInt() + i)),
-        ],
-      ),
+      builder: (context, value, _) => Row(children: [
+        for (var i = 0; i < value.visibleDayCount; i++)
+          Expanded(child: _buildPage(context, value.page.toInt() + i)),
+      ]),
     );
   }
 

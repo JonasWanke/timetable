@@ -213,9 +213,7 @@ class DatePageValue with Diagnosticable {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(
-      DiagnosticsProperty<VisibleDateRange>('visibleRange', visibleRange),
-    );
+    properties.add(DiagnosticsProperty('visibleRange', visibleRange));
     properties.add(DoubleProperty('page', page));
     properties.add(DateDiagnosticsProperty('date', date));
   }
@@ -245,8 +243,7 @@ class DatePageValueWithScrollActivity extends DatePageValue {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties
-        .add(DiagnosticsProperty<DateScrollActivity>('activity', activity));
+    properties.add(DiagnosticsProperty('activity', activity));
   }
 }
 
@@ -276,7 +273,7 @@ class DrivenDateScrollActivity extends DateScrollActivity {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<DatePageValue>('target', target));
+    properties.add(DiagnosticsProperty('target', target));
   }
 }
 

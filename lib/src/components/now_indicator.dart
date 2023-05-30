@@ -295,7 +295,7 @@ class _NowIndicatorPainter extends CustomPainter {
         controller: controller,
         style: style,
         devicePixelRatio: devicePixelRatio,
-        repaintNotifier: ValueNotifier<DateTime>(DateTimeTimetable.now()),
+        repaintNotifier: ValueNotifier(DateTimeTimetable.now()),
       );
   _NowIndicatorPainter._({
     required this.controller,

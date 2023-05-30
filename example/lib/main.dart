@@ -178,7 +178,7 @@ class _TimetableExampleState extends State<TimetableExample>
           tooltip: 'Go to today',
         ),
         const SizedBox(width: 8),
-        DropdownButton<PredefinedVisibleDateRange>(
+        DropdownButton(
           onChanged: (visibleRange) => _updateVisibleDateRange(visibleRange!),
           value: _visibleDateRange,
           items: [

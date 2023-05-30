@@ -223,8 +223,7 @@ class _TimeZoomState extends State<TimeZoom>
         math.log(_kDrag / 100);
 
     _animation =
-        Tween<double>(begin: _outerOffset, end: frictionSimulation.finalX)
-            .animate(
+        Tween(begin: _outerOffset, end: frictionSimulation.finalX).animate(
       CurvedAnimation(parent: _animationController, curve: Curves.decelerate),
     );
     _animationController.duration = finalTime.seconds;
@@ -593,7 +592,7 @@ class _ScaleGestureRecognizer extends OneSequenceGestureRecognizer {
                   kMaxFlingVelocity,
             );
           }
-          invokeCallback<void>(
+          invokeCallback(
             'onEnd',
             () => onEnd!(
               ScaleEndDetails(
@@ -603,7 +602,7 @@ class _ScaleGestureRecognizer extends OneSequenceGestureRecognizer {
             ),
           );
         } else {
-          invokeCallback<void>(
+          invokeCallback(
             'onEnd',
             () => onEnd!(
               ScaleEndDetails(
@@ -648,7 +647,7 @@ class _ScaleGestureRecognizer extends OneSequenceGestureRecognizer {
     }
 
     if (_state == _ScaleState.started && onUpdate != null) {
-      invokeCallback<void>('onUpdate', () {
+      invokeCallback('onUpdate', () {
         onUpdate!(ScaleUpdateDetails(
           scale: _scaleFactor,
           horizontalScale: _horizontalScaleFactor,
@@ -668,7 +667,7 @@ class _ScaleGestureRecognizer extends OneSequenceGestureRecognizer {
   void _dispatchOnStartCallbackIfNeeded() {
     assert(_state == _ScaleState.started);
     if (onStart != null) {
-      invokeCallback<void>('onStart', () {
+      invokeCallback('onStart', () {
         onStart!(ScaleStartDetails(
           focalPoint: _currentFocalPoint,
           localFocalPoint: PointerEvent.transformPosition(

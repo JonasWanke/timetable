@@ -104,7 +104,7 @@ class _MonthIndicatorForController extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = this.controller ?? DefaultDateController.of(context)!;
-    return ValueListenableBuilder<DateTime>(
+    return ValueListenableBuilder(
       valueListenable: controller.date.map((it) => it.firstDayOfMonth),
       builder: (context, month, _) => MonthIndicator(month, style: style),
     );

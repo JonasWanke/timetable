@@ -347,7 +347,7 @@ class _WeekIndicatorForController extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder<Week>(
+    return ValueListenableBuilder(
       valueListenable: (controller ?? DefaultDateController.of(context)!)
           .date
           .map((it) => it.week),

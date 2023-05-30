@@ -37,7 +37,7 @@ class ExampleApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder<MediaOverrideState>(
+    return ValueListenableBuilder(
       valueListenable: _mediaOverrideState,
       builder: (context, overrideState, _) {
         return MaterialApp(

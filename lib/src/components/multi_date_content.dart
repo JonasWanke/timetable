@@ -48,7 +48,7 @@ class _MultiDateContentState<E extends Event>
   @override
   void initState() {
     super.initState();
-    geometryKey = widget.geometryKey ?? GlobalKey<MultiDateContentGeometry>();
+    geometryKey = widget.geometryKey ?? GlobalKey();
     wasGeometryKeyFromWidget = widget.geometryKey != null;
   }
 
@@ -56,7 +56,7 @@ class _MultiDateContentState<E extends Event>
   void didUpdateWidget(covariant MultiDateContent<E> oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.geometryKey == null && wasGeometryKeyFromWidget) {
-      geometryKey = GlobalKey<MultiDateContentGeometry>();
+      geometryKey = GlobalKey();
       wasGeometryKeyFromWidget = false;
     } else if (widget.geometryKey != null &&
         geometryKey != widget.geometryKey) {
@@ -133,7 +133,7 @@ class MultiDateContentGeometry extends State<_MultiDateContentGeometryWidget> {
   RenderBox _findRenderBox() => context.findRenderObject()! as RenderBox;
 
   static MultiDateContentGeometry? maybeOf(BuildContext context) =>
-      context.findAncestorStateOfType<MultiDateContentGeometry>();
+      context.findAncestorStateOfType();
 }
 
 typedef PartDayDragStartCallback = VoidCallback;

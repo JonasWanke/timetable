@@ -58,7 +58,7 @@ class MultiDateEventHeader<E extends Event> extends StatelessWidget {
         maxEventRows = maxEventRowsFromHeight.coerceAtMost(maxEventRows);
       }
 
-      return ValueListenableBuilder<DatePageValue>(
+      return ValueListenableBuilder(
         valueListenable: DefaultDateController.of(context)!,
         builder: (context, pageValue, __) => _buildContent(
           context,

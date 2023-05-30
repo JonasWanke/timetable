@@ -367,9 +367,7 @@ class _EventParentDataWidget extends ParentDataWidget<_EventParentData> {
 }
 
 class _EventsWidget extends MultiChildRenderObjectWidget {
-  // TODO(JonasWanke): Make this const when upgrading the minimum Flutter version.
-  // ignore: prefer_const_constructors_in_immutables
-  _EventsWidget({
+  const _EventsWidget({
     required this.pageValue,
     required this.eventHeight,
     required this.maxEventRows,

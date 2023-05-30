@@ -17,6 +17,11 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### 📦 Build & CI
 -->
 
+## 1.0.0-alpha.13 · 2023-05-30
+
+### 📦 Build & CI
+* upgrade to Flutter v3.10.0, Dart v3.0.0 ([`81e4ebe`](https://github.com/JonasWanke/timetable/commit/81e4ebea6258f26df34973a7ef9bc1ddedec9ffd))
+
 ## 1.0.0-alpha.12 · 2023-05-16
 
 ### ⚠️ BREAKING CHANGES

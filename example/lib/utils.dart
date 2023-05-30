@@ -26,7 +26,7 @@ void initDebugOverlay() {
     MediaOverrideDebugHelper(
       _mediaOverrideState,
       supportedLocales: _supportedLocales,
-    )
+    ),
   ];
 }
 

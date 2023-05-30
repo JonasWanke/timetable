@@ -43,7 +43,8 @@ android {
 
     defaultConfig {
         applicationId "dev.wanke.timetable.example"
-        minSdkVersion flutter.minSdkVersion
+        // https://github.com/JonasWanke/timetable/actions/runs/5045070337/jobs/9048885559?pr=142
+        minSdkVersion 19
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName

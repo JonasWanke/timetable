@@ -6,8 +6,6 @@ jobs:
   assign-author:
     if: github.event.action == 'opened'
     runs-on: ubuntu-latest
-    permissions:
-      pull-requests: write
     steps:
       - uses: samspills/assign-pr-to-author@v1.0.2
         with:
@@ -17,8 +15,7 @@ jobs:
     if: github.event.action == 'opened' && github.event.pull_request.user.login == 'dependabot[bot]'
     runs-on: ubuntu-latest
     permissions:
-      contents: read
-      pull-requests: write
+      pull-requests: read
     steps:
       - uses: dependabot/fetch-metadata@v1.6.0
         id: dependabot-metadata

@@ -1,0 +1,36 @@
+name: PR
+
+on: pull_request_target
+
+jobs:
+  assign-author:
+    if: github.event.action == 'opened'
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - uses: samspills/assign-pr-to-author@v1.0.2
+        with:
+          repo-token: ${{ secrets.BOT_TOKEN }}
+
+  approve-dependabot-pr:
+    if: github.event.action == 'opened' && github.event.pull_request.user.login == 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: dependabot/fetch-metadata@v1.6.0
+        id: dependabot-metadata
+      - name: Merge patch and minor updates
+        if: steps.dependabot-metadata.outputs.update-type == 'version-update:semver-patch' || steps.dependabot-metadata.outputs.update-type == 'version-update:semver-minor'
+        run: gh pr merge --auto --merge "$PR_URL"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GITHUB_TOKEN: ${{ secrets.BOT_TOKEN }}
+      - name: Request manual review for major updates
+        if: steps.dependabot-metadata.outputs.update-type == 'version-update:semver-major' && toJSON(github.event.pull_request.requested_reviewers) == '[]'
+        run: gh pr edit "$PR_URL" --add-reviewer JonasWanke
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GITHUB_TOKEN: ${{ secrets.BOT_TOKEN }}

@@ -85,10 +85,10 @@ packages:
     dependency: "direct main"
     description:
       name: debug_overlay
-      sha256: "04c4800550e257b8275b56e5735c8370a8c92d9bffc2cfe2c5c89df734c7db0f"
+      sha256: e456487cc969f081b2f52ea6ad8e263fa0fd86a2b6d7a09127375998c71d036a
       url: "https://pub.dev"
     source: hosted
-    version: "0.2.8"
+    version: "0.2.9"
   device_info_plus:
     dependency: transitive
     description:

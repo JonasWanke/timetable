@@ -45,10 +45,10 @@ packages:
     dependency: transitive
     description:
       name: collection
-      sha256: f092b211a4319e98e5ff58223576de6c2803db36221657b46c82574721240687
+      sha256: ee67cb0715911d28db6bf4af1026078bd6f0128b07a5f66fb2ed94ec6783c09a
       url: "https://pub.dev"
     source: hosted
-    version: "1.17.2"
+    version: "1.18.0"
   crypto:
     dependency: transitive
     description:
@@ -85,10 +85,10 @@ packages:
     dependency: "direct main"
     description:
       name: debug_overlay
-      sha256: "04c4800550e257b8275b56e5735c8370a8c92d9bffc2cfe2c5c89df734c7db0f"
+      sha256: "3c630f1c4e59dca72e9da9caac8602645c252b78fd9f6802ef5b2b260e40a6b2"
       url: "https://pub.dev"
     source: hosted
-    version: "0.2.8"
+    version: "0.2.11"
   device_info_plus:
     dependency: transitive
     description:
@@ -184,6 +184,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.18.1"
+  json_view:
+    dependency: transitive
+    description:
+      name: json_view
+      sha256: "905c69f9e69d1eab5406b87ab6c10c3706c04c70c6a4959621bd2b43c2d27374"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.4.2"
   lints:
     dependency: transitive
     description:
@@ -220,10 +228,10 @@ packages:
     dependency: transitive
     description:
       name: meta
-      sha256: "3c74dbf8763d36539f114c799d8a2d87343b5067e9d796ca22b5eb8437090ee3"
+      sha256: a6e590c838b18133bb482a2745ad77c5bb7715fb0451209e1a7567d416678b8e
       url: "https://pub.dev"
     source: hosted
-    version: "1.9.1"
+    version: "1.10.0"
   package_info_plus:
     dependency: transitive
     description:
@@ -392,10 +400,10 @@ packages:
     dependency: transitive
     description:
       name: web
-      sha256: dc8ccd225a2005c1be616fe02951e2e342092edf968cf0844220383757ef8f10
+      sha256: afe077240a270dcfd2aafe77602b4113645af95d0ad31128cc02bce5ac5d5152
       url: "https://pub.dev"
     source: hosted
-    version: "0.1.4-beta"
+    version: "0.3.0"
   win32:
     dependency: transitive
     description:

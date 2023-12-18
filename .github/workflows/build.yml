@@ -74,7 +74,7 @@ jobs:
         working-directory: example
 
       - name: Upload APK as artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: example-apk
           path: example/build/app/outputs/apk/release/app-release.apk

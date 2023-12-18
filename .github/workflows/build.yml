@@ -76,5 +76,5 @@ jobs:
       - name: Upload APK as artifact
         uses: actions/upload-artifact@v4
         with:
-          name: example-apk
+          name: example-apk-flutter-${{ matrix.flutter-channel }}
           path: example/build/app/outputs/apk/release/app-release.apk

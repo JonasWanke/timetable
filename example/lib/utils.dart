@@ -8,6 +8,7 @@ import 'package:timetable/timetable.dart';
 
 final _mediaOverrideState = ValueNotifier(MediaOverrideState());
 final _supportedLocales = [
+  const Locale('cs'),
   const Locale('de'),
   const Locale('en'),
   const Locale('es'),

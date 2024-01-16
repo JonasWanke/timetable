@@ -55,7 +55,7 @@ class BasicEvent extends Event {
   @override
   int get hashCode => Object.hash(super.hashCode, title, backgroundColor);
   @override
-  bool operator ==(dynamic other) =>
+  bool operator ==(Object other) =>
       other is BasicEvent &&
       super == other &&
       title == other.title &&

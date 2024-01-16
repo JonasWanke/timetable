@@ -30,7 +30,7 @@ class AllDayEventLayoutInfo {
   @override
   int get hashCode => Object.hash(hiddenStartDays, hiddenEndDays);
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return other is AllDayEventLayoutInfo &&
         hiddenStartDays == other.hiddenStartDays &&
         hiddenEndDays == other.hiddenEndDays;

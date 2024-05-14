@@ -1,64 +1,88 @@
+import 'package:chrono/chrono.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:oxidized/oxidized.dart';
 
-import '../utils.dart';
 import 'controller.dart';
 
 /// The value held by [TimeController].
 @immutable
 class TimeRange {
-  TimeRange(this.startTime, this.endTime)
-      : assert(startTime.debugCheckIsValidTimetableTimeOfDay()),
-        assert(endTime.debugCheckIsValidTimetableTimeOfDay()),
-        assert(startTime <= endTime);
+  const TimeRange(this.startTime, this.endTime)
+      : assert(endTime == null || startTime <= endTime);
   factory TimeRange.fromStartAndDuration(
-    Duration startTime,
-    Duration duration,
-  ) =>
-      TimeRange(startTime, startTime + duration);
+    Time startTime,
+    TimeDuration duration,
+  ) {
+    final endAsDuration = startTime.fractionalSecondsSinceMidnight + duration;
+    assert(endAsDuration <= Hours.normalDay);
+    return TimeRange(
+      startTime,
+      Time.fromTimeSinceMidnight(endAsDuration).unwrap(),
+    );
+  }
 
   factory TimeRange.centeredAround(
-    Duration center,
-    Duration duration, {
+    Time center,
+    TimeDuration duration, {
     bool canShiftIfDoesntFit = true,
   }) {
-    assert(duration <= 1.days);
+    assert(duration.isPositive);
+    assert(duration <= Hours.normalDay);
 
     final TimeRange newRange;
-    final halfDuration = duration * (1 / 2);
-    if (center - halfDuration < 0.days) {
+    // TODO(JonasWanke): `timeDuration.dividedByNum(…)`
+    final halfDuration = duration.asFractionalSeconds.dividedByNum(2);
+    // final newRange = center.subtract(halfDuration).andThen((p0) => null).orElse((_));
+    if (center.fractionalSecondsSinceMidnight < halfDuration) {
       assert(canShiftIfDoesntFit);
-      newRange = TimeRange(0.days, duration);
-    } else if (center + halfDuration > 1.days) {
+      newRange = TimeRange(
+        Time.midnight,
+        Time.fromTimeSinceMidnight(duration).unwrap(),
+      );
+    } else if (center.add(halfDuration).isErr()) {
       assert(canShiftIfDoesntFit);
-      newRange = TimeRange(1.days - duration, 1.days);
+      newRange = TimeRange(
+        Time.fromTimeSinceMidnight(FractionalSeconds.normalDay - duration)
+            .unwrap(),
+        null,
+      );
     } else {
       newRange = TimeRange(
         // Ensure that the resulting duration is exactly [duration], even if
         // [halfDuration] was rounded.
-        center - duration + halfDuration,
-        center + halfDuration,
+        center.add(-duration.asFractionalSeconds + halfDuration).unwrap(),
+        center.add(halfDuration).unwrapOrNull(),
       );
     }
     assert(newRange.duration == duration);
     return newRange;
   }
 
-  static final fullDay = TimeRange(0.days, 1.days);
+  static final fullDay = TimeRange(Time.midnight, null);
 
-  final Duration startTime;
-  Duration get centerTime => startTime + duration * (1 / 2);
-  final Duration endTime;
-  Duration get duration => endTime - startTime;
+  final Time startTime;
+  // TODO(JonasWanke): `timeDuration.dividedByNum(…)`
+  Time get centerTime =>
+      startTime.add(duration.asFractionalSeconds.dividedByNum(2)).unwrap();
+  final Time? endTime;
+  TimeDuration get duration =>
+      (endTime?.fractionalSecondsSinceMidnight ?? FractionalSeconds.normalDay) -
+      startTime.fractionalSecondsSinceMidnight;
 
-  bool contains(TimeRange other) =>
-      startTime <= other.startTime && other.endTime <= endTime;
+  bool contains(TimeRange other) {
+    return startTime <= other.startTime &&
+        (endTime == null ||
+            (other.endTime != null && other.endTime! <= endTime!));
+  }
 
-  // ignore: prefer_constructors_over_static_methods
-  static TimeRange lerp(TimeRange a, TimeRange b, double t) {
-    return TimeRange(
-      lerpDuration(a.startTime, b.startTime, t),
-      lerpDuration(a.endTime, b.endTime, t),
-    );
+  static Result<TimeRange, String> lerp(TimeRange a, TimeRange b, double t) {
+    return Time.lerp(a.startTime, b.startTime, t)
+        .andThenAlso(
+          () => Option.from(Time.lerpNullable(a.endTime, b.endTime, t))
+              .transpose(),
+        )
+        .map((it) => TimeRange(it.$1, it.$2.toNullable()));
   }
 
   @override
@@ -72,4 +96,11 @@ class TimeRange {
 
   @override
   String toString() => 'TimeRange($startTime – $endTime)';
+}
+
+extension<T extends Object, E extends Object> on Result<T, E> {
+  Result<(T, T2), E> andThenAlso<T2 extends Object>(
+    ValueGetter<Result<T2, E>> op,
+  ) =>
+      andThen((t1) => op().map((t2) => (t1, t2)));
 }

@@ -1,4 +1,5 @@
 import 'package:black_hole_flutter/black_hole_flutter.dart';
+import 'package:chrono/chrono.dart';
 import 'package:flutter/material.dart';
 
 import '../callbacks.dart';
@@ -7,7 +8,6 @@ import '../date/controller.dart';
 import '../localization.dart';
 import '../theme.dart';
 import '../utils.dart';
-import '../week.dart';
 
 /// A widget that displays the week number and possibly year for the given week.
 ///
@@ -27,20 +27,19 @@ import '../week.dart';
 ///   Timetable widgets.
 class WeekIndicator extends StatelessWidget {
   const WeekIndicator(
-    this.week, {
+    this.yearWeek, {
     super.key,
     this.alwaysUseNarrowestVariant = false,
     this.onTap,
     this.style,
   });
   WeekIndicator.forDate(
-    DateTime date, {
+    Date date, {
     super.key,
     this.alwaysUseNarrowestVariant = false,
     this.onTap,
     this.style,
-  })  : assert(date.debugCheckIsValidTimetableDate()),
-        week = date.week;
+  }) : yearWeek = date.yearWeek;
   static Widget forController(
     DateController? controller, {
     Key? key,
@@ -56,7 +55,7 @@ class WeekIndicator extends StatelessWidget {
         style: style,
       );
 
-  final Week week;
+  final YearWeek yearWeek;
   final bool alwaysUseNarrowestVariant;
   final VoidCallback? onTap;
   final WeekIndicatorStyle? style;
@@ -64,11 +63,13 @@ class WeekIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final style = this.style ??
-        TimetableTheme.orDefaultOf(context).weekIndicatorStyleProvider(week);
+        TimetableTheme.orDefaultOf(context)
+            .weekIndicatorStyleProvider(yearWeek);
     final defaultOnTap = DefaultTimetableCallbacks.of(context)?.onWeekTap;
 
     return InkResponse(
-      onTap: onTap ?? (defaultOnTap != null ? () => defaultOnTap(week) : null),
+      onTap:
+          onTap ?? (defaultOnTap != null ? () => defaultOnTap(yearWeek) : null),
       child: Tooltip(
         message: style.tooltip,
         child: DecoratedBox(
@@ -254,7 +255,7 @@ class _RenderWeekIndicatorText extends RenderBox {
 class WeekIndicatorStyle {
   factory WeekIndicatorStyle(
     BuildContext context,
-    Week week, {
+    YearWeek yearWeek, {
     String? tooltip,
     Decoration? decoration,
     EdgeInsetsGeometry? padding,
@@ -264,7 +265,7 @@ class WeekIndicatorStyle {
     final colorScheme = context.theme.colorScheme;
     final localizations = TimetableLocalizations.of(context);
     return WeekIndicatorStyle.raw(
-      tooltip: tooltip ?? localizations.weekOfYear(week),
+      tooltip: tooltip ?? localizations.weekOfYear(yearWeek),
       decoration: decoration ??
           BoxDecoration(
             color: colorScheme.brightness.contrastColor.withOpacity(0.05),
@@ -275,7 +276,7 @@ class WeekIndicatorStyle {
       textStyle: textStyle ??
           context.textTheme.bodyMedium!
               .copyWith(color: colorScheme.background.mediumEmphasisOnColor),
-      labels: labels ?? localizations.weekLabels(week),
+      labels: labels ?? localizations.weekLabels(yearWeek),
     );
   }
 
@@ -350,9 +351,9 @@ class _WeekIndicatorForController extends StatelessWidget {
     return ValueListenableBuilder(
       valueListenable: (controller ?? DefaultDateController.of(context)!)
           .date
-          .map((it) => it.week),
-      builder: (context, week, _) => WeekIndicator(
-        week,
+          .map((it) => it.yearWeek),
+      builder: (context, yearWeek, _) => WeekIndicator(
+        yearWeek,
         alwaysUseNarrowestVariant: alwaysUseNarrowestVariant,
         onTap: onTap,
         style: style,

@@ -23,14 +23,18 @@ environment:
 dependencies:
   async: ^2.6.0
   black_hole_flutter: ^1.0.0
+  chrono:
+    path: ../chrono/chrono
   collection: ^1.15.0
   dart_date: ^1.1.0
   dartx: ^1.0.0
+  fixed: ^4.0.1
   flutter:
     sdk: flutter
   flutter_layout_grid: ^2.0.0
   intl: '>=0.17.0 <0.19.0'
   meta: ^1.3.0
+  oxidized: ^6.0.0
 
 dev_dependencies:
   dart_code_metrics: ^5.0.1

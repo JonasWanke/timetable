@@ -1,3 +1,4 @@
+import 'package:chrono/chrono.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -5,7 +6,6 @@ import '../callbacks.dart';
 import '../config.dart';
 import '../localization.dart';
 import '../theme.dart';
-import '../utils.dart';
 import 'date_indicator.dart';
 import 'weekday_indicator.dart';
 
@@ -22,14 +22,14 @@ import 'weekday_indicator.dart';
 /// * [DefaultTimetableCallbacks], which provides callbacks to descendant
 ///   Timetable widgets.
 class DateHeader extends StatelessWidget {
-  DateHeader(
+  const DateHeader(
     this.date, {
     super.key,
     this.onTap,
     this.style,
-  }) : assert(date.debugCheckIsValidTimetableDate());
+  });
 
-  final DateTime date;
+  final Date date;
   final VoidCallback? onTap;
   final DateHeaderStyle? style;
 
@@ -75,20 +75,19 @@ class DateHeader extends StatelessWidget {
 class DateHeaderStyle {
   factory DateHeaderStyle(
     BuildContext context,
-    DateTime date, {
+    Date date, {
     String? tooltip,
     EdgeInsetsGeometry? padding,
     bool? showWeekdayIndicator,
     double? indicatorSpacing,
     bool? showDateIndicator,
   }) {
-    assert(date.debugCheckIsValidTimetableDate());
-
     return DateHeaderStyle.raw(
       tooltip: tooltip ??
           () {
             context.dependOnTimetableLocalizations();
-            return DateFormat.yMMMMEEEEd().format(date);
+            return DateFormat.yMMMMEEEEd()
+                .format(date.atMidnight.asCoreDateTimeInLocalZone);
           }(),
       padding: padding ?? const EdgeInsets.all(4),
       showWeekdayIndicator: showWeekdayIndicator ?? true,

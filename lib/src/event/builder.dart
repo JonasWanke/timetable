@@ -1,3 +1,4 @@
+import 'package:chrono/chrono.dart';
 import 'package:flutter/widgets.dart' hide Interval;
 
 import '../components/multi_date_event_header_overflow.dart';
@@ -10,7 +11,7 @@ typedef EventBuilder<E extends Event> = Widget Function(
 );
 typedef AllDayOverflowBuilder<E extends Event> = Widget Function(
   BuildContext context,
-  DateTime date,
+  Date date,
   List<E> overflowedEvents,
 );
 

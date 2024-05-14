@@ -1,3 +1,4 @@
+import 'package:chrono/chrono.dart';
 import 'package:flutter/material.dart';
 
 import '../components/month_widget.dart';
@@ -12,10 +13,10 @@ import '../utils.dart';
 /// [DateController].
 class CompactMonthTimetable extends StatefulWidget {
   CompactMonthTimetable({
-    MonthWidgetBuilder? monthBuilder,
+    YearMonthWidgetBuilder? monthBuilder,
   }) : monthBuilder = monthBuilder ?? ((context, month) => MonthWidget(month));
 
-  final MonthWidgetBuilder monthBuilder;
+  final YearMonthWidgetBuilder monthBuilder;
 
   @override
   State<CompactMonthTimetable> createState() => _CompactMonthTimetableState();
@@ -31,8 +32,8 @@ class _CompactMonthTimetableState extends State<CompactMonthTimetable>
     super.initState();
 
     _monthPageController = MonthPageController(
-      initialMonth: dateController?.date.value.firstDayOfMonth ??
-          DateTimeTimetable.currentMonth(),
+      initialMonth: dateController?.date.value.yearMonth ??
+          YearMonth.currentInLocalZone(),
     );
     _monthPageController.addListener(_onMonthPageControllerChanged);
   }
@@ -57,7 +58,7 @@ class _CompactMonthTimetableState extends State<CompactMonthTimetable>
   int _monthPageControllerDriverCount = 0;
   Future<void> _onDateControllerChanged() async {
     if (_dateControllerDriverCount > 0) return;
-    final dateControllerMonth = dateController!.date.value.firstDayOfMonth;
+    final dateControllerMonth = dateController!.date.value.yearMonth;
     if (dateControllerMonth == _monthPageController.value) return;
 
     _monthPageControllerDriverCount++;
@@ -69,7 +70,10 @@ class _CompactMonthTimetableState extends State<CompactMonthTimetable>
     if (_monthPageControllerDriverCount > 0) return;
 
     _dateControllerDriverCount++;
-    await dateController?.animateTo(_monthPageController.value, vsync: this);
+    await dateController?.animateTo(
+      _monthPageController.value.firstDay,
+      vsync: this,
+    );
     _dateControllerDriverCount--;
   }
 

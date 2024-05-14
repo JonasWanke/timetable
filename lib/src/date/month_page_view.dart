@@ -1,5 +1,8 @@
+import 'dart:core' as core;
+import 'dart:core' hide Duration;
 import 'dart:ui';
 
+import 'package:chrono/chrono.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -16,7 +19,7 @@ class MonthPageView extends StatefulWidget {
 
   final MonthPageController? monthPageController;
   final bool shrinkWrapInCrossAxis;
-  final MonthWidgetBuilder builder;
+  final YearMonthWidgetBuilder builder;
 
   @override
   State<MonthPageView> createState() => _MonthPageViewState();
@@ -30,7 +33,7 @@ class _MonthPageViewState extends State<MonthPageView> {
   void initState() {
     super.initState();
     _controller = widget.monthPageController ??
-        MonthPageController(initialMonth: DateTimeTimetable.currentMonth());
+        MonthPageController(initialMonth: YearMonth.currentInLocalZone());
     _controller.addListener(_onMonthChanged);
   }
 
@@ -107,10 +110,9 @@ class _MonthPageViewState extends State<MonthPageView> {
 
 /// Controls a [MonthPageView].
 class MonthPageController extends ChangeNotifier
-    implements ValueListenable<DateTime> {
-  MonthPageController({required DateTime initialMonth})
-      : assert(initialMonth.debugCheckIsValidTimetableMonth()),
-        _pageController =
+    implements ValueListenable<YearMonth> {
+  MonthPageController({required YearMonth initialMonth})
+      : _pageController =
             PageController(initialPage: _pageFromMonth(initialMonth)) {
     _pageController.addListener(notifyListeners);
   }
@@ -118,9 +120,9 @@ class MonthPageController extends ChangeNotifier
   final PageController _pageController;
 
   @override
-  DateTime get value => _monthFromPage(_pageController.page!.round());
+  YearMonth get value => _monthFromPage(_pageController.page!.round());
 
-  late DateTime _previousValue = value;
+  late YearMonth _previousValue = value;
   @override
   void notifyListeners() {
     final newValue = value;
@@ -135,37 +137,35 @@ class MonthPageController extends ChangeNotifier
     super.dispose();
   }
 
-  // "DateTimes can represent time values that are at a distance of at most
-  // 100,000,000 days from epoch […]", which would be -271821-04-20.
-  static final _minMonth = DateTime.utc(-271821, 6, 1);
+  // FIXME: if negative pages are supported: get rid of this
+  static final _minYearMonth = const Year(-1000000).firstMonth;
   static final _minPage =
-      (_minMonth.year * DateTime.monthsPerYear) + (_minMonth.month - 1);
-  static DateTime _monthFromPage(int page) {
-    page = _minPage + page;
-    final year = (page < 0 ? page - DateTime.monthsPerYear + 1 : page) ~/
-        DateTime.monthsPerYear;
-    final month = page % DateTime.monthsPerYear + 1;
-    return DateTimeTimetable.month(year, month);
+      (_minYearMonth.year.number * Months.perYear) + _minYearMonth.month.index;
+  static YearMonth _monthFromPage(int page) {
+    page += _minPage;
+    final year =
+        Year((page < 0 ? page - Months.perYear + 1 : page) ~/ Months.perYear);
+    final month = Month.fromIndex(page % Months.perYear).unwrap();
+    return YearMonth(year, month);
   }
 
-  static int _pageFromMonth(DateTime month) {
-    assert(month.debugCheckIsValidTimetableMonth());
-    return (month.year * DateTime.monthsPerYear) + (month.month - 1) - _minPage;
+  static int _pageFromMonth(YearMonth month) {
+    return month.year.number * Months.perYear + month.month.index - _minPage;
   }
 
   // Animation
   Future<void> animateTo(
-    DateTime month, {
+    YearMonth yearMonth, {
     Curve curve = Curves.easeInOut,
-    Duration duration = const Duration(milliseconds: 200),
+    core.Duration duration = const core.Duration(milliseconds: 200),
   }) async {
     await _pageController.animateToPage(
-      _pageFromMonth(month),
+      _pageFromMonth(yearMonth),
       duration: duration,
       curve: curve,
     );
   }
 
-  void jumpTo(DateTime month) =>
-      _pageController.jumpToPage(_pageFromMonth(month));
+  void jumpTo(YearMonth yearMonth) =>
+      _pageController.jumpToPage(_pageFromMonth(yearMonth));
 }

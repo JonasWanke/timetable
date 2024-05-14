@@ -1,11 +1,11 @@
 import 'package:black_hole_flutter/black_hole_flutter.dart';
+import 'package:chrono/chrono.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_layout_grid/flutter_layout_grid.dart';
 
 import '../config.dart';
 import '../theme.dart';
 import '../utils.dart';
-import '../week.dart';
 import 'date_indicator.dart';
 import 'week_indicator.dart';
 import 'weekday_indicator.dart';
@@ -20,20 +20,20 @@ import 'weekday_indicator.dart';
 ///   descendant Timetable widgets.
 class MonthWidget extends StatelessWidget {
   MonthWidget(
-    this.month, {
+    this.yearMonth, {
     DateWidgetBuilder? weekDayBuilder,
-    WeekWidgetBuilder? weekBuilder,
+    YearWeekWidgetBuilder? weekBuilder,
     DateWidgetBuilder? dateBuilder,
     this.style,
-  })  : assert(month.debugCheckIsValidTimetableMonth()),
-        weekDayBuilder =
+  })  : weekDayBuilder =
             weekDayBuilder ?? ((context, date) => WeekdayIndicator(date)),
         weekBuilder = weekBuilder ??
             ((context, week) {
               final timetableTheme = TimetableTheme.orDefaultOf(context);
               return WeekIndicator(
                 week,
-                style: (style ?? timetableTheme.monthWidgetStyleProvider(month))
+                style: (style ??
+                            timetableTheme.monthWidgetStyleProvider(yearMonth))
                         .removeIndividualWeekDecorations
                     ? timetableTheme
                         .weekIndicatorStyleProvider(week)
@@ -44,12 +44,10 @@ class MonthWidget extends StatelessWidget {
             }),
         dateBuilder = dateBuilder ??
             ((context, date) {
-              assert(date.debugCheckIsValidTimetableDate());
-
               final timetableTheme = TimetableTheme.orDefaultOf(context);
               DateIndicatorStyle? dateStyle;
-              if (date.firstDayOfMonth != month &&
-                  (style ?? timetableTheme.monthWidgetStyleProvider(month))
+              if (date.yearMonth != yearMonth &&
+                  (style ?? timetableTheme.monthWidgetStyleProvider(yearMonth))
                       .showDatesFromOtherMonthsAsDisabled) {
                 final original =
                     timetableTheme.dateIndicatorStyleProvider(date);
@@ -62,10 +60,10 @@ class MonthWidget extends StatelessWidget {
               return DateIndicator(date, style: dateStyle);
             });
 
-  final DateTime month;
+  final YearMonth yearMonth;
 
   final DateWidgetBuilder weekDayBuilder;
-  final WeekWidgetBuilder weekBuilder;
+  final YearWeekWidgetBuilder weekBuilder;
   final DateWidgetBuilder dateBuilder;
 
   final MonthWidgetStyle? style;
@@ -73,17 +71,17 @@ class MonthWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final style = this.style ??
-        TimetableTheme.orDefaultOf(context).monthWidgetStyleProvider(month);
+        TimetableTheme.orDefaultOf(context).monthWidgetStyleProvider(yearMonth);
 
-    final firstDay = month.previousOrSame(style.startOfWeek);
-    final minDayCount = month.lastDayOfMonth.difference(firstDay).inDays + 1;
-    final weekCount = (minDayCount / DateTime.daysPerWeek).ceil();
+    final firstDay = yearMonth.firstDay.previousOrSame(style.startOfWeek);
+    final minDayCount = yearMonth.length;
+    final weekCount = minDayCount.roundToWeeks(rounding: Rounding.up).inWeeks;
 
-    final today = DateTimeTimetable.today();
+    final today = Date.todayInLocalZone();
 
-    Widget buildDate(int week, int weekday) {
-      final date = firstDay + (DateTime.daysPerWeek * week + weekday).days;
-      if (!style.showDatesFromOtherMonths && date.firstDayOfMonth != month) {
+    Widget buildDate(int week, Weekday weekday) {
+      final date = firstDay + Weeks(week) + Days(weekday.index);
+      if (!style.showDatesFromOtherMonths && date.yearMonth != yearMonth) {
         return const SizedBox.shrink();
       }
 
@@ -98,7 +96,7 @@ class MonthWidget extends StatelessWidget {
     return LayoutGrid(
       columnSizes: [
         auto,
-        ...repeat(DateTime.daysPerWeek, [1.fr]),
+        ...repeat(Days.perWeek, [1.fr]),
       ],
       rowSizes: [
         auto,
@@ -107,14 +105,12 @@ class MonthWidget extends StatelessWidget {
       children: [
         // By using today as the base, highlighting for the current day is
         // applied automatically.
-        for (final day in 1.rangeTo(DateTime.daysPerWeek))
+        // FIXME(JonasWanke): support startOfWeek
+        for (final day in today.yearWeek.days)
           GridPlacement(
-            columnStart: day,
+            columnStart: day.weekday.number,
             rowStart: 0,
-            child: Center(
-              child:
-                  weekDayBuilder(context, today + (day - today.weekday).days),
-            ),
+            child: Center(child: weekDayBuilder(context, day.asDate)),
           ),
         GridPlacement(
           columnStart: 0,
@@ -123,9 +119,10 @@ class MonthWidget extends StatelessWidget {
           child: _buildWeeks(context, style, firstDay, weekCount),
         ),
         for (final week in 0.rangeTo(weekCount - 1))
-          for (final weekday in 0.rangeTo(DateTime.daysPerWeek - 1))
+          // FIXME(JonasWanke): support startOfWeek
+          for (final weekday in Weekday.values)
             GridPlacement(
-              columnStart: weekday + 1,
+              columnStart: weekday.number,
               rowStart: week + 1,
               child: buildDate(week, weekday),
             ),
@@ -136,11 +133,9 @@ class MonthWidget extends StatelessWidget {
   Widget _buildWeeks(
     BuildContext context,
     MonthWidgetStyle style,
-    DateTime firstDay,
+    Date firstDay,
     int weekCount,
   ) {
-    assert(firstDay.debugCheckIsValidTimetableDate());
-
     return DecoratedBox(
       decoration: style.weeksDecoration,
       child: Padding(
@@ -149,10 +144,7 @@ class MonthWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             for (final index in 0.rangeTo(weekCount - 1))
-              weekBuilder(
-                context,
-                (firstDay + (index * DateTime.daysPerWeek).days).week,
-              ),
+              weekBuilder(context, (firstDay + Weeks(index)).yearWeek),
           ],
         ),
       ),
@@ -169,8 +161,12 @@ class MonthWidget extends StatelessWidget {
 class MonthWidgetStyle {
   factory MonthWidgetStyle(
     BuildContext context,
-    DateTime month, {
-    int? startOfWeek,
+    // To allow future updates to use the `yearMonth` and align the parameters
+    // to other style constructors.
+    // FIXME
+    // ignore: avoid_unused_constructor_parameters
+    YearMonth yearMonth, {
+    Weekday? startOfWeek,
     Decoration? weeksDecoration,
     EdgeInsetsGeometry? weeksPadding,
     bool? removeIndividualWeekDecorations,
@@ -178,13 +174,10 @@ class MonthWidgetStyle {
     bool? showDatesFromOtherMonths,
     bool? showDatesFromOtherMonthsAsDisabled,
   }) {
-    assert(startOfWeek.debugCheckIsValidTimetableDayOfWeek());
-    assert(month.debugCheckIsValidTimetableMonth());
-
     final theme = context.theme;
     removeIndividualWeekDecorations ??= true;
     return MonthWidgetStyle.raw(
-      startOfWeek: startOfWeek ?? DateTime.monday,
+      startOfWeek: startOfWeek ?? Weekday.monday,
       weeksDecoration: weeksDecoration ??
           (removeIndividualWeekDecorations
               ? BoxDecoration(
@@ -212,7 +205,7 @@ class MonthWidgetStyle {
     required this.showDatesFromOtherMonthsAsDisabled,
   });
 
-  final int startOfWeek;
+  final Weekday startOfWeek;
   final Decoration weeksDecoration;
   final EdgeInsetsGeometry weeksPadding;
   final bool removeIndividualWeekDecorations;
@@ -225,7 +218,7 @@ class MonthWidgetStyle {
   final bool showDatesFromOtherMonthsAsDisabled;
 
   MonthWidgetStyle copyWith({
-    int? startOfWeek,
+    Weekday? startOfWeek,
     Decoration? weeksDecoration,
     EdgeInsetsGeometry? weeksPadding,
     bool? removeIndividualWeekDecorations,

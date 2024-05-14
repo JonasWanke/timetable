@@ -3,13 +3,13 @@
 import 'dart:ui';
 
 import 'package:black_hole_flutter/black_hole_flutter.dart';
+import 'package:chrono/chrono.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../config.dart';
 import '../localization.dart';
 import '../theme.dart';
-import '../utils.dart';
 import 'time_indicators.dart';
 
 /// A widget that displays a label at the given time.
@@ -22,30 +22,22 @@ import 'time_indicators.dart';
 /// * [TimetableTheme] (and [TimetableConfig]), which provide styles to
 ///   descendant Timetable widgets.
 class TimeIndicator extends StatelessWidget {
-  TimeIndicator({
-    super.key,
-    required this.time,
-    this.style,
-  }) : assert(time.debugCheckIsValidTimetableTimeOfDay());
+  const TimeIndicator({super.key, required this.time, this.style});
 
-  static String formatHour(Duration time) => _format(DateFormat.j(), time);
-  static String formatHourMinute(Duration time) =>
-      _format(DateFormat.jm(), time);
-  static String formatHourMinuteSecond(Duration time) =>
+  static String formatHour(Time time) => _format(DateFormat.j(), time);
+  static String formatHourMinute(Time time) => _format(DateFormat.jm(), time);
+  static String formatHourMinuteSecond(Time time) =>
       _format(DateFormat.jms(), time);
 
-  static String formatHour24(Duration time) => _format(DateFormat.H(), time);
-  static String formatHour24Minute(Duration time) =>
-      _format(DateFormat.Hm(), time);
-  static String formatHour24MinuteSecond(Duration time) =>
+  static String formatHour24(Time time) => _format(DateFormat.H(), time);
+  static String formatHour24Minute(Time time) => _format(DateFormat.Hm(), time);
+  static String formatHour24MinuteSecond(Time time) =>
       _format(DateFormat.Hms(), time);
 
-  static String _format(DateFormat format, Duration time) {
-    assert(time.debugCheckIsValidTimetableTimeOfDay());
-    return format.format(DateTime(0) + time);
-  }
+  static String _format(DateFormat format, Time time) =>
+      format.format(Date.unixEpoch.at(time).asCoreDateTimeInLocalZone);
 
-  final Duration time;
+  final Time time;
   final TimeIndicatorStyle? style;
 
   @override
@@ -66,13 +58,11 @@ class TimeIndicator extends StatelessWidget {
 class TimeIndicatorStyle {
   factory TimeIndicatorStyle(
     BuildContext context,
-    Duration time, {
+    Time time, {
     TextStyle? textStyle,
     String? label,
     bool alwaysUse24HourFormat = false,
   }) {
-    assert(time.debugCheckIsValidTimetableTimeOfDay());
-
     final theme = context.theme;
     final bodySmall = theme.textTheme.bodySmall!;
     final proportionalFiguresFeature =

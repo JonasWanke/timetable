@@ -1,3 +1,4 @@
+import 'package:chrono/chrono.dart';
 import 'package:flutter/widgets.dart';
 
 import 'components/date_content.dart';
@@ -7,10 +8,9 @@ import 'components/multi_date_event_header_overflow.dart';
 import 'components/week_indicator.dart';
 import 'event/builder.dart';
 import 'layouts/multi_date.dart';
-import 'week.dart';
 
-typedef WeekTapCallback = void Function(Week week);
-typedef DateTapCallback = void Function(DateTime date);
+typedef WeekTapCallback = void Function(YearWeek week);
+typedef DateTapCallback = void Function(Date date);
 typedef DateTimeTapCallback = void Function(DateTime dateTime);
 
 @immutable

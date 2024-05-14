@@ -150,7 +150,7 @@ class _DatePageViewState extends State<DatePageView> {
   }
 
   Widget _buildPage(BuildContext context, int page) {
-    var child = widget.builder(context, DateTimeTimetable.dateFromPage(page));
+    var child = widget.builder(context, DateTimetable.fromPage(page));
     if (widget.shrinkWrapInCrossAxis) {
       child = ImmediateSizeReportingOverflowPage(
         onSizeChanged: (size) {
@@ -306,7 +306,8 @@ class MultiDateScrollPosition extends ScrollPositionWithSingleContext {
 
   double pixelsToPage(double pixels) =>
       _minPage + pixelDeltaToPageDelta(pixels);
-  double pageToPixels(double page) => pageDeltaToPixelDelta(page - _minPage);
+  double pageToPixels(num page) =>
+      pageDeltaToPixelDelta(page.toDouble() - _minPage);
 
   double pixelDeltaToPageDelta(double pixels) {
     final result = pixels * owner.visibleDayCount / viewportDimension;

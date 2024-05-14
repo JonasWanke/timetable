@@ -1,11 +1,11 @@
 import 'package:black_hole_flutter/black_hole_flutter.dart';
+import 'package:chrono/chrono.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../config.dart';
 import '../localization.dart';
 import '../theme.dart';
-import '../utils.dart';
 
 /// A widget that displays the weekday for the given date.
 ///
@@ -15,13 +15,13 @@ import '../utils.dart';
 /// * [TimetableTheme] (and [TimetableConfig]), which provide styles to
 ///   descendant Timetable widgets.
 class WeekdayIndicator extends StatelessWidget {
-  WeekdayIndicator(
+  const WeekdayIndicator(
     this.date, {
     super.key,
     this.style,
-  }) : assert(date.debugCheckIsValidTimetableDate());
+  });
 
-  final DateTime date;
+  final Date date;
   final WeekdayIndicatorStyle? style;
 
   @override
@@ -48,28 +48,28 @@ class WeekdayIndicator extends StatelessWidget {
 class WeekdayIndicatorStyle {
   factory WeekdayIndicatorStyle(
     BuildContext context,
-    DateTime date, {
+    Date date, {
     Decoration? decoration,
     EdgeInsetsGeometry? padding,
     TextStyle? textStyle,
     String? label,
   }) {
-    assert(date.debugCheckIsValidTimetableDate());
-
     final theme = context.theme;
     return WeekdayIndicatorStyle.raw(
       decoration: decoration ?? const BoxDecoration(),
       padding: padding ?? EdgeInsets.zero,
       textStyle: textStyle ??
           theme.textTheme.bodySmall!.copyWith(
-            color: date.isToday
+            color: date.isTodayInLocalZone()
                 ? theme.colorScheme.primary
                 : theme.colorScheme.background.mediumEmphasisOnColor,
           ),
       label: label ??
           () {
             context.dependOnTimetableLocalizations();
-            return DateFormat('EEE').format(date);
+            return DateFormat('EEE').format(
+              date.atMidnight.asCoreDateTimeInLocalZone,
+            );
           }(),
     );
   }

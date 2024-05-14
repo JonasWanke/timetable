@@ -1,4 +1,5 @@
 import 'package:black_hole_flutter/black_hole_flutter.dart';
+import 'package:chrono/chrono.dart';
 import 'package:flutter/material.dart';
 
 import '../callbacks.dart';
@@ -7,7 +8,6 @@ import '../event/basic.dart';
 import '../event/builder.dart';
 import '../layouts/multi_date.dart';
 import '../localization.dart';
-import '../utils.dart';
 import 'multi_date_event_header.dart';
 
 /// The default widget for displaying the overflow of a [MultiDateEventHeader].
@@ -26,14 +26,13 @@ import 'multi_date_event_header.dart';
 /// * [DefaultEventBuilder.allDayOverflowBuilder], which creates this widget by
 ///   default.
 class MultiDateEventHeaderOverflow extends StatelessWidget {
-  MultiDateEventHeaderOverflow(
+  const MultiDateEventHeaderOverflow(
     this.date, {
     super.key,
     required this.overflowCount,
-  })  : assert(date.debugCheckIsValidTimetableDate()),
-        assert(overflowCount >= 1);
+  }) : assert(overflowCount >= 1);
 
-  final DateTime date;
+  final Date date;
   final int overflowCount;
 
   @override
@@ -45,7 +44,7 @@ class MultiDateEventHeaderOverflow extends StatelessWidget {
         id: date,
         title: TimetableLocalizations.of(context).allDayOverflow(overflowCount),
         backgroundColor: context.theme.colorScheme.background.withOpacity(0),
-        start: date,
+        start: date.atMidnight,
         end: date.atEndOfDay,
       ),
       info: const AllDayEventLayoutInfo(hiddenStartDays: 0, hiddenEndDays: 0),

@@ -1,4 +1,5 @@
 import 'package:black_hole_flutter/black_hole_flutter.dart';
+import 'package:chrono/chrono.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -6,7 +7,6 @@ import '../callbacks.dart';
 import '../config.dart';
 import '../localization.dart';
 import '../theme.dart';
-import '../utils.dart';
 
 /// A widget that displays the date of month for the given date.
 ///
@@ -21,14 +21,14 @@ import '../utils.dart';
 /// * [DefaultTimetableCallbacks], which provides callbacks to descendant
 ///   Timetable widgets.
 class DateIndicator extends StatelessWidget {
-  DateIndicator(
+  const DateIndicator(
     this.date, {
     super.key,
     this.onTap,
     this.style,
-  }) : assert(date.debugCheckIsValidTimetableDate());
+  });
 
-  final DateTime date;
+  final Date date;
   final VoidCallback? onTap;
   final DateIndicatorStyle? style;
 
@@ -60,15 +60,13 @@ class DateIndicator extends StatelessWidget {
 class DateIndicatorStyle {
   factory DateIndicatorStyle(
     BuildContext context,
-    DateTime date, {
+    Date date, {
     Decoration? decoration,
     EdgeInsetsGeometry? padding,
     TextStyle? textStyle,
     String? label,
   }) {
-    assert(date.debugCheckIsValidTimetableDate());
-
-    final today = DateTimeTimetable.today();
+    final today = Date.todayInLocalZone();
     final isInFuture = date > today;
     final isToday = date == today;
 

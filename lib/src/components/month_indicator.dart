@@ -1,4 +1,5 @@
 import 'package:black_hole_flutter/black_hole_flutter.dart';
+import 'package:chrono/chrono.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -16,11 +17,7 @@ import '../utils.dart';
 /// * [TimetableTheme] (and [TimetableConfig]), which provide styles to
 ///   descendant Timetable widgets.
 class MonthIndicator extends StatelessWidget {
-  MonthIndicator(
-    this.month, {
-    super.key,
-    this.style,
-  }) : assert(month.debugCheckIsValidTimetableMonth());
+  const MonthIndicator(this.yearMonth, {super.key, this.style});
   static Widget forController(
     DateController? controller, {
     Key? key,
@@ -28,13 +25,14 @@ class MonthIndicator extends StatelessWidget {
   }) =>
       _MonthIndicatorForController(controller, key: key, style: style);
 
-  final DateTime month;
+  final YearMonth yearMonth;
   final MonthIndicatorStyle? style;
 
   @override
   Widget build(BuildContext context) {
     final style = this.style ??
-        TimetableTheme.orDefaultOf(context).monthIndicatorStyleProvider(month);
+        TimetableTheme.orDefaultOf(context)
+            .monthIndicatorStyleProvider(yearMonth);
 
     return Text(style.label, style: style.textStyle);
   }
@@ -49,19 +47,19 @@ class MonthIndicator extends StatelessWidget {
 class MonthIndicatorStyle {
   factory MonthIndicatorStyle(
     BuildContext context,
-    DateTime month, {
+    YearMonth yearMonth, {
     TextStyle? textStyle,
     String? label,
   }) {
-    assert(month.debugCheckIsValidTimetableMonth());
-
     final theme = context.theme;
     return MonthIndicatorStyle.raw(
       textStyle: textStyle ?? theme.textTheme.titleMedium!,
       label: label ??
           () {
             context.dependOnTimetableLocalizations();
-            return DateFormat.MMMM().format(month);
+            return DateFormat.MMMM().format(
+              yearMonth.firstDay.atMidnight.asCoreDateTimeInLocalZone,
+            );
           }(),
     );
   }
@@ -105,8 +103,9 @@ class _MonthIndicatorForController extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = this.controller ?? DefaultDateController.of(context)!;
     return ValueListenableBuilder(
-      valueListenable: controller.date.map((it) => it.firstDayOfMonth),
-      builder: (context, month, _) => MonthIndicator(month, style: style),
+      valueListenable: controller.date.map((it) => it.yearMonth),
+      builder: (context, yearMonth, _) =>
+          MonthIndicator(yearMonth, style: style),
     );
   }
 }

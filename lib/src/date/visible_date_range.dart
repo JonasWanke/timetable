@@ -1,3 +1,4 @@
+import 'package:chrono/chrono.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/physics.dart';
 
@@ -22,9 +23,9 @@ abstract class VisibleDateRange with Diagnosticable {
   factory VisibleDateRange.days(
     int visibleDayCount, {
     int swipeRange,
-    DateTime? alignmentDate,
-    DateTime? minDate,
-    DateTime? maxDate,
+    Date? alignmentDate,
+    Date? minDate,
+    Date? maxDate,
   }) = DaysVisibleDateRange;
 
   /// A visible range that shows seven consecutive days, aligned to
@@ -33,12 +34,12 @@ abstract class VisibleDateRange with Diagnosticable {
   /// When set, swiping is limited from `minDate` to `maxDate` so that both can
   /// still be seen.
   factory VisibleDateRange.week({
-    int startOfWeek = DateTime.monday,
-    DateTime? minDate,
-    DateTime? maxDate,
+    Weekday startOfWeek = Weekday.monday,
+    Date? minDate,
+    Date? maxDate,
   }) {
     return VisibleDateRange.weekAligned(
-      DateTime.daysPerWeek,
+      Days.perWeek,
       firstDay: startOfWeek,
       minDate: minDate,
       maxDate: maxDate,
@@ -52,17 +53,18 @@ abstract class VisibleDateRange with Diagnosticable {
   /// still be seen.
   factory VisibleDateRange.weekAligned(
     int visibleDayCount, {
-    int firstDay = DateTime.monday,
-    DateTime? minDate,
-    DateTime? maxDate,
+    Weekday firstDay = Weekday.monday,
+    Date? minDate,
+    Date? maxDate,
   }) {
     return VisibleDateRange.days(
       visibleDayCount,
-      swipeRange: DateTime.daysPerWeek,
+      swipeRange: Days.perWeek,
       // This just has to be any date fitting `firstDay`. The addition results
       // in a correct value because 2021-01-03 was a Sunday and
-      // `DateTime.monday = 1`.
-      alignmentDate: DateTimeTimetable.date(2021, 1, 3) + firstDay.days,
+      // `Weekday.monday.number = 1`.
+      alignmentDate: Date.from(const Year(2021), Month.january, 3).unwrap() +
+          Days(firstDay.number),
       minDate: minDate,
       maxDate: maxDate,
     );
@@ -71,15 +73,15 @@ abstract class VisibleDateRange with Diagnosticable {
   /// A non-scrollable visible range.
   ///
   /// This is useful for, e.g., [RecurringMultiDateTimetable].
-  factory VisibleDateRange.fixed(DateTime startDate, int visibleDayCount) =>
+  factory VisibleDateRange.fixed(Date startDate, int visibleDayCount) =>
       FixedDaysVisibleDateRange(startDate, visibleDayCount);
 
   final int visibleDayCount;
   final bool canScroll;
 
-  double getTargetPageForFocus(double focusPage);
+  int getTargetPageForFocus(num focusPage);
 
-  double getTargetPageForCurrent(
+  int getTargetPageForCurrent(
     double currentPage, {
     double velocity = 0,
     Tolerance tolerance = Tolerance.defaultTolerance,
@@ -101,51 +103,58 @@ class DaysVisibleDateRange extends VisibleDateRange {
   DaysVisibleDateRange(
     int visibleDayCount, {
     this.swipeRange = 1,
-    DateTime? alignmentDate,
+    Date? alignmentDate,
     this.minDate,
     this.maxDate,
-  })  : alignmentDate = alignmentDate ?? DateTimeTimetable.today(),
-        assert(minDate.debugCheckIsValidTimetableDate()),
-        assert(maxDate.debugCheckIsValidTimetableDate()),
+  })  : alignmentDate = alignmentDate ?? Date.todayInLocalZone(),
         assert(minDate == null || maxDate == null || minDate <= maxDate),
         super(visibleDayCount: visibleDayCount, canScroll: true) {
-    minPage = minDate == null ? null : getTargetPageForFocus(minDate!.page);
+    minPage = minDate == null
+        ? null
+        : getTargetPageForFocus(minDate!.page.toDouble());
     maxPage = maxDate == null
         ? null
-        : _getMinimumPageForFocus(maxDate!.page)
-            .coerceAtLeast(minPage ?? double.negativeInfinity);
+        : () {
+            var result = _getMinimumPageForFocus(maxDate!.page);
+            if (minPage != null) result = result.coerceAtLeast(minPage!);
+            return result;
+          }();
   }
 
   final int swipeRange;
-  final DateTime alignmentDate;
+  final Date alignmentDate;
 
-  final DateTime? minDate;
-  late final double? minPage;
-  final DateTime? maxDate;
-  late final double? maxPage;
+  final Date? minDate;
+  late final int? minPage;
+  final Date? maxDate;
+  late final int? maxPage;
 
   @override
-  double getTargetPageForFocus(
-    double focusPage, {
+  int getTargetPageForFocus(
+    num focusPage, {
     double velocity = 0,
     Tolerance tolerance = Tolerance.defaultTolerance,
   }) {
     // Taken from [_InteractiveViewerState._kDrag].
     const kDrag = 0.0000135;
-    final simulation =
-        FrictionSimulation(kDrag, focusPage, velocity, tolerance: tolerance);
+    final simulation = FrictionSimulation(
+      kDrag,
+      focusPage.toDouble(),
+      velocity,
+      tolerance: tolerance,
+    );
     final targetFocusPage = simulation.finalX;
 
-    final alignmentOffset = alignmentDate.datePage % swipeRange;
+    final alignmentOffset = alignmentDate.page % swipeRange;
     final alignmentDifference =
-        (targetFocusPage.floor() - alignmentDate.datePage) % swipeRange;
+        (targetFocusPage.floor() - alignmentDate.page) % swipeRange;
     final alignmentCorrectedTargetPage = targetFocusPage - alignmentDifference;
     final swipeAlignedTargetPage =
         (alignmentCorrectedTargetPage / swipeRange).floor() * swipeRange;
-    return (alignmentOffset + swipeAlignedTargetPage).toDouble();
+    return alignmentOffset + swipeAlignedTargetPage;
   }
 
-  double _getMinimumPageForFocus(double focusPage) {
+  int _getMinimumPageForFocus(int focusPage) {
     var page = focusPage - visibleDayCount;
     while (true) {
       final target = getTargetPageForFocus(page);
@@ -155,7 +164,7 @@ class DaysVisibleDateRange extends VisibleDateRange {
   }
 
   @override
-  double getTargetPageForCurrent(
+  int getTargetPageForCurrent(
     double currentPage, {
     double velocity = 0,
     Tolerance tolerance = Tolerance.defaultTolerance,
@@ -170,8 +179,8 @@ class DaysVisibleDateRange extends VisibleDateRange {
   @override
   double applyBoundaryConditions(double page) {
     final targetPage = page.coerceIn(
-      minPage ?? double.negativeInfinity,
-      maxPage ?? double.infinity,
+      minPage?.toDouble() ?? double.negativeInfinity,
+      maxPage?.toDouble() ?? double.infinity,
     );
     return page - targetPage;
   }
@@ -183,10 +192,10 @@ class DaysVisibleDateRange extends VisibleDateRange {
     properties.add(DateDiagnosticsProperty('alignmentDate', alignmentDate));
     properties
         .add(DateDiagnosticsProperty('minDate', minDate, defaultValue: null));
-    properties.add(DoubleProperty('minPage', minPage, defaultValue: null));
+    properties.add(IntProperty('minPage', minPage, defaultValue: null));
     properties
         .add(DateDiagnosticsProperty('maxDate', maxDate, defaultValue: null));
-    properties.add(DoubleProperty('maxPage', maxPage, defaultValue: null));
+    properties.add(IntProperty('maxPage', maxPage, defaultValue: null));
   }
 }
 
@@ -195,22 +204,21 @@ class DaysVisibleDateRange extends VisibleDateRange {
 /// This is useful for, e.g., [RecurringMultiDateTimetable].
 class FixedDaysVisibleDateRange extends VisibleDateRange {
   FixedDaysVisibleDateRange(this.startDate, int visibleDayCount)
-      : assert(startDate.debugCheckIsValidTimetableDate()),
-        super(visibleDayCount: visibleDayCount, canScroll: false);
+      : super(visibleDayCount: visibleDayCount, canScroll: false);
 
-  final DateTime startDate;
-  double get page => startDate.page;
+  final Date startDate;
+  int get page => startDate.page;
 
   @override
-  double getTargetPageForFocus(
-    double focusPage, {
+  int getTargetPageForFocus(
+    num focusPage, {
     double velocity = 0,
     Tolerance tolerance = Tolerance.defaultTolerance,
   }) =>
       page;
 
   @override
-  double getTargetPageForCurrent(
+  int getTargetPageForCurrent(
     double currentPage, {
     double velocity = 0,
     Tolerance tolerance = Tolerance.defaultTolerance,
@@ -221,6 +229,6 @@ class FixedDaysVisibleDateRange extends VisibleDateRange {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties.add(DateDiagnosticsProperty('startDate', startDate));
-    properties.add(DoubleProperty('page', page));
+    properties.add(IntProperty('page', page));
   }
 }

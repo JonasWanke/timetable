@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:async/async.dart';
 import 'package:black_hole_flutter/black_hole_flutter.dart';
+import 'package:chrono/chrono.dart';
 import 'package:flutter/material.dart';
 
 import '../config.dart';
@@ -295,7 +296,7 @@ class _NowIndicatorPainter extends CustomPainter {
         controller: controller,
         style: style,
         devicePixelRatio: devicePixelRatio,
-        repaintNotifier: ValueNotifier(DateTimeTimetable.now()),
+        repaintNotifier: ValueNotifier(DateTime.nowInLocalZone()),
       );
   _NowIndicatorPainter._({
     required this.controller,
@@ -320,9 +321,8 @@ class _NowIndicatorPainter extends CustomPainter {
 
     final pageValue = controller.value;
     final dateWidth = size.width / pageValue.visibleDayCount;
-    final now = DateTimeTimetable.now();
-    final temporalXOffset =
-        now.copyWith(isUtc: true).atStartOfDay.page - pageValue.page;
+    final now = DateTime.nowInLocalZone();
+    final temporalXOffset = now.date.page - pageValue.page;
     final left = temporalXOffset * dateWidth;
     final right = left + dateWidth;
 
@@ -332,21 +332,25 @@ class _NowIndicatorPainter extends CustomPainter {
     final actualLeft = left.coerceAtLeast(0);
     final actualRight = right.coerceAtMost(size.width);
 
-    final y = now.timeOfDay / 1.days * size.height;
+    final y = now.time.fractionalSecondsSinceMidnight
+            .dividedByTimeDuration(Hours.normalDay)
+            .toDouble() *
+        size.height;
     canvas.drawLine(Offset(actualLeft, y), Offset(actualRight, y), _paint);
     style.shape.paint(canvas, size, left, right, y);
 
     // Schedule the repaint so that our position has moved at most half a device
     // pixel.
     final maxDistance = 0.5 / devicePixelRatio;
-    final delay = 1.days * (maxDistance / size.height);
+    final delay =
+        FractionalSeconds.normalDay.timesNum(maxDistance / size.height);
     _repaint = CancelableOperation.fromFuture(
       Future<void>.delayed(
-        delay,
+        delay.roundToCoreDuration(),
         () {
           // [ChangeNotifier.notifyListeners] is protected, so we use a
           // [ValueNotifier] and always set a different time.
-          _repaintNotifier.value = DateTimeTimetable.now();
+          _repaintNotifier.value = DateTime.nowInLocalZone();
         },
       ),
     );

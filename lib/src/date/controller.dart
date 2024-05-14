@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:chrono/chrono.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart' hide Interval;
 
@@ -20,9 +21,9 @@ import 'visible_date_range.dart';
 /// You can also get and update the [VisibleDateRange] via [visibleRange].
 class DateController extends ValueNotifier<DatePageValueWithScrollActivity> {
   DateController({
-    DateTime? initialDate,
+    Date? initialDate,
     VisibleDateRange? visibleRange,
-  })  : assert(initialDate.debugCheckIsValidTimetableDate()),
+  }) :
         // We set the correct value in the body below.
         super(DatePageValueWithScrollActivity(
           visibleRange ?? VisibleDateRange.week(),
@@ -30,22 +31,22 @@ class DateController extends ValueNotifier<DatePageValueWithScrollActivity> {
           const IdleDateScrollActivity(),
         )) {
     // The correct value is set via the listener when we assign to our value.
-    _date = ValueNotifier(DateTimeTimetable.dateFromPage(0));
+    _date = ValueNotifier(Date.unixEpoch);
     addListener(() => _date.value = value.date);
 
     // The correct value is set via the listener when we assign to our value.
-    _visibleDates = ValueNotifier(Interval(DateTime(0), DateTime(0)));
+    _visibleDates = ValueNotifier(Interval(Date.unixEpoch, Date.unixEpoch));
     addListener(() => _visibleDates.value = value.visibleDates);
 
-    final rawStartPage = initialDate?.page ?? DateTimeTimetable.today().page;
+    final rawStartPage = initialDate?.page ?? Date.todayInLocalZone().page;
     value = value.copyWithActivity(
       page: value.visibleRange.getTargetPageForFocus(rawStartPage),
       activity: const IdleDateScrollActivity(),
     );
   }
 
-  late final ValueNotifier<DateTime> _date;
-  ValueListenable<DateTime> get date => _date;
+  late final ValueNotifier<Date> _date;
+  ValueListenable<Date> get date => _date;
 
   VisibleDateRange get visibleRange => value.visibleRange;
   set visibleRange(VisibleDateRange visibleRange) {
@@ -69,7 +70,7 @@ class DateController extends ValueNotifier<DatePageValueWithScrollActivity> {
     required TickerProvider vsync,
   }) {
     return animateTo(
-      DateTimeTimetable.today(),
+      Date.todayInLocalZone(),
       curve: curve,
       duration: duration,
       vsync: vsync,
@@ -77,7 +78,7 @@ class DateController extends ValueNotifier<DatePageValueWithScrollActivity> {
   }
 
   Future<void> animateTo(
-    DateTime date, {
+    Date date, {
     Curve curve = Curves.easeInOut,
     Duration duration = const Duration(milliseconds: 200),
     required TickerProvider vsync,
@@ -91,7 +92,7 @@ class DateController extends ValueNotifier<DatePageValueWithScrollActivity> {
   }
 
   Future<void> animateToPage(
-    double page, {
+    int page, {
     Curve curve = Curves.easeInOut,
     Duration duration = const Duration(milliseconds: 200),
     required TickerProvider vsync,
@@ -122,13 +123,9 @@ class DateController extends ValueNotifier<DatePageValueWithScrollActivity> {
     await controller.animateTo(1, duration: duration, curve: curve);
   }
 
-  void jumpToToday() => jumpTo(DateTimeTimetable.today());
-  void jumpTo(DateTime date) {
-    assert(date.debugCheckIsValidTimetableDate());
-    jumpToPage(date.page);
-  }
-
-  void jumpToPage(double page) {
+  void jumpToToday() => jumpTo(Date.todayInLocalZone());
+  void jumpTo(Date date) => jumpToPage(date.page);
+  void jumpToPage(int page) {
     cancelAnimation();
     value = value.copyWithActivity(
       page: value.visibleRange.getTargetPageForFocus(page),
@@ -163,25 +160,17 @@ class DatePageValue with Diagnosticable {
   int get visibleDayCount => visibleRange.visibleDayCount;
 
   final double page;
-  DateTime get date => DateTimeTimetable.dateFromPage(page.round());
+  Date get date => DateTimetable.fromPage(page.round());
 
   int get firstVisiblePage => page.floor();
 
   /// The first date that is at least partially visible.
-  DateTime get firstVisibleDate {
-    final result = DateTimeTimetable.dateFromPage(firstVisiblePage);
-    assert(result.debugCheckIsValidTimetableDate());
-    return result;
-  }
+  Date get firstVisibleDate => DateTimetable.fromPage(firstVisiblePage);
 
   int get lastVisiblePage => page.ceil() + visibleDayCount - 1;
 
   /// The last date that is at least partially visible.
-  DateTime get lastVisibleDate {
-    final result = DateTimeTimetable.dateFromPage(lastVisiblePage);
-    assert(result.debugCheckIsValidTimetableDate());
-    return result;
-  }
+  Date get lastVisibleDate => DateTimetable.fromPage(lastVisiblePage);
 
   /// The interval of dates that are at least partially visible.
   Interval get visibleDates {
@@ -190,11 +179,11 @@ class DatePageValue with Diagnosticable {
     return result;
   }
 
-  Iterable<DateTime> get visibleDatesIterable sync* {
+  Iterable<Date> get visibleDatesIterable sync* {
     var currentDate = firstVisibleDate;
     while (currentDate <= lastVisibleDate) {
       yield currentDate;
-      currentDate = currentDate.add(1.days);
+      currentDate = currentDate + const Days(1);
     }
   }
 
@@ -230,12 +219,12 @@ class DatePageValueWithScrollActivity extends DatePageValue {
 
   DatePageValueWithScrollActivity copyWithActivity({
     VisibleDateRange? visibleRange,
-    double? page,
+    num? page,
     required DateScrollActivity activity,
   }) {
     return DatePageValueWithScrollActivity(
       visibleRange ?? this.visibleRange,
-      page ?? this.page,
+      page?.toDouble() ?? this.page,
       activity,
     );
   }

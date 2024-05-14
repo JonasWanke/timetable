@@ -1,8 +1,8 @@
 import 'package:black_hole_flutter/black_hole_flutter.dart';
+import 'package:chrono/chrono.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:time/time.dart';
 import 'package:timetable/timetable.dart';
 
 // ignore: unused_import
@@ -43,7 +43,7 @@ class _TimetableExampleState extends State<TimetableExample>
     // minDuration: 1.hours,
     // maxDuration: 10.hours,
     // initialRange: TimeRange(8.hours, 20.hours),
-    maxRange: TimeRange(0.hours, 24.hours),
+    maxRange: TimeRange(Time.midnight, null),
   );
 
   final _draggedEvents = <BasicEvent>[];
@@ -93,7 +93,7 @@ class _TimetableExampleState extends State<TimetableExample>
           _showSnackBar('Tapped on week $week.');
           _updateVisibleDateRange(PredefinedVisibleDateRange.week);
           _dateController.animateTo(
-            week.getDayOfWeek(DateTime.monday),
+            week.firstDay.asDate,
             vsync: this,
           );
         },
@@ -131,7 +131,7 @@ class _TimetableExampleState extends State<TimetableExample>
   }
 
   Widget _buildPartDayEvent(BasicEvent event) {
-    final roundedTo = 15.minutes;
+    const roundedTo = Minutes(15);
 
     return PartDayDraggableEvent(
       onDragStart: () => setState(() => _draggedEvents.add(event)),
@@ -225,36 +225,24 @@ enum PredefinedVisibleDateRange { day, threeDays, workWeek, week, fixed }
 
 extension on PredefinedVisibleDateRange {
   VisibleDateRange get visibleDateRange {
-    switch (this) {
-      case PredefinedVisibleDateRange.day:
-        return VisibleDateRange.days(1);
-      case PredefinedVisibleDateRange.threeDays:
-        return VisibleDateRange.days(3);
-      case PredefinedVisibleDateRange.workWeek:
-        return VisibleDateRange.weekAligned(5);
-      case PredefinedVisibleDateRange.week:
-        return VisibleDateRange.week();
-      case PredefinedVisibleDateRange.fixed:
-        return VisibleDateRange.fixed(
-          DateTimeTimetable.today(),
-          DateTime.daysPerWeek,
-        );
-    }
+    return switch (this) {
+      PredefinedVisibleDateRange.day => VisibleDateRange.days(1),
+      PredefinedVisibleDateRange.threeDays => VisibleDateRange.days(3),
+      PredefinedVisibleDateRange.workWeek => VisibleDateRange.weekAligned(5),
+      PredefinedVisibleDateRange.week => VisibleDateRange.week(),
+      PredefinedVisibleDateRange.fixed =>
+        VisibleDateRange.fixed(Date.todayInLocalZone(), Days.perWeek),
+    };
   }
 
   String get title {
-    switch (this) {
-      case PredefinedVisibleDateRange.day:
-        return 'Day';
-      case PredefinedVisibleDateRange.threeDays:
-        return '3 Days';
-      case PredefinedVisibleDateRange.workWeek:
-        return 'Work Week';
-      case PredefinedVisibleDateRange.week:
-        return 'Week';
-      case PredefinedVisibleDateRange.fixed:
-        return '7 Days (fixed)';
-    }
+    return switch (this) {
+      PredefinedVisibleDateRange.day => 'Day',
+      PredefinedVisibleDateRange.threeDays => '3 Days',
+      PredefinedVisibleDateRange.workWeek => 'Work Week',
+      PredefinedVisibleDateRange.week => 'Week',
+      PredefinedVisibleDateRange.fixed => '7 Days (fixed)',
+    };
   }
 }
 

@@ -1,3 +1,7 @@
+import 'dart:core' as core;
+import 'dart:core' hide Duration;
+
+import 'package:chrono/chrono.dart';
 import 'package:flutter/material.dart';
 
 import '../config.dart';
@@ -14,8 +18,8 @@ import 'zoom.dart';
 /// [animateTo], [jumpToShowFullDay], or by directly setting the [value].
 class TimeController extends ValueNotifier<TimeRange> {
   TimeController({
-    this.minDuration = const Duration(minutes: 1),
-    Duration? maxDuration,
+    this.minDuration = const Minutes(1),
+    TimeDuration? maxDuration,
     TimeRange? initialRange,
     TimeRange? maxRange,
     this.minDayHeight,
@@ -44,7 +48,7 @@ class TimeController extends ValueNotifier<TimeRange> {
   }
 
   static TimeRange _getInitialRange(
-    Duration? maxDuration,
+    TimeDuration? maxDuration,
     TimeRange? maxRange,
   ) {
     if (maxDuration != null &&
@@ -72,7 +76,7 @@ class TimeController extends ValueNotifier<TimeRange> {
   /// The minimum visible duration when zooming in.
   ///
   /// [minDayHeight] takes precedence over this value.
-  final Duration minDuration;
+  final TimeDuration minDuration;
 
   /// The minimum visible duration, honoring [minDuration] and [minDayHeight].
   Duration get actualMinDuration =>
@@ -85,7 +89,7 @@ class TimeController extends ValueNotifier<TimeRange> {
   Duration get actualMaxDuration =>
       maxDuration.coerceAtMost(maxDurationFromMinDayHeightOrDefault);
 
-  static const maxPossibleDuration = Duration(days: 1);
+  static const maxPossibleDuration = Hours.normalDay;
 
   /// The maximum range that can be revealed when zooming out.
   final TimeRange maxRange;
@@ -170,7 +174,7 @@ class TimeController extends ValueNotifier<TimeRange> {
 
   Future<void> animateToShowFullDay({
     Curve curve = Curves.easeInOut,
-    Duration duration = const Duration(milliseconds: 200),
+    core.Duration duration = const core.Duration(milliseconds: 200),
     required TickerProvider vsync,
   }) {
     assert(maxDuration == maxPossibleDuration);
@@ -186,7 +190,7 @@ class TimeController extends ValueNotifier<TimeRange> {
   Future<void> animateTo(
     TimeRange newValue, {
     Curve curve = Curves.easeInOut,
-    Duration duration = const Duration(milliseconds: 200),
+    core.Duration duration = const core.Duration(milliseconds: 200),
     required TickerProvider vsync,
   }) async {
     assert(_isValidRange(newValue));
@@ -200,7 +204,7 @@ class TimeController extends ValueNotifier<TimeRange> {
               previousRange,
               newValue,
               _animationController!.value,
-            );
+            ).unwrap();
           })
           ..animateTo(1, duration: duration, curve: curve);
   }

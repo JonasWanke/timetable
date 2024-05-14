@@ -1,3 +1,4 @@
+import 'package:chrono/chrono.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart' hide Interval;
@@ -126,7 +127,7 @@ class MultiDateContentGeometry extends State<_MultiDateContentGeometryWidget> {
     final page = (pageValue.page +
             localOffset.dx / size.width * pageValue.visibleDayCount)
         .floor();
-    return DateTimeTimetable.dateFromPage(page) +
+    return DateTimetable.fromPage(page) +
         1.days * (localOffset.dy / size.height);
   }
 

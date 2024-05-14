@@ -1,8 +1,7 @@
+import 'package:chrono/chrono.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
-
-import 'week.dart';
 
 /// Provides localized strings for Timetable widgets.
 ///
@@ -165,8 +164,8 @@ abstract class TimetableLocalizations {
 
   String allDayOverflow(int overflowCount) => '+$overflowCount';
 
-  List<String> weekLabels(Week week);
-  String weekOfYear(Week week);
+  List<String> weekLabels(YearWeek yearWeek);
+  String weekOfYear(YearWeek yearWeek);
 }
 
 extension BuildContextTimetableLocalizations on BuildContext {
@@ -186,172 +185,172 @@ class TimetableLocalizationDe extends TimetableLocalizations {
   const TimetableLocalizationDe();
 
   @override
-  List<String> weekLabels(Week week) {
+  List<String> weekLabels(YearWeek yearWeek) {
     return [
-      weekOfYear(week),
-      'Woche ${week.weekOfYear}',
-      'KW ${week.weekOfYear}',
-      '${week.weekOfYear}',
+      weekOfYear(yearWeek),
+      'Woche ${yearWeek.week}',
+      'KW ${yearWeek.week}',
+      '${yearWeek.week}',
     ];
   }
 
   @override
-  String weekOfYear(Week week) =>
-      'Kalenderwoche ${week.weekOfYear}, ${week.weekBasedYear}';
+  String weekOfYear(YearWeek yearWeek) =>
+      'Kalenderwoche ${yearWeek.week}, ${yearWeek.weekBasedYear}';
 }
 
 class TimetableLocalizationEn extends TimetableLocalizations {
   const TimetableLocalizationEn();
 
   @override
-  List<String> weekLabels(Week week) {
+  List<String> weekLabels(YearWeek yearWeek) {
     return [
-      weekOfYear(week),
-      'Week ${week.weekOfYear}',
-      'W ${week.weekOfYear}',
-      '${week.weekOfYear}',
+      weekOfYear(yearWeek),
+      'Week ${yearWeek.week}',
+      'W ${yearWeek.week}',
+      '${yearWeek.week}',
     ];
   }
 
   @override
-  String weekOfYear(Week week) =>
-      'Week ${week.weekOfYear}, ${week.weekBasedYear}';
+  String weekOfYear(YearWeek yearWeek) =>
+      'Week ${yearWeek.week}, ${yearWeek.weekBasedYear}';
 }
 
 class TimetableLocalizationEs extends TimetableLocalizations {
   const TimetableLocalizationEs();
 
   @override
-  List<String> weekLabels(Week week) {
+  List<String> weekLabels(YearWeek yearWeek) {
     return [
-      weekOfYear(week),
-      'Semana ${week.weekOfYear}',
-      'S ${week.weekOfYear}',
-      '${week.weekOfYear}',
+      weekOfYear(yearWeek),
+      'Semana ${yearWeek.week}',
+      'S ${yearWeek.week}',
+      '${yearWeek.week}',
     ];
   }
 
   @override
-  String weekOfYear(Week week) =>
-      'Semana ${week.weekOfYear}, ${week.weekBasedYear}';
+  String weekOfYear(YearWeek yearWeek) =>
+      'Semana ${yearWeek.week}, ${yearWeek.weekBasedYear}';
 }
 
 class TimetableLocalizationFr extends TimetableLocalizations {
   const TimetableLocalizationFr();
 
   @override
-  List<String> weekLabels(Week week) {
+  List<String> weekLabels(YearWeek yearWeek) {
     return [
-      weekOfYear(week),
-      'Semaine ${week.weekOfYear}',
-      'S ${week.weekOfYear}',
-      '${week.weekOfYear}',
+      weekOfYear(yearWeek),
+      'Semaine ${yearWeek.week}',
+      'S ${yearWeek.week}',
+      '${yearWeek.week}',
     ];
   }
 
   @override
-  String weekOfYear(Week week) =>
-      'Semaine ${week.weekOfYear}, ${week.weekBasedYear}';
+  String weekOfYear(YearWeek yearWeek) =>
+      'Semaine ${yearWeek.week}, ${yearWeek.weekBasedYear}';
 }
 
 class TimetableLocalizationHu extends TimetableLocalizations {
   const TimetableLocalizationHu();
 
   @override
-  List<String> weekLabels(Week week) =>
-      [weekOfYear(week), '${week.weekOfYear}. hét', '${week.weekOfYear}'];
+  List<String> weekLabels(YearWeek yearWeek) =>
+      [weekOfYear(yearWeek), '${yearWeek.week}. hét', '${yearWeek.week}'];
 
   @override
-  String weekOfYear(Week week) =>
-      '${week.weekOfYear}. hét, ${week.weekBasedYear}';
+  String weekOfYear(YearWeek yearWeek) =>
+      '${yearWeek.week}. hét, ${yearWeek.weekBasedYear}';
 }
 
 class TimetableLocalizationIt extends TimetableLocalizations {
   const TimetableLocalizationIt();
 
   @override
-  List<String> weekLabels(Week week) {
+  List<String> weekLabels(YearWeek yearWeek) {
     return [
-      weekOfYear(week),
-      'Settimana ${week.weekOfYear}',
-      'S ${week.weekOfYear}',
-      '${week.weekOfYear}',
+      weekOfYear(yearWeek),
+      'Settimana ${yearWeek.week}',
+      'S ${yearWeek.week}',
+      '${yearWeek.week}',
     ];
   }
 
   @override
-  String weekOfYear(Week week) =>
-      'Settimana ${week.weekOfYear}, ${week.weekBasedYear}';
+  String weekOfYear(YearWeek yearWeek) =>
+      'Settimana ${yearWeek.week}, ${yearWeek.weekBasedYear}';
 }
 
 class TimetableLocalizationJa extends TimetableLocalizations {
   const TimetableLocalizationJa();
 
   @override
-  List<String> weekLabels(Week week) {
+  List<String> weekLabels(YearWeek yearWeek) {
     return [
-      weekOfYear(week),
-      '第${week.weekOfYear}週',
-      '${week.weekOfYear}週',
-      '${week.weekOfYear}',
+      weekOfYear(yearWeek),
+      '第${yearWeek.week}週',
+      '${yearWeek.week}週',
+      '${yearWeek.week}',
     ];
   }
 
   @override
-  String weekOfYear(Week week) =>
-      'Week ${week.weekOfYear}, ${week.weekBasedYear}';
+  String weekOfYear(YearWeek yearWeek) =>
+      'Week ${yearWeek.week}, ${yearWeek.weekBasedYear}';
 }
 
 class TimetableLocalizationPt extends TimetableLocalizations {
   const TimetableLocalizationPt();
 
   @override
-  List<String> weekLabels(Week week) {
+  List<String> weekLabels(YearWeek yearWeek) {
     return [
-      weekOfYear(week),
-      'Semana ${week.weekOfYear}',
-      'S ${week.weekOfYear}',
-      '${week.weekOfYear}',
+      weekOfYear(yearWeek),
+      'Semana ${yearWeek.week}',
+      'S ${yearWeek.week}',
+      '${yearWeek.week}',
     ];
   }
 
   @override
-  String weekOfYear(Week week) =>
-      'Semana ${week.weekOfYear}, ${week.weekBasedYear}';
+  String weekOfYear(YearWeek yearWeek) =>
+      'Semana ${yearWeek.week}, ${yearWeek.weekBasedYear}';
 }
 
 class TimetableLocalizationZhCn extends TimetableLocalizations {
   const TimetableLocalizationZhCn();
 
   @override
-  List<String> weekLabels(Week week) {
+  List<String> weekLabels(YearWeek yearWeek) {
     return [
-      weekOfYear(week),
-      '第${week.weekOfYear}周',
-      '${week.weekOfYear}周',
-      '${week.weekOfYear}',
+      weekOfYear(yearWeek),
+      '第${yearWeek.week}周',
+      '${yearWeek.week}周',
+      '${yearWeek.week}',
     ];
   }
 
   @override
-  String weekOfYear(Week week) =>
-      'Week ${week.weekOfYear}, ${week.weekBasedYear}';
+  String weekOfYear(YearWeek yearWeek) =>
+      'Week ${yearWeek.week}, ${yearWeek.weekBasedYear}';
 }
 
 class TimetableLocalizationZhTw extends TimetableLocalizations {
   const TimetableLocalizationZhTw();
 
   @override
-  List<String> weekLabels(Week week) {
+  List<String> weekLabels(YearWeek yearWeek) {
     return [
-      weekOfYear(week),
-      '第${week.weekOfYear}週',
-      '${week.weekOfYear}週',
-      '${week.weekOfYear}',
+      weekOfYear(yearWeek),
+      '第${yearWeek.week}週',
+      '${yearWeek.week}週',
+      '${yearWeek.week}',
     ];
   }
 
   @override
-  String weekOfYear(Week week) =>
-      'Week ${week.weekOfYear}, ${week.weekBasedYear}';
+  String weekOfYear(YearWeek yearWeek) =>
+      'Week ${yearWeek.week}, ${yearWeek.weekBasedYear}';
 }

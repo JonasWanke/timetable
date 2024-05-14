@@ -1,63 +1,64 @@
+import 'package:chrono/chrono.dart';
 import 'package:test/test.dart';
 import 'package:timetable/src/event/event.dart';
 import 'package:timetable/src/utils.dart';
 
 void main() {
   group('TimetableEvent', () {
-    final start = DateTime.utc(2020, 1, 1);
+    final start = const Year(2020).firstDay.atMidnight;
 
     final events = [
       _TestEvent(start, start),
-      _TestEvent(start, start + 1.days),
-      _TestEvent(start, start + 2.days),
+      _TestEvent(start, start + const Days(1)),
+      _TestEvent(start, start + const Days(2)),
       _TestEvent(start + 10.hours, start + 12.hours),
       _TestEvent(
-        start + const Duration(hours: 10),
-        start + const Duration(days: 1, hours: 12),
+        start + const Hours(10),
+        start + const Days(1) + const Hours(12),
       ),
       _TestEvent(
-        start + const Duration(hours: 10),
-        start + const Duration(days: 2, hours: 12),
+        start + const Hours(10),
+        start + const Days(2) + const Hours(12),
       ),
     ];
 
     test('intersectsInterval', () {
       final intervals = [
         {
-          Interval(start - 1.days, start - 1.days): false,
+          Interval(start - const Days(1), start - const Days(1)): false,
           Interval(start, start): true,
-          Interval(start, start + 1.days): true,
-          Interval(start + 1.days, start + 1.days): false,
+          Interval(start, start + const Days(1)): true,
+          Interval(start + const Days(1), start + const Days(1)): false,
         },
         {
-          Interval(start - 1.days, start - 1.days): false,
+          Interval(start - const Days(1), start - const Days(1)): false,
           Interval(start, start): true,
-          Interval(start, start + 1.days): true,
-          Interval(start + 1.days, start + 1.days): false,
+          Interval(start, start + const Days(1)): true,
+          Interval(start + const Days(1), start + const Days(1)): false,
         },
         {
-          Interval(start - 1.days, start - 1.days): false,
+          Interval(start - const Days(1), start - const Days(1)): false,
           Interval(start, start): true,
-          Interval(start, start + 1.days): true,
-          Interval(start + 1.days, start + 1.days): true,
+          Interval(start, start + const Days(1)): true,
+          Interval(start + const Days(1), start + const Days(1)): true,
         },
         {
-          Interval(start - 1.days, start - 1.days): false,
+          Interval(start - const Days(1), start - const Days(1)): false,
           Interval(start, start): false,
-          Interval(start, start + 1.days): true,
-          Interval(start + 1.days, start + 1.days): false,
+          Interval(start, start + const Days(1)): true,
+          Interval(start + const Days(1), start + const Days(1)): false,
         },
         {
-          Interval(start - 1.days, start - 1.days): false,
+          Interval(start - const Days(1), start - const Days(1)): false,
           Interval(start, start): false,
-          Interval(start, start + 1.days): true,
-          Interval(start + 1.days, start + 1.days): true,
+          Interval(start, start + const Days(1)): true,
+          Interval(start + const Days(1), start + const Days(1)): true,
         },
         {
-          Interval(start - 1.days, start - 1.days): false,
+          Interval(start - const Days(1), start - const Days(1)): false,
           Interval(start, start): false,
-          Interval(start, start + 1.days): true,
-          Interval(start + 1.days, start + 1.days): true,
+          Interval(start, start + const Days(1)): true,
+          Interval(start + const Days(1), start + const Days(1)): true,
         },
       ];
 

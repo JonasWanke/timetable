@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:black_hole_flutter/black_hole_flutter.dart';
+import 'package:chrono/chrono.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
@@ -26,7 +27,7 @@ class TimeIndicators extends StatelessWidget {
     TimeBasedStyleProvider<TimeIndicatorStyle>? styleProvider,
     Alignment alignment = Alignment.centerRight,
     int firstHour = 1,
-    int lastHour = Duration.hoursPerDay - 1,
+    int lastHour = Hours.perNormalDay - 1,
     bool alignFirstAndLastLabelsInside = false,
   }) {
     return TimeIndicators._build(
@@ -36,7 +37,7 @@ class TimeIndicators extends StatelessWidget {
       firstIndex: firstHour,
       lastIndex: lastHour,
       alignFirstAndLastLabelsInside: alignFirstAndLastLabelsInside,
-      indexToTime: (it) => it.hours,
+      indexToTime: (it) => Time.from(it).unwrap(),
       formatter: TimeIndicator.formatHour,
     );
   }
@@ -46,7 +47,7 @@ class TimeIndicators extends StatelessWidget {
     TimeBasedStyleProvider<TimeIndicatorStyle>? styleProvider,
     Alignment alignment = Alignment.centerRight,
     int firstHalfHour = 1,
-    int lastHalfHour = Duration.hoursPerDay * 2 - 1,
+    int lastHalfHour = Hours.perNormalDay * 2 - 1,
     bool alignFirstAndLastLabelsInside = false,
   }) {
     return TimeIndicators._build(
@@ -56,7 +57,8 @@ class TimeIndicators extends StatelessWidget {
       firstIndex: firstHalfHour,
       lastIndex: lastHalfHour,
       alignFirstAndLastLabelsInside: alignFirstAndLastLabelsInside,
-      indexToTime: (it) => 30.minutes * it,
+      indexToTime: (it) =>
+          Time.fromTimeSinceMidnight(Minutes(it * 30)).unwrap(),
       formatter: TimeIndicator.formatHourMinute,
     );
   }
@@ -68,8 +70,8 @@ class TimeIndicators extends StatelessWidget {
     required int firstIndex,
     required int lastIndex,
     required bool alignFirstAndLastLabelsInside,
-    required Duration Function(int) indexToTime,
-    required String Function(Duration time) formatter,
+    required Time Function(int) indexToTime,
+    required String Function(Time time) formatter,
   }) {
     Alignment getAlignmentFor(int index) {
       if (alignFirstAndLastLabelsInside) {
@@ -94,13 +96,11 @@ class TimeIndicators extends StatelessWidget {
   }
 
   static TimeIndicatorsChild _buildChild(
-    Duration time,
+    Time time,
     Alignment alignment,
     TimeBasedStyleProvider<TimeIndicatorStyle>? styleProvider,
-    String Function(Duration time) formatter,
+    String Function(Time time) formatter,
   ) {
-    assert(time.debugCheckIsValidTimetableTimeOfDay());
-
     return TimeIndicatorsChild(
       time: time,
       alignment: alignment,
@@ -149,11 +149,10 @@ class TimeIndicatorsChild extends ParentDataWidget<_TimeIndicatorParentData> {
     required this.time,
     this.alignment = Alignment.centerRight,
     required super.child,
-  })  : assert(time.debugCheckIsValidTimetableTimeOfDay()),
-        super(key: ValueKey(time));
+  }) : super(key: ValueKey(time));
 
   /// The time of day that this widget positioned next to.
-  final Duration time;
+  final Time time;
 
   /// How to align the widget to the [time].
   ///
@@ -179,7 +178,7 @@ class TimeIndicatorsChild extends ParentDataWidget<_TimeIndicatorParentData> {
 }
 
 class _TimeIndicatorParentData extends ContainerBoxParentData<RenderBox> {
-  Duration? time;
+  Time? time;
   AlignmentGeometry? alignment;
 }
 
@@ -257,7 +256,8 @@ class _TimeIndicatorsLayout extends RenderBox
       final time = data.time!;
       final alignment = data.alignment!.resolve(textDirection);
 
-      final yAnchor = time / 1.days * size.height;
+      final yAnchor =
+          time.fractionalSecondsSinceMidnight / 1.days * size.height;
       final outerRect = Rect.fromLTRB(
         0,
         yAnchor - child.size.height,

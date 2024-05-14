@@ -1,3 +1,4 @@
+import 'package:chrono/chrono.dart';
 import 'package:flutter/widgets.dart';
 
 import '../callbacks.dart';
@@ -25,14 +26,13 @@ class DateContent<E extends Event> extends StatelessWidget {
     required List<E> events,
     this.overlays = const [],
     this.onBackgroundTap,
-  })  : assert(date.debugCheckIsValidTimetableDate()),
-        assert(
+  })  : assert(
           events.every((e) => e.interval.intersects(date.fullDayInterval)),
           'All events must intersect the given date',
         ),
         events = events.sortedByStartLength();
 
-  final DateTime date;
+  final Date date;
 
   final List<E> events;
   final List<TimeOverlay> overlays;

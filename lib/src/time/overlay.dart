@@ -1,3 +1,4 @@
+import 'package:chrono/chrono.dart';
 import 'package:flutter/widgets.dart';
 
 import '../event/event.dart';
@@ -5,17 +6,17 @@ import '../utils.dart';
 
 @immutable
 class TimeOverlay {
-  TimeOverlay({
+  const TimeOverlay({
     required this.start,
     required this.end,
     required this.widget,
     this.position = TimeOverlayPosition.behindEvents,
-  })  : assert(start.debugCheckIsValidTimetableTimeOfDay()),
-        assert(end.debugCheckIsValidTimetableTimeOfDay()),
-        assert(start < end);
+  }) : assert(end == null || start < end);
 
-  final Duration start;
-  final Duration end;
+  final Time start;
+
+  /// The end time of the overlay or `null` if it doesn't end on this date.
+  final Time? end;
 
   /// The widget that will be shown as an overlay.
   final Widget widget;
@@ -36,12 +37,11 @@ enum TimeOverlayPosition { behindEvents, inFrontOfEvents }
 /// * [mergeTimeOverlayProviders], which merges multiple [TimeOverlayProvider]s.
 typedef TimeOverlayProvider = List<TimeOverlay> Function(
   BuildContext context,
-  DateTime date,
+  Date date,
 );
 
 // ignore: prefer_function_declarations_over_variables
 final TimeOverlayProvider emptyTimeOverlayProvider = (context, date) {
-  assert(date.debugCheckIsValidTimetableDate());
   return [];
 };
 
@@ -73,17 +73,15 @@ class DefaultTimeOverlayProvider extends InheritedWidget {
 
 extension EventToTimeOverlay on Event {
   TimeOverlay? toTimeOverlay({
-    required DateTime date,
+    required Date date,
     required Widget widget,
     TimeOverlayPosition position = TimeOverlayPosition.inFrontOfEvents,
   }) {
-    assert(date.debugCheckIsValidTimetableDate());
-
     if (!interval.intersects(date.fullDayInterval)) return null;
 
     return TimeOverlay(
-      start: start.difference(date).coerceAtLeast(Duration.zero),
-      end: endInclusive.difference(date).coerceAtMost(1.days),
+      start: start.difference(date.atMidnight).coerceAtLeast(Duration.zero),
+      end: endInclusive.difference(date.atMidnight).coerceAtMost(1.days),
       widget: widget,
       position: position,
     );

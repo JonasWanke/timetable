@@ -1,3 +1,4 @@
+import 'package:chrono/chrono.dart';
 import 'package:flutter/foundation.dart';
 
 import '../utils.dart';
@@ -20,7 +21,7 @@ abstract class Event with Diagnosticable {
   /// End of the event; exclusive.
   final DateTime end;
 
-  bool get isAllDay => end.difference(start).inDays >= 1;
+  bool get isAllDay => end.timeDifference(start) >= Hours.normalDay;
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {

@@ -1,3 +1,4 @@
+import 'package:chrono/chrono.dart';
 import 'package:flutter/widgets.dart';
 
 import '../config.dart';
@@ -23,14 +24,13 @@ class DateEvents<E extends Event> extends StatelessWidget {
     required List<E> events,
     this.eventBuilder,
     this.style,
-  })  : assert(date.debugCheckIsValidTimetableDate()),
-        assert(
+  })  : assert(
           events.every((e) => e.interval.intersects(date.fullDayInterval)),
           'All events must intersect the given date',
         ),
         events = events.sortedByStartLength();
 
-  final DateTime date;
+  final Date date;
   final List<E> events;
   final EventBuilder<E>? eventBuilder;
   final DateEventsStyle? style;
@@ -70,7 +70,7 @@ class DateEventsStyle {
     // ignore: avoid_unused_constructor_parameters
     BuildContext context,
     // ignore: avoid_unused_constructor_parameters, See above.
-    DateTime date, {
+    Date date, {
     Duration? minEventDuration,
     double? minEventHeight,
     EdgeInsetsGeometry? padding,
@@ -79,12 +79,11 @@ class DateEventsStyle {
     double? stackedEventSpacing,
   }) {
     return DateEventsStyle.raw(
-      minEventDuration: minEventDuration ?? const Duration(minutes: 30),
+      minEventDuration: minEventDuration ?? const Minutes(30),
       minEventHeight: minEventHeight ?? 16,
       padding: padding ?? const EdgeInsets.only(right: 1),
       enableStacking: enableStacking ?? true,
-      minEventDeltaForStacking:
-          minEventDeltaForStacking ?? const Duration(minutes: 15),
+      minEventDeltaForStacking: minEventDeltaForStacking ?? const Minutes(15),
       stackedEventSpacing: stackedEventSpacing ?? 4,
     );
   }
@@ -176,12 +175,11 @@ class DateEventsStyle {
 
 class _DayEventsLayoutDelegate<E extends Event>
     extends MultiChildLayoutDelegate {
-  _DayEventsLayoutDelegate(this.date, this.events, this.style)
-      : assert(date.debugCheckIsValidTimetableDate());
+  _DayEventsLayoutDelegate(this.date, this.events, this.style);
 
   static const minWidth = 4.0;
 
-  final DateTime date;
+  final Date date;
   final List<E> events;
 
   final DateEventsStyle style;
@@ -197,16 +195,16 @@ class _DayEventsLayoutDelegate<E extends Event>
       return size.height * (duration / 1.days);
     }
 
-    double timeToY(DateTime dateTime) {
+    double dateTimeToY(DateTime dateTime) {
       assert(dateTime.debugCheckIsValidTimetableDateTime());
 
-      if (dateTime < date) return 0;
-      if (dateTime.atStartOfDay > date) return size.height;
-      return durationToY(dateTime.timeOfDay);
+      if (dateTime.date < date) return 0;
+      if (dateTime.date > date) return size.height;
+      return durationToY(dateTime.time.fractionalSecondsSinceMidnight);
     }
 
     for (final event in events) {
-      final top = timeToY(event.start)
+      final top = dateTimeToY(event.start)
           .coerceAtMost(size.height - durationToY(style.minEventDuration))
           .coerceAtMost(size.height - style.minEventHeight);
       final height = durationToY(_durationOn(event, size.height))

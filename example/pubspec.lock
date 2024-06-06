@@ -60,10 +60,11 @@ packages:
   chrono:
     dependency: "direct main"
     description:
-      path: "../../chrono/chrono"
-      relative: true
-    source: path
-    version: "0.0.0"
+      name: chrono
+      sha256: ec0e43e7268e2b13664a53e91249a10de423032975308d01b3aa455bd9911e35
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.0"
   clock:
     dependency: transitive
     description:
@@ -363,10 +364,10 @@ packages:
     dependency: transitive
     description:
       name: meta
-      sha256: d584fa6707a52763a52446f02cc621b077888fb63b93bbcb1143a7be5a0c0c04
+      sha256: "7687075e408b093f36e6bbf6c91878cc0d4cd10f409506f7bc996f68220b9136"
       url: "https://pub.dev"
     source: hosted
-    version: "1.11.0"
+    version: "1.12.0"
   mime:
     dependency: transitive
     description:
@@ -455,6 +456,15 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.2.1"
+  ranges:
+    dependency: transitive
+    description:
+      path: "."
+      ref: "87be930db3559f8e315a445a9e14754f68a29611"
+      resolved-ref: "87be930db3559f8e315a445a9e14754f68a29611"
+      url: "https://github.com/JonasWanke/ranges.git"
+    source: git
+    version: "0.0.0"
   rational:
     dependency: transitive
     description:
@@ -716,5 +726,5 @@ packages:
     source: hosted
     version: "3.1.2"
 sdks:
-  dart: ">=3.3.0 <4.0.0"
-  flutter: ">=3.10.0"
+  dart: ">=3.4.0 <4.0.0"
+  flutter: ">=3.22.0"

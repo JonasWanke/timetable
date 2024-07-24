@@ -1,7 +1,6 @@
-local/
+.direnv/
 
 pubspec.lock
-Gemfile.lock
 
 # Miscellaneous
 *.class

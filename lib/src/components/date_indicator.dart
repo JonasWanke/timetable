@@ -85,8 +85,8 @@ class DateIndicatorStyle {
             color: isToday
                 ? theme.colorScheme.primary.highEmphasisOnColor
                 : isInFuture
-                    ? theme.colorScheme.background.contrastColor
-                    : theme.colorScheme.background.mediumEmphasisOnColor,
+                    ? theme.colorScheme.surface.contrastColor
+                    : theme.colorScheme.surface.mediumEmphasisOnColor,
           ),
       label: label ??
           () {

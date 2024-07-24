@@ -56,7 +56,7 @@ class MonthWidget extends StatelessWidget {
                     timetableTheme.dateIndicatorStyleProvider(date);
                 dateStyle = original.copyWith(
                   textStyle: original.textStyle.copyWith(
-                    color: context.theme.colorScheme.background.disabledOnColor,
+                    color: context.theme.colorScheme.surface.disabledOnColor,
                   ),
                 );
               }

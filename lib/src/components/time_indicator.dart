@@ -80,7 +80,7 @@ class TimeIndicatorStyle {
     return TimeIndicatorStyle.raw(
       textStyle: textStyle ??
           bodySmall.copyWith(
-            color: theme.colorScheme.background.disabledOnColor,
+            color: theme.colorScheme.surface.disabledOnColor,
             fontFeatures: [
               ...?bodySmall.fontFeatures
                   ?.where((it) => it.value != proportionalFiguresFeature),

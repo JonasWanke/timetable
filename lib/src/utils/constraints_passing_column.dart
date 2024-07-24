@@ -15,7 +15,7 @@ import 'package:flutter/widgets.dart';
 /// * `mainAxisSize = MainAxisSize.min`
 /// * `crossAxisAlignment = CrossAxisAlignment.start`
 class ConstraintsPassingColumn extends MultiChildRenderObjectWidget {
-  const ConstraintsPassingColumn({required super.children});
+  const ConstraintsPassingColumn({super.key, required super.children});
 
   @override
   RenderObject createRenderObject(BuildContext context) =>
@@ -46,10 +46,10 @@ class _ConstraintsPassingColumnRenderObject extends RenderBox
       children.map((it) => it.getMaxIntrinsicWidth(height)).maxOrNull ?? 0;
   @override
   double computeMinIntrinsicHeight(double width) =>
-      children.map((it) => it.getMinIntrinsicHeight(width)).sum.toDouble();
+      children.map((it) => it.getMinIntrinsicHeight(width)).sum;
   @override
   double computeMaxIntrinsicHeight(double width) =>
-      children.map((it) => it.getMaxIntrinsicHeight(width)).sum.toDouble();
+      children.map((it) => it.getMaxIntrinsicHeight(width)).sum;
 
   @override
   void performLayout() {

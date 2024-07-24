@@ -4,7 +4,7 @@ import 'package:timetable/src/utils.dart';
 
 void main() {
   group('TimetableEvent', () {
-    final start = DateTime.utc(2020, 1, 1);
+    final start = DateTime.utc(2020);
 
     final events = [
       _TestEvent(start, start),

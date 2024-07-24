@@ -78,7 +78,6 @@ class MultiDateTimetable<E extends Event> extends StatefulWidget {
             width: leadingWidth,
             child: Align(
               heightFactor: 1,
-              alignment: Alignment.center,
               child: WeekIndicator.forController(null),
             ),
           ),
@@ -132,16 +131,20 @@ class _MultiDateTimetableState<E extends Event>
       ),
     );
 
-    return LayoutBuilder(builder: (context, constraints) {
-      final maxHeaderHeight = constraints.maxHeight * style.maxHeaderFraction;
-      return Column(children: [
-        ConstrainedBox(
-          constraints: BoxConstraints(maxHeight: maxHeaderHeight),
-          child: header,
-        ),
-        Expanded(child: content),
-      ]);
-    });
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final maxHeaderHeight = constraints.maxHeight * style.maxHeaderFraction;
+        return Column(
+          children: [
+            ConstrainedBox(
+              constraints: BoxConstraints(maxHeight: maxHeaderHeight),
+              child: header,
+            ),
+            Expanded(child: content),
+          ],
+        );
+      },
+    );
   }
 }
 
@@ -172,18 +175,22 @@ class MultiDateTimetableHeader<E extends Event> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(children: [
-      leading,
-      Expanded(
-        child: ConstraintsPassingColumn(children: [
-          DatePageView(
-            shrinkWrapInCrossAxis: true,
-            builder: dateHeaderBuilder,
+    return Row(
+      children: [
+        leading,
+        Expanded(
+          child: ConstraintsPassingColumn(
+            children: [
+              DatePageView(
+                shrinkWrapInCrossAxis: true,
+                builder: dateHeaderBuilder,
+              ),
+              bottom,
+            ],
           ),
-          bottom,
-        ]),
-      ),
-    ]);
+        ),
+      ],
+    );
   }
 }
 
@@ -220,11 +227,13 @@ class MultiDateTimetableContent<E extends Event> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(children: [
-      leading,
-      divider,
-      Expanded(child: content),
-    ]);
+    return Row(
+      children: [
+        leading,
+        divider,
+        Expanded(child: content),
+      ],
+    );
   }
 }
 
@@ -287,9 +296,9 @@ class _DefaultContentLeading extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 8),
           child: Builder(
             builder: (context) => TimeIndicators.hours(
-              // `TimeIndicators.hours` overwrites the style provider's labels by
-              // default, but here we want the user's style provider from the ambient
-              // theme to take precedence.
+              // `TimeIndicators.hours` overwrites the style provider's labels
+              // by default, but here we want the user's style provider from the
+              // ambient theme to take precedence.
               styleProvider:
                   TimetableTheme.of(context)?.timeIndicatorStyleProvider,
             ),

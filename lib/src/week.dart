@@ -55,7 +55,7 @@ class Week implements Comparable<Week> {
     final base = weekOfYear * DateTime.daysPerWeek + dayOfWeek;
     final yearCorrection =
         DateTimeTimetable.date(weekBasedYear, 1, 4).weekday + 3;
-    return DateTimeTimetable.date(weekBasedYear, 1, 1) +
+    return DateTimeTimetable.date(weekBasedYear) +
         (base - yearCorrection - 1).days;
   }
 

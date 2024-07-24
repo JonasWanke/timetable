@@ -138,7 +138,7 @@ class MonthPageController extends ChangeNotifier
 
   // "DateTimes can represent time values that are at a distance of at most
   // 100,000,000 days from epoch […]", which would be -271821-04-20.
-  static final _minMonth = DateTime.utc(-271821, 6, 1);
+  static final _minMonth = DateTime.utc(-271821, 6);
   static final _minPage =
       (_minMonth.year * DateTime.monthsPerYear) + (_minMonth.month - 1);
   static DateTime _monthFromPage(int page) {

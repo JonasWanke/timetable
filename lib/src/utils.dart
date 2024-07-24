@@ -46,7 +46,7 @@ extension DateTimeTimetable on DateTime {
   }
 
   static DateTime month(int year, int month) {
-    final date = DateTime.utc(year, month, 1);
+    final date = DateTime.utc(year, month);
     assert(date.debugCheckIsValidTimetableMonth());
     return date;
   }
@@ -147,7 +147,7 @@ extension DateTimeTimetable on DateTime {
 
   static DateTime dateFromPage(int page) {
     final date = DateTime.fromMillisecondsSinceEpoch(
-      (page * Duration.millisecondsPerDay).toInt(),
+      page * Duration.millisecondsPerDay,
       isUtc: true,
     );
     assert(date.debugCheckIsValidTimetableDate());

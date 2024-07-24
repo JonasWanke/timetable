@@ -70,7 +70,7 @@ void main() {
 
         expect(
           VisibleDateRange.week(startOfWeek: startOfWeek)
-              .getTargetPageForCurrent(page.toDouble()),
+              .getTargetPageForCurrent(page),
           targetPage,
         );
       },

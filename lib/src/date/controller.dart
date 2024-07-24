@@ -24,11 +24,13 @@ class DateController extends ValueNotifier<DatePageValueWithScrollActivity> {
     VisibleDateRange? visibleRange,
   })  : assert(initialDate.debugCheckIsValidTimetableDate()),
         // We set the correct value in the body below.
-        super(DatePageValueWithScrollActivity(
-          visibleRange ?? VisibleDateRange.week(),
-          0,
-          const IdleDateScrollActivity(),
-        )) {
+        super(
+          DatePageValueWithScrollActivity(
+            visibleRange ?? VisibleDateRange.week(),
+            0,
+            const IdleDateScrollActivity(),
+          ),
+        ) {
     // The correct value is set via the listener when we assign to our value.
     _date = ValueNotifier(DateTimeTimetable.dateFromPage(0));
     addListener(() => _date.value = value.date);

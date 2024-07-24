@@ -27,12 +27,14 @@ abstract class Event with Diagnosticable {
     super.debugFillProperties(properties);
     properties.add(DiagnosticsProperty('start', start));
     properties.add(DiagnosticsProperty('end', end));
-    properties.add(FlagProperty(
-      'isAllDay',
-      value: isAllDay,
-      ifTrue: 'all-day',
-      ifFalse: 'part-day',
-    ));
+    properties.add(
+      FlagProperty(
+        'isAllDay',
+        value: isAllDay,
+        ifTrue: 'all-day',
+        ifFalse: 'part-day',
+      ),
+    );
   }
 }
 

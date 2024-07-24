@@ -46,9 +46,10 @@ extension EventProviderTimetable<E extends Event> on EventProvider<E> {
               'visible range.',
             ),
             ErrorDescription(
-              'For the visible range ${visibleRange.start} – ${visibleRange.end}, '
-              "${invalidEvents.length} out of ${events.length} events don't "
-              'intersect this range: $invalidEvents',
+              'For the visible range ${visibleRange.start} – '
+              '${visibleRange.end}, ${invalidEvents.length} out of '
+              "${events.length} events don't intersect this range: "
+              '$invalidEvents',
             ),
             ErrorDescription(
               "This property is enforced so that you don't accidentally, e.g., "

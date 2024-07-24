@@ -334,9 +334,11 @@ class _DayEventsLayoutDelegate<E extends Event>
       for (var i = position.column + 1; i < columns.length; i++) {
         final hasOverlapInColumn = currentGroup
             .where((e) => positions.eventPositions[e]!.column == i)
-            .where((e) =>
-                event.start < _actualEnd(e, height) &&
-                e.start < _actualEnd(event, height))
+            .where(
+              (e) =>
+                  event.start < _actualEnd(e, height) &&
+                  e.start < _actualEnd(event, height),
+            )
             .isNotEmpty;
         if (hasOverlapInColumn) break;
 

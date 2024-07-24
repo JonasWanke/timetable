@@ -110,8 +110,7 @@ class TimeController extends ValueNotifier<TimeRange> {
   final _clients = <TimeControllerClientRegistration>[];
 
   /// The minimum height of all [TimeControllerClientRegistration]s.
-  double? get minClientHeight =>
-      _clients.map((it) => it.height).minOrNull?.toDouble();
+  double? get minClientHeight => _clients.map((it) => it.height).minOrNull;
 
   Duration? _maxDurationFromMinDayHeight;
 

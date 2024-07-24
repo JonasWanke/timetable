@@ -153,7 +153,6 @@ class BasicAllDayEventWidget extends StatelessWidget {
         child: Material(
           shape: AllDayEventBorder(
             info: info,
-            side: BorderSide.none,
             radii: style.radii,
           ),
           clipBehavior: Clip.antiAlias,

@@ -51,7 +51,6 @@ class DateHeader extends StatelessWidget {
                 .copyWith(clearOnDateTap: true),
             child: Column(
               mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 if (style.showWeekdayIndicator) WeekdayIndicator(date),
                 if (style.showWeekdayIndicator && style.showDateIndicator)

@@ -97,75 +97,77 @@ class _TimeZoomState extends State<TimeZoom>
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(builder: (context, constraints) {
-      _parentHeight = constraints.maxHeight;
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        _parentHeight = constraints.maxHeight;
 
-      final heightToReport =
-          _parentHeight * (1.days / _controller!.maxRange.duration);
-      if (_registration == null || heightToReport != _registration!.height) {
-        scheduleMicrotask(() {
-          // This might update the controller's value, causing a rebuild
-          //  which is not permitted during the build phase).
-          if (_registration == null) {
-            _registration = _controller!.registerClient(heightToReport);
-          } else {
-            _registration!.notifyHeightChanged(heightToReport);
-          }
-        });
-      }
+        final heightToReport =
+            _parentHeight * (1.days / _controller!.maxRange.duration);
+        if (_registration == null || heightToReport != _registration!.height) {
+          scheduleMicrotask(() {
+            // This might update the controller's value, causing a rebuild
+            //  which is not permitted during the build phase).
+            if (_registration == null) {
+              _registration = _controller!.registerClient(heightToReport);
+            } else {
+              _registration!.notifyHeightChanged(heightToReport);
+            }
+          });
+        }
 
-      _scrollController ??= _ScrollController(
-        getOffset: () => _outerOffset,
-        setOffset: _setOffset,
-      );
+        _scrollController ??= _ScrollController(
+          getOffset: () => _outerOffset,
+          setOffset: _setOffset,
+        );
 
-      return RawGestureDetector(
-        gestures: {
-          // We can't use a `GestureDetector` with scaling as that uses
-          // `computePanSlop` to determine the minimum distance a pointer has
-          // to move before it is considered a pan (in this case, a scroll).
-          // If this widget is used in a scrollable context, then the outer
-          // scrollable view would always win in the gesture arena because it
-          // uses `computeHitSlop`, which is half that amount.
-          _ScaleGestureRecognizer:
-              GestureRecognizerFactoryWithHandlers<_ScaleGestureRecognizer>(
-            () => _ScaleGestureRecognizer(debugOwner: this),
-            (instance) {
-              instance
-                ..onStart = _onScaleStart
-                ..onUpdate = _onScaleUpdate
-                ..onEnd = _onScaleEnd
-                ..dragStartBehavior = DragStartBehavior.down;
-            },
-          ),
-        },
-        child: ClipRect(
-          child: _NoDragSingleChildScrollView(
-            controller: _scrollController!,
-            child: ValueListenableBuilder(
-              valueListenable: _controller!,
-              builder: (context, _, child) {
-                // Layouts the child so only [_controller.maxRange] is
-                // visible.
-                final innerChildHeight = _outerChildHeight *
-                    (1.days / _controller!.maxRange.duration);
-                final innerOffset = -innerChildHeight *
-                    (_controller!.maxRange.startTime / 1.days);
-
-                return SizedBox(
-                  height: _outerChildHeight,
-                  child: _VerticalOverflowBox(
-                    offset: innerOffset,
-                    height: innerChildHeight,
-                    child: widget.child,
-                  ),
-                );
+        return RawGestureDetector(
+          gestures: {
+            // We can't use a `GestureDetector` with scaling as that uses
+            // `computePanSlop` to determine the minimum distance a pointer has
+            // to move before it is considered a pan (in this case, a scroll).
+            // If this widget is used in a scrollable context, then the outer
+            // scrollable view would always win in the gesture arena because it
+            // uses `computeHitSlop`, which is half that amount.
+            _ScaleGestureRecognizer:
+                GestureRecognizerFactoryWithHandlers<_ScaleGestureRecognizer>(
+              () => _ScaleGestureRecognizer(debugOwner: this),
+              (instance) {
+                instance
+                  ..onStart = _onScaleStart
+                  ..onUpdate = _onScaleUpdate
+                  ..onEnd = _onScaleEnd
+                  ..dragStartBehavior = DragStartBehavior.down;
               },
             ),
+          },
+          child: ClipRect(
+            child: _NoDragSingleChildScrollView(
+              controller: _scrollController!,
+              child: ValueListenableBuilder(
+                valueListenable: _controller!,
+                builder: (context, _, child) {
+                  // Layouts the child so only [_controller.maxRange] is
+                  // visible.
+                  final innerChildHeight = _outerChildHeight *
+                      (1.days / _controller!.maxRange.duration);
+                  final innerOffset = -innerChildHeight *
+                      (_controller!.maxRange.startTime / 1.days);
+
+                  return SizedBox(
+                    height: _outerChildHeight,
+                    child: _VerticalOverflowBox(
+                      offset: innerOffset,
+                      height: innerChildHeight,
+                      child: widget.child,
+                    ),
+                  );
+                },
+              ),
+            ),
           ),
-        ),
-      );
-    });
+        );
+      },
+    );
   }
 
   void _setOffset(double value) {
@@ -604,12 +606,7 @@ class _ScaleGestureRecognizer extends OneSequenceGestureRecognizer {
         } else {
           invokeCallback(
             'onEnd',
-            () => onEnd!(
-              ScaleEndDetails(
-                velocity: Velocity.zero,
-                pointerCount: _pointerQueue.length,
-              ),
-            ),
+            () => onEnd!(ScaleEndDetails(pointerCount: _pointerQueue.length)),
           );
         }
       }
@@ -648,18 +645,20 @@ class _ScaleGestureRecognizer extends OneSequenceGestureRecognizer {
 
     if (_state == _ScaleState.started && onUpdate != null) {
       invokeCallback('onUpdate', () {
-        onUpdate!(ScaleUpdateDetails(
-          scale: _scaleFactor,
-          horizontalScale: _horizontalScaleFactor,
-          verticalScale: _verticalScaleFactor,
-          focalPoint: _currentFocalPoint,
-          localFocalPoint: PointerEvent.transformPosition(
-            _lastTransform,
-            _currentFocalPoint,
+        onUpdate!(
+          ScaleUpdateDetails(
+            scale: _scaleFactor,
+            horizontalScale: _horizontalScaleFactor,
+            verticalScale: _verticalScaleFactor,
+            focalPoint: _currentFocalPoint,
+            localFocalPoint: PointerEvent.transformPosition(
+              _lastTransform,
+              _currentFocalPoint,
+            ),
+            rotation: _computeRotationFactor(),
+            pointerCount: _pointerQueue.length,
           ),
-          rotation: _computeRotationFactor(),
-          pointerCount: _pointerQueue.length,
-        ));
+        );
       });
     }
   }
@@ -668,14 +667,16 @@ class _ScaleGestureRecognizer extends OneSequenceGestureRecognizer {
     assert(_state == _ScaleState.started);
     if (onStart != null) {
       invokeCallback('onStart', () {
-        onStart!(ScaleStartDetails(
-          focalPoint: _currentFocalPoint,
-          localFocalPoint: PointerEvent.transformPosition(
-            _lastTransform,
-            _currentFocalPoint,
+        onStart!(
+          ScaleStartDetails(
+            focalPoint: _currentFocalPoint,
+            localFocalPoint: PointerEvent.transformPosition(
+              _lastTransform,
+              _currentFocalPoint,
+            ),
+            pointerCount: _pointerQueue.length,
           ),
-          pointerCount: _pointerQueue.length,
-        ));
+        );
       });
     }
   }
@@ -705,15 +706,12 @@ class _ScaleGestureRecognizer extends OneSequenceGestureRecognizer {
     switch (_state) {
       case _ScaleState.possible:
         resolve(GestureDisposition.rejected);
-        break;
       case _ScaleState.ready:
         assert(false); // We should have not seen a pointer yet
-        break;
       case _ScaleState.accepted:
         break;
       case _ScaleState.started:
         assert(false); // We should be in the accepted state when user is done
-        break;
     }
     _state = _ScaleState.ready;
   }
@@ -824,7 +822,8 @@ class _ScrollPositionWithSingleContext extends ScrollPositionWithSingleContext {
     required Curve curve,
   }) {
     throw UnsupportedError(
-      "TimeZoom's `_ScrollPositionWithSingleContext` doesn't support `animateTo`.",
+      "TimeZoom's `_ScrollPositionWithSingleContext` doesn't support "
+      '`animateTo`.',
     );
   }
 
@@ -843,7 +842,8 @@ class _ScrollPositionWithSingleContext extends ScrollPositionWithSingleContext {
   @override
   void jumpToWithoutSettling(double value) {
     throw UnsupportedError(
-      "TimeZoom's `_ScrollPositionWithSingleContext` doesn't support `jumpToWithoutSettling`.",
+      "TimeZoom's `_ScrollPositionWithSingleContext` doesn't support "
+      '`jumpToWithoutSettling`.',
     );
   }
 

@@ -1,6 +1,6 @@
 name: timetable
 description: Customizable, animated calendar widget including day, week, and month views
-version: 1.0.0-alpha.13
+version: 1.0.0-alpha.14
 repository: https://github.com/JonasWanke/timetable
 screenshots:
   - description: Navigation with synchronized month and week views

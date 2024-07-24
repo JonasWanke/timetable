@@ -6,7 +6,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 
 <!-- Template:
-## NEW · 2023-xx-xx
+## NEW · 2024-xx-xx
 
 ### ⚠️ BREAKING CHANGES
 ### 🎉 New Features
@@ -16,6 +16,18 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### 🏗️ Refactoring
 ### 📦 Build & CI
 -->
+
+## 1.0.0-alpha.14 · 2024-07-24
+
+### 🎉 New Features
+* add `key` parameter to all public widgets ([`aa72a76`](https://github.com/JonasWanke/timetable/commit/aa72a76372ff0c1598331a5fa0d78150d60dde51))
+
+### ⚡ Changes
+* migrate from `colorScheme.background` to `.surface`, `.onBackground` to `.onSurface` ([`41d27d2`](https://github.com/JonasWanke/timetable/commit/41d27d29524f64a2328fb5a45c175065931efb7a))
+* mark `…Style` classes as `@immutable` ([`df6aef7`](https://github.com/JonasWanke/timetable/commit/df6aef7a944594ae498e68220a406c5b040f767d))
+
+### 📦 Build & CI
+* widen `intl` support to `>=0.17.0 <0.20.0` ([#166](https://github.com/JonasWanke/timetable/pull/166)), closes: [#159](https://github.com/JonasWanke/timetable/issues/159). Thanks to [@MasterHiei](https://github.com/MasterHiei)!
 
 ## 1.0.0-alpha.13 · 2023-05-30
 

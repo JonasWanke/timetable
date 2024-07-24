@@ -230,6 +230,7 @@ class MultiDateTimetableContent<E extends Event> extends StatelessWidget {
 
 /// Defines visual properties for [MultiDateTimetable] and
 /// [RecurringMultiDateTimetable].
+@immutable
 class MultiDateTimetableStyle {
   factory MultiDateTimetableStyle(
     // To allow future updates to use the context and align the parameters to

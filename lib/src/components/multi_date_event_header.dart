@@ -111,6 +111,7 @@ class MultiDateEventHeader<E extends Event> extends StatelessWidget {
 }
 
 /// Defines visual properties for [MultiDateEventHeader].
+@immutable
 class MultiDateEventHeaderStyle {
   factory MultiDateEventHeaderStyle(
     // To allow future updates to use the context and align the parameters to

@@ -63,6 +63,7 @@ class DateEvents<E extends Event> extends StatelessWidget {
 /// See also:
 ///
 /// * [TimetableThemeData], which bundles the styles for all Timetable widgets.
+@immutable
 class DateEventsStyle {
   factory DateEventsStyle(
     // To allow future updates to use the context and align the parameters to

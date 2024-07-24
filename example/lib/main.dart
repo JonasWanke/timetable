@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:black_hole_flutter/black_hole_flutter.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
@@ -11,10 +13,12 @@ import 'utils.dart';
 
 Future<void> main() async {
   initDebugOverlay();
-  runApp(ExampleApp(child: TimetableExample()));
+  runApp(const ExampleApp(child: TimetableExample()));
 }
 
 class TimetableExample extends StatefulWidget {
+  const TimetableExample({super.key});
+
   @override
   State<TimetableExample> createState() => _TimetableExampleState();
 }
@@ -63,14 +67,16 @@ class _TimetableExampleState extends State<TimetableExample>
       timeController: _timeController,
       eventBuilder: (context, event) => _buildPartDayEvent(event),
       // ignore: sort_child_properties_last
-      child: Column(children: [
-        _buildAppBar(),
-        Expanded(
-          child: _isRecurringLayout
-              ? RecurringMultiDateTimetable<BasicEvent>()
-              : MultiDateTimetable<BasicEvent>(),
-        ),
-      ]),
+      child: Column(
+        children: [
+          _buildAppBar(),
+          Expanded(
+            child: _isRecurringLayout
+                ? RecurringMultiDateTimetable<BasicEvent>()
+                : MultiDateTimetable<BasicEvent>(),
+          ),
+        ],
+      ),
       // Optional:
       eventProvider: eventProviderFromFixedList(positioningDemoEvents),
       allDayEventBuilder: (context, event, info) => BasicAllDayEventWidget(
@@ -92,14 +98,16 @@ class _TimetableExampleState extends State<TimetableExample>
         onWeekTap: (week) {
           _showSnackBar('Tapped on week $week.');
           _updateVisibleDateRange(PredefinedVisibleDateRange.week);
-          _dateController.animateTo(
-            week.getDayOfWeek(DateTime.monday),
-            vsync: this,
+          unawaited(
+            _dateController.animateTo(
+              week.getDayOfWeek(DateTime.monday),
+              vsync: this,
+            ),
           );
         },
         onDateTap: (date) {
           _showSnackBar('Tapped on date $date.');
-          _dateController.animateTo(date, vsync: this);
+          unawaited(_dateController.animateTo(date, vsync: this));
         },
         onDateBackgroundTap: (date) =>
             _showSnackBar('Tapped on date background at $date.'),
@@ -172,8 +180,8 @@ class _TimetableExampleState extends State<TimetableExample>
         IconButton(
           icon: const Icon(Icons.today),
           onPressed: () {
-            _dateController.animateToToday(vsync: this);
-            _timeController.animateToShowFullDay(vsync: this);
+            unawaited(_dateController.animateToToday(vsync: this));
+            unawaited(_timeController.animateToShowFullDay(vsync: this));
           },
           tooltip: 'Go to today',
         ),
@@ -194,24 +202,28 @@ class _TimetableExampleState extends State<TimetableExample>
     );
 
     if (!_isRecurringLayout) {
-      child = Column(children: [
-        child,
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: Builder(builder: (context) {
-            return DefaultTimetableCallbacks(
-              callbacks: DefaultTimetableCallbacks.of(context)!.copyWith(
-                onDateTap: (date) {
-                  _showSnackBar('Tapped on date $date.');
-                  _updateVisibleDateRange(PredefinedVisibleDateRange.day);
-                  _dateController.animateTo(date, vsync: this);
-                },
-              ),
-              child: CompactMonthTimetable(),
-            );
-          }),
-        ),
-      ]);
+      child = Column(
+        children: [
+          child,
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: Builder(
+              builder: (context) {
+                return DefaultTimetableCallbacks(
+                  callbacks: DefaultTimetableCallbacks.of(context)!.copyWith(
+                    onDateTap: (date) {
+                      _showSnackBar('Tapped on date $date.');
+                      _updateVisibleDateRange(PredefinedVisibleDateRange.day);
+                      unawaited(_dateController.animateTo(date, vsync: this));
+                    },
+                  ),
+                  child: CompactMonthTimetable(),
+                );
+              },
+            ),
+          ),
+        ],
+      );
     }
 
     return Material(color: colorScheme.surface, elevation: 4, child: child);

@@ -1,67 +1,9 @@
-include: package:flutter_lints/flutter.yaml
-
-analyzer:
-  language:
-    strict-casts: true
-    strict-inference: true
-    strict-raw-types: true
-  exclude:
-    - lib/generated_plugin_registrant.dart
+include: package:supernova/lints.yaml
 
 linter:
   rules:
-    always_declare_return_types: true
-    avoid_bool_literals_in_conditional_expressions: true
-    avoid_catching_errors: true
-    avoid_double_and_int_checks: true
-    avoid_field_initializers_in_const_classes: true
-    avoid_final_parameters: true
-    avoid_implementing_value_types: true
-    avoid_js_rounded_ints: true
-    avoid_positional_boolean_parameters: true
-    avoid_returning_this: true
-    avoid_setters_without_getters: true
-    avoid_slow_async_io: true
-    avoid_types_on_closure_parameters: true
-    avoid_unused_constructor_parameters: true
-    avoid_void_async: true
-    cancel_subscriptions: true
-    cast_nullable_to_non_nullable: true
-    close_sinks: true
-    comment_references: true
-    conditional_uri_does_not_exist: true
-    depend_on_referenced_packages: false
-    directives_ordering: true
-    flutter_style_todos: true
-    join_return_with_assignment: true
-    no_adjacent_strings_in_list: true
-    omit_local_variable_types: true
-    only_throw_errors: true
-    prefer_asserts_in_initializer_lists: true
-    prefer_final_in_for_each: true
-    prefer_final_locals: true
-    prefer_foreach: true
-    prefer_if_elements_to_conditional_expressions: true
-    prefer_int_literals: true
-    prefer_relative_imports: true
-    prefer_single_quotes: true
-    secure_pubspec_urls: true
-    sized_box_shrink_expand: true
-    sort_constructors_first: true
-    sort_pub_dependencies: true
-    sort_unnamed_constructors_first: true
-    test_types_in_equals: true
-    throw_in_finally: true
-    tighten_type_of_initializing_formals: true
-    unawaited_futures: true
-    unnecessary_lambdas: true
-    unnecessary_parenthesis: true
-    unnecessary_statements: true
-    unsafe_html: true
-    use_colored_box: true
-    use_decorated_box: true
-    use_enums: true
-    use_key_in_widget_constructors: false
-    use_setters_to_change_properties: true
-    use_string_buffers: true
-    use_super_parameters: true
+    use_key_in_widget_constructors: ignore
+
+dart_code_metrics:
+  rules:
+    prefer-extracting-callbacks: false

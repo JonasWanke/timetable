@@ -33,9 +33,12 @@ dependencies:
   meta: ^1.3.0
 
 dev_dependencies:
-  dart_code_metrics: ^5.0.1
-  flutter_lints: ^2.0.1
   flutter_test:
     sdk: flutter
   glados: ^1.0.0
+  supernova:
+    git:
+      url: https://github.com/JonasWanke/supernova.git
+      path: supernova
+      ref: c89aad86b75155d5ea8c61c9a0d9ac635c1b92ec
   test: ^1.9.4

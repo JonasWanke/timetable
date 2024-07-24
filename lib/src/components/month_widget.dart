@@ -21,6 +21,7 @@ import 'weekday_indicator.dart';
 class MonthWidget extends StatelessWidget {
   MonthWidget(
     this.month, {
+    super.key,
     DateWidgetBuilder? weekDayBuilder,
     WeekWidgetBuilder? weekBuilder,
     DateWidgetBuilder? dateBuilder,

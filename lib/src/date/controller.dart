@@ -284,7 +284,11 @@ class DrivenDateScrollActivity extends DateScrollActivity {
 /// * [TimetableConfig], which bundles multiple configuration widgets for
 ///   Timetable.
 class DefaultDateController extends InheritedWidget {
-  const DefaultDateController({required this.controller, required super.child});
+  const DefaultDateController({
+    super.key,
+    required this.controller,
+    required super.child,
+  });
 
   final DateController controller;
 

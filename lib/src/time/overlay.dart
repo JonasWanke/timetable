@@ -54,6 +54,7 @@ TimeOverlayProvider mergeTimeOverlayProviders(
 
 class DefaultTimeOverlayProvider extends InheritedWidget {
   const DefaultTimeOverlayProvider({
+    super.key,
     required this.overlayProvider,
     required super.child,
   });

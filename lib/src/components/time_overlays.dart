@@ -15,7 +15,7 @@ import 'date_content.dart';
 /// * [DateContent], which displays [Event]s and [TimeOverlay]s and also honors
 ///   the `position`s.
 class TimeOverlays extends StatelessWidget {
-  const TimeOverlays({required this.overlays});
+  const TimeOverlays({super.key, required this.overlays});
 
   final List<TimeOverlay> overlays;
 

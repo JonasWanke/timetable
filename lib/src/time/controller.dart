@@ -231,6 +231,7 @@ class TimeController extends ValueNotifier<TimeRange> {
 ///   Timetable.
 class DefaultTimeController extends InheritedWidget {
   const DefaultTimeController({
+    super.key,
     required this.controller,
     required super.child,
   });

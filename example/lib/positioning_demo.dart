@@ -250,8 +250,9 @@ List<TimeOverlay> positioningDemoOverlayProvider(
 ) {
   assert(date.debugCheckIsValidTimetableDate());
 
-  final widget =
-      ColoredBox(color: context.theme.brightness.contrastColor.withOpacity(.1));
+  final widget = ColoredBox(
+    color: context.theme.brightness.contrastColor.withOpacity(0.1),
+  );
 
   if (DateTime.monday <= date.weekday && date.weekday <= DateTime.friday) {
     return [

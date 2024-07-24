@@ -237,36 +237,26 @@ enum PredefinedVisibleDateRange { day, threeDays, workWeek, week, fixed }
 
 extension on PredefinedVisibleDateRange {
   VisibleDateRange get visibleDateRange {
-    switch (this) {
-      case PredefinedVisibleDateRange.day:
-        return VisibleDateRange.days(1);
-      case PredefinedVisibleDateRange.threeDays:
-        return VisibleDateRange.days(3);
-      case PredefinedVisibleDateRange.workWeek:
-        return VisibleDateRange.weekAligned(5);
-      case PredefinedVisibleDateRange.week:
-        return VisibleDateRange.week();
-      case PredefinedVisibleDateRange.fixed:
-        return VisibleDateRange.fixed(
+    return switch (this) {
+      PredefinedVisibleDateRange.day => VisibleDateRange.days(1),
+      PredefinedVisibleDateRange.threeDays => VisibleDateRange.days(3),
+      PredefinedVisibleDateRange.workWeek => VisibleDateRange.weekAligned(5),
+      PredefinedVisibleDateRange.week => VisibleDateRange.week(),
+      PredefinedVisibleDateRange.fixed => VisibleDateRange.fixed(
           DateTimeTimetable.today(),
           DateTime.daysPerWeek,
-        );
-    }
+        ),
+    };
   }
 
   String get title {
-    switch (this) {
-      case PredefinedVisibleDateRange.day:
-        return 'Day';
-      case PredefinedVisibleDateRange.threeDays:
-        return '3 Days';
-      case PredefinedVisibleDateRange.workWeek:
-        return 'Work Week';
-      case PredefinedVisibleDateRange.week:
-        return 'Week';
-      case PredefinedVisibleDateRange.fixed:
-        return '7 Days (fixed)';
-    }
+    return switch (this) {
+      PredefinedVisibleDateRange.day => 'Day',
+      PredefinedVisibleDateRange.threeDays => '3 Days',
+      PredefinedVisibleDateRange.workWeek => 'Work Week',
+      PredefinedVisibleDateRange.week => 'Week',
+      PredefinedVisibleDateRange.fixed => '7 Days (fixed)',
+    };
   }
 }
 

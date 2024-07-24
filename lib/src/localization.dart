@@ -84,31 +84,19 @@ class TimetableLocalizationsDelegate
   bool shouldReload(TimetableLocalizationsDelegate old) => false;
 
   static TimetableLocalizations? _getLocalization(Locale locale) {
-    switch (locale.languageCode) {
-      case 'de':
-        return const TimetableLocalizationDe();
-      case 'en':
-        return const TimetableLocalizationEn();
-      case 'es':
-        return const TimetableLocalizationEs();
-      case 'fr':
-        return const TimetableLocalizationFr();
-      case 'hu':
-        return const TimetableLocalizationHu();
-      case 'it':
-        return const TimetableLocalizationIt();
-      case 'ja':
-        return const TimetableLocalizationJa();
-      case 'pt':
-        return const TimetableLocalizationPt();
-      case 'zh':
-        if (locale.countryCode?.toLowerCase() == 'tw') {
-          return const TimetableLocalizationZhTw();
-        }
-        return const TimetableLocalizationZhCn();
-      default:
-        return null;
-    }
+    return switch ((locale.languageCode, locale.countryCode?.toUpperCase())) {
+      ('de', _) => const TimetableLocalizationDe(),
+      ('en', _) => const TimetableLocalizationEn(),
+      ('es', _) => const TimetableLocalizationEs(),
+      ('fr', _) => const TimetableLocalizationFr(),
+      ('hu', _) => const TimetableLocalizationHu(),
+      ('it', _) => const TimetableLocalizationIt(),
+      ('ja', _) => const TimetableLocalizationJa(),
+      ('pt', _) => const TimetableLocalizationPt(),
+      ('zh', 'TW') => const TimetableLocalizationZhTw(),
+      ('zh', _) => const TimetableLocalizationZhCn(),
+      _ => null,
+    };
   }
 }
 

@@ -18,8 +18,5 @@ dependencies:
 dev_dependencies:
   flutter_lints: ^2.0.3
 
-dependency_overrides:
-  intl: ^0.18.0
-
 flutter:
   uses-material-design: true

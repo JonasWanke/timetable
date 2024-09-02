@@ -9,7 +9,7 @@ environment:
 dependencies:
   black_hole_flutter: ^1.1.0
   collection: ^1.18.0
-  debug_overlay: ^0.2.1
+  debug_overlay: ^0.2.12
   flutter:
     sdk: flutter
   flutter_localizations:

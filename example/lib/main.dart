@@ -1,7 +1,8 @@
+// ignore_for_file: avoid_print
+
 import 'dart:async';
 
 import 'package:black_hole_flutter/black_hole_flutter.dart';
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:time/time.dart';
@@ -91,7 +92,7 @@ class _TimetableExampleState extends State<TimetableExample>
               (it) =>
                   it.toTimeOverlay(date: date, widget: BasicEventWidget(it)),
             )
-            .whereNotNull()
+            .nonNulls
             .toList(),
       ]),
       callbacks: TimetableCallbacks(
@@ -259,5 +260,3 @@ extension on PredefinedVisibleDateRange {
     };
   }
 }
-
-// ignore_for_file: avoid_print, unused_element

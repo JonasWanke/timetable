@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 env:
-  JAVA_VERSION: 12.x
+  JAVA_VERSION: 17
 
 jobs:
   test:

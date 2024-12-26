@@ -15,23 +15,27 @@ import 'date_content.dart';
 /// * [DateContent], which displays [Event]s and [TimeOverlay]s and also honors
 ///   the `position`s.
 class TimeOverlays extends StatelessWidget {
-  const TimeOverlays({required this.overlays});
+  const TimeOverlays({super.key, required this.overlays});
 
   final List<TimeOverlay> overlays;
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(builder: (context, constraints) {
-      final height = constraints.maxHeight;
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final height = constraints.maxHeight;
 
-      return Stack(children: [
-        for (final overlay in overlays)
-          Positioned.fill(
-            top: (overlay.start / 1.days) * height,
-            bottom: (1 - overlay.end / 1.days) * height,
-            child: overlay.widget,
-          ),
-      ]);
-    });
+        return Stack(
+          children: [
+            for (final overlay in overlays)
+              Positioned.fill(
+                top: (overlay.start / 1.days) * height,
+                bottom: (1 - overlay.end / 1.days) * height,
+                child: overlay.widget,
+              ),
+          ],
+        );
+      },
+    );
   }
 }

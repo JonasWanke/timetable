@@ -59,7 +59,7 @@ class NowIndicatorStyle {
     Color? lineColor,
     double? lineWidth,
   }) {
-    final defaultColor = context.theme.colorScheme.onBackground;
+    final defaultColor = context.theme.colorScheme.onSurface;
     return NowIndicatorStyle.raw(
       shape: shape ?? CircleNowIndicatorShape(color: defaultColor),
       lineColor: lineColor ?? defaultColor,

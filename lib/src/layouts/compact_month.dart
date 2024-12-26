@@ -13,6 +13,7 @@ import '../utils.dart';
 /// [DateController].
 class CompactMonthTimetable extends StatefulWidget {
   CompactMonthTimetable({
+    super.key,
     YearMonthWidgetBuilder? monthBuilder,
   }) : monthBuilder = monthBuilder ?? ((context, month) => MonthWidget(month));
 

@@ -131,6 +131,7 @@ class TimetableCallbacks {
 /// [DefaultTimetableCallbacks] widgets above this on are overridden.
 class DefaultTimetableCallbacks extends InheritedWidget {
   const DefaultTimetableCallbacks({
+    super.key,
     required this.callbacks,
     required super.child,
   });

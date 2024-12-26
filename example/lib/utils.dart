@@ -69,7 +69,7 @@ class ExampleApp extends StatelessWidget {
     );
     theme = theme.copyWith(
       colorScheme: theme.colorScheme
-          .copyWith(onBackground: theme.colorScheme.background.contrastColor),
+          .copyWith(onSurface: theme.colorScheme.surface.contrastColor),
       textTheme: theme.textTheme.copyWith(
         titleLarge:
             theme.textTheme.titleLarge!.copyWith(fontWeight: FontWeight.normal),

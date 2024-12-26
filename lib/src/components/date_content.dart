@@ -44,22 +44,27 @@ class DateContent<E extends Event> extends StatelessWidget {
     final onBackgroundTap = this.onBackgroundTap ??
         DefaultTimetableCallbacks.of(context)?.onDateTimeBackgroundTap;
 
-    return LayoutBuilder(builder: (context, constraints) {
-      final height = constraints.maxHeight;
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final height = constraints.maxHeight;
 
-      return GestureDetector(
-        behavior: HitTestBehavior.translucent,
-        onTapUp: onBackgroundTap != null
-            ? (details) =>
-                onBackgroundTap(date + (details.localPosition.dy / height).days)
-            : null,
-        child: Stack(children: [
-          _buildOverlaysForPosition(TimeOverlayPosition.behindEvents),
-          DateEvents<E>(date: date, events: events),
-          _buildOverlaysForPosition(TimeOverlayPosition.inFrontOfEvents),
-        ]),
-      );
-    });
+        return GestureDetector(
+          behavior: HitTestBehavior.translucent,
+          onTapUp: onBackgroundTap != null
+              ? (details) => onBackgroundTap(
+                    date + (details.localPosition.dy / height).days,
+                  )
+              : null,
+          child: Stack(
+            children: [
+              _buildOverlaysForPosition(TimeOverlayPosition.behindEvents),
+              DateEvents<E>(date: date, events: events),
+              _buildOverlaysForPosition(TimeOverlayPosition.inFrontOfEvents),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   Widget _buildOverlaysForPosition(TimeOverlayPosition position) {

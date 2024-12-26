@@ -25,11 +25,13 @@ class DateController extends ValueNotifier<DatePageValueWithScrollActivity> {
     VisibleDateRange? visibleRange,
   }) :
         // We set the correct value in the body below.
-        super(DatePageValueWithScrollActivity(
-          visibleRange ?? VisibleDateRange.week(),
-          0,
-          const IdleDateScrollActivity(),
-        )) {
+        super(
+          DatePageValueWithScrollActivity(
+            visibleRange ?? VisibleDateRange.week(),
+            0,
+            const IdleDateScrollActivity(),
+          ),
+        ) {
     // The correct value is set via the listener when we assign to our value.
     _date = ValueNotifier(Date.unixEpoch);
     addListener(() => _date.value = value.date);
@@ -273,7 +275,11 @@ class DrivenDateScrollActivity extends DateScrollActivity {
 /// * [TimetableConfig], which bundles multiple configuration widgets for
 ///   Timetable.
 class DefaultDateController extends InheritedWidget {
-  const DefaultDateController({required this.controller, required super.child});
+  const DefaultDateController({
+    super.key,
+    required this.controller,
+    required super.child,
+  });
 
   final DateController controller;
 

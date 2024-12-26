@@ -62,7 +62,7 @@ class WeekdayIndicatorStyle {
           theme.textTheme.bodySmall!.copyWith(
             color: date.isTodayInLocalZone()
                 ? theme.colorScheme.primary
-                : theme.colorScheme.background.mediumEmphasisOnColor,
+                : theme.colorScheme.surface.mediumEmphasisOnColor,
           ),
       label: label ??
           () {

@@ -195,7 +195,7 @@ class _RenderWeekIndicatorText extends RenderBox {
         text: TextSpan(text: it, style: _style),
         textDirection: textDirection,
         maxLines: 1,
-      )..layout(minWidth: 0, maxWidth: double.infinity);
+      )..layout();
     }).toList();
   }
 
@@ -203,26 +203,26 @@ class _RenderWeekIndicatorText extends RenderBox {
 
   @override
   double computeMinIntrinsicWidth(double height) =>
-      _labelPainters.map((it) => it.width).min.toDouble();
+      _labelPainters.map((it) => it.width).min;
   @override
   double computeMaxIntrinsicWidth(double height) {
     final widths = _labelPainters.map((it) => it.width);
-    return (alwaysUseNarrowestVariant ? widths.min : widths.max).toDouble();
+    return (alwaysUseNarrowestVariant ? widths.min : widths.max);
   }
 
   @override
   double computeMinIntrinsicHeight(double width) =>
-      _labelPainters.map((it) => it.height).min.toDouble();
+      _labelPainters.map((it) => it.height).min;
   @override
   double computeMaxIntrinsicHeight(double width) {
     final heights = _labelPainters.map((it) => it.height);
-    return (alwaysUseNarrowestVariant ? heights.min : heights.max).toDouble();
+    return (alwaysUseNarrowestVariant ? heights.min : heights.max);
   }
 
   @override
   void performLayout() {
     for (final painter in _labelPainters) {
-      painter.layout(minWidth: 0, maxWidth: double.infinity);
+      painter.layout();
     }
 
     TextPainter narrowestPainter() => _labelPainters.minBy((it) => it.width)!;
@@ -275,7 +275,7 @@ class WeekIndicatorStyle {
           padding ?? const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
       textStyle: textStyle ??
           context.textTheme.bodyMedium!
-              .copyWith(color: colorScheme.background.mediumEmphasisOnColor),
+              .copyWith(color: colorScheme.surface.mediumEmphasisOnColor),
       labels: labels ?? localizations.weekLabels(yearWeek),
     );
   }

@@ -12,6 +12,7 @@ import '../utils.dart';
 /// axis.
 class MonthPageView extends StatefulWidget {
   const MonthPageView({
+    super.key,
     this.monthPageController,
     this.shrinkWrapInCrossAxis = false,
     required this.builder,

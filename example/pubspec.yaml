@@ -7,20 +7,24 @@ environment:
   flutter: '>=3.22.0'
 
 dependencies:
+  black_hole_flutter: ^1.1.0
   chrono: ^0.1.0
+  collection: ^1.18.0
   debug_overlay: ^0.2.1
   flutter:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
+  time: ^2.1.4
   timetable:
     path: ../
 
 dev_dependencies:
-  flutter_lints: ^2.0.3
-
-dependency_overrides:
-  intl: ^0.18.0
+  supernova:
+    git:
+      url: https://github.com/JonasWanke/supernova.git
+      path: supernova
+      ref: c89aad86b75155d5ea8c61c9a0d9ac635c1b92ec
 
 flutter:
   uses-material-design: true

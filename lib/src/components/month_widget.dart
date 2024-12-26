@@ -21,6 +21,7 @@ import 'weekday_indicator.dart';
 class MonthWidget extends StatelessWidget {
   MonthWidget(
     this.yearMonth, {
+    super.key,
     DateWidgetBuilder? weekDayBuilder,
     YearWeekWidgetBuilder? weekBuilder,
     DateWidgetBuilder? dateBuilder,
@@ -53,7 +54,7 @@ class MonthWidget extends StatelessWidget {
                     timetableTheme.dateIndicatorStyleProvider(date);
                 dateStyle = original.copyWith(
                   textStyle: original.textStyle.copyWith(
-                    color: context.theme.colorScheme.background.disabledOnColor,
+                    color: context.theme.colorScheme.surface.disabledOnColor,
                   ),
                 );
               }

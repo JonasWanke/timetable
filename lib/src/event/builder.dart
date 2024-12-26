@@ -17,6 +17,7 @@ typedef AllDayOverflowBuilder<E extends Event> = Widget Function(
 
 class DefaultEventBuilder<E extends Event> extends InheritedWidget {
   DefaultEventBuilder({
+    super.key,
     required this.builder,
     AllDayEventBuilder<E>? allDayBuilder,
     AllDayOverflowBuilder<E>? allDayOverflowBuilder,

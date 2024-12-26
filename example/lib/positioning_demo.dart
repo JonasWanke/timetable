@@ -165,8 +165,9 @@ List<TimeOverlay> positioningDemoOverlayProvider(
   BuildContext context,
   Date date,
 ) {
-  final widget =
-      ColoredBox(color: context.theme.brightness.contrastColor.withOpacity(.1));
+  final widget = ColoredBox(
+    color: context.theme.brightness.contrastColor.withOpacity(0.1),
+  );
 
   if (Weekday.monday <= date.weekday && date.weekday <= Weekday.friday) {
     return [

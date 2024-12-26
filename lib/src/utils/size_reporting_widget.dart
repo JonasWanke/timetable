@@ -59,6 +59,7 @@ class _SizeReportingWidgetState extends State<SizeReportingWidget> {
 // Copied and modified from: https://github.com/Limbou/expandable_page_view/blob/d692cff38f9e098ad5c020d80123a13ab2a53083/lib/expandable_page_view.dart
 class ImmediateSizeReportingOverflowPage extends StatelessWidget {
   const ImmediateSizeReportingOverflowPage({
+    super.key,
     required this.onSizeChanged,
     required this.child,
   });

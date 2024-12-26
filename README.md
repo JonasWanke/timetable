@@ -9,12 +9,15 @@
 | ![](https://github.com/JonasWanke/timetable/raw/main/doc/demo-callbacks.webp?raw=true) | ![](https://github.com/JonasWanke/timetable/raw/main/doc/demo-visibleDateRange.webp?raw=true) |
 
 - [Available Layouts](#available-layouts)
+  - [`MultiDateTimetable`](#multidatetimetable)
+  - [`RecurringMultiDateTimetable`](#recurringmultidatetimetable)
+  - [`CompactMonthTimetable`](#compactmonthtimetable)
 - [Getting started](#getting-started)
   - [0. General Information](#0-general-information)
   - [1. Define your `Event`s](#1-define-your-events)
   - [2. Create a `DateController` (optional)](#2-create-a-datecontroller-optional)
   - [3. Create a `TimeController` (optional)](#3-create-a-timecontroller-optional)
-  - [4. Create your Timetable](#4-create-your-timetable)
+  - [4. Create your Timetable widget](#4-create-your-timetable-widget)
 - [Theming](#theming)
 - [Advanced Features](#advanced-features)
   - [Drag and Drop](#drag-and-drop)
@@ -45,7 +48,6 @@ A Timetable widget that displays [`MonthWidget`]s in a page view.
 |                                                   Light Mode                                                   |                                                   Dark Mode                                                   |
 | :------------------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------------: |
 | ![](https://github.com/JonasWanke/timetable/raw/main/doc/screenshot-CompactMonthTimetable-light.webp?raw=true) | ![](https://github.com/JonasWanke/timetable/raw/main/doc/screenshot-CompactMonthTimetable-dark.webp?raw=true) |
-
 
 ## Getting started
 
@@ -282,15 +284,17 @@ TimetableConfig<MyEvent>(
 The provider is just a function that receives a date and returns a list of [`TimeOverlay`] for that date.
 The example above therefore draws a light gray background before 8 a.m. and after 8 p.m. on every day.
 
-[example/main.dart]: https://github.com/JonasWanke/timetable/blob/main/example/lib/main.dart
 <!-- Flutter -->
+
 [`DateTime`]: https://api.flutter.dev/flutter/dart-core/DateTime-class.html
 [`Duration`]: https://api.flutter.dev/flutter/dart-core/Duration-class.html
 [`GlobalKey`]: https://api.flutter.dev/flutter/widgets/GlobalKey-class.html
 [`ScrollController`]: https://api.flutter.dev/flutter/widgets/ScrollController-class.html
 [`State.dispose`]: https://api.flutter.dev/flutter/widgets/State/dispose.html
 [`TabController`]: https://api.flutter.dev/flutter/material/TabController-class.html
+
 <!-- timetable -->
+
 [`BasicEvent`]: https://pub.dev/documentation/timetable/latest/timetable/BasicEvent-class.html
 [`BasicEventWidget`]: https://pub.dev/documentation/timetable/latest/timetable/BasicEventWidget-class.html
 [`CompactMonthTimetable`]: https://pub.dev/documentation/timetable/latest/timetable/CompactMonthTimetable-class.html
@@ -317,5 +321,7 @@ The example above therefore draws a light gray background before 8 a.m. and af
 [`VisibleDateRange.days`]: https://pub.dev/documentation/timetable/latest/timetable/VisibleDateRange/days.html
 [`VisibleDateRange.week`]: https://pub.dev/documentation/timetable/latest/timetable/VisibleDateRange/week.html
 [`VisibleDateRange.weekAligned`]: https://pub.dev/documentation/timetable/latest/timetable/VisibleDateRange/foo.html
+
 <!-- time -->
+
 [<kbd>time</kbd>]: https://pub.dev/packages/time

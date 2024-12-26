@@ -11,6 +11,7 @@ import 'event.dart';
 /// See also:
 ///
 /// * [BasicEventWidget], which can display instances of [BasicEvent].
+@immutable
 class BasicEvent extends Event {
   const BasicEvent({
     required this.id,
@@ -153,7 +154,6 @@ class BasicAllDayEventWidget extends StatelessWidget {
         child: Material(
           shape: AllDayEventBorder(
             info: info,
-            side: BorderSide.none,
             radii: style.radii,
           ),
           clipBehavior: Clip.antiAlias,

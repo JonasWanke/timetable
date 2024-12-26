@@ -63,6 +63,7 @@ class DateEvents<E extends Event> extends StatelessWidget {
 /// See also:
 ///
 /// * [TimetableThemeData], which bundles the styles for all Timetable widgets.
+@immutable
 class DateEventsStyle {
   factory DateEventsStyle(
     // To allow future updates to use the context and align the parameters to
@@ -331,9 +332,11 @@ class _DayEventsLayoutDelegate<E extends Event>
       for (var i = position.column + 1; i < columns.length; i++) {
         final hasOverlapInColumn = currentGroup
             .where((e) => positions.eventPositions[e]!.column == i)
-            .where((e) =>
-                event.start < _actualEnd(e, height) &&
-                e.start < _actualEnd(event, height))
+            .where(
+              (e) =>
+                  event.start < _actualEnd(e, height) &&
+                  e.start < _actualEnd(event, height),
+            )
             .isNotEmpty;
         if (hasOverlapInColumn) break;
 

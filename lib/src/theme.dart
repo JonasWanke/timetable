@@ -203,6 +203,7 @@ class TimetableThemeData {
 /// * [TimetableThemeData], which bundles the actual styles.
 class TimetableTheme extends InheritedWidget {
   const TimetableTheme({
+    super.key,
     required this.data,
     required super.child,
   });

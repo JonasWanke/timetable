@@ -49,33 +49,38 @@ class MultiDateEventHeader<E extends Event> extends StatelessWidget {
     final style = this.style ??
         TimetableTheme.orDefaultOf(context).multiDateEventHeaderStyle;
 
-    final child = LayoutBuilder(builder: (context, constraints) {
-      var maxEventRows = style.maxEventRows;
-      if (constraints.maxHeight.isFinite) {
-        final maxRowsFromHeight =
-            (constraints.maxHeight / style.eventHeight).floor();
-        final maxEventRowsFromHeight = (maxRowsFromHeight - 1).coerceAtLeast(0);
-        maxEventRows = maxEventRowsFromHeight.coerceAtMost(maxEventRows);
-      }
+    final child = LayoutBuilder(
+      builder: (context, constraints) {
+        var maxEventRows = style.maxEventRows;
+        if (constraints.maxHeight.isFinite) {
+          final maxRowsFromHeight =
+              (constraints.maxHeight / style.eventHeight).floor();
+          final maxEventRowsFromHeight =
+              (maxRowsFromHeight - 1).coerceAtLeast(0);
+          maxEventRows = maxEventRowsFromHeight.coerceAtMost(maxEventRows);
+        }
 
-      return ValueListenableBuilder(
-        valueListenable: DefaultDateController.of(context)!,
-        builder: (context, pageValue, __) => _buildContent(
-          context,
-          pageValue,
-          width: constraints.maxWidth,
-          eventHeight: style.eventHeight,
-          maxEventRows: maxEventRows,
+        return ValueListenableBuilder(
+          valueListenable: DefaultDateController.of(context)!,
+          builder: (context, pageValue, __) => _buildContent(
+            context,
+            pageValue,
+            width: constraints.maxWidth,
+            eventHeight: style.eventHeight,
+            maxEventRows: maxEventRows,
+          ),
+        );
+      },
+    );
+
+    return Stack(
+      children: [
+        Positioned.fill(
+          child: DatePageView(builder: (context, date) => const SizedBox()),
         ),
-      );
-    });
-
-    return Stack(children: [
-      Positioned.fill(
-        child: DatePageView(builder: (context, date) => const SizedBox()),
-      ),
-      ClipRect(child: Padding(padding: style.padding, child: child)),
-    ]);
+        ClipRect(child: Padding(padding: style.padding, child: child)),
+      ],
+    );
   }
 
   Widget _buildContent(
@@ -111,6 +116,7 @@ class MultiDateEventHeader<E extends Event> extends StatelessWidget {
 }
 
 /// Defines visual properties for [MultiDateEventHeader].
+@immutable
 class MultiDateEventHeaderStyle {
   factory MultiDateEventHeaderStyle(
     // To allow future updates to use the context and align the parameters to

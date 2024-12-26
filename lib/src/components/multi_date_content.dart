@@ -177,6 +177,7 @@ typedef PartDayDragCanceledCallbackWithGeometryKey = void Function(
 /// It must be used inside a [MultiDateContent].
 class PartDayDraggableEvent extends StatefulWidget {
   PartDayDraggableEvent({
+    super.key,
     this.onDragStart,
     PartDayDragUpdateCallback? onDragUpdate,
     PartDayDragEndCallback? onDragEnd,
@@ -207,6 +208,7 @@ class PartDayDraggableEvent extends StatefulWidget {
 
   PartDayDraggableEvent.forGeometryKeys(
     this.geometryKeys, {
+    super.key,
     this.onDragStart,
     PartDayDragUpdateCallbackWithGeometryKey? onDragUpdate,
     PartDayDragEndCallbackWithGeometryKey? onDragEnd,

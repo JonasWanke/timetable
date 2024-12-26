@@ -36,7 +36,7 @@ class DatePageView extends StatefulWidget {
 
 class _DatePageViewState extends State<DatePageView> {
   DateController? _controller;
-  MultiDateScrollController? _scrollController;
+  late MultiDateScrollController _scrollController;
   final _heights = <int, double>{};
 
   @override
@@ -55,7 +55,7 @@ class _DatePageViewState extends State<DatePageView> {
   @override
   void dispose() {
     _controller!.date.removeListener(_onDateChanged);
-    _scrollController!.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -64,7 +64,7 @@ class _DatePageViewState extends State<DatePageView> {
 
     if (_controller != null && !_controller!.isDisposed) {
       _controller!.date.removeListener(_onDateChanged);
-      _scrollController!.dispose();
+      _scrollController.dispose();
     }
 
     _controller = widget.controller ?? DefaultDateController.of(context)!;
@@ -104,7 +104,7 @@ class _DatePageViewState extends State<DatePageView> {
     return Scrollable(
       axisDirection: AxisDirection.right,
       physics: DateScrollPhysics(_controller!.map((it) => it.visibleRange)),
-      controller: _scrollController!,
+      controller: _scrollController,
       viewportBuilder: (context, position) => Viewport(
         axisDirection: AxisDirection.right,
         offset: position,
@@ -127,10 +127,12 @@ class _DatePageViewState extends State<DatePageView> {
   Widget _buildNonScrollingChild() {
     return ValueListenableBuilder(
       valueListenable: _controller!,
-      builder: (context, value, _) => Row(children: [
-        for (var i = 0; i < value.visibleDayCount; i++)
-          Expanded(child: _buildPage(context, value.page.toInt() + i)),
-      ]),
+      builder: (context, value, _) => Row(
+        children: [
+          for (var i = 0; i < value.visibleDayCount; i++)
+            Expanded(child: _buildPage(context, value.page.toInt() + i)),
+        ],
+      ),
     );
   }
 
@@ -139,8 +141,7 @@ class _DatePageViewState extends State<DatePageView> {
       return page
           .rangeTo(page + pageValue.visibleDayCount - 1)
           .map((it) => _heights[it] ?? 0)
-          .max
-          .toDouble();
+          .max;
     }
 
     final oldMaxHeight = maxHeightFrom(pageValue.page.floor());

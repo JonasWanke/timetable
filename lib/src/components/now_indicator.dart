@@ -339,8 +339,7 @@ class _NowIndicatorPainter extends CustomPainter {
     // Schedule the repaint so that our position has moved at most half a device
     // pixel.
     final maxDistance = 0.5 / devicePixelRatio;
-    final delay =
-        FractionalSeconds.normalDay.timesNum(maxDistance / size.height);
+    final delay = Nanoseconds.normalDay.timesDouble(maxDistance / size.height);
     _repaint = CancelableOperation.fromFuture(
       Future<void>.delayed(
         delay.roundToCoreDuration(),

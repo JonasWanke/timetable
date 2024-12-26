@@ -129,7 +129,7 @@ class MultiDateContentGeometry extends State<_MultiDateContentGeometryWidget> {
             localOffset.dx / size.width * pageValue.visibleDayCount)
         .floor();
     return DateTimetable.fromPage(page).atMidnight +
-        FractionalSeconds.normalDay.timesNum(localOffset.dy / size.height);
+        Nanoseconds.normalDay.timesDouble(localOffset.dy / size.height);
   }
 
   RenderBox _findRenderBox() => context.findRenderObject()! as RenderBox;

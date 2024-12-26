@@ -53,8 +53,8 @@ class DateContent<E extends Event> extends StatelessWidget {
           onTapUp: onBackgroundTap != null
               ? (details) => onBackgroundTap(
                     date.atMidnight +
-                        FractionalSeconds.normalDay
-                            .timesNum(details.localPosition.dy / height),
+                        Nanoseconds.normalDay
+                            .timesDouble(details.localPosition.dy / height),
                   )
               : null,
           child: Stack(

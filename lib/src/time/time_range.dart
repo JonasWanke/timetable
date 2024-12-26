@@ -14,7 +14,7 @@ class TimeRange {
     Time startTime,
     TimeDuration duration,
   ) {
-    final endAsDuration = startTime.fractionalSecondsSinceMidnight + duration;
+    final endAsDuration = startTime.nanosecondsSinceMidnight + duration;
     assert(endAsDuration <= Hours.normalDay);
     return TimeRange(
       startTime,
@@ -32,9 +32,8 @@ class TimeRange {
 
     final TimeRange newRange;
     // TODO(JonasWanke): `timeDuration.dividedByNum(…)`
-    final halfDuration = duration.asFractionalSeconds.dividedByNum(2);
-    // final newRange = center.subtract(halfDuration).andThen((p0) => null).orElse((_));
-    if (center.fractionalSecondsSinceMidnight < halfDuration) {
+    final halfDuration = duration.asNanoseconds ~/ 2;
+    if (center.nanosecondsSinceMidnight < halfDuration) {
       assert(canShiftIfDoesntFit);
       newRange = TimeRange(
         Time.midnight,
@@ -43,15 +42,14 @@ class TimeRange {
     } else if (center.add(halfDuration).isErr()) {
       assert(canShiftIfDoesntFit);
       newRange = TimeRange(
-        Time.fromTimeSinceMidnight(FractionalSeconds.normalDay - duration)
-            .unwrap(),
+        Time.fromTimeSinceMidnight(Nanoseconds.normalDay - duration).unwrap(),
         null,
       );
     } else {
       newRange = TimeRange(
         // Ensure that the resulting duration is exactly [duration], even if
         // [halfDuration] was rounded.
-        center.add(-duration.asFractionalSeconds + halfDuration).unwrap(),
+        center.add(-duration.asNanoseconds + halfDuration).unwrap(),
         center.add(halfDuration).unwrapOrNull(),
       );
     }
@@ -63,12 +61,11 @@ class TimeRange {
 
   final Time startTime;
   // TODO(JonasWanke): `timeDuration.dividedByNum(…)`
-  Time get centerTime =>
-      startTime.add(duration.asFractionalSeconds.dividedByNum(2)).unwrap();
+  Time get centerTime => startTime.add(duration.asNanoseconds ~/ 2).unwrap();
   final Time? endTime;
   TimeDuration get duration =>
-      (endTime?.fractionalSecondsSinceMidnight ?? FractionalSeconds.normalDay) -
-      startTime.fractionalSecondsSinceMidnight;
+      (endTime?.nanosecondsSinceMidnight ?? Nanoseconds.normalDay) -
+      startTime.nanosecondsSinceMidnight;
 
   bool contains(TimeRange other) {
     return startTime <= other.startTime &&

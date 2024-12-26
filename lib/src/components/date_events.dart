@@ -199,7 +199,7 @@ class _DayEventsLayoutDelegate<E extends Event>
     double dateTimeToY(DateTime dateTime) {
       if (dateTime.date < date) return 0;
       if (dateTime.date > date) return size.height;
-      return durationToY(dateTime.time.fractionalSecondsSinceMidnight);
+      return durationToY(dateTime.time.nanosecondsSinceMidnight);
     }
 
     for (final event in events) {
@@ -349,7 +349,7 @@ class _DayEventsLayoutDelegate<E extends Event>
 
   DateTime _actualEnd(E event, double height) {
     final minDurationForHeight =
-        FractionalSeconds.normalDay.timesNum(style.minEventHeight / height);
+        Nanoseconds.normalDay.timesDouble(style.minEventHeight / height);
     return event.end
         .coerceAtLeast(event.start + style.minEventDuration)
         .coerceAtLeast(event.start + minDurationForHeight);

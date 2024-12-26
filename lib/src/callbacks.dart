@@ -9,7 +9,7 @@ import 'components/week_indicator.dart';
 import 'event/builder.dart';
 import 'layouts/multi_date.dart';
 
-typedef WeekTapCallback = void Function(YearWeek week);
+typedef WeekTapCallback = void Function(IsoYearWeek week);
 typedef DateTapCallback = void Function(Date date);
 typedef DateTimeTapCallback = void Function(DateTime dateTime);
 

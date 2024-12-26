@@ -152,8 +152,8 @@ abstract class TimetableLocalizations {
 
   String allDayOverflow(int overflowCount) => '+$overflowCount';
 
-  List<String> weekLabels(YearWeek yearWeek);
-  String weekOfYear(YearWeek yearWeek);
+  List<String> weekLabels(IsoYearWeek yearWeek);
+  String weekOfYear(IsoYearWeek yearWeek);
 }
 
 extension BuildContextTimetableLocalizations on BuildContext {
@@ -173,7 +173,7 @@ class TimetableLocalizationDe extends TimetableLocalizations {
   const TimetableLocalizationDe();
 
   @override
-  List<String> weekLabels(YearWeek yearWeek) {
+  List<String> weekLabels(IsoYearWeek yearWeek) {
     return [
       weekOfYear(yearWeek),
       'Woche ${yearWeek.week}',
@@ -183,7 +183,7 @@ class TimetableLocalizationDe extends TimetableLocalizations {
   }
 
   @override
-  String weekOfYear(YearWeek yearWeek) =>
+  String weekOfYear(IsoYearWeek yearWeek) =>
       'Kalenderwoche ${yearWeek.week}, ${yearWeek.weekBasedYear}';
 }
 
@@ -191,7 +191,7 @@ class TimetableLocalizationEn extends TimetableLocalizations {
   const TimetableLocalizationEn();
 
   @override
-  List<String> weekLabels(YearWeek yearWeek) {
+  List<String> weekLabels(IsoYearWeek yearWeek) {
     return [
       weekOfYear(yearWeek),
       'Week ${yearWeek.week}',
@@ -201,7 +201,7 @@ class TimetableLocalizationEn extends TimetableLocalizations {
   }
 
   @override
-  String weekOfYear(YearWeek yearWeek) =>
+  String weekOfYear(IsoYearWeek yearWeek) =>
       'Week ${yearWeek.week}, ${yearWeek.weekBasedYear}';
 }
 
@@ -209,7 +209,7 @@ class TimetableLocalizationEs extends TimetableLocalizations {
   const TimetableLocalizationEs();
 
   @override
-  List<String> weekLabels(YearWeek yearWeek) {
+  List<String> weekLabels(IsoYearWeek yearWeek) {
     return [
       weekOfYear(yearWeek),
       'Semana ${yearWeek.week}',
@@ -219,7 +219,7 @@ class TimetableLocalizationEs extends TimetableLocalizations {
   }
 
   @override
-  String weekOfYear(YearWeek yearWeek) =>
+  String weekOfYear(IsoYearWeek yearWeek) =>
       'Semana ${yearWeek.week}, ${yearWeek.weekBasedYear}';
 }
 
@@ -227,7 +227,7 @@ class TimetableLocalizationFr extends TimetableLocalizations {
   const TimetableLocalizationFr();
 
   @override
-  List<String> weekLabels(YearWeek yearWeek) {
+  List<String> weekLabels(IsoYearWeek yearWeek) {
     return [
       weekOfYear(yearWeek),
       'Semaine ${yearWeek.week}',
@@ -237,7 +237,7 @@ class TimetableLocalizationFr extends TimetableLocalizations {
   }
 
   @override
-  String weekOfYear(YearWeek yearWeek) =>
+  String weekOfYear(IsoYearWeek yearWeek) =>
       'Semaine ${yearWeek.week}, ${yearWeek.weekBasedYear}';
 }
 
@@ -245,11 +245,11 @@ class TimetableLocalizationHu extends TimetableLocalizations {
   const TimetableLocalizationHu();
 
   @override
-  List<String> weekLabels(YearWeek yearWeek) =>
+  List<String> weekLabels(IsoYearWeek yearWeek) =>
       [weekOfYear(yearWeek), '${yearWeek.week}. hét', '${yearWeek.week}'];
 
   @override
-  String weekOfYear(YearWeek yearWeek) =>
+  String weekOfYear(IsoYearWeek yearWeek) =>
       '${yearWeek.week}. hét, ${yearWeek.weekBasedYear}';
 }
 
@@ -257,7 +257,7 @@ class TimetableLocalizationIt extends TimetableLocalizations {
   const TimetableLocalizationIt();
 
   @override
-  List<String> weekLabels(YearWeek yearWeek) {
+  List<String> weekLabels(IsoYearWeek yearWeek) {
     return [
       weekOfYear(yearWeek),
       'Settimana ${yearWeek.week}',
@@ -267,7 +267,7 @@ class TimetableLocalizationIt extends TimetableLocalizations {
   }
 
   @override
-  String weekOfYear(YearWeek yearWeek) =>
+  String weekOfYear(IsoYearWeek yearWeek) =>
       'Settimana ${yearWeek.week}, ${yearWeek.weekBasedYear}';
 }
 
@@ -275,7 +275,7 @@ class TimetableLocalizationJa extends TimetableLocalizations {
   const TimetableLocalizationJa();
 
   @override
-  List<String> weekLabels(YearWeek yearWeek) {
+  List<String> weekLabels(IsoYearWeek yearWeek) {
     return [
       weekOfYear(yearWeek),
       '第${yearWeek.week}週',
@@ -285,7 +285,7 @@ class TimetableLocalizationJa extends TimetableLocalizations {
   }
 
   @override
-  String weekOfYear(YearWeek yearWeek) =>
+  String weekOfYear(IsoYearWeek yearWeek) =>
       'Week ${yearWeek.week}, ${yearWeek.weekBasedYear}';
 }
 
@@ -293,7 +293,7 @@ class TimetableLocalizationPt extends TimetableLocalizations {
   const TimetableLocalizationPt();
 
   @override
-  List<String> weekLabels(YearWeek yearWeek) {
+  List<String> weekLabels(IsoYearWeek yearWeek) {
     return [
       weekOfYear(yearWeek),
       'Semana ${yearWeek.week}',
@@ -303,7 +303,7 @@ class TimetableLocalizationPt extends TimetableLocalizations {
   }
 
   @override
-  String weekOfYear(YearWeek yearWeek) =>
+  String weekOfYear(IsoYearWeek yearWeek) =>
       'Semana ${yearWeek.week}, ${yearWeek.weekBasedYear}';
 }
 
@@ -311,7 +311,7 @@ class TimetableLocalizationZhCn extends TimetableLocalizations {
   const TimetableLocalizationZhCn();
 
   @override
-  List<String> weekLabels(YearWeek yearWeek) {
+  List<String> weekLabels(IsoYearWeek yearWeek) {
     return [
       weekOfYear(yearWeek),
       '第${yearWeek.week}周',
@@ -321,7 +321,7 @@ class TimetableLocalizationZhCn extends TimetableLocalizations {
   }
 
   @override
-  String weekOfYear(YearWeek yearWeek) =>
+  String weekOfYear(IsoYearWeek yearWeek) =>
       'Week ${yearWeek.week}, ${yearWeek.weekBasedYear}';
 }
 
@@ -329,7 +329,7 @@ class TimetableLocalizationZhTw extends TimetableLocalizations {
   const TimetableLocalizationZhTw();
 
   @override
-  List<String> weekLabels(YearWeek yearWeek) {
+  List<String> weekLabels(IsoYearWeek yearWeek) {
     return [
       weekOfYear(yearWeek),
       '第${yearWeek.week}週',
@@ -339,6 +339,6 @@ class TimetableLocalizationZhTw extends TimetableLocalizations {
   }
 
   @override
-  String weekOfYear(YearWeek yearWeek) =>
+  String weekOfYear(IsoYearWeek yearWeek) =>
       'Week ${yearWeek.week}, ${yearWeek.weekBasedYear}';
 }

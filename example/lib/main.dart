@@ -99,9 +99,7 @@ class _TimetableExampleState extends State<TimetableExample>
         onWeekTap: (week) {
           _showSnackBar('Tapped on week $week.');
           _updateVisibleDateRange(PredefinedVisibleDateRange.week);
-          unawaited(
-            _dateController.animateTo(week.firstDay.asDate, vsync: this),
-          );
+          unawaited(_dateController.animateTo(week.firstDay, vsync: this));
         },
         onDateTap: (date) {
           _showSnackBar('Tapped on date $date.');

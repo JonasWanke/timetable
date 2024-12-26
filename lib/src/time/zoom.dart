@@ -45,14 +45,12 @@ class _TimeZoomState extends State<TimeZoom>
   double get _outerChildHeight =>
       _parentHeight *
       _controller!.maxRange.duration
-          .dividedByTimeDuration(_controller!.value.duration)
-          .toDouble();
+          .dividedByTimeDuration(_controller!.value.duration);
   double get _outerOffset {
     final timeRange = _controller!.value;
     return timeRange.startTime
             .difference(_controller!.maxRange.startTime)
-            .dividedByTimeDuration(_controller!.maxRange.duration)
-            .toDouble() *
+            .dividedByTimeDuration(_controller!.maxRange.duration) *
         _outerChildHeight;
   }
 
@@ -109,9 +107,8 @@ class _TimeZoomState extends State<TimeZoom>
         _parentHeight = constraints.maxHeight;
 
         final heightToReport = _parentHeight *
-            FractionalSeconds.normalDay
-                .dividedByTimeDuration(_controller!.maxRange.duration)
-                .toDouble();
+            Nanoseconds.normalDay
+                .dividedByTimeDuration(_controller!.maxRange.duration);
         if (_registration == null || heightToReport != _registration!.height) {
           scheduleMicrotask(() {
             // This might update the controller's value, causing a rebuild
@@ -158,14 +155,12 @@ class _TimeZoomState extends State<TimeZoom>
                   // Layouts the child so only [_controller.maxRange] is
                   // visible.
                   final innerChildHeight = _outerChildHeight *
-                      FractionalSeconds.normalDay
-                          .dividedByTimeDuration(_controller!.maxRange.duration)
-                          .toDouble();
+                      Nanoseconds.normalDay.dividedByTimeDuration(
+                        _controller!.maxRange.duration,
+                      );
                   final innerOffset = -innerChildHeight *
-                      _controller!
-                          .maxRange.startTime.fractionalSecondsSinceMidnight
-                          .dividedByTimeDuration(FractionalSeconds.normalDay)
-                          .toDouble();
+                      _controller!.maxRange.startTime.nanosecondsSinceMidnight
+                          .dividedByTimeDuration(Nanoseconds.normalDay);
 
                   return SizedBox(
                     height: _outerChildHeight,
@@ -189,7 +184,7 @@ class _TimeZoomState extends State<TimeZoom>
     controller.value = TimeRange.fromStartAndDuration(
       controller.maxRange.startTime
           .add(
-            controller.maxRange.duration.timesNum(value / _outerChildHeight),
+            controller.maxRange.duration.timesDouble(value / _outerChildHeight),
           )
           .unwrap(),
       controller.value.duration,
@@ -215,7 +210,7 @@ class _TimeZoomState extends State<TimeZoom>
       newDuration = controller.actualMaxDuration;
     } else {
       newDuration = _initialRange!.duration
-          .timesNum(1 / rawScale)
+          .timesDouble(1 / rawScale)
           .coerceIn(controller.actualMinDuration, controller.actualMaxDuration);
     }
 
@@ -246,7 +241,9 @@ class _TimeZoomState extends State<TimeZoom>
         Tween(begin: _outerOffset, end: frictionSimulation.finalX).animate(
       CurvedAnimation(parent: _animationController, curve: Curves.decelerate),
     );
-    _animationController.duration = finalTime.seconds;
+    _animationController.duration = core.Duration(
+      microseconds: (finalTime * Microseconds.perSecond).round(),
+    );
     _animation!.addListener(_onAnimate);
     _animationController.forward();
   }
@@ -261,7 +258,7 @@ class _TimeZoomState extends State<TimeZoom>
 
     final controller = _controller!;
     final offsetFromStartTime = controller.maxRange.duration
-        .timesNum(_animation!.value / _outerChildHeight);
+        .timesDouble(_animation!.value / _outerChildHeight);
     _setNewTimeRange(
       controller.maxRange.startTime.add(offsetFromStartTime).unwrap(),
       controller.value.duration,
@@ -275,17 +272,17 @@ class _TimeZoomState extends State<TimeZoom>
         .unwrap();
   }
 
-  FractionalSeconds _focusToDuration(
+  Nanoseconds _focusToDuration(
     double focalPoint,
     TimeDuration visibleDuration,
   ) =>
-      visibleDuration.timesNum(focalPoint / _parentHeight);
+      visibleDuration.timesDouble(focalPoint / _parentHeight);
   void _setNewTimeRange(Time startTime, TimeDuration duration) {
     final actualStartTime = startTime.coerceIn(
       _controller!.maxRange.startTime,
       Time.fromTimeSinceMidnight(
-        (_controller!.maxRange.endTime?.fractionalSecondsSinceMidnight ??
-                FractionalSeconds.normalDay) -
+        (_controller!.maxRange.endTime?.nanosecondsSinceMidnight ??
+                Nanoseconds.normalDay) -
             duration,
       ).unwrap(),
     );

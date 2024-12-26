@@ -108,11 +108,11 @@ class MonthWidget extends StatelessWidget {
         // By using today as the base, highlighting for the current day is
         // applied automatically.
         // FIXME(JonasWanke): support startOfWeek
-        for (final day in today.yearWeek.days)
+        for (final day in today.isoYearWeek.days)
           GridPlacement(
-            columnStart: day.weekday.number,
+            columnStart: day.weekday.isoNumber,
             rowStart: 0,
-            child: Center(child: weekDayBuilder(context, day.asDate)),
+            child: Center(child: weekDayBuilder(context, day)),
           ),
         GridPlacement(
           columnStart: 0,
@@ -124,7 +124,7 @@ class MonthWidget extends StatelessWidget {
           // FIXME(JonasWanke): support startOfWeek
           for (final weekday in Weekday.values)
             GridPlacement(
-              columnStart: weekday.number,
+              columnStart: weekday.isoNumber,
               rowStart: week + 1,
               child: buildDate(week, weekday),
             ),
@@ -146,7 +146,7 @@ class MonthWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             for (final index in 0.rangeTo(weekCount - 1))
-              weekBuilder(context, (firstDay + Weeks(index)).yearWeek),
+              weekBuilder(context, (firstDay + Weeks(index)).isoYearWeek),
           ],
         ),
       ),

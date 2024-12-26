@@ -39,7 +39,7 @@ class WeekIndicator extends StatelessWidget {
     this.alwaysUseNarrowestVariant = false,
     this.onTap,
     this.style,
-  }) : yearWeek = date.yearWeek;
+  }) : yearWeek = date.isoYearWeek;
   static Widget forController(
     DateController? controller, {
     Key? key,
@@ -55,7 +55,7 @@ class WeekIndicator extends StatelessWidget {
         style: style,
       );
 
-  final YearWeek yearWeek;
+  final IsoYearWeek yearWeek;
   final bool alwaysUseNarrowestVariant;
   final VoidCallback? onTap;
   final WeekIndicatorStyle? style;
@@ -255,7 +255,7 @@ class _RenderWeekIndicatorText extends RenderBox {
 class WeekIndicatorStyle {
   factory WeekIndicatorStyle(
     BuildContext context,
-    YearWeek yearWeek, {
+    IsoYearWeek yearWeek, {
     String? tooltip,
     Decoration? decoration,
     EdgeInsetsGeometry? padding,
@@ -351,7 +351,7 @@ class _WeekIndicatorForController extends StatelessWidget {
     return ValueListenableBuilder(
       valueListenable: (controller ?? DefaultDateController.of(context)!)
           .date
-          .map((it) => it.yearWeek),
+          .map((it) => it.isoYearWeek),
       builder: (context, yearWeek, _) => WeekIndicator(
         yearWeek,
         alwaysUseNarrowestVariant: alwaysUseNarrowestVariant,

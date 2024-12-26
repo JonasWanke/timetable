@@ -26,12 +26,12 @@ extension DoubleTimetableInternal on double {
       coerceAtLeast(min).coerceAtMost(max);
 }
 
-extension FractionalSecondsTimetableInternal on FractionalSeconds {
-  FractionalSeconds coerceAtLeast(FractionalSeconds min) =>
-      this < min ? min : this;
-  FractionalSeconds coerceAtMost(FractionalSeconds max) =>
-      this > max ? max : this;
-  FractionalSeconds coerceIn(FractionalSeconds min, FractionalSeconds max) =>
+extension NanosecondsTimetableInternal on Nanoseconds {
+  Nanoseconds coerceAtLeast(TimeDuration min) =>
+      this < min.asNanoseconds ? min.asNanoseconds : this;
+  Nanoseconds coerceAtMost(TimeDuration max) =>
+      this > max.asNanoseconds ? max.asNanoseconds : this;
+  Nanoseconds coerceIn(TimeDuration min, TimeDuration max) =>
       coerceAtLeast(min).coerceAtMost(max);
 }
 
@@ -45,23 +45,19 @@ typedef YearMonthWidgetBuilder = Widget Function(
 );
 typedef YearWeekWidgetBuilder = Widget Function(
   BuildContext context,
-  YearWeek yearWeek,
+  IsoYearWeek yearWeek,
 );
 typedef DateWidgetBuilder = Widget Function(BuildContext context, Date date);
 
 extension DateTimeTimetable on DateTime {
   static DateTime fromPage(double page) {
     return DateTime.fromDurationSinceUnixEpoch(
-      FractionalSeconds.normalDay.timesNum(page),
+      Nanoseconds.normalDay.timesDouble(page),
     );
   }
 
-  double get page {
-    return durationSinceUnixEpoch
-        .dividedByTimeDuration(Hours.normalDay)
-        .toDecimal()
-        .toDouble();
-  }
+  double get page =>
+      durationSinceUnixEpoch.dividedByTimeDuration(Hours.normalDay);
 }
 
 extension DateTimetable on Date {
@@ -74,12 +70,11 @@ extension DateTimetable on Date {
 }
 
 extension TimeDurationTimetableInternal on TimeDuration {
-  double get dayFraction =>
-      dividedByTimeDuration(FractionalSeconds.normalDay).toDouble();
+  double get dayFraction => dividedByTimeDuration(Nanoseconds.normalDay);
 }
 
 extension TimeTimetableInternal on Time {
-  double get dayFraction => fractionalSecondsSinceMidnight.dayFraction;
+  double get dayFraction => nanosecondsSinceMidnight.dayFraction;
 }
 
 extension NullableTimeTimetableInternal on Time? {

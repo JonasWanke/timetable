@@ -64,7 +64,7 @@ abstract class VisibleDateRange with Diagnosticable {
       // in a correct value because 2021-01-03 was a Sunday and
       // `Weekday.monday.number = 1`.
       alignmentDate: Date.from(const Year(2021), Month.january, 3).unwrap() +
-          Days(firstDay.number),
+          Days(firstDay.isoNumber),
       minDate: minDate,
       maxDate: maxDate,
     );

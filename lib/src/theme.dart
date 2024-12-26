@@ -16,7 +16,7 @@ import 'components/weekday_indicator.dart';
 import 'layouts/multi_date.dart';
 
 typedef YearMonthBasedStyleProvider<T> = T Function(YearMonth month);
-typedef YearWeekBasedStyleProvider<T> = T Function(YearWeek week);
+typedef YearWeekBasedStyleProvider<T> = T Function(IsoYearWeek week);
 typedef DateBasedStyleProvider<T> = T Function(Date date);
 typedef TimeBasedStyleProvider<T> = T Function(Time time);
 

@@ -23,7 +23,12 @@ environment:
 dependencies:
   async: ^2.6.0
   black_hole_flutter: ^1.0.0
-  chrono: ^0.1.0
+  # chrono: ^0.1.0
+  chrono:
+    git:
+      url: https://github.com/JonasWanke/chrono.git
+      path: chrono
+      ref: 15fbbf13886fa9a58a5dabe9339514acf9a100b9
   collection: ^1.15.0
   dart_date: ^1.1.0
   dartx: ^1.0.0

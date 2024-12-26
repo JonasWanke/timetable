@@ -54,7 +54,7 @@ class TimeController extends ValueNotifier<TimeRange> {
     if (maxDuration != null &&
         maxRange != null &&
         maxDuration <= maxRange.duration) {
-      final maxDurationHalf = maxDuration.half;
+      final maxDurationHalf = maxDuration ~/ 2;
       return TimeRange(
         maxRange.centerTime.subtract(maxDurationHalf).unwrap(),
         maxRange.centerTime.add(maxDurationHalf).unwrapOrNull(),
@@ -135,9 +135,9 @@ class TimeController extends ValueNotifier<TimeRange> {
     }
 
     final minRangeHeight = minDayHeight! *
-        maxRange.duration.dividedByTimeDuration(maxPossibleDuration).toDouble();
+        maxRange.duration.dividedByTimeDuration(maxPossibleDuration);
     _maxDurationFromMinDayHeight =
-        maxRange.duration.timesNum(minClientHeight / minRangeHeight);
+        maxRange.duration.timesDouble(minClientHeight / minRangeHeight);
   }
 
   TimeDuration get maxDurationFromMinDayHeightOrDefault =>

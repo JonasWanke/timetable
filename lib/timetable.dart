@@ -38,12 +38,7 @@ export 'src/time/zoom.dart';
 export 'src/utils.dart'
     show
         DateTimeTimetable,
+        DateTimetable,
         DateWidgetBuilder,
-        IntervalTimetable,
-        MonthWidgetBuilder,
-        NullableDateTimeTimetable,
-        NullableDurationTimetable,
-        NullableIntTimetable,
-        NullableIntervalTimetable,
-        WeekWidgetBuilder;
-export 'src/week.dart';
+        YearMonthWidgetBuilder,
+        YearWeekWidgetBuilder;

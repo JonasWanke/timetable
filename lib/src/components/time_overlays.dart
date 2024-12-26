@@ -29,8 +29,8 @@ class TimeOverlays extends StatelessWidget {
           children: [
             for (final overlay in overlays)
               Positioned.fill(
-                top: (overlay.start / 1.days) * height,
-                bottom: (1 - overlay.end / 1.days) * height,
+                top: (overlay.start.dayFraction) * height,
+                bottom: (1 - overlay.end.dayFraction) * height,
                 child: overlay.widget,
               ),
           ],

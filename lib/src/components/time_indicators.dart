@@ -4,6 +4,7 @@ import 'package:black_hole_flutter/black_hole_flutter.dart';
 import 'package:chrono/chrono.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:ranges/ranges.dart';
 
 import '../theme.dart';
 import '../utils.dart';
@@ -256,8 +257,7 @@ class _TimeIndicatorsLayout extends RenderBox
       final time = data.time!;
       final alignment = data.alignment!.resolve(textDirection);
 
-      final yAnchor =
-          time.fractionalSecondsSinceMidnight / 1.days * size.height;
+      final yAnchor = time.dayFraction * size.height;
       final outerRect = Rect.fromLTRB(
         0,
         yAnchor - child.size.height,

@@ -1,6 +1,9 @@
 import 'dart:async';
+import 'dart:core' as core;
+import 'dart:core';
 import 'dart:math' as math;
 
+import 'package:chrono/chrono.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -41,16 +44,20 @@ class _TimeZoomState extends State<TimeZoom>
   // is visible.
   double get _outerChildHeight =>
       _parentHeight *
-      (_controller!.maxRange.duration / _controller!.value.duration);
+      _controller!.maxRange.duration
+          .dividedByTimeDuration(_controller!.value.duration)
+          .toDouble();
   double get _outerOffset {
     final timeRange = _controller!.value;
-    return (timeRange.startTime - _controller!.maxRange.startTime) /
-        _controller!.maxRange.duration *
+    return timeRange.startTime
+            .difference(_controller!.maxRange.startTime)
+            .dividedByTimeDuration(_controller!.maxRange.duration)
+            .toDouble() *
         _outerChildHeight;
   }
 
   late TimeRange? _initialRange;
-  late Duration? _lastFocus;
+  late Time? _lastFocus;
 
   @override
   void initState() {
@@ -101,8 +108,10 @@ class _TimeZoomState extends State<TimeZoom>
       builder: (context, constraints) {
         _parentHeight = constraints.maxHeight;
 
-        final heightToReport =
-            _parentHeight * (1.days / _controller!.maxRange.duration);
+        final heightToReport = _parentHeight *
+            FractionalSeconds.normalDay
+                .dividedByTimeDuration(_controller!.maxRange.duration)
+                .toDouble();
         if (_registration == null || heightToReport != _registration!.height) {
           scheduleMicrotask(() {
             // This might update the controller's value, causing a rebuild
@@ -149,9 +158,14 @@ class _TimeZoomState extends State<TimeZoom>
                   // Layouts the child so only [_controller.maxRange] is
                   // visible.
                   final innerChildHeight = _outerChildHeight *
-                      (1.days / _controller!.maxRange.duration);
+                      FractionalSeconds.normalDay
+                          .dividedByTimeDuration(_controller!.maxRange.duration)
+                          .toDouble();
                   final innerOffset = -innerChildHeight *
-                      (_controller!.maxRange.startTime / 1.days);
+                      _controller!
+                          .maxRange.startTime.fractionalSecondsSinceMidnight
+                          .dividedByTimeDuration(FractionalSeconds.normalDay)
+                          .toDouble();
 
                   return SizedBox(
                     height: _outerChildHeight,
@@ -173,8 +187,11 @@ class _TimeZoomState extends State<TimeZoom>
   void _setOffset(double value) {
     final controller = _controller!;
     controller.value = TimeRange.fromStartAndDuration(
-      controller.maxRange.startTime +
-          controller.maxRange.duration * (value / _outerChildHeight),
+      controller.maxRange.startTime
+          .add(
+            controller.maxRange.duration.timesNum(value / _outerChildHeight),
+          )
+          .unwrap(),
       controller.value.duration,
     );
   }
@@ -189,7 +206,7 @@ class _TimeZoomState extends State<TimeZoom>
     final rawScale = details.verticalScale;
     assert(rawScale >= 0);
 
-    final Duration newDuration;
+    final TimeDuration newDuration;
     if (rawScale <= precisionErrorTolerance) {
       // When `rawScale` approaches zero, `1 / rawScale` in the `else`-branch
       // can become infinity, producing an error when multiplying a `Duration`
@@ -197,12 +214,13 @@ class _TimeZoomState extends State<TimeZoom>
       // maximum possible value directly.
       newDuration = controller.actualMaxDuration;
     } else {
-      newDuration = (_initialRange!.duration * (1 / rawScale))
+      newDuration = _initialRange!.duration
+          .timesNum(1 / rawScale)
           .coerceIn(controller.actualMinDuration, controller.actualMaxDuration);
     }
 
     final newFocus = _focusToDuration(details.localFocalPoint.dy, newDuration);
-    final newStart = _lastFocus! - newFocus;
+    final newStart = _lastFocus!.subtract(newFocus).unwrap();
     _setNewTimeRange(newStart, newDuration);
   }
 
@@ -242,28 +260,34 @@ class _TimeZoomState extends State<TimeZoom>
     }
 
     final controller = _controller!;
-    final offsetFromStartTime =
-        controller.maxRange.duration * (_animation!.value / _outerChildHeight);
+    final offsetFromStartTime = controller.maxRange.duration
+        .timesNum(_animation!.value / _outerChildHeight);
     _setNewTimeRange(
-      controller.maxRange.startTime + offsetFromStartTime,
+      controller.maxRange.startTime.add(offsetFromStartTime).unwrap(),
       controller.value.duration,
     );
   }
 
-  Duration _getFocusTime(double focalPoint) {
+  Time _getFocusTime(double focalPoint) {
     final range = _controller!.value;
-    return range.startTime + _focusToDuration(focalPoint, range.duration);
+    return range.startTime
+        .add(_focusToDuration(focalPoint, range.duration))
+        .unwrap();
   }
 
-  Duration _focusToDuration(
+  FractionalSeconds _focusToDuration(
     double focalPoint,
-    Duration visibleDuration,
+    TimeDuration visibleDuration,
   ) =>
-      visibleDuration * (focalPoint / _parentHeight);
-  void _setNewTimeRange(Duration startTime, Duration duration) {
+      visibleDuration.timesNum(focalPoint / _parentHeight);
+  void _setNewTimeRange(Time startTime, TimeDuration duration) {
     final actualStartTime = startTime.coerceIn(
       _controller!.maxRange.startTime,
-      _controller!.maxRange.endTime - duration,
+      Time.fromTimeSinceMidnight(
+        (_controller!.maxRange.endTime?.fractionalSecondsSinceMidnight ??
+                FractionalSeconds.normalDay) -
+            duration,
+      ).unwrap(),
     );
     _controller!.value =
         TimeRange.fromStartAndDuration(actualStartTime, duration);
@@ -818,7 +842,7 @@ class _ScrollPositionWithSingleContext extends ScrollPositionWithSingleContext {
   @override
   Future<void> animateTo(
     double to, {
-    required Duration duration,
+    required core.Duration duration,
     required Curve curve,
   }) {
     throw UnsupportedError(

@@ -54,10 +54,10 @@ class TimeController extends ValueNotifier<TimeRange> {
     if (maxDuration != null &&
         maxRange != null &&
         maxDuration <= maxRange.duration) {
-      final maxDurationHalf = maxDuration * (1 / 2);
+      final maxDurationHalf = maxDuration.half;
       return TimeRange(
-        maxRange.centerTime - maxDurationHalf,
-        maxRange.centerTime + maxDurationHalf,
+        maxRange.centerTime.subtract(maxDurationHalf).unwrap(),
+        maxRange.centerTime.add(maxDurationHalf).unwrapOrNull(),
       );
     }
     return maxRange ?? TimeRange.fullDay;
@@ -79,14 +79,14 @@ class TimeController extends ValueNotifier<TimeRange> {
   final TimeDuration minDuration;
 
   /// The minimum visible duration, honoring [minDuration] and [minDayHeight].
-  Duration get actualMinDuration =>
+  TimeDuration get actualMinDuration =>
       minDuration.coerceAtMost(maxDurationFromMinDayHeightOrDefault);
 
   /// The maximum visible duration when zooming out.
-  final Duration maxDuration;
+  final TimeDuration maxDuration;
 
   /// The maximum visible duration, honoring [maxDuration] and [minDayHeight].
-  Duration get actualMaxDuration =>
+  TimeDuration get actualMaxDuration =>
       maxDuration.coerceAtMost(maxDurationFromMinDayHeightOrDefault);
 
   static const maxPossibleDuration = Hours.normalDay;
@@ -116,12 +116,12 @@ class TimeController extends ValueNotifier<TimeRange> {
   /// The minimum height of all [TimeControllerClientRegistration]s.
   double? get minClientHeight => _clients.map((it) => it.height).minOrNull;
 
-  Duration? _maxDurationFromMinDayHeight;
+  TimeDuration? _maxDurationFromMinDayHeight;
 
   /// The maximum visible duration when zooming out when evaluating
   /// [minDayHeight] against all registered clients (i.e., widgets using this
   /// controller).
-  Duration? get maxDurationFromMinDayHeight => _maxDurationFromMinDayHeight;
+  TimeDuration? get maxDurationFromMinDayHeight => _maxDurationFromMinDayHeight;
   void _updateMaxDurationFromMinDayHeight() {
     if (minDayHeight == null) {
       _maxDurationFromMinDayHeight = null;
@@ -134,13 +134,13 @@ class TimeController extends ValueNotifier<TimeRange> {
       return;
     }
 
-    final minRangeHeight =
-        minDayHeight! * (maxRange.duration / maxPossibleDuration);
+    final minRangeHeight = minDayHeight! *
+        maxRange.duration.dividedByTimeDuration(maxPossibleDuration).toDouble();
     _maxDurationFromMinDayHeight =
-        maxRange.duration * (minClientHeight / minRangeHeight);
+        maxRange.duration.timesNum(minClientHeight / minRangeHeight);
   }
 
-  Duration get maxDurationFromMinDayHeightOrDefault =>
+  TimeDuration get maxDurationFromMinDayHeightOrDefault =>
       maxDurationFromMinDayHeight ?? maxDuration;
 
   TimeControllerClientRegistration registerClient(double height) {

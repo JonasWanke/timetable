@@ -1,5 +1,6 @@
 import 'package:chrono/chrono.dart';
 import 'package:flutter/foundation.dart';
+import 'package:ranges/ranges.dart';
 
 import '../utils.dart';
 import 'basic.dart';
@@ -40,8 +41,8 @@ abstract class Event with Diagnosticable {
 }
 
 extension EventExtension on Event {
-  DateTime get endInclusive => start == end ? end : end - 1.milliseconds;
-  Interval get interval => Interval(start, endInclusive);
+  Range<DateTime> get range => Range(start, end);
+  RangeInclusive<Date> get dateRange => RangeInclusive(start.date, end.date);
   Duration get duration => end.difference(start);
 
   bool get isPartDay => !isAllDay;

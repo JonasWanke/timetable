@@ -1,8 +1,11 @@
+import 'dart:core' as core;
+import 'dart:core';
 import 'dart:ui';
 
 import 'package:chrono/chrono.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/widgets.dart' hide Interval;
+import 'package:flutter/widgets.dart';
+import 'package:ranges/ranges.dart';
 
 import '../config.dart';
 import '../utils.dart';
@@ -37,7 +40,7 @@ class DateController extends ValueNotifier<DatePageValueWithScrollActivity> {
     addListener(() => _date.value = value.date);
 
     // The correct value is set via the listener when we assign to our value.
-    _visibleDates = ValueNotifier(Interval(Date.unixEpoch, Date.unixEpoch));
+    _visibleDates = ValueNotifier(const RangeInclusive.single(Date.unixEpoch));
     addListener(() => _visibleDates.value = value.visibleDates);
 
     final rawStartPage = initialDate?.page ?? Date.todayInLocalZone().page;
@@ -60,15 +63,15 @@ class DateController extends ValueNotifier<DatePageValueWithScrollActivity> {
     );
   }
 
-  late final ValueNotifier<Interval> _visibleDates;
-  ValueListenable<Interval> get visibleDates => _visibleDates;
+  late final ValueNotifier<RangeInclusive<Date>> _visibleDates;
+  ValueListenable<RangeInclusive<Date>> get visibleDates => _visibleDates;
 
   // Animation
   AnimationController? _animationController;
 
   Future<void> animateToToday({
     Curve curve = Curves.easeInOut,
-    Duration duration = const Duration(milliseconds: 200),
+    core.Duration duration = const core.Duration(milliseconds: 200),
     required TickerProvider vsync,
   }) {
     return animateTo(
@@ -82,7 +85,7 @@ class DateController extends ValueNotifier<DatePageValueWithScrollActivity> {
   Future<void> animateTo(
     Date date, {
     Curve curve = Curves.easeInOut,
-    Duration duration = const Duration(milliseconds: 200),
+    core.Duration duration = const core.Duration(milliseconds: 200),
     required TickerProvider vsync,
   }) {
     return animateToPage(
@@ -96,7 +99,7 @@ class DateController extends ValueNotifier<DatePageValueWithScrollActivity> {
   Future<void> animateToPage(
     int page, {
     Curve curve = Curves.easeInOut,
-    Duration duration = const Duration(milliseconds: 200),
+    core.Duration duration = const core.Duration(milliseconds: 200),
     required TickerProvider vsync,
   }) async {
     cancelAnimation();
@@ -106,7 +109,8 @@ class DateController extends ValueNotifier<DatePageValueWithScrollActivity> {
 
     final previousPage = value.page;
     final targetPage = value.visibleRange.getTargetPageForFocus(page);
-    final targetDatePageValue = DatePageValue(visibleRange, targetPage);
+    final targetDatePageValue =
+        DatePageValue(visibleRange, targetPage.toDouble());
     controller.addListener(() {
       value = value.copyWithActivity(
         page: lerpDouble(previousPage, targetPage, controller.value)!,
@@ -174,12 +178,9 @@ class DatePageValue with Diagnosticable {
   /// The last date that is at least partially visible.
   Date get lastVisibleDate => DateTimetable.fromPage(lastVisiblePage);
 
-  /// The interval of dates that are at least partially visible.
-  Interval get visibleDates {
-    final result = Interval(firstVisibleDate, lastVisibleDate.atEndOfDay);
-    assert(result.debugCheckIsValidTimetableDateInterval());
-    return result;
-  }
+  /// The range of dates that are at least partially visible.
+  RangeInclusive<Date> get visibleDates =>
+      RangeInclusive(firstVisibleDate, lastVisibleDate);
 
   Iterable<Date> get visibleDatesIterable sync* {
     var currentDate = firstVisibleDate;
@@ -206,7 +207,7 @@ class DatePageValue with Diagnosticable {
     super.debugFillProperties(properties);
     properties.add(DiagnosticsProperty('visibleRange', visibleRange));
     properties.add(DoubleProperty('page', page));
-    properties.add(DateDiagnosticsProperty('date', date));
+    properties.add(DiagnosticsProperty('date', date));
   }
 }
 

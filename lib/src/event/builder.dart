@@ -1,5 +1,5 @@
 import 'package:chrono/chrono.dart';
-import 'package:flutter/widgets.dart' hide Interval;
+import 'package:flutter/widgets.dart';
 
 import '../components/multi_date_event_header_overflow.dart';
 import 'all_day.dart';

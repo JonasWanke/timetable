@@ -78,11 +78,13 @@ extension EventToTimeOverlay on Event {
     required Widget widget,
     TimeOverlayPosition position = TimeOverlayPosition.inFrontOfEvents,
   }) {
-    if (!interval.intersects(date.fullDayInterval)) return null;
+    if (!range.intersects(date.fullDayRange)) return null;
 
     return TimeOverlay(
-      start: start.difference(date.atMidnight).coerceAtLeast(Duration.zero),
-      end: endInclusive.difference(date.atMidnight).coerceAtMost(1.days),
+      start: Time.fromTimeSinceMidnight(start.timeDifference(date.atMidnight))
+          .unwrapOr(Time.midnight),
+      end: Time.fromTimeSinceMidnight(end.timeDifference(date.atMidnight))
+          .unwrapOrNull(),
       widget: widget,
       position: position,
     );

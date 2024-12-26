@@ -37,7 +37,7 @@ dependencies:
   ranges:
     git:
       url: https://github.com/JonasWanke/ranges.git
-      ref: 87be930db3559f8e315a445a9e14754f68a29611
+      ref: bd6e42874cbacd87ddbcc37d23af3ba91a6a6516
 
 dev_dependencies:
   flutter_test:

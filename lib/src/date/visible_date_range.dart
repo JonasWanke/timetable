@@ -189,12 +189,10 @@ class DaysVisibleDateRange extends VisibleDateRange {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties.add(IntProperty('swipeRange', swipeRange));
-    properties.add(DateDiagnosticsProperty('alignmentDate', alignmentDate));
-    properties
-        .add(DateDiagnosticsProperty('minDate', minDate, defaultValue: null));
+    properties.add(DiagnosticsProperty('alignmentDate', alignmentDate));
+    properties.add(DiagnosticsProperty('minDate', minDate, defaultValue: null));
     properties.add(IntProperty('minPage', minPage, defaultValue: null));
-    properties
-        .add(DateDiagnosticsProperty('maxDate', maxDate, defaultValue: null));
+    properties.add(DiagnosticsProperty('maxDate', maxDate, defaultValue: null));
     properties.add(IntProperty('maxPage', maxPage, defaultValue: null));
   }
 }
@@ -228,7 +226,7 @@ class FixedDaysVisibleDateRange extends VisibleDateRange {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DateDiagnosticsProperty('startDate', startDate));
+    properties.add(DiagnosticsProperty('startDate', startDate));
     properties.add(IntProperty('page', page));
   }
 }

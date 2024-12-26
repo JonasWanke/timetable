@@ -1,3 +1,6 @@
+import 'dart:core';
+import 'dart:core' as core;
+
 import 'package:black_hole_flutter/black_hole_flutter.dart';
 import 'package:chrono/chrono.dart';
 import 'package:flutter/material.dart';
@@ -89,7 +92,8 @@ class DateIndicatorStyle {
       label: label ??
           () {
             context.dependOnTimetableLocalizations();
-            return DateFormat('d').format(date);
+            return DateFormat('d')
+                .format(core.DateTime.now().copyWith(day: date.day));
           }(),
     );
   }

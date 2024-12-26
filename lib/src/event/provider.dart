@@ -1,6 +1,7 @@
-import 'package:flutter/widgets.dart' hide Interval;
+import 'package:chrono/chrono.dart';
+import 'package:flutter/widgets.dart';
+import 'package:ranges/ranges.dart';
 
-import '../utils.dart';
 import 'event.dart';
 
 /// Provides [Event]s to Timetable widgets.
@@ -16,12 +17,12 @@ import 'event.dart';
 /// * [DefaultEventProvider], which provides [EventProvider]s to Timetable
 ///   widgets below it.
 typedef EventProvider<E extends Event> = List<E> Function(
-  Interval visibleRange,
+  RangeInclusive<Date> visibleRange,
 );
 
 EventProvider<E> eventProviderFromFixedList<E extends Event>(List<E> events) {
   return (visibleRange) =>
-      events.where((it) => it.interval.intersects(visibleRange)).toList();
+      events.where((it) => it.dateRange.intersects(visibleRange)).toList();
 }
 
 EventProvider<E> mergeEventProviders<E extends Event>(
@@ -37,7 +38,7 @@ extension EventProviderTimetable<E extends Event> on EventProvider<E> {
       final events = this(visibleRange);
       assert(() {
         final invalidEvents = events
-            .where((it) => !it.interval.intersects(visibleRange))
+            .where((it) => !it.dateRange.intersects(visibleRange))
             .toList();
         if (invalidEvents.isNotEmpty) {
           throw FlutterError.fromParts([
@@ -47,7 +48,7 @@ extension EventProviderTimetable<E extends Event> on EventProvider<E> {
             ),
             ErrorDescription(
               'For the visible range ${visibleRange.start} – '
-              '${visibleRange.end}, ${invalidEvents.length} out of '
+              '${visibleRange.endInclusive}, ${invalidEvents.length} out of '
               "${events.length} events don't intersect this range: "
               '$invalidEvents',
             ),

@@ -4,7 +4,6 @@ import 'dart:async';
 
 import 'package:black_hole_flutter/black_hole_flutter.dart';
 import 'package:chrono/chrono.dart';
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:timetable/timetable.dart';
@@ -101,10 +100,7 @@ class _TimetableExampleState extends State<TimetableExample>
           _showSnackBar('Tapped on week $week.');
           _updateVisibleDateRange(PredefinedVisibleDateRange.week);
           unawaited(
-            _dateController.animateTo(
-              week.getDayOfWeek(DateTime.monday),
-              vsync: this,
-            ),
+            _dateController.animateTo(week.firstDay.asDate, vsync: this),
           );
         },
         onDateTap: (date) {
@@ -244,15 +240,8 @@ extension on PredefinedVisibleDateRange {
       PredefinedVisibleDateRange.threeDays => VisibleDateRange.days(3),
       PredefinedVisibleDateRange.workWeek => VisibleDateRange.weekAligned(5),
       PredefinedVisibleDateRange.week => VisibleDateRange.week(),
-const (<<<<)<<< HEAD
       PredefinedVisibleDateRange.fixed =>
         VisibleDateRange.fixed(Date.todayInLocalZone(), Days.perWeek),
-===const (===,)=
-      PredefinedVisibleDateRange.fixed => VisibleDateRange.fixed(
-          DateTimeTimetable.today(),
-          DateTime.daysPerWeek,
-        ),
-const (>>>>>>)> main
     };
   }
 

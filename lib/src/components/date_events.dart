@@ -25,7 +25,7 @@ class DateEvents<E extends Event> extends StatelessWidget {
     this.eventBuilder,
     this.style,
   })  : assert(
-          events.every((e) => e.interval.intersects(date.fullDayInterval)),
+          events.every((e) => e.range.intersects(date.fullDayRange)),
           'All events must intersect the given date',
         ),
         events = events.sortedByStartLength();
@@ -72,11 +72,11 @@ class DateEventsStyle {
     BuildContext context,
     // ignore: avoid_unused_constructor_parameters, See above.
     Date date, {
-    Duration? minEventDuration,
+    TimeDuration? minEventDuration,
     double? minEventHeight,
     EdgeInsetsGeometry? padding,
     bool? enableStacking,
-    Duration? minEventDeltaForStacking,
+    TimeDuration? minEventDeltaForStacking,
     double? stackedEventSpacing,
   }) {
     return DateEventsStyle.raw(
@@ -98,10 +98,10 @@ class DateEventsStyle {
     required this.stackedEventSpacing,
   });
 
-  /// Minimum [Duration] to size a part-day event.
+  /// Minimum duration to size a part-day event.
   ///
   /// Can be used together with [minEventHeight].
-  final Duration minEventDuration;
+  final TimeDuration minEventDuration;
 
   /// Minimum height to size a part-day event.
   ///
@@ -126,17 +126,17 @@ class DateEventsStyle {
   /// See also:
   ///
   /// * [enableStacking], which can disable the stacking behavior completely.
-  final Duration minEventDeltaForStacking;
+  final TimeDuration minEventDeltaForStacking;
 
   /// Horizontal space between two parallel events stacked on top of each other.
   final double stackedEventSpacing;
 
   DateEventsStyle copyWith({
-    Duration? minEventDuration,
+    TimeDuration? minEventDuration,
     double? minEventHeight,
     EdgeInsetsGeometry? padding,
     bool? enableStacking,
-    Duration? minEventDeltaForStacking,
+    TimeDuration? minEventDeltaForStacking,
     double? stackedEventSpacing,
   }) {
     return DateEventsStyle.raw(
@@ -191,14 +191,12 @@ class _DayEventsLayoutDelegate<E extends Event>
 
     final positions = _calculatePositions(size.height);
 
-    double durationToY(Duration duration) {
-      assert(duration.debugCheckIsValidTimetableTimeOfDay());
-      return size.height * (duration / 1.days);
+    double durationToY(TimeDuration duration) {
+      assert(duration.isNonNegative && duration <= Hours.normalDay);
+      return duration.dayFraction * size.height;
     }
 
     double dateTimeToY(DateTime dateTime) {
-      assert(dateTime.debugCheckIsValidTimetableDateTime());
-
       if (dateTime.date < date) return 0;
       if (dateTime.date > date) return size.height;
       return durationToY(dateTime.time.fractionalSecondsSinceMidnight);
@@ -350,16 +348,17 @@ class _DayEventsLayoutDelegate<E extends Event>
   }
 
   DateTime _actualEnd(E event, double height) {
-    final minDurationForHeight = (style.minEventHeight / height).days;
+    final minDurationForHeight =
+        FractionalSeconds.normalDay.timesNum(style.minEventHeight / height);
     return event.end
         .coerceAtLeast(event.start + style.minEventDuration)
         .coerceAtLeast(event.start + minDurationForHeight);
   }
 
-  Duration _durationOn(E event, double height) {
-    final start = event.start.coerceAtLeast(date);
-    final end = _actualEnd(event, height).coerceAtMost(date + 1.days);
-    return end.difference(start);
+  TimeDuration _durationOn(E event, double height) {
+    final start = event.start.coerceAtLeast(date.atMidnight);
+    final end = _actualEnd(event, height).coerceAtMost(date.next.atMidnight);
+    return end.timeDifference(start);
   }
 
   @override

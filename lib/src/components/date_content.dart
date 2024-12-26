@@ -8,7 +8,7 @@ import '../utils.dart';
 import 'date_events.dart';
 import 'time_overlays.dart';
 
-/// A widget that displays [Event]s and [TimeOverlay]s.
+/// A widget that displays [Event]s and [TimeOverlay]s for a single [Date].
 ///
 /// If [onBackgroundTap] is not supplied, [DefaultTimetableCallbacks]'s
 /// `onDateTimeBackgroundTap` is used if it's provided above in the widget tree.
@@ -27,7 +27,7 @@ class DateContent<E extends Event> extends StatelessWidget {
     this.overlays = const [],
     this.onBackgroundTap,
   })  : assert(
-          events.every((e) => e.interval.intersects(date.fullDayInterval)),
+          events.every((e) => e.range.intersects(date.fullDayRange)),
           'All events must intersect the given date',
         ),
         events = events.sortedByStartLength();
@@ -52,7 +52,9 @@ class DateContent<E extends Event> extends StatelessWidget {
           behavior: HitTestBehavior.translucent,
           onTapUp: onBackgroundTap != null
               ? (details) => onBackgroundTap(
-                    date + (details.localPosition.dy / height).days,
+                    date.atMidnight +
+                        FractionalSeconds.normalDay
+                            .timesNum(details.localPosition.dy / height),
                   )
               : null,
           child: Stack(

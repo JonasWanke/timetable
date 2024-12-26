@@ -1,7 +1,8 @@
 import 'package:chrono/chrono.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart' hide Interval;
+import 'package:flutter/widgets.dart';
+import 'package:ranges/ranges.dart';
 
 import '../config.dart';
 import '../date/controller.dart';
@@ -72,9 +73,9 @@ class _MultiDateContentState<E extends Event>
       controller: DefaultDateController.of(context)!,
       builder: (context, date) => DateContent<E>(
         date: date,
-        events:
-            DefaultEventProvider.of<E>(context)?.call(date.fullDayInterval) ??
-                [],
+        events: DefaultEventProvider.of<E>(context)
+                ?.call(RangeInclusive.single(date)) ??
+            [],
         overlays:
             DefaultTimeOverlayProvider.of(context)?.call(context, date) ?? [],
       ),
@@ -127,8 +128,8 @@ class MultiDateContentGeometry extends State<_MultiDateContentGeometryWidget> {
     final page = (pageValue.page +
             localOffset.dx / size.width * pageValue.visibleDayCount)
         .floor();
-    return DateTimetable.fromPage(page) +
-        1.days * (localOffset.dy / size.height);
+    return DateTimetable.fromPage(page).atMidnight +
+        FractionalSeconds.normalDay.timesNum(localOffset.dy / size.height);
   }
 
   RenderBox _findRenderBox() => context.findRenderObject()! as RenderBox;

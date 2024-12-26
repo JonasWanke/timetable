@@ -2,6 +2,7 @@ import 'package:black_hole_flutter/black_hole_flutter.dart';
 import 'package:chrono/chrono.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_layout_grid/flutter_layout_grid.dart';
+import 'package:ranges/ranges.dart';
 
 import '../config.dart';
 import '../theme.dart';
@@ -119,7 +120,7 @@ class MonthWidget extends StatelessWidget {
           rowSpan: weekCount,
           child: _buildWeeks(context, style, firstDay, weekCount),
         ),
-        for (final week in 0.rangeTo(weekCount - 1))
+        for (final week in 0.rangeUntil(weekCount))
           // FIXME(JonasWanke): support startOfWeek
           for (final weekday in Weekday.values)
             GridPlacement(

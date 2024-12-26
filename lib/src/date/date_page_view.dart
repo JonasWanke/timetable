@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:ranges/ranges.dart';
 
 import '../utils.dart';
 import 'controller.dart';
@@ -139,7 +140,7 @@ class _DatePageViewState extends State<DatePageView> {
   double _getHeight(DatePageValue pageValue) {
     double maxHeightFrom(int page) {
       return page
-          .rangeTo(page + pageValue.visibleDayCount - 1)
+          .rangeUntil(page + pageValue.visibleDayCount)
           .map((it) => _heights[it] ?? 0)
           .max;
     }

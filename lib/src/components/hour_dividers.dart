@@ -1,8 +1,8 @@
+import 'package:chrono/chrono.dart';
 import 'package:flutter/material.dart';
 
 import '../config.dart';
 import '../theme.dart';
-import '../utils.dart';
 
 /// A widget that displays horizontal dividers between hours of a day.
 ///
@@ -88,8 +88,8 @@ class _HourDividersPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final heightPerHour = size.height / Duration.hoursPerDay;
-    for (final h in InternalDateTimeTimetable.innerDateHours) {
+    final heightPerHour = size.height / Hours.perNormalDay;
+    for (final h in List.generate(Hours.perNormalDay - 1, (i) => i + 1)) {
       final y = h * heightPerHour;
       canvas.drawLine(Offset(-8, y), Offset(size.width, y), _paint);
     }

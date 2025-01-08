@@ -64,7 +64,7 @@ class TimeRange {
   // TODO(JonasWanke): `timeDuration.dividedByNum(…)`
   Time get centerTime => startTime.add(duration.asNanoseconds ~/ 2).unwrap();
   final Time? endTime;
-  TimeDuration get duration =>
+  Nanoseconds get duration =>
       (endTime?.nanosecondsSinceMidnight ?? Nanoseconds.normalDay) -
       startTime.nanosecondsSinceMidnight;
 

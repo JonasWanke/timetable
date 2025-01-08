@@ -18,33 +18,38 @@ import 'zoom.dart';
 /// [animateTo], [jumpToShowFullDay], or by directly setting the [value].
 class TimeController extends ValueNotifier<TimeRange> {
   TimeController({
-    this.minDuration = const Minutes(1),
+    TimeDuration minDuration = const Minutes(1),
     TimeDuration? maxDuration,
     TimeRange? initialRange,
     TimeRange? maxRange,
-    this.minDayHeight,
-  })  : assert(!minDuration.isNegative),
+    double? minDayHeight,
+  }) : this._(
+          minDuration: minDuration.asNanoseconds,
+          maxDuration: maxDuration?.asNanoseconds ??
+              maxRange?.duration ??
+              maxPossibleDuration,
+          maxRange: maxRange ?? TimeRange.fullDay,
+          initialRange: initialRange ?? _getInitialRange(maxDuration, maxRange),
+          minDayHeight: minDayHeight,
+        );
+  TimeController._({
+    required this.minDuration,
+    required this.maxDuration,
+    required TimeRange initialRange,
+    required this.maxRange,
+    required this.minDayHeight,
+  })  : assert(minDuration.isNonNegative),
         assert(minDuration <= maxPossibleDuration),
-        assert(maxDuration == null || maxDuration <= maxPossibleDuration),
-        assert(maxDuration == null || minDuration <= maxDuration),
-        maxDuration = maxDuration ?? maxRange?.duration ?? maxPossibleDuration,
-        assert(initialRange == null || minDuration <= initialRange.duration),
-        assert(
-          maxDuration == null ||
-              initialRange == null ||
-              initialRange.duration <= maxDuration,
-        ),
-        assert(maxRange == null || minDuration <= maxRange.duration),
-        assert(
-          maxDuration == null ||
-              maxRange == null ||
-              maxDuration <= maxRange.duration,
-        ),
-        maxRange = maxRange ?? TimeRange.fullDay,
+        assert(maxDuration <= maxPossibleDuration),
+        assert(minDuration <= maxDuration),
+        assert(minDuration <= initialRange.duration),
+        assert(initialRange.duration <= maxDuration),
+        assert(minDuration <= maxRange.duration),
+        assert(maxDuration <= maxRange.duration),
         assert(minDayHeight == null || minDayHeight > 0),
         assert(minDayHeight == null || minDayHeight.isFinite),
-        super(initialRange ?? _getInitialRange(maxDuration, maxRange)) {
-    assert(initialRange == null || _isValidRange(initialRange));
+        super(initialRange) {
+    assert(_isValidRange(initialRange));
   }
 
   static TimeRange _getInitialRange(
@@ -76,20 +81,20 @@ class TimeController extends ValueNotifier<TimeRange> {
   /// The minimum visible duration when zooming in.
   ///
   /// [minDayHeight] takes precedence over this value.
-  final TimeDuration minDuration;
+  final Nanoseconds minDuration;
 
   /// The minimum visible duration, honoring [minDuration] and [minDayHeight].
-  TimeDuration get actualMinDuration =>
+  Nanoseconds get actualMinDuration =>
       minDuration.coerceAtMost(maxDurationFromMinDayHeightOrDefault);
 
   /// The maximum visible duration when zooming out.
-  final TimeDuration maxDuration;
+  final Nanoseconds maxDuration;
 
   /// The maximum visible duration, honoring [maxDuration] and [minDayHeight].
-  TimeDuration get actualMaxDuration =>
+  Nanoseconds get actualMaxDuration =>
       maxDuration.coerceAtMost(maxDurationFromMinDayHeightOrDefault);
 
-  static const maxPossibleDuration = Hours.normalDay;
+  static final maxPossibleDuration = Nanoseconds.normalDay;
 
   /// The maximum range that can be revealed when zooming out.
   final TimeRange maxRange;
@@ -116,12 +121,12 @@ class TimeController extends ValueNotifier<TimeRange> {
   /// The minimum height of all [TimeControllerClientRegistration]s.
   double? get minClientHeight => _clients.map((it) => it.height).minOrNull;
 
-  TimeDuration? _maxDurationFromMinDayHeight;
+  Nanoseconds? _maxDurationFromMinDayHeight;
 
   /// The maximum visible duration when zooming out when evaluating
   /// [minDayHeight] against all registered clients (i.e., widgets using this
   /// controller).
-  TimeDuration? get maxDurationFromMinDayHeight => _maxDurationFromMinDayHeight;
+  Nanoseconds? get maxDurationFromMinDayHeight => _maxDurationFromMinDayHeight;
   void _updateMaxDurationFromMinDayHeight() {
     if (minDayHeight == null) {
       _maxDurationFromMinDayHeight = null;
@@ -140,7 +145,7 @@ class TimeController extends ValueNotifier<TimeRange> {
         maxRange.duration.timesDouble(minClientHeight / minRangeHeight);
   }
 
-  TimeDuration get maxDurationFromMinDayHeightOrDefault =>
+  Nanoseconds get maxDurationFromMinDayHeightOrDefault =>
       maxDurationFromMinDayHeight ?? maxDuration;
 
   TimeControllerClientRegistration registerClient(double height) {

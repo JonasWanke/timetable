@@ -5,6 +5,7 @@ import 'package:oxidized/oxidized.dart';
 
 import 'controller.dart';
 
+// TODO(JonasWanke): use `RangeInclusive<Time>` instead?
 /// The value held by [TimeController].
 @immutable
 class TimeRange {

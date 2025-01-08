@@ -215,7 +215,7 @@ class _TimeZoomState extends State<TimeZoom>
     }
 
     final newFocus = _focusToDuration(details.localFocalPoint.dy, newDuration);
-    final newStart = _lastFocus!.subtract(newFocus).unwrap();
+    final newStart = _lastFocus!.nanosecondsSinceMidnight - newFocus;
     _setNewTimeRange(newStart, newDuration);
   }
 
@@ -260,7 +260,8 @@ class _TimeZoomState extends State<TimeZoom>
     final offsetFromStartTime = controller.maxRange.duration
         .timesDouble(_animation!.value / _outerChildHeight);
     _setNewTimeRange(
-      controller.maxRange.startTime.add(offsetFromStartTime).unwrap(),
+      controller.maxRange.startTime.nanosecondsSinceMidnight +
+          offsetFromStartTime,
       controller.value.duration,
     );
   }
@@ -277,15 +278,15 @@ class _TimeZoomState extends State<TimeZoom>
     TimeDuration visibleDuration,
   ) =>
       visibleDuration.timesDouble(focalPoint / _parentHeight);
-  void _setNewTimeRange(Time startTime, TimeDuration duration) {
-    final actualStartTime = startTime.coerceIn(
-      _controller!.maxRange.startTime,
-      Time.fromTimeSinceMidnight(
+  void _setNewTimeRange(Nanoseconds startTime, TimeDuration duration) {
+    final actualStartTime = Time.fromTimeSinceMidnight(
+      startTime.coerceIn(
+        _controller!.maxRange.startTime.nanosecondsSinceMidnight,
         (_controller!.maxRange.endTime?.nanosecondsSinceMidnight ??
                 Nanoseconds.normalDay) -
             duration,
-      ).unwrap(),
-    );
+      ),
+    ).unwrap();
     _controller!.value =
         TimeRange.fromStartAndDuration(actualStartTime, duration);
   }

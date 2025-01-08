@@ -1,9 +1,9 @@
 import 'dart:ui';
 
+import 'package:deranged/deranged.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:ranges/ranges.dart';
 
 import '../utils.dart';
 import 'controller.dart';

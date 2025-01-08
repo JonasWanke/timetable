@@ -44,8 +44,7 @@ class MultiDateEventHeaderOverflow extends StatelessWidget {
         id: date,
         title: TimetableLocalizations.of(context).allDayOverflow(overflowCount),
         backgroundColor: context.theme.colorScheme.surface.withOpacity(0),
-        start: date.atMidnight,
-        end: date.next.atMidnight,
+        range: date.dateTimes,
       ),
       info: const AllDayEventLayoutInfo(hiddenStartDays: 0, hiddenEndDays: 0),
       onTap: onMultiDateHeaderOverflowTap == null

@@ -11,7 +11,7 @@ import 'layouts/multi_date.dart';
 
 typedef WeekTapCallback = void Function(IsoYearWeek week);
 typedef DateTapCallback = void Function(Date date);
-typedef DateTimeTapCallback = void Function(DateTime dateTime);
+typedef CDateTimeTapCallback = void Function(CDateTime dateTime);
 
 @immutable
 class TimetableCallbacks {
@@ -49,7 +49,7 @@ class TimetableCallbacks {
   /// and time.
   ///
   /// Used internally by [DateContent].
-  final DateTimeTapCallback? onDateTimeBackgroundTap;
+  final CDateTimeTapCallback? onDateTimeBackgroundTap;
 
   /// Called when the user taps on the overflow of a [MultiDateEventHeader].
   ///
@@ -75,7 +75,7 @@ class TimetableCallbacks {
     bool clearOnDateTap = false,
     DateTapCallback? onDateBackgroundTap,
     bool clearOnDateBackgroundTap = false,
-    DateTimeTapCallback? onDateTimeBackgroundTap,
+    CDateTimeTapCallback? onDateTimeBackgroundTap,
     bool clearOnDateTimeBackgroundTap = false,
     DateTapCallback? onMultiDateHeaderOverflowTap,
     bool clearOnMultiDateHeaderOverflowTap = false,

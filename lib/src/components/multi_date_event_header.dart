@@ -2,9 +2,9 @@ import 'dart:ui';
 
 import 'package:black_hole_flutter/black_hole_flutter.dart';
 import 'package:chrono/chrono.dart';
+import 'package:deranged/deranged.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:ranges/ranges.dart';
 
 import '../callbacks.dart';
 import '../config.dart';
@@ -232,8 +232,9 @@ class _MultiDateEventHeaderEventsState<E extends Event>
   void _updateEventPositions({required int? oldMaxEventRows}) {
     // Remove events outside the current viewport (with some buffer).
     _yPositions.removeWhere((event, yPosition) {
-      return event.start.page.floor() > widget.pageValue.lastVisiblePage ||
-          event.end.page.ceil() <= widget.pageValue.firstVisibleDate.page;
+      return event.range.start.page.floor() >
+              widget.pageValue.lastVisiblePage ||
+          event.range.end.page.ceil() <= widget.pageValue.firstVisibleDate.page;
     });
     _maxEventPositions.removeWhere((date, _) {
       return date < widget.pageValue.firstVisiblePage ||
@@ -278,7 +279,7 @@ class _MultiDateEventHeaderEventsState<E extends Event>
     }
 
     for (final date in widget.pageValue.visibleDatesIterable) {
-      final dayRange = date.fullDayRange;
+      final dayRange = date.dateTimes;
       final maxEventPosition = _yPositions.entries
           .where((it) => it.key.range.intersects(dayRange))
           .map((it) => it.value ?? widget.maxEventRows)
@@ -332,8 +333,8 @@ class _MultiDateEventHeaderEventsState<E extends Event>
       event,
       AllDayEventLayoutInfo(
         hiddenStartDays:
-            (widget.pageValue.page - event.start.page).coerceAtLeast(0),
-        hiddenEndDays: (event.end.page.ceil() -
+            (widget.pageValue.page - event.range.start.page).coerceAtLeast(0),
+        hiddenEndDays: (event.range.end.page.ceil() -
                 widget.pageValue.page -
                 widget.pageValue.visibleDayCount)
             .coerceAtLeast(0),

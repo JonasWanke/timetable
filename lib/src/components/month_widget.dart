@@ -1,8 +1,8 @@
 import 'package:black_hole_flutter/black_hole_flutter.dart';
 import 'package:chrono/chrono.dart';
+import 'package:deranged/deranged.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_layout_grid/flutter_layout_grid.dart';
-import 'package:ranges/ranges.dart';
 
 import '../config.dart';
 import '../theme.dart';
@@ -75,7 +75,7 @@ class MonthWidget extends StatelessWidget {
     final style = this.style ??
         TimetableTheme.orDefaultOf(context).monthWidgetStyleProvider(yearMonth);
 
-    final firstDay = yearMonth.firstDay.previousOrSame(style.startOfWeek);
+    final firstDay = yearMonth.dates.start.previousOrSame(style.startOfWeek);
     final minDayCount = yearMonth.length;
     final weekCount = minDayCount.roundToWeeks(rounding: Rounding.up).inWeeks;
 
@@ -108,7 +108,7 @@ class MonthWidget extends StatelessWidget {
         // By using today as the base, highlighting for the current day is
         // applied automatically.
         // FIXME(JonasWanke): support startOfWeek
-        for (final day in today.isoYearWeek.days)
+        for (final day in today.isoYearWeek.dates.iter)
           GridPlacement(
             columnStart: day.weekday.isoNumber,
             rowStart: 0,

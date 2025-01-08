@@ -4,7 +4,6 @@ import 'package:flutter/widgets.dart';
 import '../callbacks.dart';
 import '../event/event.dart';
 import '../time/overlay.dart';
-import '../utils.dart';
 import 'date_events.dart';
 import 'time_overlays.dart';
 
@@ -27,7 +26,7 @@ class DateContent<E extends Event> extends StatelessWidget {
     this.overlays = const [],
     this.onBackgroundTap,
   })  : assert(
-          events.every((e) => e.range.intersects(date.fullDayRange)),
+          events.every((e) => e.range.intersects(date.dateTimes)),
           'All events must intersect the given date',
         ),
         events = events.sortedByStartLength();
@@ -37,7 +36,7 @@ class DateContent<E extends Event> extends StatelessWidget {
   final List<E> events;
   final List<TimeOverlay> overlays;
 
-  final DateTimeTapCallback? onBackgroundTap;
+  final CDateTimeTapCallback? onBackgroundTap;
 
   @override
   Widget build(BuildContext context) {

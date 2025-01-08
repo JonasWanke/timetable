@@ -25,7 +25,7 @@ class DateEvents<E extends Event> extends StatelessWidget {
     this.eventBuilder,
     this.style,
   })  : assert(
-          events.every((e) => e.range.intersects(date.fullDayRange)),
+          events.every((e) => e.range.intersects(date.dateTimes)),
           'All events must intersect the given date',
         ),
         events = events.sortedByStartLength();
@@ -196,14 +196,14 @@ class _DayEventsLayoutDelegate<E extends Event>
       return duration.dayFraction * size.height;
     }
 
-    double dateTimeToY(DateTime dateTime) {
+    double dateTimeToY(CDateTime dateTime) {
       if (dateTime.date < date) return 0;
       if (dateTime.date > date) return size.height;
       return durationToY(dateTime.time.nanosecondsSinceMidnight);
     }
 
     for (final event in events) {
-      final top = dateTimeToY(event.start)
+      final top = dateTimeToY(event.range.start)
           .coerceAtMost(size.height - durationToY(style.minEventDuration))
           .coerceAtMost(size.height - style.minEventHeight);
       final height = durationToY(_durationOn(event, size.height))
@@ -233,9 +233,9 @@ class _DayEventsLayoutDelegate<E extends Event>
     final positions = _EventPositions();
 
     var currentGroup = <E>[];
-    DateTime? currentEnd;
+    CDateTime? currentEnd;
     for (final event in events) {
-      if (currentEnd != null && event.start >= currentEnd) {
+      if (currentEnd != null && event.range.start >= currentEnd) {
         _endGroup(positions, currentGroup, height);
         currentGroup = [];
         currentEnd = null;
@@ -269,27 +269,29 @@ class _DayEventsLayoutDelegate<E extends Event>
     for (final event in currentGroup) {
       var minColumn = -1;
       var minIndex = 1 << 31;
-      DateTime? minEnd;
+      CDateTime? minEnd;
       var columnFound = false;
       for (var columnIndex = 0; columnIndex < columns.length; columnIndex++) {
         final column = columns[columnIndex];
         final other = column.last;
 
         // No space in current column
-        if (!style.enableStacking && event.start < _actualEnd(other, height) ||
+        if (!style.enableStacking &&
+                event.range.start < _actualEnd(other, height) ||
             style.enableStacking &&
-                event.start < other.start + style.minEventDeltaForStacking) {
+                event.range.start <
+                    other.range.start + style.minEventDeltaForStacking) {
           continue;
         }
 
         final index = column
-                .where((e) => _actualEnd(e, height) >= event.start)
+                .where((e) => _actualEnd(e, height) >= event.range.start)
                 .map((e) => positions.eventPositions[e]!.index)
                 .maxOrNull ??
             -1;
 
         final previousEnd = column
-            .map((it) => it.end)
+            .map((it) => it.range.end)
             .reduce((value, element) => value.coerceAtLeast(element));
 
         // Further at the top and hence wider
@@ -332,8 +334,8 @@ class _DayEventsLayoutDelegate<E extends Event>
             .where((e) => positions.eventPositions[e]!.column == i)
             .where(
               (e) =>
-                  event.start < _actualEnd(e, height) &&
-                  e.start < _actualEnd(event, height),
+                  event.range.start < _actualEnd(e, height) &&
+                  e.range.start < _actualEnd(event, height),
             )
             .isNotEmpty;
         if (hasOverlapInColumn) break;
@@ -347,16 +349,16 @@ class _DayEventsLayoutDelegate<E extends Event>
     positions.groupColumnCounts.add(columns.length);
   }
 
-  DateTime _actualEnd(E event, double height) {
+  CDateTime _actualEnd(E event, double height) {
     final minDurationForHeight =
         Nanoseconds.normalDay.timesDouble(style.minEventHeight / height);
-    return event.end
-        .coerceAtLeast(event.start + style.minEventDuration)
-        .coerceAtLeast(event.start + minDurationForHeight);
+    return event.range.end
+        .coerceAtLeast(event.range.start + style.minEventDuration)
+        .coerceAtLeast(event.range.start + minDurationForHeight);
   }
 
   TimeDuration _durationOn(E event, double height) {
-    final start = event.start.coerceAtLeast(date.atMidnight);
+    final start = event.range.start.coerceAtLeast(date.atMidnight);
     final end = _actualEnd(event, height).coerceAtMost(date.next.atMidnight);
     return end.timeDifference(start);
   }

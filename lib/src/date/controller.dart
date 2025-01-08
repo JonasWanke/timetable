@@ -3,9 +3,9 @@ import 'dart:core';
 import 'dart:ui';
 
 import 'package:chrono/chrono.dart';
+import 'package:deranged/deranged.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
-import 'package:ranges/ranges.dart';
 
 import '../config.dart';
 import '../utils.dart';

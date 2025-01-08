@@ -29,6 +29,7 @@ class NowIndicator extends StatelessWidget {
     this.style,
     this.child,
   });
+  // TODO(JonasWanke): accept `nowGetter`
 
   final NowIndicatorStyle? style;
   final Widget? child;
@@ -296,13 +297,13 @@ class _NowIndicatorPainter extends CustomPainter {
         controller: controller,
         style: style,
         devicePixelRatio: devicePixelRatio,
-        repaintNotifier: ValueNotifier(DateTime.nowInLocalZone()),
+        repaintNotifier: ValueNotifier(CDateTime.nowInLocalZone()),
       );
   _NowIndicatorPainter._({
     required this.controller,
     required this.style,
     required this.devicePixelRatio,
-    required ValueNotifier<DateTime> repaintNotifier,
+    required ValueNotifier<CDateTime> repaintNotifier,
   })  : _paint = Paint()
           ..color = style.lineColor
           ..strokeWidth = style.lineWidth,
@@ -321,7 +322,7 @@ class _NowIndicatorPainter extends CustomPainter {
 
     final pageValue = controller.value;
     final dateWidth = size.width / pageValue.visibleDayCount;
-    final now = DateTime.nowInLocalZone();
+    final now = CDateTime.nowInLocalZone();
     final temporalXOffset = now.date.page - pageValue.page;
     final left = temporalXOffset * dateWidth;
     final right = left + dateWidth;
@@ -346,14 +347,14 @@ class _NowIndicatorPainter extends CustomPainter {
         () {
           // [ChangeNotifier.notifyListeners] is protected, so we use a
           // [ValueNotifier] and always set a different time.
-          _repaintNotifier.value = DateTime.nowInLocalZone();
+          _repaintNotifier.value = CDateTime.nowInLocalZone();
         },
       ),
     );
   }
 
   int _activeListenerCount = 0;
-  final ValueNotifier<DateTime> _repaintNotifier;
+  final ValueNotifier<CDateTime> _repaintNotifier;
   CancelableOperation<void>? _repaint;
 
   @override

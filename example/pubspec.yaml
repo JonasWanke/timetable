@@ -16,6 +16,7 @@ dependencies:
       ref: 15fbbf13886fa9a58a5dabe9339514acf9a100b9
   collection: ^1.18.0
   debug_overlay: ^0.2.1
+  deranged: ^0.0.0
   flutter:
     sdk: flutter
   flutter_localizations:
@@ -30,6 +31,12 @@ dev_dependencies:
       url: https://github.com/JonasWanke/supernova.git
       path: supernova
       ref: c89aad86b75155d5ea8c61c9a0d9ac635c1b92ec
+
+dependency_overrides:
+  chrono:
+    path: ../../chrono/chrono
+  deranged:
+    path: ../../deranged
 
 flutter:
   uses-material-design: true

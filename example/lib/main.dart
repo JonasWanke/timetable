@@ -4,6 +4,7 @@ import 'dart:async';
 
 import 'package:black_hole_flutter/black_hole_flutter.dart';
 import 'package:chrono/chrono.dart';
+import 'package:deranged/deranged.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:timetable/timetable.dart';
@@ -99,7 +100,7 @@ class _TimetableExampleState extends State<TimetableExample>
         onWeekTap: (week) {
           _showSnackBar('Tapped on week $week.');
           _updateVisibleDateRange(PredefinedVisibleDateRange.week);
-          unawaited(_dateController.animateTo(week.firstDay, vsync: this));
+          unawaited(_dateController.animateTo(week.dates.start, vsync: this));
         },
         onDateTap: (date) {
           _showSnackBar('Tapped on date $date.');
@@ -144,12 +145,12 @@ class _TimetableExampleState extends State<TimetableExample>
         final index = _draggedEvents.indexWhere((it) => it.id == event.id);
         final oldEvent = _draggedEvents[index];
         _draggedEvents[index] = oldEvent.copyWith(
-          start: dateTime,
-          end: dateTime + oldEvent.duration,
+          range: dateTime.rangeUntil(dateTime + oldEvent.range.timeDuration),
         );
       }),
       onDragEnd: (dateTime) {
-        dateTime = (dateTime ?? event.start).roundTimeToMultipleOf(roundedTo);
+        dateTime =
+            (dateTime ?? event.range.start).roundTimeToMultipleOf(roundedTo);
         setState(() => _draggedEvents.removeWhere((it) => it.id == event.id));
         _showSnackBar('Dragged event to $dateTime.');
       },

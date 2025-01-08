@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:black_hole_flutter/black_hole_flutter.dart';
 import 'package:chrono/chrono.dart';
+import 'package:deranged/deranged.dart';
 import 'package:flutter/material.dart';
 import 'package:timetable/timetable.dart';
 
@@ -129,8 +130,9 @@ class _DemoEvent extends BasicEvent {
     return _DemoEvent._(
       demoId.toString(),
       eventId,
-      start: (today + Days(demoId)).at(start),
-      end: (today + Days(demoId + endDateOffset)).at(end),
+      range: (today + Days(demoId))
+          .at(start)
+          .rangeUntil((today + Days(demoId + endDateOffset)).at(end)),
     );
   }
 
@@ -139,16 +141,13 @@ class _DemoEvent extends BasicEvent {
     return _DemoEvent._(
       'a',
       id,
-      start: (today + Days(startOffset)).atMidnight,
-      end: (today + Days(startOffset + length)).atMidnight,
+      range: (today + Days(startOffset))
+          .atMidnight
+          .rangeUntil((today + Days(startOffset + length)).atMidnight),
     );
   }
-  _DemoEvent._(
-    String demoId,
-    int eventId, {
-    required super.start,
-    required super.end,
-  }) : super(
+  _DemoEvent._(String demoId, int eventId, {required super.range})
+      : super(
           id: '$demoId-$eventId',
           title: '$demoId-$eventId',
           backgroundColor: _getColor('$demoId-$eventId'),

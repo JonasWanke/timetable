@@ -1,5 +1,6 @@
 import 'package:black_hole_flutter/black_hole_flutter.dart';
 import 'package:chrono/chrono.dart';
+import 'package:deranged/deranged.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -13,12 +14,11 @@ import 'event.dart';
 /// * [BasicEventWidget], which can display instances of [BasicEvent].
 @immutable
 class BasicEvent extends Event {
-  const BasicEvent({
+  BasicEvent({
     required this.id,
     required this.title,
     required this.backgroundColor,
-    required super.start,
-    required super.end,
+    required super.range,
   });
 
   /// An ID for this event.
@@ -42,15 +42,13 @@ class BasicEvent extends Event {
     Object? id,
     String? title,
     Color? backgroundColor,
-    DateTime? start,
-    DateTime? end,
+    Range<CDateTime>? range,
   }) {
     return BasicEvent(
       id: id ?? this.id,
       title: title ?? this.title,
       backgroundColor: backgroundColor ?? this.backgroundColor,
-      start: start ?? this.start,
-      end: end ?? this.end,
+      range: range ?? this.range,
     );
   }
 
@@ -59,9 +57,10 @@ class BasicEvent extends Event {
   @override
   bool operator ==(Object other) =>
       other is BasicEvent &&
-      super == other &&
+      id == other.id &&
       title == other.title &&
-      backgroundColor == other.backgroundColor;
+      backgroundColor == other.backgroundColor &&
+      range == other.range;
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {

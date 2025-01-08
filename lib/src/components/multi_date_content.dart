@@ -1,8 +1,8 @@
 import 'package:chrono/chrono.dart';
+import 'package:deranged/deranged.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:ranges/ranges.dart';
 
 import '../config.dart';
 import '../date/controller.dart';
@@ -120,7 +120,7 @@ class MultiDateContentGeometry extends State<_MultiDateContentGeometryWidget> {
     return (Offset.zero & renderBox.size).contains(localOffset);
   }
 
-  DateTime resolveOffset(Offset globalOffset) {
+  CDateTime resolveOffset(Offset globalOffset) {
     final renderBox = _findRenderBox();
     final size = renderBox.size;
     final localOffset = renderBox.globalToLocal(globalOffset);
@@ -142,22 +142,22 @@ typedef PartDayDragStartCallback = VoidCallback;
 
 typedef PartDayDragUpdateCallbackRaw = void Function(
   GlobalKey<MultiDateContentGeometry>? geometryKey,
-  DateTime dateTime,
+  CDateTime dateTime,
 );
-typedef PartDayDragUpdateCallback = void Function(DateTime dateTime);
+typedef PartDayDragUpdateCallback = void Function(CDateTime dateTime);
 typedef PartDayDragUpdateCallbackWithGeometryKey = void Function(
   GlobalKey<MultiDateContentGeometry> geometryKey,
-  DateTime dateTime,
+  CDateTime dateTime,
 );
 
 typedef PartDayDragEndCallbackRaw = void Function(
   GlobalKey<MultiDateContentGeometry>? geometryKey,
-  DateTime? dateTime,
+  CDateTime? dateTime,
 );
-typedef PartDayDragEndCallback = void Function(DateTime? dateTime);
+typedef PartDayDragEndCallback = void Function(CDateTime? dateTime);
 typedef PartDayDragEndCallbackWithGeometryKey = void Function(
   GlobalKey<MultiDateContentGeometry> geometryKey,
-  DateTime? dateTime,
+  CDateTime? dateTime,
 );
 
 typedef PartDayDragCanceledCallbackRaw = void Function(

@@ -2,7 +2,6 @@ import 'package:chrono/chrono.dart';
 import 'package:flutter/widgets.dart';
 
 import '../event/event.dart';
-import '../utils.dart';
 
 @immutable
 class TimeOverlay {
@@ -78,12 +77,13 @@ extension EventToTimeOverlay on Event {
     required Widget widget,
     TimeOverlayPosition position = TimeOverlayPosition.inFrontOfEvents,
   }) {
-    if (!range.intersects(date.fullDayRange)) return null;
+    if (!range.intersects(date.dateTimes)) return null;
 
     return TimeOverlay(
-      start: Time.fromTimeSinceMidnight(start.timeDifference(date.atMidnight))
-          .unwrapOr(Time.midnight),
-      end: Time.fromTimeSinceMidnight(end.timeDifference(date.atMidnight))
+      start: Time.fromTimeSinceMidnight(
+        range.start.timeDifference(date.atMidnight),
+      ).unwrapOr(Time.midnight),
+      end: Time.fromTimeSinceMidnight(range.end.timeDifference(date.atMidnight))
           .unwrapOrNull(),
       widget: widget,
       position: position,

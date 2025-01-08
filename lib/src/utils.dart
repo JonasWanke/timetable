@@ -1,7 +1,6 @@
 import 'package:chrono/chrono.dart';
 import 'package:fixed/fixed.dart';
 import 'package:flutter/widgets.dart' hide Interval;
-import 'package:ranges/ranges.dart';
 
 export 'package:collection/collection.dart';
 export 'package:dart_date/dart_date.dart' show Interval;
@@ -49,11 +48,11 @@ typedef YearWeekWidgetBuilder = Widget Function(
 );
 typedef DateWidgetBuilder = Widget Function(BuildContext context, Date date);
 
-extension DateTimeTimetable on DateTime {
-  static DateTime fromPage(double page) {
-    return DateTime.fromDurationSinceUnixEpoch(
+extension CDateTimeTimetable on CDateTime {
+  static CDateTime fromPage(double page) {
+    return Instant.fromDurationSinceUnixEpoch(
       Nanoseconds.normalDay.timesDouble(page),
-    );
+    ).dateTimeInUtc;
   }
 
   double get page =>
@@ -64,9 +63,6 @@ extension DateTimetable on Date {
   static Date fromPage(int page) => Date.fromDaysSinceUnixEpoch(Days(page));
 
   int get page => daysSinceUnixEpoch.inDays;
-
-  // TODO(JonasWanke): Move to Chrono
-  Range<DateTime> get fullDayRange => Range(atMidnight, next.atMidnight);
 }
 
 extension TimeDurationTimetableInternal on TimeDuration {

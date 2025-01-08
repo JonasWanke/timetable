@@ -139,7 +139,7 @@ class MonthPageController extends ChangeNotifier
   }
 
   // FIXME: if negative pages are supported: get rid of this
-  static final _minYearMonth = const Year(-1000000).firstMonth;
+  static final _minYearMonth = const Year(-1000000).months.start;
   static final _minPage =
       (_minYearMonth.year.number * Months.perYear) + _minYearMonth.month.index;
   static YearMonth _monthFromPage(int page) {

@@ -2,9 +2,9 @@ import 'dart:math' as math;
 
 import 'package:black_hole_flutter/black_hole_flutter.dart';
 import 'package:chrono/chrono.dart';
+import 'package:deranged/deranged.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:ranges/ranges.dart';
 
 import '../theme.dart';
 import '../utils.dart';

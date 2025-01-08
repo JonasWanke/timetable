@@ -58,7 +58,7 @@ class MonthIndicatorStyle {
           () {
             context.dependOnTimetableLocalizations();
             return DateFormat.MMMM().format(
-              yearMonth.firstDay.atMidnight.asCoreDateTimeInLocalZone,
+              yearMonth.dates.start.atMidnight.asCoreDateTimeInLocalZone,
             );
           }(),
     );

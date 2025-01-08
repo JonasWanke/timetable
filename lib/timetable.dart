@@ -37,7 +37,7 @@ export 'src/time/time_range.dart';
 export 'src/time/zoom.dart';
 export 'src/utils.dart'
     show
-        DateTimeTimetable,
+        CDateTimeTimetable,
         DateTimetable,
         DateWidgetBuilder,
         YearMonthWidgetBuilder,

@@ -72,7 +72,7 @@ class _CompactMonthTimetableState extends State<CompactMonthTimetable>
 
     _dateControllerDriverCount++;
     await dateController?.animateTo(
-      _monthPageController.value.firstDay,
+      _monthPageController.value.dates.start,
       vsync: this,
     );
     _dateControllerDriverCount--;

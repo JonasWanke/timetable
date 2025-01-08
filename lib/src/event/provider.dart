@@ -1,6 +1,6 @@
 import 'package:chrono/chrono.dart';
+import 'package:deranged/deranged.dart';
 import 'package:flutter/widgets.dart';
-import 'package:ranges/ranges.dart';
 
 import 'event.dart';
 

@@ -283,9 +283,8 @@ class _TimeZoomState extends State<TimeZoom>
       startTime.coerceIn(
         _controller!.maxRange.startTime.nanosecondsSinceMidnight,
         (_controller!.maxRange.endTime?.nanosecondsSinceMidnight ??
-                Nanoseconds.normalDay) -
-            duration -
-            Nanoseconds(1),
+                (Nanoseconds.normalDay - Nanoseconds(1))) -
+            duration,
       ),
     ).unwrap();
     _controller!.value =

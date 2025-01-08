@@ -19,7 +19,7 @@ class TimeRange {
     assert(endAsDuration <= Hours.normalDay);
     return TimeRange(
       startTime,
-      Time.fromTimeSinceMidnight(endAsDuration).unwrap(),
+      Time.fromTimeSinceMidnight(endAsDuration).unwrapOrNull(),
     );
   }
 

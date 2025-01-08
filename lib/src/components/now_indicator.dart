@@ -341,16 +341,13 @@ class _NowIndicatorPainter extends CustomPainter {
     // pixel.
     final maxDistance = 0.5 / devicePixelRatio;
     final delay = Nanoseconds.normalDay.timesDouble(maxDistance / size.height);
-    _repaint = CancelableOperation.fromFuture(
-      Future<void>.delayed(
-        delay.roundToCoreDuration(),
-        () {
-          // [ChangeNotifier.notifyListeners] is protected, so we use a
-          // [ValueNotifier] and always set a different time.
-          _repaintNotifier.value = CDateTime.nowInLocalZone();
-        },
-      ),
-    );
+    // ignore: discarded_futures
+    _repaint = CancelableOperation.fromFuture(() async {
+      await delay.wait;
+      // [ChangeNotifier.notifyListeners] is protected, so we use a
+      // [ValueNotifier] and always set a different time.
+      _repaintNotifier.value = CDateTime.nowInLocalZone();
+    }());
   }
 
   int _activeListenerCount = 0;

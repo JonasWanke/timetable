@@ -106,12 +106,12 @@ class BasicEventWidget extends StatelessWidget {
           onTap: onTap,
           child: Padding(
             padding: const EdgeInsets.only(left: 4, top: 2, right: 4),
-            child: DefaultTextStyle(
+            child: Text(
+              event.title,
               style: context.textTheme.bodyMedium!.copyWith(
                 fontSize: 12,
                 color: event.backgroundColor.highEmphasisOnColor,
               ),
-              child: Text(event.title),
             ),
           ),
         ),
@@ -151,10 +151,7 @@ class BasicAllDayEventWidget extends StatelessWidget {
           radii: style.radii,
         ),
         child: Material(
-          shape: AllDayEventBorder(
-            info: info,
-            radii: style.radii,
-          ),
+          shape: AllDayEventBorder(info: info, radii: style.radii),
           clipBehavior: Clip.antiAlias,
           color: Colors.transparent,
           child: InkWell(

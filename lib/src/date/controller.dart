@@ -43,21 +43,26 @@ class DateController extends ValueNotifier<DatePageValueWithScrollActivity> {
     _visibleDates = ValueNotifier(const RangeInclusive.single(Date.unixEpoch));
     addListener(() => _visibleDates.value = value.visibleDates);
 
-    var startPage = (initialDate ?? Date.todayInLocalZone()).page.toDouble();
-    startPage = value.visibleRange.getTargetPageForFocus(startPage).toDouble();
-
-    final actualVisibleRange = visibleRange ?? _defaultVisibleRange;
-    if (actualVisibleRange.canScroll) {
-      startPage -= actualVisibleRange.applyBoundaryConditions(startPage);
-    }
-
     value = value.copyWithActivity(
-      page: value.visibleRange.getTargetPageForFocus(startPage),
+      page: _getTargetPageWithBoundaryConditions(
+        (initialDate ?? Date.todayInLocalZone()).page.toDouble(),
+        value.visibleRange,
+      ),
       activity: const IdleDateScrollActivity(),
     );
   }
 
   static final _defaultVisibleRange = VisibleDateRange.week();
+  static double _getTargetPageWithBoundaryConditions(
+    double focusPage,
+    VisibleDateRange visibleRange,
+  ) {
+    focusPage = visibleRange.getTargetPageForFocus(focusPage).toDouble();
+    if (visibleRange.canScroll) {
+      focusPage -= visibleRange.applyBoundaryConditions(focusPage);
+    }
+    return focusPage;
+  }
 
   late final ValueNotifier<Date> _date;
   ValueListenable<Date> get date => _date;
@@ -66,7 +71,7 @@ class DateController extends ValueNotifier<DatePageValueWithScrollActivity> {
   set visibleRange(VisibleDateRange visibleRange) {
     cancelAnimation();
     value = value.copyWithActivity(
-      page: visibleRange.getTargetPageForFocus(value.page),
+      page: _getTargetPageWithBoundaryConditions(value.page, visibleRange),
       visibleRange: visibleRange,
       activity: const IdleDateScrollActivity(),
     );

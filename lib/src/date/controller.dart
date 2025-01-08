@@ -30,7 +30,7 @@ class DateController extends ValueNotifier<DatePageValueWithScrollActivity> {
         // We set the correct value in the body below.
         super(
           DatePageValueWithScrollActivity(
-            visibleRange ?? VisibleDateRange.week(),
+            visibleRange ?? _defaultVisibleRange,
             0,
             const IdleDateScrollActivity(),
           ),
@@ -43,12 +43,21 @@ class DateController extends ValueNotifier<DatePageValueWithScrollActivity> {
     _visibleDates = ValueNotifier(const RangeInclusive.single(Date.unixEpoch));
     addListener(() => _visibleDates.value = value.visibleDates);
 
-    final rawStartPage = initialDate?.page ?? Date.todayInLocalZone().page;
+    var startPage = (initialDate ?? Date.todayInLocalZone()).page.toDouble();
+    startPage = value.visibleRange.getTargetPageForFocus(startPage).toDouble();
+
+    final actualVisibleRange = visibleRange ?? _defaultVisibleRange;
+    if (actualVisibleRange.canScroll) {
+      startPage -= actualVisibleRange.applyBoundaryConditions(startPage);
+    }
+
     value = value.copyWithActivity(
-      page: value.visibleRange.getTargetPageForFocus(rawStartPage),
+      page: value.visibleRange.getTargetPageForFocus(startPage),
       activity: const IdleDateScrollActivity(),
     );
   }
+
+  static final _defaultVisibleRange = VisibleDateRange.week();
 
   late final ValueNotifier<Date> _date;
   ValueListenable<Date> get date => _date;

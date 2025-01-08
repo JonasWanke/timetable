@@ -30,13 +30,11 @@ dependencies:
       path: chrono
       ref: 1ddb4151078e668d40d1f662d2b3d8f873faeb6e
   collection: ^1.15.0
-  dart_date: ^1.1.0
   dartx: ^1.0.0
   deranged: # ^0.0.0
     git:
       url: https://github.com/JonasWanke/deranged.git
       ref: d3623a08412048eea309e156017944159ef5dfed
-  fixed: ^4.0.1
   flutter:
     sdk: flutter
   flutter_layout_grid: ^2.0.0

@@ -166,14 +166,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.19.0"
-  dart_date:
-    dependency: transitive
-    description:
-      name: dart_date
-      sha256: b107b5fed4aa2a0e5ccc636049a98833f5bdbb99e1d67b9b1a4ef80037482f01
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.4.0"
   dart_style:
     dependency: transitive
     description:
@@ -206,16 +198,8 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.2.12"
-  decimal:
-    dependency: transitive
-    description:
-      name: decimal
-      sha256: "24a261d5d5c87e86c7651c417a5dbdf8bcd7080dd592533910e8d0505a279f21"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.3.3"
   deranged:
-    dependency: "direct overridden"
+    dependency: "direct main"
     description:
       path: "../../deranged"
       relative: true
@@ -269,14 +253,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "7.0.1"
-  fixed:
-    dependency: transitive
-    description:
-      name: fixed
-      sha256: "0d55e0a083026060f0b50c7f6e00d40a772d6a6b5e1812bc6e57c75ea58c21cc"
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.3.0"
   fixnum:
     dependency: transitive
     description:
@@ -564,14 +540,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.2.2"
-  rational:
-    dependency: transitive
-    description:
-      name: rational
-      sha256: cb808fb6f1a839e6fc5f7d8cb3b0a10e1db48b3be102de73938c627f0b636336
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.2.3"
   rxdart:
     dependency: transitive
     description:
@@ -763,14 +731,6 @@ packages:
       url: "https://github.com/JonasWanke/time_machine.git"
     source: git
     version: "0.9.17"
-  timeago:
-    dependency: transitive
-    description:
-      name: timeago
-      sha256: "054cedf68706bb142839ba0ae6b135f6b68039f0b8301cbe8784ae653d5ff8de"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.7.0"
   timetable:
     dependency: "direct main"
     description:

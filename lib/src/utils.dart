@@ -1,9 +1,7 @@
 import 'package:chrono/chrono.dart';
-import 'package:fixed/fixed.dart';
 import 'package:flutter/widgets.dart' hide Interval;
 
 export 'package:collection/collection.dart';
-export 'package:dart_date/dart_date.dart' show Interval;
 export 'package:dartx/dartx.dart'
     show
         ComparableCoerceAtLeastExtension,
@@ -32,10 +30,6 @@ extension NanosecondsTimetableInternal on Nanoseconds {
       this > max.asNanoseconds ? max.asNanoseconds : this;
   Nanoseconds coerceIn(TimeDuration min, TimeDuration max) =>
       coerceAtLeast(min).coerceAtMost(max);
-}
-
-extension FixedTimetableInternal on Fixed {
-  double toDouble() => toDecimal().toDouble();
 }
 
 typedef YearMonthWidgetBuilder = Widget Function(

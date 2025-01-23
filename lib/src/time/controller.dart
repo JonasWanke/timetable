@@ -38,7 +38,7 @@ class TimeController extends ValueNotifier<TimeRange> {
     required TimeRange initialRange,
     required this.maxRange,
     required this.minDayHeight,
-  })  : assert(minDuration.isNonNegative),
+  })  : assert(minDuration.isPositive),
         assert(minDuration <= maxPossibleDuration),
         assert(maxDuration <= maxPossibleDuration),
         assert(minDuration <= maxDuration),

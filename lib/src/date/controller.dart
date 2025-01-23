@@ -122,9 +122,9 @@ class DateController extends ValueNotifier<DatePageValueWithScrollActivity> {
     _animationController = controller;
 
     final previousPage = value.page;
-    final targetPage = value.visibleRange.getTargetPageForFocus(page);
-    final targetDatePageValue =
-        DatePageValue(visibleRange, targetPage.toDouble());
+    final targetPage =
+        _getTargetPageWithBoundaryConditions(page.toDouble(), visibleRange);
+    final targetDatePageValue = DatePageValue(visibleRange, targetPage);
     controller.addListener(() {
       value = value.copyWithActivity(
         page: lerpDouble(previousPage, targetPage, controller.value)!,
@@ -148,7 +148,7 @@ class DateController extends ValueNotifier<DatePageValueWithScrollActivity> {
   void jumpToPage(int page) {
     cancelAnimation();
     value = value.copyWithActivity(
-      page: value.visibleRange.getTargetPageForFocus(page),
+      page: _getTargetPageWithBoundaryConditions(page.toDouble(), visibleRange),
       activity: const IdleDateScrollActivity(),
     );
   }

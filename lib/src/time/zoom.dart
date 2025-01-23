@@ -73,6 +73,7 @@ class _TimeZoomState extends State<TimeZoom>
     } else if (newController != _controller) {
       _controller!.removeListener(_onControllerChanged);
       _registration?.unregister();
+      _registration = null;
     }
     _controller = newController;
     newController.addListener(_onControllerChanged);
@@ -93,6 +94,7 @@ class _TimeZoomState extends State<TimeZoom>
     if (_controller != null) {
       _controller!.removeListener(_onControllerChanged);
       _registration?.unregister();
+      _registration = null;
     } else {
       assert(_registration == null);
     }
@@ -112,7 +114,7 @@ class _TimeZoomState extends State<TimeZoom>
         if (_registration == null || heightToReport != _registration!.height) {
           scheduleMicrotask(() {
             // This might update the controller's value, causing a rebuild
-            //  which is not permitted during the build phase).
+            // which is not permitted during the build phase).
             if (_registration == null) {
               _registration = _controller!.registerClient(heightToReport);
             } else {

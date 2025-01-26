@@ -295,7 +295,9 @@ class _DayEventsLayoutDelegate<E extends Event>
 
         // Further at the top and hence wider
         if (index < minIndex ||
-            (index == minIndex && (minEnd != null && previousEnd < minEnd))) {
+            (minIndex > -1 &&
+                (index == minIndex &&
+                    (minEnd != null && previousEnd < minEnd)))) {
           minColumn = columnIndex;
           minIndex = index;
           minEnd = previousEnd;

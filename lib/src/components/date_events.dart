@@ -276,11 +276,10 @@ class _DayEventsLayoutDelegate<E extends Event>
         final other = column.last;
 
         // No space in current column
-        if (!style.enableStacking &&
-                event.range.start < _actualEnd(other, height) ||
-            style.enableStacking &&
+        if (event.range.start < _actualEnd(other, height) &&
+            (!style.enableStacking ||
                 event.range.start <
-                    other.range.start + style.minEventDeltaForStacking) {
+                    other.range.start + style.minEventDeltaForStacking)) {
           continue;
         }
 

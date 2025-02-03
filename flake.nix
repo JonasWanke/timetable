@@ -19,8 +19,8 @@
 
         # Android
         androidSdkArgs = {
-          buildToolsVersions = [ "30.0.3" ];
-          platformVersions = [ "34" ];
+          buildToolsVersions = [ "33.0.1" ];
+          platformVersions = [ "33" "34" "35" ];
         };
         androidComposition =
           pkgs.androidenv.composeAndroidPackages androidSdkArgs;

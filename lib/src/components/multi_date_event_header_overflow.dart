@@ -44,6 +44,8 @@ class MultiDateEventHeaderOverflow extends StatelessWidget {
       BasicEvent(
         id: date,
         title: TimetableLocalizations.of(context).allDayOverflow(overflowCount),
+        // TODO(JonasWanke): Remove when updating to Flutter 3.27
+        // ignore: deprecated_member_use
         backgroundColor: context.theme.colorScheme.surface.withOpacity(0),
         start: date,
         end: date.atEndOfDay,

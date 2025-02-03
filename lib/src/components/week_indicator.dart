@@ -267,6 +267,8 @@ class WeekIndicatorStyle {
       tooltip: tooltip ?? localizations.weekOfYear(week),
       decoration: decoration ??
           BoxDecoration(
+            // TODO(JonasWanke): Remove when updating to Flutter 3.27
+            // ignore: deprecated_member_use
             color: colorScheme.brightness.contrastColor.withOpacity(0.05),
             borderRadius: const BorderRadius.all(Radius.circular(4)),
           ),

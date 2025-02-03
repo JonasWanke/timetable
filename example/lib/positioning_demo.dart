@@ -251,6 +251,8 @@ List<TimeOverlay> positioningDemoOverlayProvider(
   assert(date.debugCheckIsValidTimetableDate());
 
   final widget = ColoredBox(
+    // TODO(JonasWanke): Remove when updating to Flutter 3.27
+    // ignore: deprecated_member_use
     color: context.theme.brightness.contrastColor.withOpacity(0.1),
   );
 

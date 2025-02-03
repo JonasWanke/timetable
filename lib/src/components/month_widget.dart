@@ -190,6 +190,8 @@ class MonthWidgetStyle {
           (removeIndividualWeekDecorations
               ? BoxDecoration(
                   color: theme.colorScheme.brightness.contrastColor
+                      // TODO(JonasWanke): Remove when updating to Flutter 3.27
+                      // ignore: deprecated_member_use
                       .withOpacity(0.05),
                   borderRadius: const BorderRadius.all(Radius.circular(4)),
                 )

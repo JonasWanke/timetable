@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 <!-- Template:
-## NEW · 2024-xx-xx
+## NEW · 2025-xx-xx
 
 ### ⚠️ BREAKING CHANGES
 ### 🎉 New Features
@@ -15,6 +15,12 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### 🏗️ Refactoring
 ### 📦 Build & CI
 -->
+
+## 1.0.0-alpha.15 · 2025-02-03
+
+### 📦 Build & CI
+
+- widen `intl` support to `>=0.17.0 <0.21.0` ([`295615a`](https://github.com/JonasWanke/timetable/commit/295615a8c2b9da35dde6ef96ce4655901e7bdcc7)), closes: [#173](https://github.com/JonasWanke/timetable/issues/173)
 
 ## 1.0.0-alpha.14 · 2024-07-24
 

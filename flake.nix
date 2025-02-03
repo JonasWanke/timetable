@@ -15,7 +15,7 @@
           };
         };
 
-        flutter = pkgs.flutterPackages.v3_24;
+        flutter = pkgs.flutterPackages.v3_27;
 
         # Android
         androidSdkArgs = {

@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 /// Supported [Locale.languageCode]s:
 ///
 /// * `de` – German
+/// * `da` – Danish
 /// * `en` – English
 /// * `es` – Spanish
 /// * `fr` – French
@@ -27,7 +28,7 @@ import 'package:intl/intl.dart';
 ///
 /// ## Supporting a new locale
 ///
-/// 1. Copy `TimetableLocalizationsEn` from below, rename it (using the
+/// 1. Copy `TimetableLocalizationEn` from below, rename it (using the
 ///    UpperCamelCase variant of its
 ///    [BCP 47 language tag](https://en.wikipedia.org/wiki/IETF_language_tag)),
 ///    and update it to the new locale. The classes should be ordered
@@ -84,6 +85,7 @@ class TimetableLocalizationsDelegate
 
   static TimetableLocalizations? _getLocalization(Locale locale) {
     return switch ((locale.languageCode, locale.countryCode?.toUpperCase())) {
+      ('da', _) => const TimetableLocalizationDa(),
       ('de', _) => const TimetableLocalizationDe(),
       ('en', _) => const TimetableLocalizationEn(),
       ('es', _) => const TimetableLocalizationEs(),
@@ -168,6 +170,19 @@ extension BuildContextTimetableLocalizations on BuildContext {
 
 // You want to contribute a new localization? Awesome! Please follow the steps
 // listed in the doc comment of [TimetableLocalizationsDelegate] above.
+
+class TimetableLocalizationDa extends TimetableLocalizations {
+  const TimetableLocalizationDa();
+
+  @override
+  List<String> weekLabels(IsoYearWeek yearWeek) {
+    return [weekOfYear(yearWeek), 'Uge ${yearWeek.week}', '${yearWeek.week}'];
+  }
+
+  @override
+  String weekOfYear(IsoYearWeek yearWeek) =>
+      'Uge ${yearWeek.week}, ${yearWeek.weekBasedYear}';
+}
 
 class TimetableLocalizationDe extends TimetableLocalizations {
   const TimetableLocalizationDe();

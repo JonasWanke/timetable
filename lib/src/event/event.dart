@@ -11,9 +11,12 @@ import 'basic.dart';
 ///
 /// * [BasicEvent], which provides a basic implementation to get you started.
 abstract class Event with Diagnosticable {
-  Event({required this.range}) : assert(range.start <= range.end);
+  Event({required this.range, this.sortKey}) : assert(range.start <= range.end);
 
   final Range<CDateTime> range;
+
+  /// A key used to sort events with the same start and end time.
+  final Comparable<dynamic>? sortKey;
 
   bool get isAllDay => range.end.timeDifference(range.start) >= Hours.normalDay;
   bool get isPartDay => !isAllDay;
@@ -41,9 +44,17 @@ extension EventExtension on Event {
 extension TimetableEventIterable<E extends Event> on Iterable<E> {
   List<E> sortedByStartLength() {
     return sorted((a, b) {
-      final result = a.range.start.compareTo(b.range.start);
+      var result = a.range.start.compareTo(b.range.start);
       if (result != 0) return result;
-      return a.range.end.compareTo(b.range.end);
+      result = a.range.end.compareTo(b.range.end);
+      if (result != 0) return result;
+
+      return switch ((a.sortKey, b.sortKey)) {
+        (final a?, final b?) => a.compareTo(b),
+        (null, null) => 0,
+        (null, _) => -1, // a comes before b
+        (_, null) => 1, // b comes before a
+      };
     });
   }
 }

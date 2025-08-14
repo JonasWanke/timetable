@@ -47,7 +47,7 @@ extension TimetableEventIterable<E extends Event> on Iterable<E> {
       var result = a.range.start.compareTo(b.range.start);
       if (result != 0) return result;
       result = a.range.end.compareTo(b.range.end);
-      if (result != 0) return result;
+      if (result != 0) return -result;
 
       return switch ((a.sortKey, b.sortKey)) {
         (final a?, final b?) => a.compareTo(b),

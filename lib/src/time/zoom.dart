@@ -19,8 +19,9 @@ import 'time_range.dart';
 /// This uses a [TimeController] to maintain its state, which has to be supplied
 /// by a [DefaultTimeController] above in the widget tree.
 class TimeZoom extends StatefulWidget {
-  const TimeZoom({super.key, required this.child});
+  const TimeZoom({super.key, this.isInteractive = true, required this.child});
 
+  final bool isInteractive;
   final Widget child;
 
   @override
@@ -128,55 +129,63 @@ class _TimeZoomState extends State<TimeZoom>
           setOffset: _setOffset,
         );
 
-        return RawGestureDetector(
-          gestures: {
-            // We can't use a `GestureDetector` with scaling as that uses
-            // `computePanSlop` to determine the minimum distance a pointer has
-            // to move before it is considered a pan (in this case, a scroll).
-            // If this widget is used in a scrollable context, then the outer
-            // scrollable view would always win in the gesture arena because it
-            // uses `computeHitSlop`, which is half that amount.
-            _ScaleGestureRecognizer:
-                GestureRecognizerFactoryWithHandlers<_ScaleGestureRecognizer>(
-              () => _ScaleGestureRecognizer(debugOwner: this),
-              (instance) {
-                instance
-                  ..onStart = _onScaleStart
-                  ..onUpdate = _onScaleUpdate
-                  ..onEnd = _onScaleEnd
-                  ..dragStartBehavior = DragStartBehavior.down;
-              },
-            ),
-          },
-          child: ClipRect(
-            child: _NoDragSingleChildScrollView(
-              controller: _scrollController!,
-              child: ValueListenableBuilder(
-                valueListenable: _controller!,
-                builder: (context, _, child) {
-                  // Layouts the child so only [_controller.maxRange] is
-                  // visible.
-                  final innerChildHeight = _outerChildHeight *
-                      Nanoseconds.normalDay.dividedByTimeDuration(
-                        _controller!.maxRange.duration,
-                      );
-                  final innerOffset = -innerChildHeight *
-                      _controller!.maxRange.startTime.nanosecondsSinceMidnight
-                          .dividedByTimeDuration(Nanoseconds.normalDay);
+        Widget child = ClipRect(
+          child: _NoDragSingleChildScrollView(
+            controller: _scrollController!,
+            physics:
+                widget.isInteractive ? null : NeverScrollableScrollPhysics(),
+            child: ValueListenableBuilder(
+              valueListenable: _controller!,
+              builder: (context, _, child) {
+                // Layouts the child so only [_controller.maxRange] is
+                // visible.
+                final innerChildHeight = _outerChildHeight *
+                    Nanoseconds.normalDay.dividedByTimeDuration(
+                      _controller!.maxRange.duration,
+                    );
+                final innerOffset = -innerChildHeight *
+                    _controller!.maxRange.startTime.nanosecondsSinceMidnight
+                        .dividedByTimeDuration(Nanoseconds.normalDay);
 
-                  return SizedBox(
-                    height: _outerChildHeight,
-                    child: _VerticalOverflowBox(
-                      offset: innerOffset,
-                      height: innerChildHeight,
-                      child: widget.child,
-                    ),
-                  );
-                },
-              ),
+                return SizedBox(
+                  height: _outerChildHeight,
+                  child: _VerticalOverflowBox(
+                    offset: innerOffset,
+                    height: innerChildHeight,
+                    child: widget.child,
+                  ),
+                );
+              },
             ),
           ),
         );
+
+        if (widget.isInteractive) {
+          child = RawGestureDetector(
+            gestures: {
+              // We can't use a `GestureDetector` with scaling as that uses
+              // `computePanSlop` to determine the minimum distance a pointer has
+              // to move before it is considered a pan (in this case, a scroll).
+              // If this widget is used in a scrollable context, then the outer
+              // scrollable view would always win in the gesture arena because it
+              // uses `computeHitSlop`, which is half that amount.
+              _ScaleGestureRecognizer:
+                  GestureRecognizerFactoryWithHandlers<_ScaleGestureRecognizer>(
+                () => _ScaleGestureRecognizer(debugOwner: this),
+                (instance) {
+                  instance
+                    ..onStart = _onScaleStart
+                    ..onUpdate = _onScaleUpdate
+                    ..onEnd = _onScaleEnd
+                    ..dragStartBehavior = DragStartBehavior.down;
+                },
+              ),
+            },
+            child: child,
+          );
+        }
+
+        return child;
       },
     );
   }
@@ -301,7 +310,8 @@ class _TimeZoomState extends State<TimeZoom>
 /// Necessary because we handle drags ourselves to also detect zoom gestures.
 class _NoDragSingleChildScrollView extends SingleChildScrollView {
   /// Creates a box in which a single widget can be scrolled.
-  const _NoDragSingleChildScrollView({super.controller, super.child})
+  const _NoDragSingleChildScrollView(
+      {super.controller, super.physics, super.child})
       : super(primary: false);
 
   @override

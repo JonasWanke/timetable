@@ -5,6 +5,7 @@ export 'src/components/date_events.dart';
 export 'src/components/date_header.dart';
 export 'src/components/date_indicator.dart';
 export 'src/components/hour_dividers.dart';
+export 'src/components/inherited_timetable_date.dart';
 export 'src/components/month_indicator.dart';
 export 'src/components/month_widget.dart';
 export 'src/components/multi_date_content.dart';

@@ -6,6 +6,7 @@ import '../event/builder.dart';
 import '../event/event.dart';
 import '../theme.dart';
 import '../utils.dart';
+import 'inherited_timetable_date.dart';
 
 /// A widget that displays the given [Event]s.
 ///
@@ -43,16 +44,19 @@ class DateEvents<E extends Event> extends StatelessWidget {
         TimetableTheme.orDefaultOf(context).dateEventsStyleProvider(date);
     return Padding(
       padding: style.padding,
-      child: CustomMultiChildLayout(
-        delegate: _DayEventsLayoutDelegate(date, events, style),
-        children: [
-          for (final event in events)
-            LayoutId(
-              key: ValueKey(event),
-              id: event,
-              child: eventBuilder(context, event),
-            ),
-        ],
+      child: InheritedTimetableDate(
+        date: date,
+        child: CustomMultiChildLayout(
+          delegate: _DayEventsLayoutDelegate(date, events, style),
+          children: [
+            for (final event in events)
+              LayoutId(
+                key: ValueKey(event),
+                id: event,
+                child: eventBuilder(context, event),
+              ),
+          ],
+        ),
       ),
     );
   }

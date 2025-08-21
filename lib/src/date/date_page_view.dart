@@ -4,6 +4,7 @@ import 'package:deranged/deranged.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:timetable/src/components/inherited_timetable_date.dart';
 
 import '../utils.dart';
 import 'controller.dart';
@@ -152,7 +153,11 @@ class _DatePageViewState extends State<DatePageView> {
   }
 
   Widget _buildPage(BuildContext context, int page) {
-    var child = widget.builder(context, DateTimetable.fromPage(page));
+    final date = DateTimetable.fromPage(page);
+    Widget child = InheritedTimetableDate(
+      date: date,
+      child: Builder(builder: (context) => widget.builder(context, date)),
+    );
     if (widget.shrinkWrapInCrossAxis) {
       child = ImmediateSizeReportingOverflowPage(
         onSizeChanged: (size) {

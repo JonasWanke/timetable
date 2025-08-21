@@ -5,6 +5,7 @@ import '../callbacks.dart';
 import '../event/event.dart';
 import '../time/overlay.dart';
 import 'date_events.dart';
+import 'inherited_timetable_date.dart';
 import 'time_overlays.dart';
 
 /// A widget that displays [Event]s and [TimeOverlay]s for a single [Date].
@@ -43,28 +44,31 @@ class DateContent<E extends Event> extends StatelessWidget {
     final onBackgroundTap = this.onBackgroundTap ??
         DefaultTimetableCallbacks.of(context)?.onDateTimeBackgroundTap;
 
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final height = constraints.maxHeight;
+    return InheritedTimetableDate(
+      date: date,
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final height = constraints.maxHeight;
 
-        return GestureDetector(
-          behavior: HitTestBehavior.translucent,
-          onTapUp: onBackgroundTap != null
-              ? (details) => onBackgroundTap(
-                    date.atMidnight +
-                        Nanoseconds.normalDay
-                            .timesDouble(details.localPosition.dy / height),
-                  )
-              : null,
-          child: Stack(
-            children: [
-              _buildOverlaysForPosition(TimeOverlayPosition.behindEvents),
-              DateEvents<E>(date: date, events: events),
-              _buildOverlaysForPosition(TimeOverlayPosition.inFrontOfEvents),
-            ],
-          ),
-        );
-      },
+          return GestureDetector(
+            behavior: HitTestBehavior.translucent,
+            onTapUp: onBackgroundTap != null
+                ? (details) => onBackgroundTap(
+                      date.atMidnight +
+                          Nanoseconds.normalDay
+                              .timesDouble(details.localPosition.dy / height),
+                    )
+                : null,
+            child: Stack(
+              children: [
+                _buildOverlaysForPosition(TimeOverlayPosition.behindEvents),
+                DateEvents<E>(date: date, events: events),
+                _buildOverlaysForPosition(TimeOverlayPosition.inFrontOfEvents),
+              ],
+            ),
+          );
+        },
+      ),
     );
   }
 

@@ -300,11 +300,11 @@ class _NowIndicatorPainter extends CustomPainter {
         style: style,
         devicePixelRatio: devicePixelRatio,
         repaintNotifier: ValueNotifier(
-          timeController.useTimeZone
-              ? DateTimeTimetable.nowAt(timeController.tzIdentifier!)
-              : DateTimeTimetable.now(),
+          timeController.getCurrentTime?.call().copyWith(isUtc: true) ??
+              DateTimeTimetable.now(),
         ),
       );
+
   _NowIndicatorPainter._({
     required this.dateController,
     required this.timeController,
@@ -330,11 +330,8 @@ class _NowIndicatorPainter extends CustomPainter {
 
     final pageValue = dateController.value;
     final dateWidth = size.width / pageValue.visibleDayCount;
-    final now = timeController.useTimeZone
-        ? DateTimeTimetable.nowAt(timeController.tzIdentifier!)
-        : DateTimeTimetable.now();
     final temporalXOffset =
-        now.copyWith(isUtc: true).atStartOfDay.page - pageValue.page;
+        _now.copyWith(isUtc: true).atStartOfDay.page - pageValue.page;
     final left = temporalXOffset * dateWidth;
     final right = left + dateWidth;
 
@@ -344,7 +341,7 @@ class _NowIndicatorPainter extends CustomPainter {
     final actualLeft = left.coerceAtLeast(0);
     final actualRight = right.coerceAtMost(size.width);
 
-    final y = now.timeOfDay / 1.days * size.height;
+    final y = _now.timeOfDay / 1.days * size.height;
     canvas.drawLine(Offset(actualLeft, y), Offset(actualRight, y), _paint);
     style.shape.paint(canvas, size, left, right, y);
 
@@ -358,9 +355,7 @@ class _NowIndicatorPainter extends CustomPainter {
         () {
           // [ChangeNotifier.notifyListeners] is protected, so we use a
           // [ValueNotifier] and always set a different time.
-          _repaintNotifier.value = timeController.useTimeZone
-              ? DateTimeTimetable.nowAt(timeController.tzIdentifier!)
-              : DateTimeTimetable.now();
+          _repaintNotifier.value = _now;
         },
       ),
     );
@@ -390,4 +385,8 @@ class _NowIndicatorPainter extends CustomPainter {
   bool shouldRepaint(_NowIndicatorPainter oldDelegate) =>
       style != oldDelegate.style ||
       devicePixelRatio != oldDelegate.devicePixelRatio;
+
+  DateTime get _now =>
+      timeController.getCurrentTime?.call().copyWith(isUtc: true) ??
+      DateTimeTimetable.now();
 }

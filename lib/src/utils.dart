@@ -1,7 +1,6 @@
 import 'package:dart_date/dart_date.dart' show Interval;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart' hide Interval;
-import 'package:timezone/timezone.dart';
 
 import 'week.dart';
 
@@ -85,12 +84,6 @@ extension DateTimeTimetable on DateTime {
 
   static DateTime now() {
     final date = DateTime.now().copyWith(isUtc: true);
-    assert(date.debugCheckIsValidTimetableDateTime());
-    return date;
-  }
-
-  static DateTime nowAt(String timezone) {
-    final date = TZDateTime.now(getLocation(timezone)).copyWith(isUtc: true);
     assert(date.debugCheckIsValidTimetableDateTime());
     return date;
   }

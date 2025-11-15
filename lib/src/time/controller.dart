@@ -18,6 +18,7 @@ class TimeController extends ValueNotifier<TimeRange> {
     Duration? maxDuration,
     TimeRange? initialRange,
     TimeRange? maxRange,
+    this.getCurrentTime,
     this.minDayHeight,
   })  : assert(!minDuration.isNegative),
         assert(minDuration <= maxPossibleDuration),
@@ -89,6 +90,12 @@ class TimeController extends ValueNotifier<TimeRange> {
 
   /// The maximum range that can be revealed when zooming out.
   final TimeRange maxRange;
+
+  /// A function that returns the current time for display purposes.
+  ///
+  /// If this is `null`, the widget will use `DateTime.now()` based on
+  /// the device’s local time zone.
+  final DateTime Function()? getCurrentTime;
 
   @override
   set value(TimeRange value) {

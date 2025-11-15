@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import '../config.dart';
 import '../date/controller.dart';
 import '../theme.dart';
+import '../time/controller.dart';
 import '../utils.dart';
 
 /// A widget that displays an indicator at the current date and time.
@@ -36,7 +37,8 @@ class NowIndicator extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomPaint(
       foregroundPainter: _NowIndicatorPainter(
-        controller: DefaultDateController.of(context)!,
+        dateController: DefaultDateController.of(context)!,
+        timeController: DefaultTimeController.of(context)!,
         style: style ?? TimetableTheme.orDefaultOf(context).nowIndicatorStyle,
         devicePixelRatio: context.mediaQuery.devicePixelRatio,
       ),
@@ -287,18 +289,25 @@ class TriangleNowIndicatorShape extends NowIndicatorShape {
 
 class _NowIndicatorPainter extends CustomPainter {
   factory _NowIndicatorPainter({
-    required DateController controller,
+    required DateController dateController,
+    required TimeController timeController,
     required NowIndicatorStyle style,
     required double devicePixelRatio,
   }) =>
       _NowIndicatorPainter._(
-        controller: controller,
+        dateController: dateController,
+        timeController: timeController,
         style: style,
         devicePixelRatio: devicePixelRatio,
-        repaintNotifier: ValueNotifier(DateTimeTimetable.now()),
+        repaintNotifier: ValueNotifier(
+          timeController.getCurrentTime?.call().copyWith(isUtc: true) ??
+              DateTimeTimetable.now(),
+        ),
       );
+
   _NowIndicatorPainter._({
-    required this.controller,
+    required this.dateController,
+    required this.timeController,
     required this.style,
     required this.devicePixelRatio,
     required ValueNotifier<DateTime> repaintNotifier,
@@ -306,9 +315,10 @@ class _NowIndicatorPainter extends CustomPainter {
           ..color = style.lineColor
           ..strokeWidth = style.lineWidth,
         _repaintNotifier = repaintNotifier,
-        super(repaint: Listenable.merge([controller, repaintNotifier]));
+        super(repaint: Listenable.merge([dateController, repaintNotifier]));
 
-  final DateController controller;
+  final DateController dateController;
+  final TimeController timeController;
   final Paint _paint;
   final NowIndicatorStyle style;
   final double devicePixelRatio;
@@ -318,11 +328,10 @@ class _NowIndicatorPainter extends CustomPainter {
     unawaited(_repaint?.cancel());
     _repaint = null;
 
-    final pageValue = controller.value;
+    final pageValue = dateController.value;
     final dateWidth = size.width / pageValue.visibleDayCount;
-    final now = DateTimeTimetable.now();
     final temporalXOffset =
-        now.copyWith(isUtc: true).atStartOfDay.page - pageValue.page;
+        _now.copyWith(isUtc: true).atStartOfDay.page - pageValue.page;
     final left = temporalXOffset * dateWidth;
     final right = left + dateWidth;
 
@@ -332,7 +341,7 @@ class _NowIndicatorPainter extends CustomPainter {
     final actualLeft = left.coerceAtLeast(0);
     final actualRight = right.coerceAtMost(size.width);
 
-    final y = now.timeOfDay / 1.days * size.height;
+    final y = _now.timeOfDay / 1.days * size.height;
     canvas.drawLine(Offset(actualLeft, y), Offset(actualRight, y), _paint);
     style.shape.paint(canvas, size, left, right, y);
 
@@ -346,7 +355,7 @@ class _NowIndicatorPainter extends CustomPainter {
         () {
           // [ChangeNotifier.notifyListeners] is protected, so we use a
           // [ValueNotifier] and always set a different time.
-          _repaintNotifier.value = DateTimeTimetable.now();
+          _repaintNotifier.value = _now;
         },
       ),
     );
@@ -376,4 +385,8 @@ class _NowIndicatorPainter extends CustomPainter {
   bool shouldRepaint(_NowIndicatorPainter oldDelegate) =>
       style != oldDelegate.style ||
       devicePixelRatio != oldDelegate.devicePixelRatio;
+
+  DateTime get _now =>
+      timeController.getCurrentTime?.call().copyWith(isUtc: true) ??
+      DateTimeTimetable.now();
 }

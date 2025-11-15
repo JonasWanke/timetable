@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:time/time.dart';
 import 'package:timetable/timetable.dart';
+// import 'package:timezone/data/latest.dart' as tz;
+// import 'package:timezone/timezone.dart';
 
 // ignore: unused_import
 import 'positioning_demo.dart';
@@ -14,6 +16,10 @@ import 'utils.dart';
 
 Future<void> main() async {
   initDebugOverlay();
+  // Please ensure the time zone database is initialized.
+  //
+  // More information: [https://pub.dev/packages/timezone]
+  // tz.initializeTimeZones();
   runApp(const ExampleApp(child: TimetableExample()));
 }
 
@@ -49,6 +55,8 @@ class _TimetableExampleState extends State<TimetableExample>
     // maxDuration: 10.hours,
     // initialRange: TimeRange(8.hours, 20.hours),
     maxRange: TimeRange(0.hours, 24.hours),
+    // Provides the current time using a custom time zone
+    // getCurrentTime: () => TZDateTime.now(getLocation('Africa/Abidjan')),
   );
 
   final _draggedEvents = <BasicEvent>[];

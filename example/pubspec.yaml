@@ -17,8 +17,9 @@ dependencies:
   time: ^2.1.4
   timetable:
     path: ../
-  # Optional: it is only required for displaying current time indicator with specific time zone
-  timezone: ^0.10.0
+  # Optional: only needed if you want to display the current time indicator using a specific time zone.
+  # You may use any alternative package as well.
+  # timezone: ^0.10.0
 
 dev_dependencies:
   supernova:

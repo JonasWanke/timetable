@@ -74,7 +74,15 @@ void main() {
   });
 }
 
-class _TestEvent extends Event {
-  const _TestEvent(DateTime start, DateTime end)
-      : super(start: start, end: end);
+class _TestEvent implements Event {
+  const _TestEvent(this.start, this.end);
+
+  @override
+  final DateTime start;
+
+  @override
+  final DateTime end;
+
+  @override
+  bool get isAllDay => end.difference(start).inDays >= 1;
 }

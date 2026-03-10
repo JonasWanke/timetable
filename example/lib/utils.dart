@@ -31,7 +31,7 @@ void initDebugOverlay() {
 }
 
 class ExampleApp extends StatelessWidget {
-  const ExampleApp({required this.child});
+  const ExampleApp({super.key, required this.child});
 
   final Widget child;
 

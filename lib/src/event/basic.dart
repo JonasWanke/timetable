@@ -2,6 +2,7 @@ import 'package:black_hole_flutter/black_hole_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import '../utils.dart';
 import 'all_day.dart';
 import 'event.dart';
 
@@ -11,14 +12,14 @@ import 'event.dart';
 ///
 /// * [BasicEventWidget], which can display instances of [BasicEvent].
 @immutable
-class BasicEvent extends Event {
+class BasicEvent with Diagnosticable implements Event {
   const BasicEvent({
     required this.id,
     required this.title,
     required this.backgroundColor,
-    required super.start,
-    required super.end,
-  });
+    required this.start,
+    required this.end,
+  }) : assert(start <= end);
 
   /// An ID for this event.
   ///
@@ -36,6 +37,17 @@ class BasicEvent extends Event {
   ///
   /// This is currently used by [BasicEventWidget] and [BasicAllDayEventWidget].
   final Color backgroundColor;
+
+  /// Start of the event; inclusive.
+  @override
+  final DateTime start;
+
+  /// End of the event; exclusive.
+  @override
+  final DateTime end;
+
+  @override
+  bool get isAllDay => end.difference(start).inDays >= 1;
 
   BasicEvent copyWith({
     Object? id,
@@ -55,6 +67,7 @@ class BasicEvent extends Event {
 
   @override
   int get hashCode => Object.hash(super.hashCode, title, backgroundColor);
+
   @override
   bool operator ==(Object other) =>
       other is BasicEvent &&
@@ -68,6 +81,16 @@ class BasicEvent extends Event {
     properties.add(DiagnosticsProperty('id', id));
     properties.add(StringProperty('title', title));
     properties.add(ColorProperty('backgroundColor', backgroundColor));
+    properties.add(DiagnosticsProperty('start', start));
+    properties.add(DiagnosticsProperty('end', end));
+    properties.add(
+      FlagProperty(
+        'isAllDay',
+        value: isAllDay,
+        ifTrue: 'all-day',
+        ifFalse: 'part-day',
+      ),
+    );
   }
 }
 
@@ -232,6 +255,7 @@ class BasicAllDayEventWidgetStyle {
 
   @override
   int get hashCode => Object.hash(margin, radii, padding, textStyle);
+
   @override
   bool operator ==(Object other) {
     return other is BasicAllDayEventWidgetStyle &&

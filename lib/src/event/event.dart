@@ -1,5 +1,3 @@
-import 'package:flutter/foundation.dart';
-
 import '../utils.dart';
 import 'basic.dart';
 
@@ -8,34 +6,14 @@ import 'basic.dart';
 /// See also:
 ///
 /// * [BasicEvent], which provides a basic implementation to get you started.
-abstract class Event with Diagnosticable {
-  const Event({
-    required this.start,
-    required this.end,
-  }) : assert(start <= end);
-
+abstract interface class Event {
   /// Start of the event; inclusive.
-  final DateTime start;
+  DateTime get start;
 
   /// End of the event; exclusive.
-  final DateTime end;
+  DateTime get end;
 
-  bool get isAllDay => end.difference(start).inDays >= 1;
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty('start', start));
-    properties.add(DiagnosticsProperty('end', end));
-    properties.add(
-      FlagProperty(
-        'isAllDay',
-        value: isAllDay,
-        ifTrue: 'all-day',
-        ifFalse: 'part-day',
-      ),
-    );
-  }
+  bool get isAllDay;
 }
 
 extension EventExtension on Event {

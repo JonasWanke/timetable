@@ -29,6 +29,7 @@ class AllDayEventLayoutInfo {
 
   @override
   int get hashCode => Object.hash(hiddenStartDays, hiddenEndDays);
+
   @override
   bool operator ==(Object other) {
     return other is AllDayEventLayoutInfo &&
@@ -110,6 +111,7 @@ class AllDayEventBorder extends ShapeBorder {
 
   @override
   int get hashCode => Object.hash(info, side, radii);
+
   @override
   bool operator ==(Object other) {
     if (other.runtimeType != runtimeType) return false;
@@ -255,6 +257,7 @@ class AllDayEventBorderRadii {
 
   @override
   int get hashCode => Object.hash(cornerRadius, leftTipRadius, rightTipRadius);
+
   @override
   bool operator ==(Object other) {
     return other is AllDayEventBorderRadii &&

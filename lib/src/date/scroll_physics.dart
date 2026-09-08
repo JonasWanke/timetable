@@ -8,6 +8,7 @@ class DateScrollPhysics extends ScrollPhysics {
   const DateScrollPhysics(this.visibleRangeListenable, {super.parent});
 
   final ValueListenable<VisibleDateRange> visibleRangeListenable;
+
   VisibleDateRange get visibleRange => visibleRangeListenable.value;
 
   @override

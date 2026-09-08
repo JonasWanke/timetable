@@ -95,6 +95,7 @@ class ImmediateSizeReportingWidget extends SingleChildRenderObjectWidget {
   @override
   RenderObject createRenderObject(BuildContext context) =>
       _ImmediateSizeReportingRenderObject(onSizeChanged);
+
   @override
   void updateRenderObject(
     BuildContext context,
@@ -110,6 +111,7 @@ class _ImmediateSizeReportingRenderObject extends RenderProxyBox {
 
   ValueChanged<Size> get onSizeChanged => _onSizeChanged;
   ValueChanged<Size> _onSizeChanged;
+
   set onSizeChanged(ValueChanged<Size> value) {
     if (_onSizeChanged == value) return;
     _onSizeChanged = value;
@@ -137,6 +139,7 @@ class ImmediateSizedBox extends SingleChildRenderObjectWidget {
   @override
   RenderObject createRenderObject(BuildContext context) =>
       _ImmediateSizedBoxRenderObject(heightGetter);
+
   @override
   void updateRenderObject(
     BuildContext context,
@@ -152,6 +155,7 @@ class _ImmediateSizedBoxRenderObject extends RenderProxyBox {
 
   ValueGetter<double> get heightGetter => _heightGetter;
   ValueGetter<double> _heightGetter;
+
   set heightGetter(ValueGetter<double> value) {
     if (_heightGetter == value) return;
     _heightGetter = value;

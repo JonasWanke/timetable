@@ -1,8 +1,8 @@
 import 'dart:math' as math;
 
 import 'package:black_hole_flutter/black_hole_flutter.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../theme.dart';
 import '../utils.dart';
@@ -134,6 +134,7 @@ class _TimeIndicators extends MultiChildRenderObjectWidget {
   @override
   RenderObject createRenderObject(BuildContext context) =>
       _TimeIndicatorsLayout(textDirection: context.directionality);
+
   @override
   void updateRenderObject(
     BuildContext context,
@@ -191,7 +192,9 @@ class _TimeIndicatorsLayout extends RenderBox
       : _textDirection = textDirection;
 
   TextDirection _textDirection;
+
   TextDirection get textDirection => _textDirection;
+
   set textDirection(TextDirection value) {
     if (_textDirection == value) return;
 
@@ -209,6 +212,7 @@ class _TimeIndicatorsLayout extends RenderBox
   @override
   double computeMinIntrinsicWidth(double height) =>
       children.map((it) => it.getMinIntrinsicWidth(height)).maxOrNull ?? 0;
+
   @override
   double computeMaxIntrinsicWidth(double height) =>
       children.map((it) => it.getMaxIntrinsicWidth(height)).maxOrNull ?? 0;

@@ -3,7 +3,7 @@ import 'dart:ui';
 
 import 'package:async/async.dart';
 import 'package:black_hole_flutter/black_hole_flutter.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../config.dart';
 import '../date/controller.dart';
@@ -90,6 +90,7 @@ class NowIndicatorStyle {
 
   @override
   int get hashCode => Object.hash(shape, lineColor, lineWidth);
+
   @override
   bool operator ==(Object other) {
     return other is NowIndicatorStyle &&
@@ -141,6 +142,7 @@ abstract class NowIndicatorShape {
 
   @override
   int get hashCode;
+
   @override
   bool operator ==(Object other);
 }
@@ -168,6 +170,7 @@ class EmptyNowIndicatorShape extends NowIndicatorShape {
 
   @override
   int get hashCode => 0;
+
   @override
   bool operator ==(Object other) {
     return other is EmptyNowIndicatorShape;
@@ -218,6 +221,7 @@ class CircleNowIndicatorShape extends NowIndicatorShape {
 
   @override
   int get hashCode => Object.hash(color, radius);
+
   @override
   bool operator ==(Object other) {
     return other is CircleNowIndicatorShape &&
@@ -275,6 +279,7 @@ class TriangleNowIndicatorShape extends NowIndicatorShape {
 
   @override
   int get hashCode => Object.hash(color, size);
+
   @override
   bool operator ==(Object other) {
     return other is TriangleNowIndicatorShape &&
@@ -297,6 +302,7 @@ class _NowIndicatorPainter extends CustomPainter {
         devicePixelRatio: devicePixelRatio,
         repaintNotifier: ValueNotifier(DateTimeTimetable.now()),
       );
+
   _NowIndicatorPainter._({
     required this.controller,
     required this.style,

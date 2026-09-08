@@ -199,6 +199,7 @@ class FixedDaysVisibleDateRange extends VisibleDateRange {
         super(visibleDayCount: visibleDayCount, canScroll: false);
 
   final DateTime startDate;
+
   double get page => startDate.page;
 
   @override

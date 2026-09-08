@@ -41,12 +41,15 @@ class _ConstraintsPassingColumnRenderObject extends RenderBox
   @override
   double computeMinIntrinsicWidth(double height) =>
       children.map((it) => it.getMinIntrinsicWidth(height)).maxOrNull ?? 0;
+
   @override
   double computeMaxIntrinsicWidth(double height) =>
       children.map((it) => it.getMaxIntrinsicWidth(height)).maxOrNull ?? 0;
+
   @override
   double computeMinIntrinsicHeight(double width) =>
       children.map((it) => it.getMinIntrinsicHeight(width)).sum;
+
   @override
   double computeMaxIntrinsicHeight(double width) =>
       children.map((it) => it.getMaxIntrinsicHeight(width)).sum;

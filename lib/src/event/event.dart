@@ -18,7 +18,9 @@ abstract interface class Event {
 
 extension EventExtension on Event {
   DateTime get endInclusive => start == end ? end : end - 1.milliseconds;
+
   Interval get interval => Interval(start, endInclusive);
+
   Duration get duration => end.difference(start);
 
   bool get isPartDay => !isAllDay;

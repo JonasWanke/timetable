@@ -1,8 +1,8 @@
 import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../utils.dart';
 import 'controller.dart';
@@ -173,6 +173,7 @@ class MultiDateScrollController extends ScrollController {
   }
 
   final DateController controller;
+
   int get visibleDayCount => controller.value.visibleDayCount;
 
   double get page => position.page;
@@ -232,6 +233,7 @@ class MultiDateScrollPosition extends ScrollPositionWithSingleContext {
   }) : super(initialPixels: null);
 
   final MultiDateScrollController owner;
+
   DateController get controller => owner.controller;
   double initialPage;
 
@@ -254,6 +256,7 @@ class MultiDateScrollPosition extends ScrollPositionWithSingleContext {
   }
 
   bool _isApplyingNewDimensions = false;
+
   @override
   void applyNewDimensions() {
     _isApplyingNewDimensions = true;
@@ -291,6 +294,7 @@ class MultiDateScrollPosition extends ScrollPositionWithSingleContext {
   }
 
   void forcePage(double page) => forcePixels(pageToPixels(page));
+
   @override
   void forcePixels(double value) {
     if (value == pixels) return;
@@ -307,6 +311,7 @@ class MultiDateScrollPosition extends ScrollPositionWithSingleContext {
 
   double pixelsToPage(double pixels) =>
       _minPage + pixelDeltaToPageDelta(pixels);
+
   double pageToPixels(double page) => pageDeltaToPixelDelta(page - _minPage);
 
   double pixelDeltaToPageDelta(double pixels) {

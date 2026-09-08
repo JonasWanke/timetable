@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../config.dart';
 import '../date/controller.dart';
@@ -71,6 +71,7 @@ class DateDividersStyle {
 
   @override
   int get hashCode => Object.hash(color, width);
+
   @override
   bool operator ==(Object other) {
     return other is DateDividersStyle &&

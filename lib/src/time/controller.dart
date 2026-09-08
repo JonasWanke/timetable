@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../config.dart';
 import '../layouts/multi_date.dart';
@@ -118,6 +118,7 @@ class TimeController extends ValueNotifier<TimeRange> {
   /// [minDayHeight] against all registered clients (i.e., widgets using this
   /// controller).
   Duration? get maxDurationFromMinDayHeight => _maxDurationFromMinDayHeight;
+
   void _updateMaxDurationFromMinDayHeight() {
     if (minDayHeight == null) {
       _maxDurationFromMinDayHeight = null;
@@ -262,6 +263,7 @@ class TimeControllerClientRegistration {
   final int id;
 
   double _height;
+
   double get height => _height;
 
   void notifyHeightChanged(double newHeight) {

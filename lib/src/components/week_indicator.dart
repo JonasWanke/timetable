@@ -1,5 +1,5 @@
 import 'package:black_hole_flutter/black_hole_flutter.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../callbacks.dart';
 import '../config.dart';
@@ -33,6 +33,7 @@ class WeekIndicator extends StatelessWidget {
     this.onTap,
     this.style,
   });
+
   WeekIndicator.forDate(
     DateTime date, {
     super.key,
@@ -41,6 +42,7 @@ class WeekIndicator extends StatelessWidget {
     this.style,
   })  : assert(date.debugCheckIsValidTimetableDate()),
         week = date.week;
+
   static Widget forController(
     DateController? controller, {
     Key? key,
@@ -149,7 +151,9 @@ class _RenderWeekIndicatorText extends RenderBox {
   }
 
   late List<String> _labels;
+
   List<String> get labels => _labels;
+
   set labels(List<String> labels) {
     if (const DeepCollectionEquality().equals(_labels, labels)) return;
 
@@ -159,7 +163,9 @@ class _RenderWeekIndicatorText extends RenderBox {
   }
 
   TextStyle _style;
+
   TextStyle get style => _style;
+
   set style(TextStyle style) {
     if (const DeepCollectionEquality().equals(_style, style)) return;
 
@@ -169,7 +175,9 @@ class _RenderWeekIndicatorText extends RenderBox {
   }
 
   TextDirection _textDirection;
+
   TextDirection get textDirection => _textDirection;
+
   set textDirection(TextDirection textDirection) {
     if (textDirection == _textDirection) return;
 
@@ -179,7 +187,9 @@ class _RenderWeekIndicatorText extends RenderBox {
   }
 
   bool _alwaysUseNarrowestVariant;
+
   bool get alwaysUseNarrowestVariant => _alwaysUseNarrowestVariant;
+
   set alwaysUseNarrowestVariant(bool alwaysUseNarrowestVariant) {
     if (alwaysUseNarrowestVariant == _alwaysUseNarrowestVariant) return;
 
@@ -188,6 +198,7 @@ class _RenderWeekIndicatorText extends RenderBox {
   }
 
   List<TextPainter> _labelPainters = [];
+
   void _generateLabelPainters() {
     _labelPainters = labels.map((it) {
       return TextPainter(
@@ -203,6 +214,7 @@ class _RenderWeekIndicatorText extends RenderBox {
   @override
   double computeMinIntrinsicWidth(double height) =>
       _labelPainters.map((it) => it.width).min;
+
   @override
   double computeMaxIntrinsicWidth(double height) {
     final widths = _labelPainters.map((it) => it.width);
@@ -212,6 +224,7 @@ class _RenderWeekIndicatorText extends RenderBox {
   @override
   double computeMinIntrinsicHeight(double width) =>
       _labelPainters.map((it) => it.height).min;
+
   @override
   double computeMaxIntrinsicHeight(double width) {
     final heights = _labelPainters.map((it) => it.height);

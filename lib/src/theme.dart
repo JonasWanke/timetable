@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import 'components/date_dividers.dart';
 import 'components/date_events.dart';
@@ -212,6 +212,7 @@ class TimetableTheme extends InheritedWidget {
 
   static TimetableThemeData? of(BuildContext context) =>
       context.dependOnInheritedWidgetOfExactType<TimetableTheme>()?.data;
+
   static TimetableThemeData orDefaultOf(BuildContext context) =>
       of(context) ?? TimetableThemeData(context);
 }

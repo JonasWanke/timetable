@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../components/date_header.dart';
 import '../components/multi_date_content.dart';
@@ -71,6 +71,7 @@ class MultiDateTimetable<E extends Event> extends StatefulWidget {
   });
 
   final MultiDateTimetableHeaderBuilder headerBuilder;
+
   static MultiDateTimetableHeaderBuilder
       _defaultHeaderBuilder<E extends Event>() {
     return (context, leadingWidth) => MultiDateTimetableHeader<E>(
@@ -85,6 +86,7 @@ class MultiDateTimetable<E extends Event> extends StatefulWidget {
   }
 
   final MultiDateTimetableContentBuilder contentBuilder;
+
   static MultiDateTimetableContentBuilder
       _defaultContentBuilder<E extends Event>(
     Widget? contentLeading,
@@ -277,6 +279,7 @@ class MultiDateTimetableStyle {
 
   @override
   int get hashCode => maxHeaderFraction.hashCode;
+
   @override
   bool operator ==(Object other) {
     return other is MultiDateTimetableStyle &&

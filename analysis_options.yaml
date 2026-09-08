@@ -1,1 +1,4 @@
-include: package:supernova/lints.yaml
+analyzer:
+  exclude:
+    - build/**
+include: package:supernova_lints/lints.yaml

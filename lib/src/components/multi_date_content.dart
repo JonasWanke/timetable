@@ -1,6 +1,6 @@
 import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart' hide Interval;
+import 'package:material_ui/material_ui.dart';
 
 import '../config.dart';
 import '../date/controller.dart';
@@ -270,6 +270,7 @@ class _PartDayDraggableEventState extends State<PartDayDraggableEvent> {
   double? _pointerVerticalAlignment;
   Offset? _lastOffset;
   var _wasMoved = false;
+
   void _resetState() {
     _pointerVerticalAlignment = null;
     _lastOffset = null;

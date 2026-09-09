@@ -68,6 +68,7 @@ class Week implements Comparable<Week> {
 
   @override
   int get hashCode => Object.hash(weekBasedYear, weekOfYear);
+
   @override
   bool operator ==(Object other) {
     return other is Week &&

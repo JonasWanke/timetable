@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../config.dart';
 import '../date/controller.dart';
@@ -30,6 +30,7 @@ class RecurringMultiDateTimetable<E extends Event> extends StatelessWidget {
   }) : timetableBuilder = timetableBuilder ?? _defaultTimetableBuilder<E>();
 
   final WidgetBuilder timetableBuilder;
+
   static WidgetBuilder _defaultTimetableBuilder<E extends Event>() {
     return (context) => MultiDateTimetable<E>(
           headerBuilder: (header, leadingWidth) => MultiDateTimetableHeader<E>(

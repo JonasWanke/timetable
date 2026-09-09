@@ -3,9 +3,9 @@ import 'dart:math' as math;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/physics.dart';
 import 'package:flutter/rendering.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../utils.dart';
 import 'controller.dart';
@@ -42,6 +42,7 @@ class _TimeZoomState extends State<TimeZoom>
   double get _outerChildHeight =>
       _parentHeight *
       (_controller!.maxRange.duration / _controller!.value.duration);
+
   double get _outerOffset {
     final timeRange = _controller!.value;
     return (timeRange.startTime - _controller!.maxRange.startTime) /
@@ -260,6 +261,7 @@ class _TimeZoomState extends State<TimeZoom>
     Duration visibleDuration,
   ) =>
       visibleDuration * (focalPoint / _parentHeight);
+
   void _setNewTimeRange(Duration startTime, Duration duration) {
     final actualStartTime = startTime.coerceIn(
       _controller!.maxRange.startTime,
@@ -364,6 +366,7 @@ class _RenderVerticalOverflowBox extends RenderShiftedBox {
 
   double get height => _height;
   double _height;
+
   set height(double value) {
     if (_height == value) return;
     _height = value;
@@ -372,6 +375,7 @@ class _RenderVerticalOverflowBox extends RenderShiftedBox {
 
   double get offset => _offset;
   double _offset;
+
   set offset(double value) {
     if (_offset == value) return;
     _offset = value;
@@ -410,7 +414,7 @@ class _RenderVerticalOverflowBox extends RenderShiftedBox {
 class _ScaleGestureRecognizer extends OneSequenceGestureRecognizer {
   _ScaleGestureRecognizer({
     super.debugOwner,
-    // ignore: unused_element
+    // ignore: unused_element_parameter
     this.dragStartBehavior = DragStartBehavior.down,
   });
 
@@ -438,9 +442,11 @@ class _ScaleGestureRecognizer extends OneSequenceGestureRecognizer {
   final Map<int, VelocityTracker> _velocityTrackers = <int, VelocityTracker>{};
 
   double get _scaleFactor => _initialSpan > 0 ? _currentSpan / _initialSpan : 1;
+
   double get _horizontalScaleFactor => _initialHorizontalSpan > 0
       ? _currentHorizontalSpan / _initialHorizontalSpan
       : 1;
+
   double get _verticalScaleFactor => _initialVerticalSpan > 0
       ? _currentVerticalSpan / _initialVerticalSpan
       : 1;

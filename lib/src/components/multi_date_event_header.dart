@@ -1,8 +1,8 @@
 import 'dart:ui';
 
 import 'package:black_hole_flutter/black_hole_flutter.dart';
-import 'package:flutter/material.dart' hide Interval;
 import 'package:flutter/rendering.dart';
+import 'package:material_ui/material_ui.dart' hide Interval;
 
 import '../callbacks.dart';
 import '../config.dart';
@@ -177,6 +177,7 @@ class MultiDateEventHeaderStyle {
 
   @override
   int get hashCode => Object.hash(eventHeight, maxEventRows, padding);
+
   @override
   bool operator ==(Object other) {
     return other is MultiDateEventHeaderStyle &&
@@ -420,7 +421,9 @@ class _EventsLayout extends RenderBox
         _maxEventPositions = maxEventRows;
 
   DatePageValue _pageValue;
+
   DatePageValue get pageValue => _pageValue;
+
   set pageValue(DatePageValue value) {
     if (_pageValue == value) return;
 
@@ -429,7 +432,9 @@ class _EventsLayout extends RenderBox
   }
 
   double _eventHeight;
+
   double get eventHeight => _eventHeight;
+
   set eventHeight(double value) {
     if (_eventHeight == value) return;
 
@@ -438,7 +443,9 @@ class _EventsLayout extends RenderBox
   }
 
   Map<int, int> _maxEventPositions;
+
   Map<int, int> get maxEventRows => _maxEventPositions;
+
   set maxEventRows(Map<int, int> value) {
     if (_maxEventPositions == value) return;
 
@@ -478,6 +485,7 @@ class _EventsLayout extends RenderBox
   @override
   double computeMinIntrinsicHeight(double width) =>
       _parallelEventCount() * eventHeight;
+
   @override
   double computeMaxIntrinsicHeight(double width) =>
       _parallelEventCount() * eventHeight;

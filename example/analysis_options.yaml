@@ -1,4 +1,4 @@
-include: package:supernova/lints.yaml
+include: package:supernova_lints/lints.yaml
 
 linter:
   rules:
@@ -7,3 +7,9 @@ linter:
 dart_code_metrics:
   rules:
     prefer-extracting-callbacks: false
+analyzer:
+  exclude:
+    - build/**
+    - android/**
+    - ios/**
+    - web/**

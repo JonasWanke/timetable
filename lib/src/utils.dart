@@ -23,7 +23,9 @@ export 'utils/size_reporting_widget.dart';
 
 extension DoubleTimetable on double {
   double coerceAtLeast(double min) => this < min ? min : this;
+
   double coerceAtMost(double max) => this > max ? max : this;
+
   double coerceIn(double min, double max) =>
       coerceAtLeast(min).coerceAtMost(max);
 }
@@ -77,9 +79,12 @@ extension DateTimeTimetable on DateTime {
 
   DateTime get atStartOfDay =>
       copyWith(hour: 0, minute: 0, second: 0, millisecond: 0);
+
   bool get isAtStartOfDay => this == atStartOfDay;
+
   DateTime get atEndOfDay =>
       copyWith(hour: 23, minute: 59, second: 59, millisecond: 999);
+
   bool get isAtEndOfDay => this == atEndOfDay;
 
   static DateTime now() {
@@ -128,6 +133,7 @@ extension DateTimeTimetable on DateTime {
   }
 
   DateTime get firstDayOfMonth => atStartOfDay.copyWith(day: 1);
+
   DateTime get lastDayOfMonth => copyWith(day: daysInMonth);
 
   DateTime roundTimeToMultipleOf(Duration duration) {
@@ -203,12 +209,16 @@ extension InternalDateTimeTimetable on DateTime {
   }
 
   DateTime operator +(Duration duration) => add(duration);
+
   DateTime operator -(Duration duration) => subtract(duration);
 
   bool operator <(DateTime other) => isBefore(other);
+
   bool operator <=(DateTime other) =>
       isBefore(other) || isAtSameMomentAs(other);
+
   bool operator >(DateTime other) => isAfter(other);
+
   bool operator >=(DateTime other) => isAfter(other) || isAtSameMomentAs(other);
 
   static final List<int> innerDateHours =
@@ -217,6 +227,7 @@ extension InternalDateTimeTimetable on DateTime {
 
 extension NullableDateTimeTimetable on DateTime? {
   bool get isValidTimetableDateTime => this == null || this!.isUtc;
+
   bool debugCheckIsValidTimetableDateTime() {
     assert(() {
       if (isValidTimetableDateTime) return true;
@@ -231,6 +242,7 @@ extension NullableDateTimeTimetable on DateTime? {
 
   bool get isValidTimetableDate =>
       isValidTimetableDateTime && (this == null || this!.isAtStartOfDay);
+
   bool debugCheckIsValidTimetableDate() {
     assert(() {
       if (isValidTimetableDate) return true;
@@ -283,6 +295,7 @@ extension NullableDateTimeTimetable on DateTime? {
 
   bool get isValidTimetableMonth =>
       isValidTimetableDate && (this == null || this!.day == 1);
+
   bool debugCheckIsValidTimetableMonth() {
     assert(() {
       if (isValidTimetableMonth) return true;
@@ -312,6 +325,7 @@ extension InternalDurationTimetable on Duration {
 extension NullableDurationTimetable on Duration? {
   bool get isValidTimetableTimeOfDay =>
       this == null || (0.days <= this! && this! <= 1.days);
+
   bool debugCheckIsValidTimetableTimeOfDay() {
     assert(() {
       if (isValidTimetableTimeOfDay) return true;
@@ -331,9 +345,13 @@ extension NullableDurationTimetable on Duration? {
 
 extension InternalNumTimetable on num {
   Duration get weeks => (this * DateTime.daysPerWeek).days;
+
   Duration get days => (this * Duration.hoursPerDay).hours;
+
   Duration get hours => (this * Duration.minutesPerHour).minutes;
+
   Duration get minutes => (this * Duration.secondsPerMinute).seconds;
+
   Duration get seconds =>
       (this * Duration.millisecondsPerSecond).round().milliseconds;
 }
@@ -345,6 +363,7 @@ extension InternalIntTimetable on int {
 extension NullableIntTimetable on int? {
   bool get isValidTimetableDayOfWeek =>
       this == null || (DateTime.monday <= this! && this! <= DateTime.sunday);
+
   bool debugCheckIsValidTimetableDayOfWeek() {
     assert(() {
       if (isValidTimetableDayOfWeek) return true;
@@ -362,6 +381,7 @@ extension NullableIntTimetable on int? {
 
   bool get isValidTimetableMonth =>
       this == null || (1 <= this! && this! <= DateTime.monthsPerYear);
+
   bool debugCheckIsValidTimetableMonth() {
     assert(() {
       if (isValidTimetableMonth) return true;

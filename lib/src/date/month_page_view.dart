@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../utils.dart';
 
@@ -122,6 +122,7 @@ class MonthPageController extends ChangeNotifier
   DateTime get value => _monthFromPage(_pageController.page!.round());
 
   late DateTime _previousValue = value;
+
   @override
   void notifyListeners() {
     final newValue = value;
@@ -141,6 +142,7 @@ class MonthPageController extends ChangeNotifier
   static final _minMonth = DateTime.utc(-271821, 6);
   static final _minPage =
       (_minMonth.year * DateTime.monthsPerYear) + (_minMonth.month - 1);
+
   static DateTime _monthFromPage(int page) {
     page = _minPage + page;
     final year = (page < 0 ? page - DateTime.monthsPerYear + 1 : page) ~/

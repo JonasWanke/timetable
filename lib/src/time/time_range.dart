@@ -10,6 +10,7 @@ class TimeRange {
       : assert(startTime.debugCheckIsValidTimetableTimeOfDay()),
         assert(endTime.debugCheckIsValidTimetableTimeOfDay()),
         assert(startTime <= endTime);
+
   factory TimeRange.fromStartAndDuration(
     Duration startTime,
     Duration duration,
@@ -46,8 +47,10 @@ class TimeRange {
   static final fullDay = TimeRange(0.days, 1.days);
 
   final Duration startTime;
+
   Duration get centerTime => startTime + duration * (1 / 2);
   final Duration endTime;
+
   Duration get duration => endTime - startTime;
 
   bool contains(TimeRange other) =>
@@ -63,6 +66,7 @@ class TimeRange {
 
   @override
   int get hashCode => Object.hash(startTime, endTime);
+
   @override
   bool operator ==(Object other) {
     return other is TimeRange &&

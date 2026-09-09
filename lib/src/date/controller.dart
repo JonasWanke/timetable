@@ -47,9 +47,11 @@ class DateController extends ValueNotifier<DatePageValueWithScrollActivity> {
   }
 
   late final ValueNotifier<DateTime> _date;
+
   ValueListenable<DateTime> get date => _date;
 
   VisibleDateRange get visibleRange => value.visibleRange;
+
   set visibleRange(VisibleDateRange visibleRange) {
     cancelAnimation();
     value = value.copyWithActivity(
@@ -60,6 +62,7 @@ class DateController extends ValueNotifier<DatePageValueWithScrollActivity> {
   }
 
   late final ValueNotifier<Interval> _visibleDates;
+
   ValueListenable<Interval> get visibleDates => _visibleDates;
 
   // Animation
@@ -125,6 +128,7 @@ class DateController extends ValueNotifier<DatePageValueWithScrollActivity> {
   }
 
   void jumpToToday() => jumpTo(DateTimeTimetable.today());
+
   void jumpTo(DateTime date) {
     assert(date.debugCheckIsValidTimetableDate());
     jumpToPage(date.page);
@@ -147,7 +151,9 @@ class DateController extends ValueNotifier<DatePageValueWithScrollActivity> {
   }
 
   bool _isDisposed = false;
+
   bool get isDisposed => _isDisposed;
+
   @override
   void dispose() {
     _date.dispose();
@@ -162,9 +168,11 @@ class DatePageValue with Diagnosticable {
   const DatePageValue(this.visibleRange, this.page);
 
   final VisibleDateRange visibleRange;
+
   int get visibleDayCount => visibleRange.visibleDayCount;
 
   final double page;
+
   DateTime get date => DateTimeTimetable.dateFromPage(page.round());
 
   int get firstVisiblePage => page.floor();
@@ -205,6 +213,7 @@ class DatePageValue with Diagnosticable {
 
   @override
   int get hashCode => Object.hash(visibleRange, page);
+
   @override
   bool operator ==(Object other) {
     return other is DatePageValue &&
